@@ -2,18 +2,14 @@
 
 import * as React from "react";
 import {
-  Edit2Icon,
-  EqualApproximatelyIcon,
   LayoutDashboard,
   LifeBuoy,
-  MessageCircleQuestion,
   Send,
   SquareTerminal,
   View,
 } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
-import { NavProjects } from "@/components/nav-projects";
 import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
 import {
@@ -77,23 +73,23 @@ const data = {
       icon: Send,
     },
   ],
-  projects: [
-    {
-      name: "Upcoming Appointments",
-      url: "#",
-      icon: EqualApproximatelyIcon,
-    },
-    {
-      name: "Bulk Appointments",
-      url: "#",
-      icon: MessageCircleQuestion,
-    },
-    {
-      name: "Modify Appointments",
-      url: "#",
-      icon: Edit2Icon,
-    },
-  ],
+  // projects: [
+  //   {
+  //     name: "Upcoming Appointments",
+  //     url: "#",
+  //     icon: EqualApproximatelyIcon,
+  //   },
+  //   {
+  //     name: "Bulk Appointments",
+  //     url: "#",
+  //     icon: MessageCircleQuestion,
+  //   },
+  //   {
+  //     name: "Modify Appointments",
+  //     url: "#",
+  //     icon: Edit2Icon,
+  //   },
+  // ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -120,7 +116,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarHeader>
           <SidebarContent>
             <NavMain items={data.navMain} />
-            <NavProjects projects={data.projects} />
+            {/* <NavProjects projects={data.projects} /> */}
             <NavSecondary items={data.navSecondary} className="mt-auto" />
           </SidebarContent>
           <SidebarFooter>
