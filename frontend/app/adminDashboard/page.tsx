@@ -1,4 +1,4 @@
-"use client";
+'use client'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,12 +13,10 @@ import { TableDemoClass } from "@/demo/admin-dashboard/TableDemoClass";
 import { TableBatchEntries } from "@/demo/admin-dashboard/TableBatchEntries";
 import { TableNormalClass } from "@/demo/admin-dashboard/TableNormalClass";
 import { Separator } from "@radix-ui/react-separator";
-import { usePathname } from "next/navigation";
 import React from "react";
 import { TableAttendance } from "@/demo/admin-dashboard/TableAttendance";
 
-const Page = () => {
-  const pathname = usePathname();
+const page = () => {
   return (
     <SidebarInset className="w-screen">
       <header className="flex h-16 shrink-0 items-center gap-2 border-b">
@@ -33,7 +31,7 @@ const Page = () => {
               <BreadcrumbSeparator className="hidden md:block" />
               <BreadcrumbItem>
                 <BreadcrumbPage>
-                  {pathname == "/adminDashboard" && "Admin Dashboard"}
+                 {"Admin Dashboard"}
                 </BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
@@ -54,4 +52,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default page;

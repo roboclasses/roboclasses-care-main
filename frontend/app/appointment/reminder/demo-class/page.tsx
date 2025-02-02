@@ -1,4 +1,3 @@
-"use client";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,11 +10,9 @@ import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { DatePickerForm } from "@/demo/demo-class/datePickerForm";
 import { Separator } from "@radix-ui/react-separator";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 import React from "react";
 
-const Page = () => {
-  const pathname = usePathname();
+const page = () => {
   return (
     <SidebarInset className="w-screen">
       <header className="flex h-16 shrink-0 items-center gap-2 border-b">
@@ -30,7 +27,7 @@ const Page = () => {
               <BreadcrumbSeparator className="hidden md:block" />
               <BreadcrumbItem>
                 <BreadcrumbPage>
-                  {pathname == "/appointment/reminder/demo-class" &&"Demo Class"}
+                  {"Demo Class"}
                 </BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
@@ -55,4 +52,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default page;

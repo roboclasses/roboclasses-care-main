@@ -26,17 +26,14 @@ const Page = () => {
                 <BreadcrumbLink href="/">Scheduler</BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator className="hidden md:block" />
-
               <BreadcrumbItem className="hidden md:block">
                 <BreadcrumbLink href="/adminDashboard">
                   Admin Dashboard
                 </BreadcrumbLink>
               </BreadcrumbItem>
-
               <BreadcrumbSeparator className="hidden md:block" />
-
               <BreadcrumbItem>
-                <BreadcrumbPage>Edit Appointment</BreadcrumbPage>
+                <BreadcrumbPage>Edit Normal Class Appointment</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
