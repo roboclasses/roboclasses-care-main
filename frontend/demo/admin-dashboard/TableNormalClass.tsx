@@ -56,7 +56,6 @@ export function TableNormalClass() {
           <TableHead className="w-[100px]">Teacher Name</TableHead>
           <TableHead>Batch Name</TableHead>
           <TableHead>Time</TableHead>
-          <TableHead>Status</TableHead>
           <TableHead>Edit</TableHead>
           <TableHead>Delete</TableHead>
         </TableRow>
@@ -76,7 +75,6 @@ export function TableNormalClass() {
                 </TableCell>
               </TableRow>
             </TableCell>
-            <TableCell></TableCell>
             <TableCell>
               <Link href={`/appointment/reminder/normal-class/edit/${appointment._id}`}>
               <EditButton name="Edit" type="button" />

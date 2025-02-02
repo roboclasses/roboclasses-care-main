@@ -55,7 +55,6 @@ export function TableBatchEntries() {
           <TableHead className="w-[100px]">Teacher Name</TableHead>
           <TableHead>Batch Name</TableHead>
           <TableHead>Times</TableHead>
-          <TableHead>Status</TableHead>
           <TableHead>Edit</TableHead>
           <TableHead>Delete</TableHead>
         </TableRow>
@@ -77,7 +76,6 @@ export function TableBatchEntries() {
                 </TableCell>
               </TableRow>
             </TableCell>
-            <TableCell></TableCell>
             <TableCell className="text-right">
               <Link href={`/newBatchEntry/edit/${batch._id}`}>
               <EditButton name="Edit" type="button" />
