@@ -17,30 +17,34 @@ import axios from "axios";
 import Link from "next/link";
 import { appointmentTypes } from "@/types/Types";
 import { DemoClassUrl } from "@/constants";
+import { toast } from "@/hooks/use-toast";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 export function TableDemoClass() {
-  const { data, error, isLoading, mutate } = useSWR<appointmentTypes[]>(DemoClassUrl,fetcher);
+  const { data, error, isLoading, isValidating, mutate } = useSWR<appointmentTypes[]>(DemoClassUrl,fetcher);
 
-  // handle delete appointment records
+  // Handle delete appointment
   const handleDelete = async (appointmentId: string) => {
     try {
-      const res = await axios.delete(
-        `${DemoClassUrl}/${appointmentId}`
-      );
+      const res = await axios.delete(`${DemoClassUrl}/${appointmentId}`);
       console.log(res.data);
 
-      mutate((data) =>
-        data?.filter((appointment) => appointment._id !== appointmentId)
-      );
+      mutate((data) => data?.filter((appointment) => appointment._id !== appointmentId));
+
+      const {message} = res.data;
+      toast({title: "Success✅", description: message,variant: "default",});
     } catch (error) {
       console.log(error);
+      toast({title:"Failed", description:"Unable to delete Demo Class", variant:"destructive"})
     }
   };
-  if (data?.length === 0) return <div>Empty List for Demo Class.</div>;
-  if (error) return <div>failed to load</div>;
-  if (isLoading) return <div>loading...</div>;
+
+  // Handle edge cases
+  if (data?.length === 0) return <div>Empty list for Demo Classes</div>;
+  if (error) return <div>Failed to load</div>;
+  if (isLoading) return <div>Loading...</div>;
+  if (isValidating) return <div>Refershing data...</div>;
 
   return (
     <Table className="border border-black">
@@ -88,10 +92,7 @@ export function TableDemoClass() {
                   type="button"
                   varient="destructive"
                   onClick={() => handleDelete(appointment._id ?? "")}
-                />
-              ) : (
-                ""
-              )}
+                />) : ("")}
             </TableCell>
           </TableRow>
         ))}

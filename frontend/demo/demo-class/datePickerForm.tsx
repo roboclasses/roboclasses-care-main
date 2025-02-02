@@ -72,14 +72,14 @@ export function DatePickerForm() {
       form.reset();
       toast({
         title: "Success✅",
-        description: "Your appointment has been submitted successfully.✅",
+        description: "Your appointment has been submitted successfully",
         variant:"default"
       });
     } catch (error) {
       console.error(error);
       toast({
         title: "Failed ",
-        description: "Unable to submit appointment!",
+        description: "Unable to submit appointment",
         variant:"destructive"
       });
     }

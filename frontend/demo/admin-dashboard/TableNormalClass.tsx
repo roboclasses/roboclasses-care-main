@@ -14,6 +14,7 @@ import useSWR from "swr";
 import { normalClassType } from "@/types/Types";
 import Link from "next/link";
 import { NormalClassUrl } from "@/constants";
+import { toast } from "@/hooks/use-toast";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -29,15 +30,19 @@ export function TableNormalClass() {
       const res = await axios.delete(`${NormalClassUrl}/${id}`);
       console.log(res.data);
 
-      // for mutating the data after delete
       mutate((data) => data?.filter((item) => item._id !== id));
+
+      const {message} = res.data;
+      toast({title: "Success✅", description: message,variant: "default",});
     } catch (error) {
       console.log(error);
+      toast({title:"Failed", description:"Unable to delete Normal Class", variant:"destructive"})
     }
   };
 
-  if (data?.length === 0) return <div>Empty List for Normal Class.</div>;
-  if (error) return <div>Error!</div>;
+  // Handle edge cases
+  if (data?.length === 0) return <div>Empty list for Normal Class</div>;
+  if (error) return <div>Failed to load</div>;
   if (isLoading) return <div>Loading...</div>;
   if (isValidating) return <div>Refershing data...</div>;
 
@@ -67,11 +72,7 @@ export function TableNormalClass() {
               </TableRow>
               <TableRow>
                 <TableCell>
-                  {appointment.time
-                    .map((value) =>
-                      !isNaN(parseInt(value[0], 10)) ? value : "N/A"
-                    )
-                    .join(" | ")}
+                  {appointment.time.map((value) =>!isNaN(parseInt(value[0], 10)) ? value : "N/A").join(" | ")}
                 </TableCell>
               </TableRow>
             </TableCell>

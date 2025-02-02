@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/table";
 import axios from "axios";
 import { useParams } from "next/navigation";
+import { NormalClassUrl } from "@/constants";
 
 const items = [
   {
@@ -130,10 +131,7 @@ export function EditNormalClassForm() {
 
   async function onSubmit(data: unknown) {
     try {
-      const res = await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/appointments/normalClass/${id}`,
-        data
-      );
+      const res = await axios.put(`${NormalClassUrl}/${id}`,data);
       console.log(res.data);
       form.reset();
       const {message} = res.data;
@@ -146,7 +144,7 @@ export function EditNormalClassForm() {
       console.error("Error booking appointment", error);
       toast({
         title: "Failed ",
-        description: "unable to update Normal Class appointment!",
+        description: "unable to update Normal Class appointment",
         variant: "destructive",
       });
     }

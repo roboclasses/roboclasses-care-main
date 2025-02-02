@@ -22,25 +22,27 @@ const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 export function TableAttendance() {
   const { data, isLoading, isValidating, error, mutate } = useSWR(AttendanceUrl,fetcher);
 
-  // handle delete attendance
+  // Handle delete attendance
   const handleDelete = async (id: string) => {
     try {
       const res = await axios.delete(`${AttendanceUrl}/${id}`);
       console.log(res.data);
+      
       mutate((data: any[]) =>data.filter((attendance: { _id: string }) => attendance._id !== id));
+
       const { message } = res.data;
       toast({title: "Success✅", description: message,variant: "default",});
     } catch (error) {
       console.log(error);
-      toast({title: "Failed",description: "unable to delete attendance", variant: "destructive",});
+      toast({title: "Failed",description: "Unable to delete attendance", variant: "destructive",});
     }
   };
 
-
+ //Handle edge cases
   if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Data fetching error!</div>;
+  if (error) return <div>Failed to load</div>;
   if (isValidating) return <div>Refreshing...</div>;
-  if (data?.length === 0) return <div>Empty list for Attendances.</div>;
+  if (data?.length === 0) return <div>Empty list for Attendances</div>;
 
   return (
     <Table className="border border-black">

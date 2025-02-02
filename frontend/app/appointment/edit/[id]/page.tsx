@@ -19,9 +19,7 @@ import { DemoClassUrl } from "@/constants";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const [date, setDate] = useState<Date>(new Date());
-  const [time, setTime] = useState<string>(
-    new Date().toLocaleTimeString().substring(11, 16)
-  );
+  const [time, setTime] = useState<string>(new Date().toLocaleTimeString().substring(11, 16));
   const [name, setName] = useState("");
   const { id } = params;
 
@@ -29,9 +27,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   useEffect(() => {
     const handleFetchOne = async () => {
       try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/appointments/demoClass/${id}`
-        );
+        const res = await axios.get(`${DemoClassUrl}/${id}`);
 
         setDate(res.data.date);
         setTime(res.data.time);
@@ -54,46 +50,26 @@ const Page = ({ params }: { params: { id: string } }) => {
   // handle update appointment
   const handleUpdate = async () => {
     try {
-      const res = await axios.put(
-        `${DemoClassUrl}/${id}`,
-        { date, time }
-      );
+      const res = await axios.put(`${DemoClassUrl}/${id}`,{date, time });
       console.log(res.data);
+      toast({title: "Success✅",description: "Your appointment is now updated successfully",variant: "default",});
 
-      toast({
-        title: "Success✅",
-        description: "Your appointment is now updated successfully.✅",
-        variant: "default",
-      });
     } catch (error) {
       console.log(error);
-      toast({
-        title: "Failed ",
-        description: "Unable to update.",
-        variant: "destructive",
-      });
+      toast({title: "Failed ",description: "Unable to update",variant: "destructive",});
     }
   };
 
   // handle delete appointment
   const handleCancelAppointment = async () => {
     try {
-      const res = await axios.patch(
-        `${process.env.NEXT_PUBLIC_API_URL}/appointments/demoClass/${id}`
-      );
+      const res = await axios.patch(`${DemoClassUrl}/${id}`);  
       console.log(res.data);
-      toast({
-        title: "Success✅",
-        description: "Your appointment got cancelled.✅",
-        variant: "default",
-      });
+      toast({title: "Success✅",description: "Your appointment got cancelled",variant: "default",});
+
     } catch (error) {
       console.log(error);
-      toast({
-        title: "Failed",
-        description: "Unable to cancel!",
-        variant: "destructive",
-      });
+      toast({title: "Failed",description: "Unable to cancel",variant: "destructive",});
     }
   };
 
@@ -109,15 +85,12 @@ const Page = ({ params }: { params: { id: string } }) => {
                 <BreadcrumbLink href="/">Scheduler</BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator className="hidden md:block" />
-
               <BreadcrumbItem className="hidden md:block">
                 <BreadcrumbLink href="/adminDashboard">
                   Admin Dashboard
                 </BreadcrumbLink>
               </BreadcrumbItem>
-
               <BreadcrumbSeparator className="hidden md:block" />
-
               <BreadcrumbItem>
                 <BreadcrumbPage>{`${name}'s Appointment`}</BreadcrumbPage>
               </BreadcrumbItem>
@@ -138,12 +111,8 @@ const Page = ({ params }: { params: { id: string } }) => {
           <EditAppointmentForm
             date={date}
             time={time}
-            handleDateChange={(e: {
-              target: { value: string | number | Date };
-            }) => setDate(new Date(e.target.value))}
-            handleTimeChange={(e: {
-              target: { value: React.SetStateAction<string> };
-            }) => setTime(e.target.value)}
+            handleDateChange={(e: {target: { value: string | number | Date }}) => setDate(new Date(e.target.value))}
+            handleTimeChange={(e: {target: { value: React.SetStateAction<string> }}) => setTime(e.target.value)}
             handleSubmit={handleUpdate}
             handleDelete={handleCancelAppointment}
           />

@@ -30,8 +30,7 @@ const Page = () => {
               <BreadcrumbSeparator className="hidden md:block" />
               <BreadcrumbItem>
                 <BreadcrumbPage>
-                  {pathname == "/appointment/reminder/demo-class" &&
-                    "Demo Class"}
+                  {pathname == "/appointment/reminder/demo-class" &&"Demo Class"}
                 </BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>

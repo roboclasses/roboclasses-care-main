@@ -118,14 +118,14 @@ export function NewBatchEntryForm() {
       form.reset();
       toast({
         title: "Success✅",
-        description: "New batch has been created.✅",
+        description: "New batch has been created",
         variant:"default"
       });
     } catch (error) {
       console.error(error);
       toast({
         title: "Failed ",
-        description: "Unable to create batch!",
+        description: "Unable to create batch",
         variant:"destructive"
       });
     }

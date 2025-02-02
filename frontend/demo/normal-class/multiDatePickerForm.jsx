@@ -133,15 +133,14 @@ export function MultiDatePickerForm() {
       form.reset();
       toast({
         title: "Success✅",
-        description:
-          "Your appointment for normal class has been submitted successfully.✅",
+        description: "Your appointment for normal class has been submitted successfully",
         variant: "default",
       });
     } catch (error) {
       console.error("Error booking appointment", error);
       toast({
         title: "Failed ",
-        description: "unable to submit Normal Class appointment!",
+        description: "unable to submit Normal Class appointment",
         variant: "destructive",
       });
     }

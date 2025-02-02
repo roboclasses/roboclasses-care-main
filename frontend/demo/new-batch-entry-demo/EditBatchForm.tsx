@@ -133,7 +133,6 @@ export function EditBatchForm() {
         variant:"destructive"
       });
     }
-
    
   }
 
