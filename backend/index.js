@@ -9,6 +9,7 @@ import appointmentsRoute from "./routes/appointmentsRoute.js"
 import newBatchEntryRoute from "./routes/newBatchEntryRoute.js"
 import attendancesRoute from "./routes/attendancesRoute.js"
 import normalClassAppointmentsRoute from "./routes/normalClassAppointmentsRoute.js"
+import userRoutes from "./routes/userRoutes.js"
 
 dotenv.config();
 const app = express();
@@ -28,6 +29,7 @@ app.use('/api/v1',appointmentsRoute)
 app.use('/api/v1', newBatchEntryRoute)
 app.use('/api/v1',attendancesRoute)
 app.use('/api/v1',normalClassAppointmentsRoute)
+app.use('/api/v1',userRoutes)
 
 // listning on port
 const PORT = 8002;
