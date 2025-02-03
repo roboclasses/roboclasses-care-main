@@ -7,7 +7,6 @@ import {
   SquareTerminal,
   View,
 } from "lucide-react";
-
 import { NavMain } from "@/components/nav-main";
 import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
@@ -22,17 +21,28 @@ import {
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import Image from "next/image";
-import { LOGO_IMG } from "@/constants/images";
 import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
 
 
 export  function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("")
+
+// get user's credentials from localstorage
+useEffect(()=>{
+  setName(localStorage.getItem("name") || 'Guest')
+  setEmail(localStorage.getItem("email") || 'guest@gmail.com')
+},[pathname])
+
+const avatar = name.slice(0,2)
+ 
   const data = {
     user: {
-      name: "Dev",
-      email: "devstidax@gmail.com",
-      avatar: { image: LOGO_IMG },
+      name: name,
+      email: email,
+      avatar: avatar,
     },
     navMain: [
       {
@@ -93,6 +103,7 @@ export  function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) 
     //   },
     // ],
   };
+
   return (
     <>
       {pathname !== "/login" && pathname !== "/signup" && (
