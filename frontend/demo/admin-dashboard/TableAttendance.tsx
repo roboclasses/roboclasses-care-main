@@ -54,6 +54,8 @@ export function TableAttendance() {
               {column.name}
             </TableHead>
           ))}
+          <TableHead>Edit</TableHead>
+          <TableHead>Delete</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

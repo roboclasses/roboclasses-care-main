@@ -120,6 +120,8 @@ export default function AttendanceTable() {
               {columns.map((column) => (
                 <TableHead key={column.id}>{column.name}</TableHead>
               ))}
+                <TableHead>Edit</TableHead>
+              
             </TableRow>
           </TableHeader>
           <TableBody>
