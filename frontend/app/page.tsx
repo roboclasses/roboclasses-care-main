@@ -8,12 +8,14 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
+import { isAuthenticated } from "@/lib/auth";
 import { Separator } from "@radix-ui/react-separator";
-import { usePathname } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 import React from "react";
 
 function Page() {
   const pathname = usePathname();
+  if(!isAuthenticated()) redirect('/login')
   return (
     <SidebarInset>
       <header className="flex h-16 shrink-0 items-center gap-2 border-b">
