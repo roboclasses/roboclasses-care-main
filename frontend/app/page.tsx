@@ -10,11 +10,10 @@ import {
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { isAuthenticated } from "@/lib/auth";
 import { Separator } from "@radix-ui/react-separator";
-import { redirect, usePathname } from "next/navigation";
+import { redirect} from "next/navigation";
 import React from "react";
 
-function Page() {
-  const pathname = usePathname();
+function page() {
   if(!isAuthenticated()) redirect('/login')
   return (
     <SidebarInset>
@@ -26,7 +25,7 @@ function Page() {
             <BreadcrumbList>
               <BreadcrumbItem className="hidden md:block">
                 <BreadcrumbLink href="/">
-                 {pathname == '/' && 'Schduler'}
+                 {'Schduler'}
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator className="hidden md:block" />         
@@ -41,4 +40,4 @@ function Page() {
   );
 }
 
-export default Page;
+export default page;

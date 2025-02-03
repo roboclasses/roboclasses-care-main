@@ -12,7 +12,7 @@ const CardDemo = () => {
                 allowFullScreen
                 width={600}
                 height={400}
-                sandbox="allow-popups allow-scripts allow-same-origin"
+                sandbox="allow-scripts allow-same-origin allow-presentation"
                 loading="lazy"
                 className="lg:w-[320px] h-[200px] rounded"
               />
