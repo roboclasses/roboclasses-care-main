@@ -54,7 +54,7 @@ export function LoginForm() {
       console.log(error);
       toast({
         title: "Failed",
-        description: "Unable to signup",
+        description: "Unable to login",
         variant: "destructive",
       });
     }
