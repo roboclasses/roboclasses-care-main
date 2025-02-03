@@ -49,6 +49,11 @@ export function LoginForm() {
         {
           toast({title:"Failed", description: message, variant:"destructive"})
         }
+        else if(status === 403)
+        {
+          toast({title:"Failed", description: message, variant:"destructive"})
+
+        }
       }
     } catch (error) {
       console.log(error);
