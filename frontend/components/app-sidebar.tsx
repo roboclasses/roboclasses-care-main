@@ -1,5 +1,4 @@
 "use client";
-
 import * as React from "react";
 import {
   LayoutDashboard,
@@ -26,74 +25,74 @@ import Image from "next/image";
 import { LOGO_IMG } from "@/constants/images";
 import { usePathname } from "next/navigation";
 
-const data = {
-  user: {
-    name: "Dev",
-    email: "devstidax@gmail.com",
-    avatar: { image: LOGO_IMG },
-  },
-  navMain: [
-    {
-      title: "Take Appointment",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "Demo Class",
-          url: "/appointment/reminder/demo-class",
-        },
-        {
-          title: "Normal Class",
-          url: "/appointment/reminder/normal-class",
-        },
-      ],
-    },
-    {
-      title: "Admnin Dashboard",
-      url: "/adminDashboard",
-      icon: LayoutDashboard,
-      isActive: false,
-    },
-    {
-      title: "Teacher View",
-      url: "/teacherView",
-      icon: View,
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Support",
-      url: "#",
-      icon: LifeBuoy,
-    },
-    {
-      title: "Feedback",
-      url: "#",
-      icon: Send,
-    },
-  ],
-  // projects: [
-  //   {
-  //     name: "Upcoming Appointments",
-  //     url: "#",
-  //     icon: EqualApproximatelyIcon,
-  //   },
-  //   {
-  //     name: "Bulk Appointments",
-  //     url: "#",
-  //     icon: MessageCircleQuestion,
-  //   },
-  //   {
-  //     name: "Modify Appointments",
-  //     url: "#",
-  //     icon: Edit2Icon,
-  //   },
-  // ],
-};
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export  function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
+  const data = {
+    user: {
+      name: "Dev",
+      email: "devstidax@gmail.com",
+      avatar: { image: LOGO_IMG },
+    },
+    navMain: [
+      {
+        title: "Take Appointment",
+        url: "#",
+        icon: SquareTerminal,
+        isActive: true,
+        items: [
+          {
+            title: "Demo Class",
+            url: "/appointment/reminder/demo-class",
+          },
+          {
+            title: "Normal Class",
+            url: "/appointment/reminder/normal-class",
+          },
+        ],
+      },
+      {
+        title: "Admnin Dashboard",
+        url: "/adminDashboard",
+        icon: LayoutDashboard,
+        isActive: false,
+      },
+      {
+        title: "Teacher View",
+        url: "/teacherView",
+        icon: View,
+      },
+    ],
+    navSecondary: [
+      {
+        title: "Support",
+        url: "#",
+        icon: LifeBuoy,
+      },
+      {
+        title: "Feedback",
+        url: "#",
+        icon: Send,
+      },
+    ],
+    // projects: [
+    //   {
+    //     name: "Upcoming Appointments",
+    //     url: "#",
+    //     icon: EqualApproximatelyIcon,
+    //   },
+    //   {
+    //     name: "Bulk Appointments",
+    //     url: "#",
+    //     icon: MessageCircleQuestion,
+    //   },
+    //   {
+    //     name: "Modify Appointments",
+    //     url: "#",
+    //     icon: Edit2Icon,
+    //   },
+    // ],
+  };
   return (
     <>
       {pathname !== "/login" && pathname !== "/signup" && (
