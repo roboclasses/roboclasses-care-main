@@ -77,7 +77,7 @@ export function SignupForm() {
                       required
                       autoComplete="name"
                       type="text"
-                      placeholder="Eg. Dev"
+                      placeholder="Eg. Guest"
                       className="h-12"
                     />
                   </FormControl>
@@ -101,7 +101,7 @@ export function SignupForm() {
                       required
                       autoComplete="email"
                       type="email"
-                      placeholder="Eg. devstidax@gmail.com"
+                      placeholder="Eg. guest@gmail.com"
                       className="h-12"
                     />
                   </FormControl>
