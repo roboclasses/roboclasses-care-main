@@ -22,7 +22,7 @@ import { toast } from "@/hooks/use-toast";
 
 const weekdays = ["Sun","Mon","Tues","Wed","Thu","Fri","Sat"]
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+const fetcher = (url: string) => axios.get(url, {headers:{ Authorization:localStorage.getItem("token") }}).then((res) => res.data);
 
 export function TableBatchEntries() {
   const { data, isLoading, isValidating, error, mutate } = useSWR<batchType[]>(NewBatchEntryUrl,fetcher);
@@ -30,7 +30,7 @@ export function TableBatchEntries() {
   // Handle delete a batch
   const handleDelete = async(id:string)=>{
     try {
-      const res = await axios.delete(`${NewBatchEntryUrl}/${id}`)
+      const res = await axios.delete(`${NewBatchEntryUrl}/${id}`, {headers:{ Authorization:localStorage.getItem("token") }})
       console.log(res.data);
 
       mutate((data)=>data?.filter((batch)=>batch._id !== id))

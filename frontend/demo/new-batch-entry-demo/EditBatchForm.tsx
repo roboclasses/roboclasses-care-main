@@ -116,7 +116,7 @@ export function EditBatchForm() {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      const res = await axios.put(`${NewBatchEntryUrl}/${id}`,data);
+      const res = await axios.put(`${NewBatchEntryUrl}/${id}`,data, {headers:{ Authorization:localStorage.getItem("token") }});
       console.log(res.data);
       form.reset();
       const {message} = res.data;
