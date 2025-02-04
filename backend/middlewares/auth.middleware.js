@@ -8,10 +8,12 @@ export const authMiddleware = (req, res, next) => {
     return res.status(403).json({ success: false, message: "JWT token is required" });
   }
 
+  // const token = auth.split(" ")[1];
+
   try {
     const decoded = jwt.verify(auth, process.env.JWT_SECRET);
     req.user = decoded;
-    console.log(req.user);
+    console.log(decoded);
     
     next();
   } catch (error) {

@@ -45,7 +45,7 @@ router.post('/login', authLimiter, async(req,res)=>{
             return res.status(403).json({success:false, message:"Invalid credential"})
         }
 
-        const jwtToken = jwt.sign({email:user.email, _id:user._id},process.env.JWT_SECRET,{expiresIn:"10d"})
+        const jwtToken = jwt.sign({email:user.email, _id:user._id, role:user.role},process.env.JWT_SECRET,{expiresIn:"10d"})
 
         return res.status(200).json({
             success:true, 

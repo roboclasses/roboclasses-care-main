@@ -22,7 +22,7 @@ import { toast } from "@/hooks/use-toast";
 
 const weekdays = ["Sun","Mon","Tues","Wed","Thu","Fri","Sat"]
 
-const fetcher = (url: string) => axios.get(url, {headers:{ Authorization:localStorage.getItem("token") }}).then((res) => res.data);
+const fetcher = (url: string) => axios.get(url, {headers:{ Authorization:localStorage.getItem("token")}}).then((res) => res.data);
 
 export function TableBatchEntries() {
   const { data, isLoading, isValidating, error, mutate } = useSWR<batchType[]>(NewBatchEntryUrl,fetcher);

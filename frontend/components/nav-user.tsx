@@ -41,6 +41,7 @@ export function NavUser({
     localStorage.removeItem('_id')
     localStorage.removeItem('name')
     localStorage.removeItem('email')
+    localStorage.removeItem('role')
     router.push('/login')
   }
   return (

@@ -113,7 +113,8 @@ export function NewBatchEntryForm() {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      const res = await axios.post(NewBatchEntryUrl,data, {headers:{ Authorization:localStorage.getItem("token") }});
+
+      const res = await axios.post(NewBatchEntryUrl,data, {headers:{ Authorization: localStorage.getItem("token") }});
       console.log(res.data);
       form.reset();
       toast({
