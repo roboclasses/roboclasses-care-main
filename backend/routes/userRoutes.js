@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post('/signup',authLimiter, async(req,res)=>{
     try {
-        const {name, email, password} = req.body;
+        const {name, email, password, role} = req.body;
         const user = await User.findOne({email})
 
         if(user)
@@ -18,7 +18,7 @@ router.post('/signup',authLimiter, async(req,res)=>{
         }
         const hashedPassword = await bcrypt.hash(password, 10)
 
-        const userModel = new User({name:name, email:email, password:hashedPassword})
+        const userModel = new User({name:name, email:email, role:role, password:hashedPassword})
         await userModel.save();
         
         return res.status(201).json({success:true, message:"Signed-up successfully"})
@@ -53,7 +53,8 @@ router.post('/login', authLimiter, async(req,res)=>{
             jwtToken, 
             _id:user._id, 
             name:user.name, 
-            email:user.email
+            email:user.email,
+            role:user.role,
         })
         
     } catch (error) {

@@ -34,13 +34,14 @@ export function LoginForm() {
     try {
       const res = await axios.post(LoginUrl, data);
       console.log(res.data);
-      const { message, status, success, jwtToken, _id, name, email } = res.data;
+      const { message, status, success, jwtToken, _id, name, email, role } = res.data;
 
       if (success) {
         localStorage.setItem("token", jwtToken),
         localStorage.setItem("_id", _id),
         localStorage.setItem("email", email),
         localStorage.setItem("name", name),
+        localStorage.setItem("role", role),
         router.push("/");
         toast({ title: "Success✅", description: message, variant: "default" });
       }
