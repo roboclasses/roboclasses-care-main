@@ -25,7 +25,10 @@ This project consists of a frontend and backend, both of which can be run locall
 
 ---
 
-## Setup Instructions
+## Login Instructions
+- **Admin Login**
+    Email Address: admin@roboclassess.com
+    Password: 123456
 
 ### Frontend
 
@@ -46,7 +49,7 @@ This project consists of a frontend and backend, both of which can be run locall
 
 1. **Install Dependencies**:
    ```bash
-     npm install
+   npm install
 
 2. **Start the Development Server**:
    ```bash
