@@ -9,3 +9,8 @@
 
 
 export const isAuthenticated = () => !!localStorage.getItem("token")
+
+
+export const isAdmin = ()=> localStorage.getItem("role") === "admin"
+
+export const isTeacher = ()=> localStorage.getItem("role") === "teacher" || localStorage.getItem("role") === "admin"

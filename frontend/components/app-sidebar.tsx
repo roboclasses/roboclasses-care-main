@@ -37,6 +37,7 @@ useEffect(()=>{
   setEmail(localStorage.getItem("email") || 'guest@gmail.com')
 },[pathname])
 
+
 const avatar = name.slice(0,2)
  
   const data = {
@@ -63,8 +64,8 @@ const avatar = name.slice(0,2)
         ],
       },
       {
-        title: "Admnin Dashboard",
-        url: "/adminDashboard",
+        title:  "Admnin Dashboard",
+        url:  "/adminDashboard",
         icon: LayoutDashboard,
         isActive: false,
       },

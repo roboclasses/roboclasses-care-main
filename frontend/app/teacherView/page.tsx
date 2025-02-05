@@ -1,4 +1,4 @@
-
+'use client'
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -9,10 +9,13 @@ import {
 } from "@/components/ui/breadcrumb";
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import AttendanceTable from "@/demo/teacher-view-demo/AttendanceTable";
+import { isTeacher } from "@/lib/auth";
 import { Separator } from "@radix-ui/react-separator";
+import { redirect } from "next/navigation";
 
 
 export default function page() {
+  if(!isTeacher()) redirect("/")
   return (
     <SidebarInset className="w-screen">
       <header className="flex h-16 shrink-0 items-center gap-2 border-b">

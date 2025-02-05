@@ -12,8 +12,11 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { EditBatchForm } from "@/demo/new-batch-entry-demo/EditBatchForm";
+import { isTeacher } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 const Page = () => {
+  if(!isTeacher()) redirect("/")
   return (
     <SidebarInset className="w-screen">
       <header className="flex h-16 shrink-0 items-center gap-2 border-b">

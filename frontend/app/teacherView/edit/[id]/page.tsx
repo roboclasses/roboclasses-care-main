@@ -13,11 +13,12 @@ import {
   TableCell
 } from "@/components/ui/table";
 import { toast } from "@/hooks/use-toast";
-import { useParams } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from '@/components/ui/breadcrumb';
 import { Separator } from '@radix-ui/react-separator';
 import { AttendanceUrl } from '@/constants';
+import { isTeacher } from '@/lib/auth';
 
 type Column = {
   id: string;
@@ -31,6 +32,7 @@ type Row = {
 };
 
 const AttendanceForm: React.FC = () => {
+  if(!isTeacher()) redirect("/")
   const [isLoading, setIsLoading] = useState(true);
   const [columns, setColumns] = useState<Column[]>([]);
   const [rows, setRows] = useState<Row[]>([]);

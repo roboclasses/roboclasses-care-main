@@ -1,11 +1,15 @@
+'use client'
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { NewBatchEntryForm } from "@/demo/new-batch-entry-demo/NewBatchEntry";
+import { isTeacher } from "@/lib/auth";
 import { Separator } from "@radix-ui/react-separator";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 import React from "react";
 
 const page = () => {
+  if(!isTeacher()) redirect("/")
   return (
     <SidebarInset className="w-screen">
     <header className="flex h-16 shrink-0 items-center gap-2 border-b">
