@@ -7,7 +7,7 @@ import { authLimiter } from "../config/rateLimits.js"
 
 const router = express.Router();
 
-router.post('/signup',authLimiter, async(req,res)=>{
+router.post('/auth/signup',authLimiter, async(req,res)=>{
     try {
         const {name, email, password, role} = req.body;
         const user = await User.findOne({email})
@@ -29,7 +29,7 @@ router.post('/signup',authLimiter, async(req,res)=>{
     }
 })
 
-router.post('/login', authLimiter, async(req,res)=>{
+router.post('/auth/login', authLimiter, async(req,res)=>{
     try {
         const {email, password} = req.body;
 
