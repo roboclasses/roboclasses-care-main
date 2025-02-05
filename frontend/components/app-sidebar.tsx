@@ -1,6 +1,7 @@
 "use client";
 import * as React from "react";
 import {
+  BookIcon,
   LayoutDashboard,
   LifeBuoy,
   Send,
@@ -68,9 +69,14 @@ const avatar = name.slice(0,2)
         isActive: false,
       },
       {
-        title: "Teacher View",
+        title: "Teachers View",
         url: "/teacherView",
         icon: View,
+      },
+      {
+        title: "New Batch Entry",
+        url: "/newBatchEntry",
+        icon: BookIcon,
       },
     ],
     navSecondary: [
