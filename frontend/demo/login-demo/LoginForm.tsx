@@ -34,7 +34,7 @@ export function LoginForm() {
     try {
       const res = await axios.post(LoginUrl, data);
       console.log(res.data);
-      const { message, status, success, jwtToken, _id, name, email, role } = res.data;
+      const { message, success, jwtToken, _id, name, email, role } = res.data;
 
       if (success) {
         localStorage.setItem("token", jwtToken),
@@ -45,22 +45,13 @@ export function LoginForm() {
         router.push("/");
         toast({ title: "Success✅", description: message, variant: "default" });
       }
-      else{
-        if(status === 404)
-        {
-          toast({title:"Failed", description: message, variant:"destructive"})
-        }
-        else if(status === 403)
-        {
-          toast({title:"Failed", description: message, variant:"destructive"})
-
-        }
-      }
-    } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error:any) {
+      const {message} = error.response.data;
       console.log(error);
       toast({
         title: "Failed",
-        description: "Unable to login",
+        description: message || "Unable to login",
         variant: "destructive",
       });
     }

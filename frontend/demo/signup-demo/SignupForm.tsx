@@ -37,23 +37,20 @@ export function SignupForm() {
     try {
       const res = await axios.post(SignupUrl, data);
       console.log(res.data);
-      const { message, status, success } = res.data;
+      const { message, success } = res.data;
 
       if (success) {
         router.push("/login");
         toast({ title: "Success✅", description: message, variant: "default" });
       }
-      else{
-        if(status === 409)
-        {
-          toast({title:"Failed", description: message, variant:"destructive"})
-        }
-      }
-    } catch (error) {
+      
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error:any) {
+      const {message} = error.response.data;
       console.log(error);
       toast({
         title: "Failed",
-        description: "Unable to signup",
+        description: message || "Unable to signup",
         variant: "destructive",
       });
     }
