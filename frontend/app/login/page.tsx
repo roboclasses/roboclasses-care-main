@@ -1,4 +1,3 @@
-'use client'
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -6,11 +5,8 @@ import React from "react";
 import sideImage from "@/public/assests/images/wallpaper.webp";
 import logo from "@/public/assests/images/logo.svg"
 import { LoginForm } from "@/demo/login-demo/LoginForm";
-import { isAuthenticated } from "@/lib/auth";
-import { redirect } from "next/navigation";
 
 const page = () => {
-  if(isAuthenticated()) redirect('/')
   return (
     <div className="grid grid-cols-2">
       <Image

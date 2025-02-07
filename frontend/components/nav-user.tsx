@@ -22,6 +22,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { useRouter } from "next/navigation"
+import { deleteUserSession } from "@/lib/session"
 
 export function NavUser({
   user,
@@ -36,12 +37,13 @@ export function NavUser({
   const router = useRouter();
 
   // Handle logout
-  const handleLogout = ()=>{
-    localStorage.removeItem('token')
-    localStorage.removeItem('_id')
-    localStorage.removeItem('name')
-    localStorage.removeItem('email')
-    localStorage.removeItem('role')
+  const handleLogout = async()=>{
+    // localStorage.removeItem('token')
+    // localStorage.removeItem('_id')
+    // localStorage.removeItem('name')
+    // localStorage.removeItem('email')
+    // localStorage.removeItem('role')
+    await deleteUserSession();
     router.push('/login')
   }
   return (

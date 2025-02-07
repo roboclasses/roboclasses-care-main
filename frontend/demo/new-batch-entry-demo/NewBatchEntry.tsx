@@ -1,11 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,11 +12,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
 import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
-import axios from "axios";
-
 import {
   Table,
   TableBody,
@@ -30,6 +24,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { NewBatchEntryUrl } from "@/constants";
+
+import axios from "axios";
+import Cookies from 'js-cookie'
+
 
 const weekdays = [
   {
@@ -114,7 +112,7 @@ export function NewBatchEntryForm() {
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
 
-      const res = await axios.post(NewBatchEntryUrl,data, {headers:{ Authorization: localStorage.getItem("token") }});
+      const res = await axios.post(NewBatchEntryUrl,data, {headers:{ Authorization: Cookies.get("token") }});
       console.log(res.data);
       form.reset();
       toast({

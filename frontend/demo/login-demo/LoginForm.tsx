@@ -13,6 +13,7 @@ import SubmitButton from "../button-demo/SubmitButton";
 import { FormField, FormItem, FormControl, Form } from "@/components/ui/form";
 import { toast } from "@/hooks/use-toast";
 import { LoginUrl } from "@/constants";
+import { createUserSession } from "@/lib/session";
 
 const FormSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email" }),
@@ -37,11 +38,12 @@ export function LoginForm() {
       const { message, success, jwtToken, _id, name, email, role } = res.data;
 
       if (success) {
-        localStorage.setItem("token", jwtToken),
-        localStorage.setItem("_id", _id),
-        localStorage.setItem("email", email),
-        localStorage.setItem("name", name),
-        localStorage.setItem("role", role),
+        // localStorage.setItem("token", jwtToken),
+        // localStorage.setItem("_id", _id),
+        // localStorage.setItem("email", email),
+        // localStorage.setItem("name", name),
+        // localStorage.setItem("role", role),
+        await createUserSession(jwtToken, role, _id, email, name)
         router.push("/");
         toast({ title: "Success✅", description: message, variant: "default" });
       }

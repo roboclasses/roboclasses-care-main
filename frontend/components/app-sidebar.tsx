@@ -22,28 +22,34 @@ import {
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import Image from "next/image";
+import { getUserSession } from "@/lib/session";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 
-export  function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const pathname = usePathname();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("")
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+const pathname = usePathname();
+const [name, setName] = useState("")
+const [email, setEmail] = useState("")
+const [avatar, setAvatar] = useState("")
 
-// get user's credentials from localstorage
+// Fetch user credentials to set user profile
 useEffect(()=>{
-  setName(localStorage.getItem("name") || 'Guest')
-  setEmail(localStorage.getItem("email") || 'guest@gmail.com')
+  const fetchUserSession = async()=>{
+    const user = await getUserSession();
+    setName(user.name || 'Guest')
+    setEmail(user.email || 'guest@gmail.com')
+    setAvatar(user.name?.slice(0,2) || 'G')
+  }
+  fetchUserSession();
+
 },[pathname])
 
-
-const avatar = name.slice(0,2)
  
   const data = {
     user: {
-      name: name,
-      email: email,
+      name: name ,
+      email: email ,
       avatar: avatar,
     },
     navMain: [

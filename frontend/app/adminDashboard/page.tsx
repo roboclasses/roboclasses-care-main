@@ -15,12 +15,8 @@ import { TableNormalClass } from "@/demo/admin-dashboard/TableNormalClass";
 import { Separator } from "@radix-ui/react-separator";
 import React from "react";
 import { TableAttendance } from "@/demo/admin-dashboard/TableAttendance";
-import { isAdmin, isAuthenticated } from "@/lib/auth";
-import { redirect } from "next/navigation";
 
 const page = () => {
-  if(!isAuthenticated()) redirect('/login')
-  if(!isAdmin())  redirect('/')
   return (
     <SidebarInset className="w-screen">
       <header className="flex h-16 shrink-0 items-center gap-2 border-b">
