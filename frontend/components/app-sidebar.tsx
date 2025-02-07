@@ -37,13 +37,12 @@ const [avatar, setAvatar] = useState("")
 useEffect(()=>{
   const fetchUserSession = async()=>{
     const user = await getUserSession();
-    setName(user.name || 'Guest')
+    setName(user.name || 'Guest')  
     setEmail(user.email || 'guest@gmail.com')
     setAvatar(user.name?.slice(0,2) || 'G')
   }
   fetchUserSession();
-
-},[pathname])
+},[])
 
  
   const data = {
