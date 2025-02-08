@@ -42,7 +42,7 @@ useEffect(()=>{
     setAvatar(user.name?.slice(0,2) || 'G')
   }
   fetchUserSession();
-},[])
+},[pathname])
 
  
   const data = {
