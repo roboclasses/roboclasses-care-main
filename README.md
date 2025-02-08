@@ -26,9 +26,8 @@ This project consists of a frontend and backend, both of which can be run locall
 ---
 
 ## Login Instructions
-- **Admin Login**
-    Email Address: admin@roboclassess.com
-    Password: 123456
+- **Email Address**: admin@roboclassess.com
+- **Password**: 123456
 
 ### Frontend
 
