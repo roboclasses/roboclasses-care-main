@@ -101,7 +101,7 @@ export function LoginForm() {
                       required
                       autoComplete="password"
                       type="password"
-                      placeholder="Enter a strong password"
+                      placeholder="Please confirm your password"
                       className="h-12"
                     />
                   </FormControl>
