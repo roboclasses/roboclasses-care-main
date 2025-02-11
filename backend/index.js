@@ -32,7 +32,8 @@ app.use('/api/v1',normalClassAppointmentsRoute)
 app.use('/api/v1',userRoutes)
 
 // listning on port
-const PORT = 8002;
-app.listen(PORT || 5000, () => {
-  console.log(`server running on http://localhost:${PORT}`);
+const port = process.env.PORT;
+const host = process.env.HOST;
+app.listen(port || 5000, () => {
+  console.log(`server running on http://${host}:${port}`);
 });
