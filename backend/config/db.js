@@ -3,7 +3,7 @@ import  dotenv from "dotenv"
 dotenv.config();
 
 export const dbConnect = async () => {
-  const dbURL = process.env.MONGO_URL || `mongodb://${process.env.MONGOUSER}:${process.env.MONGOPASSWORD}@${process.env.MONGOHOST}:${process.env.MONGOPORT}/`
+  const dbURL = `mongodb://${process.env.MONGOUSER}:${process.env.MONGOPASSWORD}@${process.env.MONGOHOST}:${process.env.MONGOPORT}/`
   try {
     // await mongoose.connect(process.env.MONGO_URI, { dbName: process.env.DB_NAME });
 
