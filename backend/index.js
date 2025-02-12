@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 import helmet from "helmet";
 
 import { dbConnect } from "./config/db.js";
-
 import appointmentsRoute from "./routes/appointmentsRoute.js"
 import newBatchEntryRoute from "./routes/newBatchEntryRoute.js"
 import attendancesRoute from "./routes/attendancesRoute.js"
@@ -18,8 +17,8 @@ const app = express();
 dbConnect();
 
 // middlewares
-// app.use(cors());
-app.use(cors({credentials:true, origin:["https://app-roboclasses-care.up.railway.app"]}))
+app.use(cors());
+// app.use(cors({credentials:true, origin:["https://app-roboclasses-care.up.railway.app"]}))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
