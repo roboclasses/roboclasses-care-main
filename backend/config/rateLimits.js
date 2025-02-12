@@ -5,5 +5,5 @@ export const authLimiter = rateLimit({
     limit: 30,
     standardHeaders: "draft-7",
     legacyHeaders: false,
-    validate: {trustProxy: false}
+    validate: {trustProxy: false, xForwardedForHeader: false}
 })
