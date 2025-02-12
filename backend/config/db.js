@@ -11,6 +11,5 @@ export const dbConnect = async () => {
     console.log("mongodb connected");
   } catch (error) {
     console.error(error);
-    throw new Error("mongodb failed to connect")
   }
 };
