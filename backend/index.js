@@ -14,6 +14,9 @@ import userRoutes from "./routes/userRoutes.js"
 dotenv.config();
 const app = express();
 
+// Trust the X-Forwarded-For header
+app.set('trust proxy', true);
+
 // connect to db
 dbConnect();
 
