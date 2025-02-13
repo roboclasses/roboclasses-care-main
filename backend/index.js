@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 import helmet from "helmet";
 
 import { dbConnect } from "./config/db.js";
-
 import appointmentsRoute from "./routes/appointmentsRoute.js"
 import newBatchEntryRoute from "./routes/newBatchEntryRoute.js"
 import attendancesRoute from "./routes/attendancesRoute.js"
@@ -34,7 +33,8 @@ app.use('/api/v1',userRoutes)
 
 // listning on port
 const port = process.env.PORT || 5000;
-const host = process.env.HOST;
+const host = process.env.HOST || 'localhost' ;
+
 app.listen(port, host, () => {
-  console.log(`server running on http://localhost:${port}`);
+  console.log(`server running on http://${host}:${port}`);
 });
