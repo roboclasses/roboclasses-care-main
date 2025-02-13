@@ -77,7 +77,7 @@ export function LoginForm() {
                       required
                       autoComplete="email"
                       type="email"
-                      placeholder="Eg. guest@gmail.com"
+                      placeholder="Enter your email address"
                       className="h-12"
                     />
                   </FormControl>
