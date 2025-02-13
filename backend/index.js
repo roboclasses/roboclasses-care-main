@@ -32,8 +32,9 @@ app.use('/api/v1',normalClassAppointmentsRoute)
 app.use('/api/v1',userRoutes)
 
 // listning on port
-const port = process.env.PORT;
-const host = process.env.HOST;
-app.listen(port || 5000, () => {
+const port = process.env.PORT || 5000;
+// const host = process.env.HOST;
+const host = '0.0.0.0'
+app.listen(port, host, () => {
   console.log(`server running on http://${host}:${port}`);
 });
