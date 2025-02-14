@@ -1,10 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,11 +10,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
 import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-
 import {
   Table,
   TableBody,
@@ -29,12 +22,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import axios from "axios";
-import { NormalClassUrl } from "@/constants";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getUserSession } from "@/lib/session";
+import { NormalClassUrl } from "@/constants";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import axios from "axios";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const items = [
   {
@@ -78,29 +75,7 @@ const weekdays = [
   },
 ];
 
-const times = [
-  {
-    id: new Date().toLocaleTimeString().substring(11, 16),
-  },
-  {
-    id: new Date().toLocaleTimeString().substring(11, 16),
-  },
-  {
-    id: new Date().toLocaleTimeString().substring(12, 18),
-  },
-  {
-    id: new Date().toLocaleTimeString().substring(15, 20),
-  },
-  {
-    id: new Date().toLocaleTimeString().substring(10, 23),
-  },
-  {
-    id: new Date().toLocaleTimeString().substring(16, 21),
-  },
-  {
-    id: new Date().toLocaleTimeString().substring(17, 24),
-  },
-];
+const times = [{id:0},{id:1},{id:2},{id:3},{id:4},{id:5},{id:6}]
 
 const teachers = [{id:1, name:"Kritika Maheswari"},{id:2, name:"Monty"},{id:3, name:"Kiruthika PK"},{id:4, name:"Pal Gudka"}]
 
@@ -143,7 +118,7 @@ export function MultiDatePickerForm() {
     defaultValues: {
       teacher: "",
       batch: "Prime B21",
-      time: ["sun", "mon", "tue", "wed", "thu", "fri", "sat"],
+      time: ["", "", "", "", "", "", ""],
       items: ["1hour"],
     },
   });
@@ -178,8 +153,8 @@ export function MultiDatePickerForm() {
           <TableCaption>A list of weekdays with time slot</TableCaption>
           <TableHeader>
             <TableRow>
-              {weekdays.map((item, index) => (
-                <TableHead className="w-[100px]" key={index}>
+              {weekdays.map((item) => (
+                <TableHead className="w-[100px]" key={item.id}>
                   {item.label}
                 </TableHead>
               ))}
@@ -187,11 +162,11 @@ export function MultiDatePickerForm() {
           </TableHeader>
           <TableBody>
             <TableRow>
-              {times.map((item, index) => (
-                <TableCell className="font-medium" key={index}>
+              {times.map((item) => (
+                <TableCell className="font-medium" key={item.id}>
                   <FormField
                     control={form.control}
-                    name={`time.${index}`}
+                    name={`time.${item.id}`}
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>

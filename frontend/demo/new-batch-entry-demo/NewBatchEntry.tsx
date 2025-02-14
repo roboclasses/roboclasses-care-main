@@ -63,29 +63,7 @@ const weekdays = [
   },
 ];
 
-const times = [
-  {
-    id: new Date().toLocaleTimeString().substring(11, 16),
-  },
-  {
-    id: new Date().toLocaleTimeString().substring(11, 16),
-  },
-  {
-    id: new Date().toLocaleTimeString().substring(12, 18),
-  },
-  {
-    id: new Date().toLocaleTimeString().substring(15, 20),
-  },
-  {
-    id: new Date().toLocaleTimeString().substring(10, 23),
-  },
-  {
-    id: new Date().toLocaleTimeString().substring(16, 21),
-  },
-  {
-    id: new Date().toLocaleTimeString().substring(17, 24),
-  },
-];
+const times = [{id:0},{id:1},{id:2},{id:3},{id:4},{id:5},{id:6}]
 
 const teachers = [{id:1, name:"Kritika Maheswari"},{id:2, name:"Monty"},{id:3, name:"Kiruthika PK"},{id:4, name:"Pal Gudka"}]
 
@@ -123,7 +101,7 @@ export function NewBatchEntryForm() {
     defaultValues: {
       teacher: "",
       batch: "",
-      time: ["sun", "mon", "tue", "wed", "thu", "fri", "sat"],
+      time: ["", "", "", "", "", "", ""],
     },
   });
 
@@ -171,11 +149,11 @@ export function NewBatchEntryForm() {
           </TableHeader>
           <TableBody>
             <TableRow>
-              {times.map((item, index) => (
-                <TableCell className="font-medium" key={index}>
+              {times.map((item) => (
+                <TableCell className="font-medium" key={item.id}>
                   <FormField
                     control={form.control}
-                    name={`time.${index}`}
+                    name={`time.${item.id}`}
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
