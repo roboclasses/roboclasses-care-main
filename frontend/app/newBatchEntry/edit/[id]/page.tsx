@@ -47,7 +47,7 @@ const Page = () => {
           className="min-h-screen object-cover"
         />
         <div className="w-[700px] flex flex-col justify-center p-20 gap-5">
-          <p className="text-4xl font-bold">Edit Attendance</p>
+          <p className="text-4xl font-bold">Edit Batch</p>
           <EditBatchForm />
         </div>
       </div>
