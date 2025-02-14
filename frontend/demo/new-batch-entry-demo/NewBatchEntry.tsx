@@ -26,8 +26,11 @@ import {
 import { NewBatchEntryUrl } from "@/constants";
 
 import axios from "axios";
-import Cookies from 'js-cookie'
-
+import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
+import { getUserSession } from "@/lib/session";
+import { usePathname } from "next/navigation";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const weekdays = [
   {
@@ -84,8 +87,9 @@ const times = [
   },
 ];
 
-const FormSchema = z.object({
+const teachers = [{id:1, name:"Kritika Maheswari"},{id:2, name:"Monty"},{id:3, name:"Kiruthika PK"},{id:4, name:"Pal Gudka"}]
 
+const FormSchema = z.object({
   batch: z
     .string()
     .min(1, { message: "Batch number must contain atleast 1 character" }),
@@ -100,6 +104,20 @@ const FormSchema = z.object({
 });
 
 export function NewBatchEntryForm() {
+  const pathname = usePathname();
+  const [name, setName] = useState("");
+  const [role, setRole] = useState("");
+  
+// For fetching logged-in users name and role
+  useEffect(() => {
+    const handleFetch = async () => {
+      const user = await getUserSession();
+      setRole(user.role || "");
+      setName(user.name || "");
+    };
+    handleFetch();
+  }, [pathname]);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -109,27 +127,29 @@ export function NewBatchEntryForm() {
     },
   });
 
+
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-
-      const res = await axios.post(NewBatchEntryUrl,data, {headers:{ Authorization: Cookies.get("token") }});
+      const res = await axios.post(NewBatchEntryUrl, data, {
+        headers: { Authorization: Cookies.get("token") },
+      });
       console.log(res.data);
       form.reset();
+      
+      const {message} = res.data;
       toast({
         title: "Success✅",
-        description: "New batch has been created",
-        variant:"default"
+        description: message || "New batch has been created",
+        variant: "default",
       });
     } catch (error) {
       console.error(error);
       toast({
-        title: "Failed ",
+        title: "Failed",
         description: "Unable to create batch",
-        variant:"destructive"
+        variant: "destructive",
       });
     }
-
-   
   }
 
   return (
@@ -191,24 +211,31 @@ export function NewBatchEntryForm() {
           )}
         />
         <FormField
-          control={form.control}
-          name="teacher"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-semibold">Teacher Name</FormLabel>
-
-              <FormControl>
-                <Input
-                  placeholder="e.g. Monty"
-                  {...field}
-                  required
-                  className="bg-white"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+              control={form.control}
+              name="teacher"
+              render={({ field }) => (
+                <FormItem>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    required
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select teacher"/>
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {role === "teacher" ? 
+                        <SelectItem value={name}>{name}</SelectItem> : 
+                          role === "admin" ? 
+                            teachers.map((item)=>(<SelectItem value={item.name} key={item.id}>{item.name}</SelectItem>)) : 
+                              '' }
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
 
         <Button type="submit">Submit</Button>
       </form>
