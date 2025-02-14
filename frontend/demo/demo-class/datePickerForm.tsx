@@ -23,6 +23,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import axios from "axios";
 import PhoneInput from "react-phone-input-2";
 import { DemoClassUrl } from "@/constants";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { getUserSession } from "@/lib/session";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 // for mapping checkbox value and label
 const items = [
@@ -35,6 +39,9 @@ const items = [
     label: "1 Hour",
   },
 ];
+
+const teachers = [{id:1, name:"Kritika Maheswari"},{id:2, name:"Monty"},{id:3, name:"Kiruthika PK"},{id:4, name:"Pal Gudka"}]
+
 
 const FormSchema = z.object({date: z.string({ required_error: "A date is required." }),
 
@@ -52,6 +59,20 @@ const FormSchema = z.object({date: z.string({ required_error: "A date is require
 });
 
 export function DatePickerForm() {
+  const pathname = usePathname();
+  const [name, setName] = useState("");
+  const [role, setRole] = useState("");
+  
+// For fetching logged-in users name and role
+  useEffect(() => {
+    const handleFetch = async () => {
+      const user = await getUserSession();
+      setRole(user.role || "");
+      setName(user.name || "");
+    };
+    handleFetch();
+  }, [pathname]);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -148,23 +169,30 @@ export function DatePickerForm() {
           )}
         />
         <FormField
-          control={form.control}
-          name="teacher"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-semibold">Teacher Name</FormLabel>
-
-              <FormControl>
-                <Input
-                  placeholder="type your teacher name"
-                  {...field}
-                  required
-                  className="bg-white"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+            control={form.control}
+              name="teacher"
+              render={({ field }) => (
+                <FormItem>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    required
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select teacher"/>
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {role === "teacher" ? 
+                        <SelectItem value={name}>{name}</SelectItem> : 
+                          role === "admin" ? 
+                            teachers.map((item)=>(<SelectItem value={item.name} key={item.id}>{item.name}</SelectItem>)) : 
+                              '' }
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+            )}
         />
         <FormField
           control={form.control}

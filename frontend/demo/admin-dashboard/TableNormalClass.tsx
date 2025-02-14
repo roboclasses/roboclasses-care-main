@@ -10,21 +10,23 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { EditButton } from "./EditButton";
-import axios from "axios";
-import useSWR from "swr";
-import { normalClassType } from "@/types/Types";
-import Link from "next/link";
 import { NormalClassUrl } from "@/constants";
 import { toast } from "@/hooks/use-toast";
+import { normalClassType } from "@/types/Types";
+
+import axios from "axios";
+import useSWR from "swr";
+import Link from "next/link";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
-// For map the row labels
-const weekdays = ["Sun", "Mon", "Tues", "Wed", "Thu", "Fri", "Sat"];
+// For mapping weekdays in time cell
+const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export function TableNormalClass() {
   const { data, isLoading, isValidating, error, mutate } = useSWR<normalClassType[]>(NormalClassUrl, fetcher);
 
+  
   // handle delete appointment for normal class
   const handleDelete = async (id: string) => {
     try {
@@ -47,6 +49,16 @@ export function TableNormalClass() {
   if (isLoading) return <div>Loading...</div>;
   if (isValidating) return <div>Refershing data...</div>;
 
+
+  // Function to format time for Normal Class appointment
+  const handleTime = (timeArray: string[]) => {
+    return timeArray
+      .map((time, index) => (time !== "" ? `${weekdays[index]} - ${time}` : null)) 
+      .filter((time) => time !== null) 
+      .join(", "); 
+  };
+
+
   return (
     <Table className="border border-black">
       <TableCaption>
@@ -66,16 +78,7 @@ export function TableNormalClass() {
           <TableRow key={appointment._id}>
             <TableCell>{appointment.teacher}</TableCell>
             <TableCell>{appointment.batch}</TableCell>
-            <TableCell className="text-right">
-              <TableRow>
-                <TableCell>{weekdays.map((day) => day).join(" | ")}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>
-                  {appointment.time.map((value) =>!isNaN(parseInt(value[0], 10)) ? value : "N/A").join(" | ")}
-                </TableCell>
-              </TableRow>
-            </TableCell>
+            <TableCell className="text-right"> {handleTime(appointment.time)} </TableCell>
             <TableCell>
               <Link href={`/appointment/reminder/normal-class/edit/${appointment._id}`}>
               <EditButton name="Edit" type="button" />

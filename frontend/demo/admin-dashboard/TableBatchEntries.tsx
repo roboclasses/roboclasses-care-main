@@ -48,6 +48,14 @@ export function TableBatchEntries() {
  if (isValidating) return <div>Refreshing...</div>;
  if (data?.length === 0) return <div>Empty list for Batches</div>;
 
+ // Format time for batch entries
+ const handleTime = (timeArray:string[])=>{
+  return timeArray
+    .map((time, index)=> time!=='' ? `${weekdays[index]} - ${time}` : null)
+    .filter((time)=>time!==null)
+    .join(", ")
+ }
+
   return (
     <Table className="border border-black">
       <TableCaption>A list of batches</TableCaption>
@@ -65,18 +73,7 @@ export function TableBatchEntries() {
           <TableRow key={batch._id}>
             <TableCell className="font-medium">{batch.teacher}</TableCell>
             <TableCell>{batch.batch}</TableCell>
-            <TableCell className="text-right">
-              <TableRow>
-                <TableCell>
-                  {weekdays.map((day)=>(day)).join(' | ')}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>
-                  {batch.time.map((value) =>!isNaN(parseInt(value[0], 10)) ? value : "N/A").join(" | ")}
-                </TableCell>
-              </TableRow>
-            </TableCell>
+            <TableCell className="text-right"> {handleTime(batch.time)} </TableCell>
             <TableCell className="text-right">
               <Link href={`/newBatchEntry/edit/${batch._id}`}>
               <EditButton name="Edit" type="button" />

@@ -27,7 +27,10 @@ import { NewBatchEntryUrl } from "@/constants";
 
 import axios from "axios";
 import Cookies from 'js-cookie'
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { getUserSession } from "@/lib/session";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const weekdays = [
   {
@@ -60,29 +63,9 @@ const weekdays = [
   },
 ];
 
-const times = [
-  {
-    id: new Date().toLocaleTimeString().substring(11, 16),
-  },
-  {
-    id: new Date().toLocaleTimeString().substring(11, 16),
-  },
-  {
-    id: new Date().toLocaleTimeString().substring(12, 18),
-  },
-  {
-    id: new Date().toLocaleTimeString().substring(15, 20),
-  },
-  {
-    id: new Date().toLocaleTimeString().substring(10, 23),
-  },
-  {
-    id: new Date().toLocaleTimeString().substring(16, 21),
-  },
-  {
-    id: new Date().toLocaleTimeString().substring(17, 24),
-  },
-];
+const times = [{id:0},{id:1},{id:2},{id:3},{id:4},{id:5},{id:6}]
+
+const teachers = [{id:1, name:"Kritika Maheswari"},{id:2, name:"Monty"},{id:3, name:"Kiruthika PK"},{id:4, name:"Pal Gudka"}]
 
 const FormSchema = z.object({
 
@@ -100,12 +83,26 @@ const FormSchema = z.object({
 });
 
 export function EditBatchForm() {
+  const pathname = usePathname();
+  const [name, setName] = useState("");
+  const [role, setRole] = useState("");
+  
+// For fetching logged-in users name and role
+  useEffect(() => {
+    const handleFetch = async () => {
+      const user = await getUserSession();
+      setRole(user.role || "");
+      setName(user.name || "");
+    };
+    handleFetch();
+  }, [pathname]);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       teacher: "",
       batch: "",
-      time: ["sun", "mon", "tue", "wed", "thu", "fri", "sat"],
+      time: ["", "", "", "", "", "", ""],
     },
   });
 
@@ -152,11 +149,11 @@ export function EditBatchForm() {
           </TableHeader>
           <TableBody>
             <TableRow>
-              {times.map((item, index) => (
-                <TableCell className="font-medium" key={index}>
+              {times.map((item) => (
+                <TableCell className="font-medium" key={item.id}>
                   <FormField
                     control={form.control}
-                    name={`time.${index}`}
+                    name={`time.${item.id}`}
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
@@ -191,23 +188,30 @@ export function EditBatchForm() {
             </FormItem>
           )}
         />
-        <FormField
+       <FormField
           control={form.control}
-          name="teacher"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-semibold">Teacher Name</FormLabel>
-
-              <FormControl>
-                <Input
-                  placeholder="e.g. Monty"
-                  {...field}
-                  required
-                  className="bg-white"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+              name="teacher"
+              render={({ field }) => (
+                <FormItem>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    required
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select teacher"/>
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {role === "teacher" ? 
+                        <SelectItem value={name}>{name}</SelectItem> : 
+                          role === "admin" ? 
+                            teachers.map((item)=>(<SelectItem value={item.name} key={item.id}>{item.name}</SelectItem>)) : 
+                              '' }
+                    </SelectContent>
+                  </Select>
+                </FormItem>
           )}
         />
 
