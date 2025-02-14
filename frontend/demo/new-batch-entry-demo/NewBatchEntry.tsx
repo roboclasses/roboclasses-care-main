@@ -211,7 +211,7 @@ export function NewBatchEntryForm() {
           )}
         />
         <FormField
-              control={form.control}
+            control={form.control}
               name="teacher"
               render={({ field }) => (
                 <FormItem>
@@ -234,8 +234,8 @@ export function NewBatchEntryForm() {
                     </SelectContent>
                   </Select>
                 </FormItem>
-              )}
-            />
+            )}
+        />
 
         <Button type="submit">Submit</Button>
       </form>

@@ -31,6 +31,10 @@ import {
 } from "@/components/ui/table";
 import axios from "axios";
 import { NormalClassUrl } from "@/constants";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { getUserSession } from "@/lib/session";
 
 const items = [
   {
@@ -98,6 +102,9 @@ const times = [
   },
 ];
 
+const teachers = [{id:1, name:"Kritika Maheswari"},{id:2, name:"Monty"},{id:3, name:"Kiruthika PK"},{id:4, name:"Pal Gudka"}]
+
+
 const FormSchema = z.object({
   time: z.array(z.string()).refine((value) => value.some((item) => item), {
     message: "You have to select at least one time.",
@@ -116,6 +123,21 @@ const FormSchema = z.object({
 });
 
 export function MultiDatePickerForm() {
+  const pathname = usePathname();
+  const [name, setName] = useState("");
+  const [role, setRole] = useState("");
+  
+// For fetching logged-in users name and role
+  useEffect(() => {
+    const handleFetch = async () => {
+      const user = await getUserSession();
+      setRole(user.role || "");
+      setName(user.name || "");
+    };
+    handleFetch();
+  }, [pathname]);
+
+
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -201,21 +223,28 @@ export function MultiDatePickerForm() {
         />
         <FormField
           control={form.control}
-          name="teacher"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-semibold">Teacher Name</FormLabel>
-
-              <FormControl>
-                <Input
-                  placeholder="Enter your teacher name"
-                  {...field}
-                  required
-                  className="bg-white"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+              name="teacher"
+              render={({ field }) => (
+                <FormItem>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    required
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select teacher"/>
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {role === "teacher" ? 
+                        <SelectItem value={name}>{name}</SelectItem> : 
+                          role === "admin" ? 
+                            teachers.map((item)=>(<SelectItem value={item.name} key={item.id}>{item.name}</SelectItem>)) : 
+                              '' }
+                    </SelectContent>
+                  </Select>
+                </FormItem>
           )}
         />
 
