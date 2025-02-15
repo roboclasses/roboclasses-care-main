@@ -4,6 +4,7 @@ import {
   BookIcon,
   LayoutDashboard,
   LifeBuoy,
+  School,
   Send,
   SquareTerminal,
   View,
@@ -83,6 +84,11 @@ useEffect(()=>{
       {
         title: "New Batch Entry",
         url: "/newBatchEntry",
+        icon: School,
+      },
+      {
+        title: "New Course Entry",
+        url: "/courseEntry",
         icon: BookIcon,
       },
     ],

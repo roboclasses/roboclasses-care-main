@@ -9,6 +9,7 @@ import newBatchEntryRoute from "./routes/newBatchEntryRoute.js"
 import attendancesRoute from "./routes/attendancesRoute.js"
 import normalClassAppointmentsRoute from "./routes/normalClassAppointmentsRoute.js"
 import userRoutes from "./routes/userRoutes.js"
+import courseRoutes from "./routes/courseRoute.js"
 
 dotenv.config();
 const app = express();
@@ -25,11 +26,12 @@ app.use(helmet());
 
 
 // routes
-app.use('/api/v1',appointmentsRoute)
-app.use('/api/v1', newBatchEntryRoute)
-app.use('/api/v1',attendancesRoute)
-app.use('/api/v1',normalClassAppointmentsRoute)
 app.use('/api/v1',userRoutes)
+app.use('/api/v1',appointmentsRoute)
+app.use('/api/v1',normalClassAppointmentsRoute)
+app.use('/api/v1', newBatchEntryRoute)
+app.use('/api/v1',courseRoutes)
+app.use('/api/v1',attendancesRoute)
 
 // listning on port
 const port = process.env.PORT || 5000;
