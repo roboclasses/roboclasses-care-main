@@ -16,6 +16,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { DemoClassUrl } from "@/constants";
+import { PRIVATE_WALLPAPER } from "@/constants/images";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const [date, setDate] = useState<Date>(new Date());
@@ -102,7 +103,7 @@ const Page = ({ params }: { params: { id: string } }) => {
         <Image
           width={1200}
           height={1200}
-          src={"/assests/images/spikeprime.webp"}
+          src={PRIVATE_WALLPAPER}
           alt="wallpaper"
           className="min-h-screen object-cover"
         />

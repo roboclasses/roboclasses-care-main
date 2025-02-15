@@ -12,6 +12,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { EditNormalClassForm } from "@/demo/normal-class/EditNormalClassForm";
+import { PRIVATE_WALLPAPER } from "@/constants/images";
 
 const Page = () => {
   return (
@@ -43,7 +44,7 @@ const Page = () => {
         <Image
           width={1200}
           height={1200}
-          src={"/assests/images/spikeprime.webp"}
+          src={PRIVATE_WALLPAPER}
           alt="wallpaper"
           className="min-h-screen object-cover"
         />

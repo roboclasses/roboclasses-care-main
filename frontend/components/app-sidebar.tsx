@@ -25,6 +25,7 @@ import Image from "next/image";
 import { getUserSession } from "@/lib/session";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { LOGO_IMG } from "@/constants/images";
 
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -126,7 +127,7 @@ useEffect(()=>{
                 <SidebarMenuButton size="lg" asChild>
                   <Link href="/">
                     <Image
-                      src={"/assests/images/logo.svg"}
+                      src={LOGO_IMG}
                       height={100}
                       width={150}
                       alt="robo-class-logo"
