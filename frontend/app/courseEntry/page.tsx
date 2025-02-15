@@ -1,21 +1,16 @@
-'use client'
 import {
   Breadcrumb,
+  BreadcrumbList,
   BreadcrumbItem,
   BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
+  BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-import { CollapsibleDemo } from "@/demo/admin-dashboard/CollapsibleDemo";
-import { TableDemoClass } from "@/demo/admin-dashboard/TableDemoClass";
-import { TableBatchEntries } from "@/demo/admin-dashboard/TableBatchEntries";
-import { TableNormalClass } from "@/demo/admin-dashboard/TableNormalClass";
+import { NewCourseEntryForm } from "@/demo/new-course-entry-demo/NewCourseEntryForm";
 import { Separator } from "@radix-ui/react-separator";
+import Image from "next/image";
 import React from "react";
-import { TableAttendance } from "@/demo/admin-dashboard/TableAttendance";
-import { TableCourseEntries } from "@/demo/admin-dashboard/TableCourseEntries";
 
 const page = () => {
   return (
@@ -31,24 +26,24 @@ const page = () => {
               </BreadcrumbItem>
               <BreadcrumbSeparator className="hidden md:block" />
               <BreadcrumbItem>
-                <BreadcrumbPage>
-                 {"Admin Dashboard"}
-                </BreadcrumbPage>
+                <BreadcrumbPage>{"New Course Entry"}</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
         </div>
       </header>
-      <div className="w-[1200px] grid grid-cols-1 space-y-10 px-20 mt-10">
-        <p className="font-bold text-4xl">Manage Appointments</p>
-        <TableDemoClass />
-        <TableNormalClass />
-      </div>
-      <div className="w-[1200px] grid grid-cols-1 space-y-10 p-20">
-        <CollapsibleDemo />
-        <TableAttendance />
-        <TableBatchEntries />
-        <TableCourseEntries />
+      <div className="grid grid-cols-2">
+        <Image
+          width={1200}
+          height={1200}
+          src={"/assests/images/spikeprime.webp"}
+          alt="wallpaper"
+          className="min-h-screen object-cover"
+        />
+        <div className="w-[600px] flex flex-col justify-center gap-5 p-20">
+          <p className="text-4xl font-bold">Create a Course</p>
+          <NewCourseEntryForm />
+        </div>
       </div>
     </SidebarInset>
   );

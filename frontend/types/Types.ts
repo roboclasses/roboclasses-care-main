@@ -47,6 +47,11 @@ export type batchType = {
   time: string[];
 };
 
+export type courseType={
+  _id:string;
+  course:string;
+}
+
 export type normalClassType = {
   _id: string;
   time: string[];
