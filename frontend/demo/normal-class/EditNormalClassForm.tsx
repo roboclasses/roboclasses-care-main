@@ -35,6 +35,7 @@ import { NormalClassUrl } from "@/constants";
 import { useEffect, useState } from "react";
 import { getUserSession } from "@/lib/session";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { teachers } from "@/data/dataStorage";
 
 const items = [
   {
@@ -80,7 +81,6 @@ const weekdays = [
 
 const times = [{id:0},{id:1},{id:2},{id:3},{id:4},{id:5},{id:6}]
 
-const teachers = [{id:1, name:"Kritika Maheswari"},{id:2, name:"Monty"},{id:3, name:"Kiruthika PK"},{id:4, name:"Pal Gudka"}]
 
 
 const FormSchema = z.object({

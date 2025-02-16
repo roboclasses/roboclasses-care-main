@@ -6,8 +6,8 @@ const router = express.Router();
 // Create appointments
 router.post("/appointments/normalClass", async (req, res) => {
   try {
-    const { teacher, batch, time, items } = req.body;
-    const data = await NormalClass.create({ teacher, batch, time, items });
+    const { teacher, userName, destination, batchName, time, items } = req.body;
+    const data = await NormalClass.create({ teacher, userName, destination, batchName, time, items });
 
     console.log(data);
     return res.status(201).json({
@@ -58,10 +58,10 @@ router.get("/appointments/normalClass/:id", async (req, res) => {
 router.put("/appointments/normalClass/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { teacher, batch, time, items } = req.body;
+    const { teacher, userName, destination, batchName, time, items } = req.body;
     const data = await NormalClass.findByIdAndUpdate(
       id,
-      { teacher, batch, time, items },
+      { teacher, userName, destination, batchName, time, items },
       { new: true }
     );
     console.log(data);

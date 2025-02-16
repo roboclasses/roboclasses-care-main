@@ -24,14 +24,16 @@ import {
 } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getUserSession } from "@/lib/session";
-import { NormalClassUrl } from "@/constants";
+import { NewBatchEntryUrl, NormalClassUrl } from "@/constants";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { string, z } from "zod";
 import axios from "axios";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import { teachers } from "@/data/dataStorage";
 
 const items = [
   {
@@ -77,32 +79,24 @@ const weekdays = [
 
 const times = [{id:0},{id:1},{id:2},{id:3},{id:4},{id:5},{id:6}]
 
-const teachers = [{id:1, name:"Kritika Maheswari"},{id:2, name:"Monty"},{id:3, name:"Kiruthika PK"},{id:4, name:"Pal Gudka"}]
 
 
 const FormSchema = z.object({
-  time: z.array(z.string()).refine((value) => value.some((item) => item), {
-    message: "You have to select at least one time.",
-  }),
-
-  items: z.array(z.string()).refine((value) => value.some((item) => item), {
-    message: "You have to select at least one item.",
-  }),
-  teacher: z
-    .string()
-    .min(2, { message: "Teacher name must contain atleast 2 character." }),
-
-  batch: z
-    .string()
-    .min(2, { message: "Batch name must contain atleast 2 character." }),
+  time: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one time."}),
+  items: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one item."}),
+  teacher: z.string().min(2, { message: "Teacher name must be atleast 2 characters long." }),
+  batch: z.string().min(2, { message: "Batch name must be atleast 2 characters long." }),
+  userName: z.string().min(2, { message:"Student name must be atlest 2 characters long." })
 });
 
 export function MultiDatePickerForm() {
   const pathname = usePathname();
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
+
+  const [data, setData] = useState([]);
   
-// For fetching logged-in users name and role
+// Handle fetching logged-in users credentials from cookie storage
   useEffect(() => {
     const handleFetch = async () => {
       const user = await getUserSession();
@@ -112,12 +106,29 @@ export function MultiDatePickerForm() {
     handleFetch();
   }, [pathname]);
 
+// Handle fetch batches
+  useEffect(()=>{
+    const handleFetch = async()=>{
+      try {
+        const res = await axios.get(NewBatchEntryUrl,{headers:{ Authorization: Cookies.get("token") }})
+        console.log(res.data);
+        setData(res.data)
+        
+      } catch (error) {
+        console.log(error);  
+      }
+    }
+    handleFetch();
+  },[])
+
 
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       teacher: "",
-      batch: "Prime B21",
+      userName:"",
+      //destination:"",
+      batch: "",
       time: ["", "", "", "", "", "", ""],
       items: ["1hour"],
     },
@@ -184,23 +195,36 @@ export function MultiDatePickerForm() {
 
         <FormField
           control={form.control}
-          name="batch"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-semibold">Batch Details</FormLabel>
-
-              <FormControl>
-                <Input {...field} required className="bg-white" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+              name="batch"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-semibold">Batch details</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    required
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select batch"/>
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {data.map((item)=>(
+                        <SelectItem value={item.batch} key={item._id}>{item.batch}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
               name="teacher"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel className="font-semibold">Teachers details</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -223,6 +247,7 @@ export function MultiDatePickerForm() {
           )}
         />
 
+
         <FormField
           control={form.control}
           name="items"
@@ -233,7 +258,7 @@ export function MultiDatePickerForm() {
                   When to send the Reminder
                 </FormLabel>
                 <FormDescription>
-                  Select the time which you want!
+                  Select the time which you want
                 </FormDescription>
               </div>
               {items.map((item) => (

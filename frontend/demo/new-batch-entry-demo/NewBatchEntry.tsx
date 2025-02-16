@@ -31,6 +31,8 @@ import { useEffect, useState } from "react";
 import { getUserSession } from "@/lib/session";
 import { usePathname } from "next/navigation";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { teachers } from "@/data/dataStorage";
 
 const weekdays = [
   {
@@ -65,20 +67,12 @@ const weekdays = [
 
 const times = [{id:0},{id:1},{id:2},{id:3},{id:4},{id:5},{id:6}]
 
-const teachers = [{id:1, name:"Kritika Maheswari"},{id:2, name:"Monty"},{id:3, name:"Kiruthika PK"},{id:4, name:"Pal Gudka"}]
 
 const FormSchema = z.object({
-  batch: z
-    .string()
-    .min(1, { message: "Batch number must contain atleast 1 character" }),
-
-  teacher: z
-    .string()
-    .min(2, { message: "Teacher name must contain atleast 2 character." }),
-
-  time: z.array(z.string()).refine((value) => value.some((item) => item), {
-    message: "You have to select at least one time.",
-  }),
+  batch: z.string().min(2, { message: "Batch number must be atleast 2 characters long." }),
+  course: z.string().min(2, { message: "Course name must be atleast 2 characters long." }),
+  teacher: z.string().min(2, { message: "Teacher name must be atleast 2 characters long." }),
+  time: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one time.",}),
 });
 
 export function NewBatchEntryForm() {
@@ -99,8 +93,9 @@ export function NewBatchEntryForm() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      teacher: "",
-      batch: "",
+      batch:"",
+      course:"",
+      teacher:"",
       time: ["", "", "", "", "", "", ""],
     },
   });
@@ -108,7 +103,13 @@ export function NewBatchEntryForm() {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      const res = await axios.post(NewBatchEntryUrl, data, {
+      const batchName = `${data.course} - ${data.batch}`
+      const payload = {
+        time:data.time,
+        teacher:data.teacher,
+        batch:batchName
+      }
+      const res = await axios.post(NewBatchEntryUrl, payload, {
         headers: { Authorization: Cookies.get("token") },
       });
       console.log(res.data);
@@ -169,16 +170,16 @@ export function NewBatchEntryForm() {
           </TableBody>
         </Table>
 
+        <div className="flex gap-1 items-center">
+        <Label className="font-semibold">Batch Name</Label>
         <FormField
           control={form.control}
-          name="batch"
+          name="course"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Batch Number</FormLabel>
-
               <FormControl>
                 <Input
-                  placeholder="e.g. Python B12 L1"
+                  placeholder="Course Name"
                   {...field}
                   required
                   className="bg-white"
@@ -189,10 +190,30 @@ export function NewBatchEntryForm() {
           )}
         />
         <FormField
+          control={form.control}
+          name="batch"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input
+                  placeholder="Batch Number"
+                  {...field}
+                  required
+                  className="bg-white"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        </div>
+
+        <FormField
             control={form.control}
               name="teacher"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel className="font-semibold">Teacher Name</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -203,6 +224,7 @@ export function NewBatchEntryForm() {
                         <SelectValue placeholder="Select teacher"/>
                       </SelectTrigger>
                     </FormControl>
+                    <FormMessage/>
                     <SelectContent>
                       {role === "teacher" ? 
                         <SelectItem value={name}>{name}</SelectItem> : 
