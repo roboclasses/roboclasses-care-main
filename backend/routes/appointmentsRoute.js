@@ -8,8 +8,7 @@ const router = express.Router();
 // create appointments
 router.post("/appointments/demoClass", async (req, res) => {
   try {
-    const { date, userName, destination, course, teacher, time, items } =
-      req.body;
+    const { date, userName, destination, course, teacher, time, items } = req.body;
     const newAppointment = {
       date,
       userName,

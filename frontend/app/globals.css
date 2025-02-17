@@ -109,28 +109,6 @@ body {
 }
 
 
-.phone-input {
-  width: 400px; /* Default width */
-  height: 35px;
-  border: 1px solid #cbd5e1; /* Slate-300 border */
-  background-color: white; /* White background */
-  border-radius: 0.4rem; /* Rounded corners */
-  outline: none; /* Remove default outline */
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow by default */
-  transition: box-shadow 0.2s, border-color 0.2s; /* Smooth transitions */
-}
-
-.phone-input:focus {
-  border-color: black; /* Change border to black on focus */
-}
-
-
-@media (min-width: 1024px) {
-  .phone-input {
-    width: 440px;
-  }
-}
-
 .sx-react-calendar-wrapper {
   width: 1200px;
   max-width: 100vw;

@@ -17,6 +17,7 @@ export type appointmentTypes = {
   userName?: string;
   date: Date;
   time: string;
+  destination?:string,
   course?: string;
   teacher?: string;
   status?: boolean;
@@ -24,6 +25,7 @@ export type appointmentTypes = {
   handleTimeChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleSubmit?: (event: React.FormEvent<HTMLFormElement>) => void;
   handleDelete?: () => void;
+  handlePhoneChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 export type editAttendance = {

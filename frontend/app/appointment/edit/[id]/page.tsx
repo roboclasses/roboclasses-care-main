@@ -22,6 +22,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   const [date, setDate] = useState<Date>(new Date());
   const [time, setTime] = useState<string>(new Date().toLocaleTimeString().substring(11, 16));
   const [name, setName] = useState("");
+  const [destination, setPhoneChange]= useState("")
   const { id } = params;
 
   // handle get single appointment
@@ -33,6 +34,7 @@ const Page = ({ params }: { params: { id: string } }) => {
         setDate(res.data.date);
         setTime(res.data.time);
         setName(res.data.userName);
+        setPhoneChange(res.data.destination);
         console.log(res.data.date);
         console.log(res.data.time);
         console.log(res.data.userName);
@@ -112,6 +114,8 @@ const Page = ({ params }: { params: { id: string } }) => {
           <EditAppointmentForm
             date={date}
             time={time}
+            destination={destination}
+            handlePhoneChange={(e)=>setPhoneChange(e.target.value)}
             handleDateChange={(e: {target: { value: string | number | Date }}) => setDate(new Date(e.target.value))}
             handleTimeChange={(e: {target: { value: React.SetStateAction<string> }}) => setTime(e.target.value)}
             handleSubmit={handleUpdate}

@@ -35,6 +35,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import PhoneInput from "react-phone-input-2";
+import 'react-phone-input-2/lib/style.css'
 
 
 const items = [
@@ -219,14 +220,14 @@ export function MultiDatePickerForm() {
           name="destination"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Phone</FormLabel>
+              <FormLabel className="font-semibold">Contact Details</FormLabel>
               <FormControl>
-                <PhoneInput
+              <PhoneInput
                   country={"uae"}
-                  placeholder="Parents Contact/Whatsapp number"
-                  {...field}               
-                  inputClass="phone-input" 
-                  specialLabel= ""
+                  placeholder="Parents Contact/Whatsapp number"   
+                  {...field}         
+                  inputStyle={{ width: "440px" }}
+                  inputProps={{ ref: field.ref, required: true }}
                 />
               </FormControl>
               <FormMessage />
@@ -240,7 +241,7 @@ export function MultiDatePickerForm() {
               name="batch"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-semibold">Batch details</FormLabel>
+                  <FormLabel className="font-semibold">Batch Details</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -266,7 +267,7 @@ export function MultiDatePickerForm() {
               name="teacher"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-semibold">Teachers details</FormLabel>
+                  <FormLabel className="font-semibold">Teachers Details</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -288,7 +289,6 @@ export function MultiDatePickerForm() {
                 </FormItem>
           )}
         />
-
 
         <FormField
           control={form.control}
