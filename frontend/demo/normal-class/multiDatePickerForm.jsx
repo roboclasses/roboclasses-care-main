@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,17 +22,20 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import StudentSearch from "./StudentSearch";
 import { getUserSession } from "@/lib/session";
 import { NewBatchEntryUrl, NormalClassUrl } from "@/constants";
+import { teachers } from "@/data/dataStorage";
 
+import { z } from "zod";
+import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { string, z } from "zod";
-import axios from "axios";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import { teachers } from "@/data/dataStorage";
+import PhoneInput from "react-phone-input-2";
+
 
 const items = [
   {
@@ -80,13 +82,13 @@ const weekdays = [
 const times = [{id:0},{id:1},{id:2},{id:3},{id:4},{id:5},{id:6}]
 
 
-
 const FormSchema = z.object({
   time: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one time."}),
   items: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one item."}),
   teacher: z.string().min(2, { message: "Teacher name must be atleast 2 characters long." }),
   batch: z.string().min(2, { message: "Batch name must be atleast 2 characters long." }),
-  userName: z.string().min(2, { message:"Student name must be atlest 2 characters long." })
+  userName: z.string().min(2, { message:"Student name must be atlest 2 characters long." }),
+  destination:z.string().min(7,{message:"Phone number must be valid."})
 });
 
 export function MultiDatePickerForm() {
@@ -95,6 +97,7 @@ export function MultiDatePickerForm() {
   const [role, setRole] = useState("");
 
   const [data, setData] = useState([]);
+  const [selectedStudent, setSelectedStudent] = useState(null)
   
 // Handle fetching logged-in users credentials from cookie storage
   useEffect(() => {
@@ -121,13 +124,19 @@ export function MultiDatePickerForm() {
     handleFetch();
   },[])
 
+// Handle select student
+  const handleStudentSelect = (student)=>{
+    setSelectedStudent(student)
+    form.setValue("userName",student.name)
+
+  }
 
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       teacher: "",
       userName:"",
-      //destination:"",
+      destination:"+971",
       batch: "",
       time: ["", "", "", "", "", "", ""],
       items: ["1hour"],
@@ -192,6 +201,39 @@ export function MultiDatePickerForm() {
             </TableRow>
           </TableBody>
         </Table>
+
+        <FormField
+          control={form.control}
+          name="userName"
+          render={() => (
+            <FormItem>
+              <FormLabel className="font-semibold">Student Name</FormLabel>
+              <StudentSearch onSelect={handleStudentSelect} selectedStudent={selectedStudent}/>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="destination"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="font-semibold">Phone</FormLabel>
+              <FormControl>
+                <PhoneInput
+                  country={"uae"}
+                  placeholder="Parents Contact/Whatsapp number"
+                  {...field}               
+                  inputClass="phone-input" 
+                  specialLabel= ""
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
 
         <FormField
           control={form.control}

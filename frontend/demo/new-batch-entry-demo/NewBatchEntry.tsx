@@ -103,11 +103,11 @@ export function NewBatchEntryForm() {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      const batchName = `${data.course} - ${data.batch}`
+      const batch = `${data.course} - ${data.batch}`
       const payload = {
         time:data.time,
         teacher:data.teacher,
-        batch:batchName
+        batch:batch
       }
       const res = await axios.post(NewBatchEntryUrl, payload, {
         headers: { Authorization: Cookies.get("token") },
