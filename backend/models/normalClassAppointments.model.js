@@ -15,7 +15,7 @@ const normalClassSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    batchName: {
+    batch: {
       type: String,
       required: true,
     },
