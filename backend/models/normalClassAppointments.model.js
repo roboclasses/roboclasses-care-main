@@ -31,6 +31,4 @@ const normalClassSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const NormalClass =
-  mongoose.models.NormalClass ??
-  mongoose.model("NormalClass", normalClassSchema);
+export const NormalClass = mongoose.models.NormalClass ?? mongoose.model("NormalClass", normalClassSchema);

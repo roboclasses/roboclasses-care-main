@@ -5,12 +5,12 @@ import React from "react";
 import { format } from "date-fns";
 import { appointmentTypes } from "@/types/Types";
 
-const EditAppointmentForm = ({ date, time, handleDateChange, handleTimeChange, handleSubmit, handleDelete }: appointmentTypes) => {
+const EditAppointmentForm = ({ date, time, handleDateChange, handleTimeChange, handleSubmit, handleDelete, destination, handlePhoneChange }: appointmentTypes) => {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2 ">
       <Input required type="date" value={format(date, "yyyy-MM-dd")} onChange={handleDateChange}/>
       <Input required type="time" value={time} onChange={handleTimeChange}/>
-
+      <Input required type="mobile" value={destination} onChange={handlePhoneChange} />
       <Button type="submit" >Reschedule</Button>
       <Button type="button" onClick={handleDelete} variant={"destructive"}>Cancel Appointment</Button>
 

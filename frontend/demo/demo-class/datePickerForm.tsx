@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { useForm } from "react-hook-form";
@@ -21,13 +19,14 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 
 import axios from "axios";
-import PhoneInput from "react-phone-input-2";
+import 'react-phone-input-2/lib/style.css'
 import { DemoClassUrl } from "@/constants";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getUserSession } from "@/lib/session";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { teachers } from "@/data/dataStorage";
+import PhoneInput from "react-phone-input-2";
 
 // for mapping checkbox value and label
 const items = [
@@ -43,17 +42,11 @@ const items = [
 
 
 const FormSchema = z.object({date: z.string({ required_error: "A date is required." }),
-
   userName: z.string({ required_error: "A date is required." }).min(2, { message: "name must contain atleast 2 character." }),
-
-  destination: z.string().min(12, { message: "mobile is incorrect." }),
-
+  destination: z.string().min(11, { message: "mobile is incorrect." }),
   course: z.string({ required_error: "A date is required." }).min(1, { message: "course must contain atleast 2 chracter" }),
-
   teacher: z.string({ required_error: "A date is required." }).min(2, { message: "Teacher name must contain atleast 2 character." }),
-
   time: z.string({ required_error: "Time slot is required." }),
-
   items: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one item.",}),
 });
 
@@ -62,7 +55,7 @@ export function DatePickerForm() {
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
   
-// For fetching logged-in users name and role
+// Handle fetching logged-in users credentials from cookie storage
   useEffect(() => {
     const handleFetch = async () => {
       const user = await getUserSession();
@@ -117,7 +110,7 @@ export function DatePickerForm() {
           name="userName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Name</FormLabel>
+              <FormLabel className="font-semibold">Full Name</FormLabel>
               <FormControl>
                 <Input
                   placeholder="Student/Parent name"
@@ -130,25 +123,28 @@ export function DatePickerForm() {
             </FormItem>
           )}
         />
+        
         <FormField
           control={form.control}
           name="destination"
           render={({ field }) => (
             <FormItem>
-               <FormLabel className="font-semibold">Phone</FormLabel>
-              <FormControl>
+               <FormLabel className="font-semibold">Contact Details</FormLabel>
+                <FormControl>
                 <PhoneInput
                   country={"uae"}
-                  placeholder="Parents Contact/Whatsapp number"
-                  {...field}               
-                  inputClass="phone-input" 
+                  placeholder="Parents Contact/Whatsapp number"   
+                  {...field}         
                   specialLabel= ""
+                  inputStyle={{width: "440px"}}
+                  inputProps={{ ref: field.ref, required: true }}
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="course"
@@ -167,11 +163,13 @@ export function DatePickerForm() {
             </FormItem>
           )}
         />
+
         <FormField
             control={form.control}
               name="teacher"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel className="font-semibold">Teacher Details</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -193,6 +191,7 @@ export function DatePickerForm() {
                 </FormItem>
             )}
         />
+        
         <FormField
           control={form.control}
           name="date"
@@ -205,7 +204,7 @@ export function DatePickerForm() {
                 <Input type="date" {...field} required className="bg-white" />
               </FormControl>
               <FormDescription>
-                Book an appointment for demo class!
+                Book an appointment for demo class
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -243,7 +242,7 @@ export function DatePickerForm() {
                   When to send the Reminder
                 </FormLabel>
                 <FormDescription>
-                  Select the time which you want!
+                  Select the time which you want
                 </FormDescription>
               </div>
               {items.map((item) => (
