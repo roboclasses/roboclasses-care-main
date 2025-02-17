@@ -1,10 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,11 +9,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
 import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-
 import {
   Table,
   TableBody,
@@ -29,12 +21,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
+import { z } from "zod";
 import axios from "axios";
-import { useParams, usePathname } from "next/navigation";
-import { NormalClassUrl } from "@/constants";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getUserSession } from "@/lib/session";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Cookies from "js-cookie";
+import { NormalClassUrl } from "@/constants";
 
 const items = [
   {
@@ -78,68 +73,77 @@ const weekdays = [
   },
 ];
 
-const times = [{id:0},{id:1},{id:2},{id:3},{id:4},{id:5},{id:6}]
-
-const teachers = [{id:1, name:"Kritika Maheswari"},{id:2, name:"Monty"},{id:3, name:"Kiruthika PK"},{id:4, name:"Pal Gudka"}]
-
+const times = [
+  { id: 0 },
+  { id: 1 },
+  { id: 2 },
+  { id: 3 },
+  { id: 4 },
+  { id: 5 },
+  { id: 6 },
+];
 
 const FormSchema = z.object({
-  time: z.array(z.string()).refine((value) => value.some((item) => item), {
-    message: "You have to select at least one time.",
-  }),
-
-  items: z.array(z.string()).refine((value) => value.some((item) => item), {
-    message: "You have to select at least one item.",
-  }),
-  teacher: z
-    .string()
-    .min(2, { message: "Teacher name must contain atleast 2 character." }),
-
-  batch: z
-    .string()
-    .min(2, { message: "Batch name must contain atleast 2 character." }),
+  time: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one time."}),
+  items: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one item."}),
+  teacher: z.string().min(2, { message: "Teacher name must be atleast 2 characters long." }),
+  batch: z.string().min(2, { message: "Batch name must be atleast 2 characters long." }),
+  userName: z.string().min(2, { message: "Student name must be atlest 2 characters long." }),
+  destination: z.string().min(7, { message: "Phone number must be valid." }),
 });
 
 export function EditNormalClassForm() {
-  const pathname = usePathname();
-  const [name, setName] = useState("");
-  const [role, setRole] = useState("");
-  
-// For fetching logged-in users name and role
+  const {id}  = useParams();
+
+  const [destination, setDestination] = useState("");
+  const [teacher, setTeacher] = useState("");
+  const [batch, setBatch] = useState("");
+  const [userName, setUserName] = useState("");
+
+
+  // Handle fetch batches
   useEffect(() => {
     const handleFetch = async () => {
-      const user = await getUserSession();
-      setRole(user.role || "");
-      setName(user.name || "");
+      try {
+        const res = await axios.get(`${NormalClassUrl}/${id}`, { headers: { Authorization: Cookies.get("token") }});
+        console.log(res.data);
+        setDestination(res.data.destination)
+        setTeacher(res.data.teacher)
+        setBatch(res.data.batch)
+        setUserName(res.data.userName)
+      } catch (error) {
+        console.log(error);
+      }
     };
     handleFetch();
-  }, [pathname]);
+  }, [id]);
+
 
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       teacher: "",
-      batch: "Prime B21",
+      userName: "",
+      destination: "+971",
+      batch: "",
       time: ["", "", "", "", "", "", ""],
       items: ["1hour"],
     },
   });
 
-  const {id} = useParams();
-
-  async function onSubmit(data: unknown) {
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      const res = await axios.put(`${NormalClassUrl}/${id}`,data);
+      const res = await axios.put(`${NormalClassUrl}/${id}`, data);
       console.log(res.data);
       form.reset();
-      const {message} = res.data;
+      const {message} = res.data
       toast({
         title: "Success✅",
-        description:message,
+        description: message,
         variant: "default",
       });
     } catch (error) {
-      console.error("Error booking appointment", error);
+      console.error(error);
       toast({
         title: "Failed ",
         description: "unable to update Normal Class appointment",
@@ -158,8 +162,8 @@ export function EditNormalClassForm() {
           <TableCaption>A list of weekdays with time slot</TableCaption>
           <TableHeader>
             <TableRow>
-              {weekdays.map((item, index) => (
-                <TableHead className="w-[100px]" key={index}>
+              {weekdays.map((item) => (
+                <TableHead className="w-[100px]" key={item.id}>
                   {item.label}
                 </TableHead>
               ))}
@@ -189,13 +193,39 @@ export function EditNormalClassForm() {
 
         <FormField
           control={form.control}
-          name="batch"
+          name="userName"
+          render={({field}) => (
+            <FormItem>
+              <FormLabel className="font-semibold">Student Name</FormLabel>
+              <Input  
+                {...field}
+                required 
+                value={userName} 
+                onChange={(e)=>{
+                setUserName(e.target.value)
+                field.onChange(e)
+                 }} 
+              />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="destination"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Batch Details</FormLabel>
-
+              <FormLabel className="font-semibold">Phone</FormLabel>
               <FormControl>
-                <Input {...field} required className="bg-white" />
+                <Input
+                  required
+                  {...field}
+                  value={destination} 
+                  onChange={(e)=>{
+                  setDestination(e.target.value)
+                  field.onChange(e) }} 
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -204,28 +234,39 @@ export function EditNormalClassForm() {
 
         <FormField
           control={form.control}
-              name="teacher"
-              render={({ field }) => (
-                <FormItem>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    required
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select teacher"/>
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {role === "teacher" ? 
-                        <SelectItem value={name}>{name}</SelectItem> : 
-                          role === "admin" ? 
-                            teachers.map((item)=>(<SelectItem value={item.name} key={item.id}>{item.name}</SelectItem>)) : 
-                              '' }
-                    </SelectContent>
-                  </Select>
-                </FormItem>
+          name="batch"
+          render={({field}) => (
+            <FormItem>
+              <FormLabel className="font-semibold">Batch Details</FormLabel>
+              <Input  
+                {...field}
+                required 
+                value={batch} 
+                onChange={(e)=>{
+                setBatch(e.target.value)
+                field.onChange(e) }} 
+              />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="teacher"
+          render={({field}) => (
+            <FormItem>
+              <FormLabel className="font-semibold">Teacher Details</FormLabel>
+              <Input  
+                {...field}
+                required 
+                value={teacher} 
+                onChange={(e)=>{
+                setTeacher(e.target.value)
+                field.onChange(e) }} 
+              />
+              <FormMessage />
+            </FormItem>
           )}
         />
 
@@ -239,7 +280,7 @@ export function EditNormalClassForm() {
                   When to send the Reminder
                 </FormLabel>
                 <FormDescription>
-                  Select the time which you want!
+                  Select the time which you want
                 </FormDescription>
               </div>
               {items.map((item) => (

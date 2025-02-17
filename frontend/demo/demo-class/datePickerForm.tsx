@@ -27,6 +27,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getUserSession } from "@/lib/session";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { teachers } from "@/data/dataStorage";
 
 // for mapping checkbox value and label
 const items = [
@@ -39,8 +40,6 @@ const items = [
     label: "1 Hour",
   },
 ];
-
-const teachers = [{id:1, name:"Kritika Maheswari"},{id:2, name:"Monty"},{id:3, name:"Kiruthika PK"},{id:4, name:"Pal Gudka"}]
 
 
 const FormSchema = z.object({date: z.string({ required_error: "A date is required." }),

@@ -52,12 +52,25 @@ export type courseType={
   course:string;
 }
 
+export type studentType = {
+  id: number;
+  name: string;
+}
+
+export type studentSearchType = {
+  onSelect: (student: studentType) => void;
+  selectedStudent: studentType | null;
+}
+
+
 export type normalClassType = {
   _id: string;
   time: string[];
   items: string[];
   teacher: string;
   batch: string;
+  userName: string;
+  destination: string;
 };
 
 export type attendanceRowAndColumnType = {

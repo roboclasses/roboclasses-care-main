@@ -11,8 +11,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { EditNormalClassForm } from "@/demo/normal-class/EditNormalClassForm";
 import { PRIVATE_WALLPAPER } from "@/constants/images";
+import { EditNormalClassForm } from "@/demo/normal-class/EditNormalClassForm";
 
 const Page = () => {
   return (

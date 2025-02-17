@@ -31,6 +31,7 @@ import { useParams, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getUserSession } from "@/lib/session";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { teachers } from "@/data/dataStorage";
 
 const weekdays = [
   {
@@ -65,29 +66,22 @@ const weekdays = [
 
 const times = [{id:0},{id:1},{id:2},{id:3},{id:4},{id:5},{id:6}]
 
-const teachers = [{id:1, name:"Kritika Maheswari"},{id:2, name:"Monty"},{id:3, name:"Kiruthika PK"},{id:4, name:"Pal Gudka"}]
 
 const FormSchema = z.object({
-
-  batch: z
-    .string()
-    .min(1, { message: "Batch number must contain atleast 1 character" }),
-
-  teacher: z
-    .string()
-    .min(2, { message: "Teacher name must contain atleast 2 character." }),
-
-  time: z.array(z.string()).refine((value) => value.some((item) => item), {
-    message: "You have to select at least one time.",
-  }),
+  batch: z.string().min(2, { message: "Batch number must be atleast 2 characters long." }),
+  teacher: z.string().min(2, { message: "Teacher name must be atleast 2 characters long." }),
+  time: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one time."}),
 });
 
 export function EditBatchForm() {
   const pathname = usePathname();
+  const {id} = useParams();
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
+
+  const [batch, setBatch] = useState("");
   
-// For fetching logged-in users name and role
+  // Handle fetching logged-in users credentials from cookie storage
   useEffect(() => {
     const handleFetch = async () => {
       const user = await getUserSession();
@@ -96,6 +90,22 @@ export function EditBatchForm() {
     };
     handleFetch();
   }, [pathname]);
+
+  // Handle fetch a batch
+  useEffect(()=>{
+    const handleFetch = async()=>{
+      try {
+        const res = await axios.get(`${NewBatchEntryUrl}/${id}`, {headers: {Authorization: Cookies.get("token")}})
+        console.log(res.data);
+        setBatch(res.data.batch)
+      } catch (error) {
+        console.log(error);  
+      }
+    }
+    handleFetch();
+  },[id])
+
+
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -106,7 +116,6 @@ export function EditBatchForm() {
     },
   });
 
-  const {id} = useParams();
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
@@ -178,8 +187,12 @@ export function EditBatchForm() {
 
               <FormControl>
                 <Input
-                  placeholder="e.g. Python B12 L1"
+                  // placeholder="e.g. Python B12 L1"
                   {...field}
+                  value={batch}
+                  onChange={(e)=>{
+                    setBatch(e.target.value)
+                    field.onChange(e)}}
                   required
                   className="bg-white"
                 />
@@ -207,8 +220,7 @@ export function EditBatchForm() {
                       {role === "teacher" ? 
                         <SelectItem value={name}>{name}</SelectItem> : 
                           role === "admin" ? 
-                            teachers.map((item)=>(<SelectItem value={item.name} key={item.id}>{item.name}</SelectItem>)) : 
-                              '' }
+                            teachers.map((item)=>(<SelectItem value={item.name} key={item.id}>{item.name}</SelectItem>)) : '' }
                     </SelectContent>
                   </Select>
                 </FormItem>
