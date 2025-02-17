@@ -13,8 +13,8 @@ This project consists of a frontend and backend, both of which can be run locall
 
 ## live URLs for both frontend and backend deployments (Check the code for full URLs)
 
-- FRONTEND URL: 
-- BACKEND URL: 
+- FRONTEND URL: https://app-roboclasses-care.up.railway.app
+- BACKEND URL: https://api-roboclasses-care.up.railway.app
 
 ---
 
