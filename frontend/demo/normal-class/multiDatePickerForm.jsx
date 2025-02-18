@@ -10,17 +10,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "@/hooks/use-toast";
-import { Input } from "@/components/ui/input";
+// import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+// import {
+//   Table,
+//   TableBody,
+//   TableCaption,
+//   TableCell,
+//   TableHead,
+//   TableHeader,
+//   TableRow,
+// } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import StudentSearch from "./StudentSearch";
 import { getUserSession } from "@/lib/session";
@@ -36,6 +36,7 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import PhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
+import MultiDateTimeEntry from "./MultiDateTimeEntry";
 
 
 const items = [
@@ -49,47 +50,51 @@ const items = [
   },
 ];
 
-const weekdays = [
-  {
-    id: "sun",
-    label: "Sunday",
-  },
-  {
-    id: "mon",
-    label: "Monday",
-  },
-  {
-    id: "tue",
-    label: "Tuesday",
-  },
-  {
-    id: "wed",
-    label: "Wednesday",
-  },
-  {
-    id: "thu",
-    label: "Thursday",
-  },
-  {
-    id: "fri",
-    label: "Friday",
-  },
-  {
-    id: "sat",
-    label: "Saturday",
-  },
-];
+// const weekdays = [
+//   {
+//     id: "sun",
+//     label: "Sunday",
+//   },
+//   {
+//     id: "mon",
+//     label: "Monday",
+//   },
+//   {
+//     id: "tue",
+//     label: "Tuesday",
+//   },
+//   {
+//     id: "wed",
+//     label: "Wednesday",
+//   },
+//   {
+//     id: "thu",
+//     label: "Thursday",
+//   },
+//   {
+//     id: "fri",
+//     label: "Friday",
+//   },
+//   {
+//     id: "sat",
+//     label: "Saturday",
+//   },
+// ];
 
-const times = [{id:0},{id:1},{id:2},{id:3},{id:4},{id:5},{id:6}]
+// const times = [{id:0},{id:1},{id:2},{id:3},{id:4},{id:5},{id:6}]
 
 
 const FormSchema = z.object({
-  time: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one time."}),
+  // time: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one time."}),
   items: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one item."}),
   teacher: z.string().min(2, { message: "Teacher name must be atleast 2 characters long." }),
   batch: z.string().min(2, { message: "Batch name must be atleast 2 characters long." }),
   userName: z.string().min(2, { message:"Student name must be atlest 2 characters long." }),
-  destination:z.string().min(7,{message:"Phone number must be valid."})
+  destination:z.string().min(7,{message:"Phone number must be valid."}),
+  dateTimeEntries: z.array(z.object({
+    date: z.string(),
+    time: z.string(),
+  }))
 });
 
 export function MultiDatePickerForm() {
@@ -99,6 +104,10 @@ export function MultiDatePickerForm() {
 
   const [data, setData] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null)
+  const [dateTimeEntries, setDateTimeEntries] = useState([]);
+
+  console.log("date and time"+dateTimeEntries);
+  
   
 // Handle fetching logged-in users credentials from cookie storage
   useEffect(() => {
@@ -132,6 +141,12 @@ export function MultiDatePickerForm() {
 
   }
 
+  // Handle multiple date and time add, remove and update
+  const handleDateTimeEntriesChange = (entries) => {
+    setDateTimeEntries(entries);
+    form.setValue("dateTimeEntries", entries); // Update form value
+  };
+
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -139,14 +154,26 @@ export function MultiDatePickerForm() {
       userName:"",
       destination:"+971",
       batch: "",
-      time: ["", "", "", "", "", "", ""],
+      // time: ["", "", "", "", "", "", ""],
       items: ["1hour"],
+      dateTimeEntries:{
+        date:"",
+        time:"",
+      }
+      
     },
   });
 
+  
   async function onSubmit(data) {
     try {
-      const res = await axios.post(NormalClassUrl,data);
+      const transformedDateTimeEntries = {
+        date: dateTimeEntries.map(entry => entry.date), // Extract all dates into an array
+        time: dateTimeEntries.map(entry => entry.time), // Extract all times into an array
+      };
+
+      const payload = {...data, ...transformedDateTimeEntries}
+      const res = await axios.post(NormalClassUrl,payload, { headers: { Authorization: Cookies.get("token") }});
       console.log(res.data);
       form.reset();
       toast({
@@ -170,7 +197,7 @@ export function MultiDatePickerForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
-        <Table>
+        {/* <Table>
           <TableCaption>A list of weekdays with time slot</TableCaption>
           <TableHeader>
             <TableRow>
@@ -201,7 +228,8 @@ export function MultiDatePickerForm() {
               ))}
             </TableRow>
           </TableBody>
-        </Table>
+        </Table> */}
+         <MultiDateTimeEntry onEntriesChange={handleDateTimeEntriesChange} />
 
         <FormField
           control={form.control}

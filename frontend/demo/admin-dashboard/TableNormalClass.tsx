@@ -17,11 +17,12 @@ import { normalClassType } from "@/types/Types";
 import axios from "axios";
 import useSWR from "swr";
 import Link from "next/link";
+import moment from 'moment-timezone'
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 // For mapping weekdays in time cell
-const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+// const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export function TableNormalClass() {
   const { data, isLoading, isValidating, error, mutate } = useSWR<normalClassType[]>(NormalClassUrl, fetcher);
@@ -51,11 +52,16 @@ export function TableNormalClass() {
 
 
   // Function to format time for Normal Class appointment
-  const handleTime = (timeArray: string[]) => {
-    return timeArray
-      .map((time, index) => (time !== "" ? `${weekdays[index]} - ${time}` : null)) 
-      .filter((time) => time !== null) 
-      .join(", "); 
+  const handleTime = (timeArray: string[], dateArray:string[]) => {
+    return timeArray.map((time, index)=>{
+      const date = dateArray[index];
+      if(date && time){
+        const desiredDate = moment(date).format('MMM D');
+        const weekday = moment(date).format('dddd')
+        return `${weekday} - ${time} - ${desiredDate}`
+      }
+      return null;
+    }).filter((time)=>time !== null).join(', ')
   };
 
 
@@ -70,7 +76,7 @@ export function TableNormalClass() {
           <TableHead>Batch Name</TableHead>
           <TableHead>Student Name</TableHead>
           <TableHead>Contact Details</TableHead>
-          <TableHead>Time</TableHead>
+          <TableHead className="text-center">Time</TableHead>
           <TableHead>Edit</TableHead>
           <TableHead>Delete</TableHead>
         </TableRow>
@@ -82,7 +88,7 @@ export function TableNormalClass() {
             <TableCell>{appointment.batch}</TableCell>
             <TableCell>{appointment.userName}</TableCell>
             <TableCell>{appointment.destination}</TableCell>
-            <TableCell className="text-right"> {handleTime(appointment.time)} </TableCell>
+            <TableCell className="text-center"> {handleTime(appointment.time, appointment.date)} </TableCell>
             <TableCell>
               <Link href={`/appointment/reminder/normal-class/edit/${appointment._id}`}>
               <EditButton name="Edit" type="button" />
