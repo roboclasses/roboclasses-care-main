@@ -65,9 +65,11 @@ export type studentSearchType = {
 }
 
 
+
 export type normalClassType = {
   _id: string;
   time: string[];
+  date: string[];
   items: string[];
   teacher: string;
   batch: string;

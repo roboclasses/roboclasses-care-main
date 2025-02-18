@@ -12,15 +12,15 @@ import {
 import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+// import {
+//   Table,
+//   TableBody,
+//   TableCaption,
+//   TableCell,
+//   TableHead,
+//   TableHeader,
+//   TableRow,
+// } from "@/components/ui/table";
 
 import { z } from "zod";
 import axios from "axios";
@@ -30,6 +30,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { NormalClassUrl } from "@/constants";
+import MultiDateTimeEntry from "./MultiDateTimeEntry";
 
 const items = [
   {
@@ -42,46 +43,46 @@ const items = [
   },
 ];
 
-const weekdays = [
-  {
-    id: "sun",
-    label: "Sunday",
-  },
-  {
-    id: "mon",
-    label: "Monday",
-  },
-  {
-    id: "tue",
-    label: "Tuesday",
-  },
-  {
-    id: "wed",
-    label: "Wednesday",
-  },
-  {
-    id: "thu",
-    label: "Thursday",
-  },
-  {
-    id: "fri",
-    label: "Friday",
-  },
-  {
-    id: "sat",
-    label: "Saturday",
-  },
-];
+// const weekdays = [
+//   {
+//     id: "sun",
+//     label: "Sunday",
+//   },
+//   {
+//     id: "mon",
+//     label: "Monday",
+//   },
+//   {
+//     id: "tue",
+//     label: "Tuesday",
+//   },
+//   {
+//     id: "wed",
+//     label: "Wednesday",
+//   },
+//   {
+//     id: "thu",
+//     label: "Thursday",
+//   },
+//   {
+//     id: "fri",
+//     label: "Friday",
+//   },
+//   {
+//     id: "sat",
+//     label: "Saturday",
+//   },
+// ];
 
-const times = [
-  { id: 0 },
-  { id: 1 },
-  { id: 2 },
-  { id: 3 },
-  { id: 4 },
-  { id: 5 },
-  { id: 6 },
-];
+// const times = [
+//   { id: 0 },
+//   { id: 1 },
+//   { id: 2 },
+//   { id: 3 },
+//   { id: 4 },
+//   { id: 5 },
+//   { id: 6 },
+// ];
 
 const FormSchema = z.object({
   time: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one time."}),
@@ -90,6 +91,10 @@ const FormSchema = z.object({
   batch: z.string().min(2, { message: "Batch name must be atleast 2 characters long." }),
   userName: z.string().min(2, { message: "Student name must be atlest 2 characters long." }),
   destination: z.string().min(7, { message: "Phone number must be valid." }),
+  dateTimeEntries: z.array(z.object({
+    date: z.string(),
+    time: z.string(),
+  }))
 });
 
 export function EditNormalClassForm() {
@@ -99,6 +104,8 @@ export function EditNormalClassForm() {
   const [teacher, setTeacher] = useState("");
   const [batch, setBatch] = useState("");
   const [userName, setUserName] = useState("");
+  const [dateTimeEntries, setDateTimeEntries] = useState([]);
+
 
 
   // Handle fetch batches
@@ -119,6 +126,13 @@ export function EditNormalClassForm() {
   }, [id]);
 
 
+    // Handle multiple date and time add, remove and update
+    const handleDateTimeEntriesChange = (entries) => {
+      setDateTimeEntries(entries);
+      form.setValue("dateTimeEntries", entries); // Update form value
+    };
+
+
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -126,14 +140,24 @@ export function EditNormalClassForm() {
       userName: "",
       destination: "+971",
       batch: "",
-      time: ["", "", "", "", "", "", ""],
+      // time: ["", "", "", "", "", "", ""],
       items: ["1hour"],
+      dateTimeEntries:{
+        date:"",
+        time:"",
+      }
     },
   });
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
+  async function onSubmit(data) {
     try {
-      const res = await axios.put(`${NormalClassUrl}/${id}`, data);
+      const transformedDateTimeEntries = {
+        date: dateTimeEntries.map(entry => entry.date), // Extract all dates into an array
+        time: dateTimeEntries.map(entry => entry.time), // Extract all times into an array
+      };
+
+      const payload = {...data, ...transformedDateTimeEntries}
+      const res = await axios.put(`${NormalClassUrl}/${id}`, payload,{ headers: { Authorization: Cookies.get("token") }});
       console.log(res.data);
       form.reset();
       const {message} = res.data
@@ -158,7 +182,7 @@ export function EditNormalClassForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
-        <Table>
+        {/* <Table>
           <TableCaption>A list of weekdays with time slot</TableCaption>
           <TableHeader>
             <TableRow>
@@ -189,7 +213,9 @@ export function EditNormalClassForm() {
               ))}
             </TableRow>
           </TableBody>
-        </Table>
+        </Table> */}
+
+        <MultiDateTimeEntry onEntriesChange={handleDateTimeEntriesChange} />
 
         <FormField
           control={form.control}
