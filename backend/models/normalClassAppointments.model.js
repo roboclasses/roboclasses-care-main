@@ -23,6 +23,10 @@ const normalClassSchema = new mongoose.Schema(
       type: [String],
       required: true,
     },
+    date:{
+      type: [Date],
+      required: true,
+    },
     items: {
       type: [String],
       required: true,

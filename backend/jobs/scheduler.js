@@ -8,18 +8,18 @@ import { sendReminder } from "../helpers.js";
     const { time, date, userName, destination, items } = appointment;
 
     // Combine date and time in Indian timezone
-    // const indianDateTime = moment.tz(
-    //   `${date} ${time}`,
-    //   "YYYY-MM-DD HH:mm",
-    //   "Asia/Kolkata"
-    // );
-    // console.log("Indian time (Schedule):" + indianDateTime.format());
+    const indianDateTime = moment.tz(
+      `${date} ${time}`,
+      "YYYY-MM-DD HH:mm",
+      "Asia/Kolkata"
+    );
+    console.log("Indian time (Schedule):" + indianDateTime.format());
 
     // Convert Indian timezone to Dubai timezone
-    // const dubaiDateTime = indianDateTime.clone().tz("Asia/Dubai");
+    const dubaiDateTime = indianDateTime.clone().tz("Asia/Dubai");
     
     // Combine date and time in Dubai timezone
-    const dubaiDateTime = moment.tz(`${date} ${time}`,"YYYY-MM-DD HH:mm", "Asia/Dubai")
+    // const dubaiDateTime = moment.tz(`${date} ${time}`,"YYYY-MM-DD HH:mm", "Asia/Dubai")
     console.log("dubai time (Schedule):" + dubaiDateTime.format());
 
     const scheduleReminder = (reminderTime, campaignName) => {
