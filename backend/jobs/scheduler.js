@@ -1,26 +1,29 @@
 import cron from "node-cron";
-import moment from "moment-timezone"; 
+import moment from "moment-timezone";
 
 import { sendReminder } from "../helpers.js";
- 
- // scheduler
- async function scheduleReminders(appointment) {
-    const { time, date, userName, destination, items } = appointment;
 
-    // Combine date and time in Indian timezone
-    const indianDateTime = moment.tz(
-      `${date} ${time}`,
-      "YYYY-MM-DD HH:mm",
-      "Asia/Kolkata"
-    );
-    console.log("Indian time (Schedule):" + indianDateTime.format());
+// scheduler
+async function scheduleReminders(appointment) {
+  const { time, date, userName, destination, items } = appointment;
 
-    // Convert Indian timezone to Dubai timezone
-    const dubaiDateTime = indianDateTime.clone().tz("Asia/Dubai");
-    
-    // Combine date and time in Dubai timezone
-    // const dubaiDateTime = moment.tz(`${date} ${time}`,"YYYY-MM-DD HH:mm", "Asia/Dubai")
-    console.log("dubai time (Schedule):" + dubaiDateTime.format());
+  let utcDateTimes;
+
+  if (Array.isArray(date) && Array.isArray(time)) {
+    utcDateTimes = date.map((d, i) => {
+      return moment.utc(`${d} ${time[i]}`, "YYYY-MM-DD HH:mm");
+    });
+  } else {
+    utcDateTimes = [moment.utc(`${date} ${time}`, "YYYY-MM-DD HH:mm")];
+  }
+
+  // Iterate through the array of date and time
+  utcDateTimes.forEach((utcDateTime) => {
+    console.log("UTC time (Schedule):" + utcDateTime.format());
+
+    // Convert UTC time to Dubai timezone
+    const dubaiDateTime = utcDateTime.clone().tz("Asia/Dubai");
+    console.log("Dubai time (Schedule):" + dubaiDateTime.format());
 
     const scheduleReminder = (reminderTime, campaignName) => {
       const minute = reminderTime.minute();
@@ -43,18 +46,12 @@ import { sendReminder } from "../helpers.js";
     };
 
     // Conditions for sending reminder on timely basis
-    if (items.includes("24hour")) {
-      const reminderFor24Hours = dubaiDateTime.clone().subtract(24, "hours");
-      console.log("24-hour reminder time (Appointment:)" + reminderFor24Hours.format());
-      scheduleReminders(reminderFor24Hours, "Trial_Class_Demo_24_hour");
-    }
-
     if (items.includes("1hour")) {
       const reminderFor1Hour = dubaiDateTime.clone().subtract(1, "hour");
       console.log("1-hour reminder time (Appointment:)" + reminderFor1Hour.format());
       scheduleReminder(reminderFor1Hour, "Trial_Class_Demo_1_hour");
     }
-  }
+  });
+}
 
-
-  export default scheduleReminders;
+export default scheduleReminders;

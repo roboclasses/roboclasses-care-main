@@ -168,7 +168,7 @@ export function MultiDatePickerForm() {
   async function onSubmit(data) {
     try {
       const transformedDateTimeEntries = {
-        date: dateTimeEntries.map(entry => entry.date), // Extract all dates into an array
+        date: dateTimeEntries.map(entry => new Date(entry.date)), // Extract all dates into an array
         time: dateTimeEntries.map(entry => entry.time), // Extract all times into an array
       };
 
