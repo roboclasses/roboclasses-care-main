@@ -18,19 +18,11 @@ router.post("/appointments/demoClass", async (req, res) => {
       time,
       items,
     };
-    console.log(newAppointment);
 
-    const createAppointments = await Appointment.create({
-      date,
-      userName,
-      destination,
-      course,
-      teacher,
-      time,
-      items,
-    });
-    // await scheduleReminders(newAppointment)
+    const createAppointments = await Appointment.create(newAppointment)
     console.log(createAppointments);
+    
+    // await scheduleReminders(newAppointment)
     return res.status(201).json({
       success: true,
       message: "appointment created successfully.", createAppointments

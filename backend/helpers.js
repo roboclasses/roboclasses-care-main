@@ -19,14 +19,9 @@ export const sendReminder = async (userName, destination, campaignName) => {
     console.log("Payload is" + JSON.stringify(payload, null, 2));
 
     try {
-      const res = await axios.post(
-        `${AISENSY_BASE_URL}`,
-        payload
-        //  { headers: { Authorization: `Bearer ${AISENSY_API_KEY}` } }
-      );
+      const res = await axios.post(`${AISENSY_BASE_URL}`, payload);
 
       const currentTime = new Date().toLocaleString();
-
       console.log(`reminder sent successfully on ${currentTime}` + res.data);
     } catch (error) {
       console.error("Failed to send reminder", error);
