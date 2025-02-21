@@ -152,9 +152,8 @@ export function MultiDatePickerForm() {
     defaultValues: {
       teacher: "",
       userName:"",
-      destination:"+971",
+      destination:"",
       batch: "",
-      // time: ["", "", "", "", "", "", ""],
       items: ["1hour"],
       dateTimeEntries:{
         date:"",
@@ -251,7 +250,7 @@ export function MultiDatePickerForm() {
               <FormLabel className="font-semibold">Contact Details</FormLabel>
               <FormControl>
               <PhoneInput
-                  country={"uae"}
+                  country={"ae"}
                   placeholder="Parents Contact/Whatsapp number"   
                   {...field}         
                   inputStyle={{ width: "440px" }}

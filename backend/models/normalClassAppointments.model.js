@@ -13,7 +13,6 @@ const normalClassSchema = new mongoose.Schema(
     destination: {
       type: String,
       required: true,
-      unique: true,
     },
     batch: {
       type: String,

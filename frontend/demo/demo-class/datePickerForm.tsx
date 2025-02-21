@@ -43,7 +43,7 @@ const items = [
 
 const FormSchema = z.object({date: z.string({ required_error: "A date is required." }),
   userName: z.string({ required_error: "A date is required." }).min(2, { message: "name must contain atleast 2 character." }),
-  destination: z.string().min(11, { message: "mobile is incorrect." }),
+  destination: z.string().min(12, { message: "mobile is incorrect." }),
   course: z.string({ required_error: "A date is required." }).min(1, { message: "course must contain atleast 2 chracter" }),
   teacher: z.string({ required_error: "A date is required." }).min(2, { message: "Teacher name must contain atleast 2 character." }),
   time: z.string({ required_error: "Time slot is required." }),
@@ -69,11 +69,11 @@ export function DatePickerForm() {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       userName: "",
-      destination: "+971",
+      destination: "",
       course: "",
       teacher: "",
       date: format(new Date(), "yyyy-MM-dd"),
-      time: new Date().toLocaleTimeString().substring(11, 16),
+      time: "",
       items: ["1hour"],
     },
   });
@@ -82,6 +82,8 @@ export function DatePickerForm() {
     try {
       const res = await axios.post(DemoClassUrl,data);
       console.log(res.data);
+      console.log(res.data?.destination);
+      
       form.reset();
       toast({
         title: "Success✅",
@@ -132,12 +134,13 @@ export function DatePickerForm() {
                <FormLabel className="font-semibold">Contact Details</FormLabel>
                 <FormControl>
                 <PhoneInput
-                  country={"uae"}
+                  country={"ae"}
                   placeholder="Parents Contact/Whatsapp number"   
-                  {...field}         
+                  {...field}  
                   specialLabel= ""
                   inputStyle={{width: "440px"}}
                   inputProps={{ ref: field.ref, required: true }}
+                
                 />
               </FormControl>
               <FormMessage />
