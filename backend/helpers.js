@@ -6,23 +6,18 @@ dotenv.config();
 export const sendReminder = async (userName, destination, campaignName) => {
     const { AISENSY_API_KEY, AISENSY_BASE_URL } = process.env;
 
-    console.log("base url" + AISENSY_BASE_URL);
-    console.log("api key" + AISENSY_API_KEY);
-
     const payload = {
       apiKey: AISENSY_API_KEY,
       campaignName,
-      destination,
+      destination: destination.startsWith("+") ? destination : `+${destination}`,
       userName,
     };
-
-    console.log("Payload is" + JSON.stringify(payload, null, 2));
 
     try {
       const res = await axios.post(`${AISENSY_BASE_URL}`, payload);
 
       const currentTime = new Date().toLocaleString();
-      console.log(`reminder sent successfully on ${currentTime}` + res.data);
+      console.log(`reminder sent successfully on ${currentTime}` + JSON.stringify(res.data, null ,2));
     } catch (error) {
       console.error("Failed to send reminder", error);
     }
