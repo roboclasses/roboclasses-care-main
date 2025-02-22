@@ -6,10 +6,6 @@ const newBatchEntrySchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    time:{
-        type:[String],
-        required:true
-    },
     batch:{
         type:String,
         required:true

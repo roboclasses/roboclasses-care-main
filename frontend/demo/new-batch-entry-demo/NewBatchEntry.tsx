@@ -23,7 +23,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { NewBatchEntryUrl } from "@/constants";
+import { CoursesUrl, NewBatchEntryUrl } from "@/constants";
 
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -33,52 +33,54 @@ import { usePathname } from "next/navigation";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { teachers } from "@/data/dataStorage";
+import { courseType } from "@/types/Types";
 
-const weekdays = [
-  {
-    id: "sun",
-    label: "Sunday",
-  },
-  {
-    id: "mon",
-    label: "Monday",
-  },
-  {
-    id: "tue",
-    label: "Tuesday",
-  },
-  {
-    id: "wed",
-    label: "Wednesday",
-  },
-  {
-    id: "thu",
-    label: "Thursday",
-  },
-  {
-    id: "fri",
-    label: "Friday",
-  },
-  {
-    id: "sat",
-    label: "Saturday",
-  },
-];
+// const weekdays = [
+//   {
+//     id: "sun",
+//     label: "Sunday",
+//   },
+//   {
+//     id: "mon",
+//     label: "Monday",
+//   },
+//   {
+//     id: "tue",
+//     label: "Tuesday",
+//   },
+//   {
+//     id: "wed",
+//     label: "Wednesday",
+//   },
+//   {
+//     id: "thu",
+//     label: "Thursday",
+//   },
+//   {
+//     id: "fri",
+//     label: "Friday",
+//   },
+//   {
+//     id: "sat",
+//     label: "Saturday",
+//   },
+// ];
 
-const times = [{id:0},{id:1},{id:2},{id:3},{id:4},{id:5},{id:6}]
+// const times = [{id:0},{id:1},{id:2},{id:3},{id:4},{id:5},{id:6}]
 
 
 const FormSchema = z.object({
   batch: z.string().min(2, { message: "Batch number must be atleast 2 characters long." }),
   course: z.string().min(2, { message: "Course name must be atleast 2 characters long." }),
   teacher: z.string().min(2, { message: "Teacher name must be atleast 2 characters long." }),
-  time: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one time.",}),
+  // time: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one time.",}),
 });
 
 export function NewBatchEntryForm() {
   const pathname = usePathname();
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
+  const [courses, setCourses] = useState<courseType[]>([]);
   
 // For fetching logged-in users name and role
   useEffect(() => {
@@ -90,13 +92,30 @@ export function NewBatchEntryForm() {
     handleFetch();
   }, [pathname]);
 
+// Get courses
+useEffect(()=>{
+  const handleFetch = async()=>{
+    try {
+      const res = await axios.get(CoursesUrl)
+      console.log(res.data);
+      setCourses(res.data)
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  handleFetch()
+
+},[])
+
+
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       batch:"",
       course:"",
       teacher:"",
-      time: ["", "", "", "", "", "", ""],
+      // time: ["", "", "", "", "", "", ""],
     },
   });
 
@@ -105,7 +124,7 @@ export function NewBatchEntryForm() {
     try {
       const batch = `${data.course} - ${data.batch}`
       const payload = {
-        time:data.time,
+        // time:data.time,
         teacher:data.teacher,
         batch:batch
       }
@@ -137,7 +156,7 @@ export function NewBatchEntryForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
-        <Table>
+        {/* <Table>
           <TableCaption>A list of weekdays with time slot</TableCaption>
           <TableHeader>
             <TableRow>
@@ -168,27 +187,36 @@ export function NewBatchEntryForm() {
               ))}
             </TableRow>
           </TableBody>
-        </Table>
+        </Table> */}
 
         <div className="flex gap-1 items-center">
         <Label className="font-semibold">Batch Name</Label>
+
         <FormField
           control={form.control}
-          name="course"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input
-                  placeholder="Course Name"
-                  {...field}
-                  required
-                  className="bg-white"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+                      name="course"
+                      render={({ field }) => (
+                        <FormItem>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                            required
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select a course"/>
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {courses.map((item)=>(
+                                <SelectItem value={item.course} key={item._id}>{item.course}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </FormItem>
           )}
-        />
+         />
+         
         <FormField
           control={form.control}
           name="batch"
@@ -206,6 +234,7 @@ export function NewBatchEntryForm() {
             </FormItem>
           )}
         />
+
         </div>
 
         <FormField
