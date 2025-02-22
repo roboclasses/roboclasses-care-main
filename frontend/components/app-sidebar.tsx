@@ -61,6 +61,10 @@ useEffect(()=>{
         isActive: true,
         items: [
           {
+            title: "Register a Student",
+            url: "/appointment/studentRegister",
+          },
+          {
             title: "Demo Class",
             url: "/appointment/reminder/demo-class",
           },
