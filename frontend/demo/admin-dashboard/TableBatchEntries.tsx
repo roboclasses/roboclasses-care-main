@@ -20,7 +20,7 @@ import axios from "axios";
 import Link from "next/link";
 
 
-const weekdays = ["Sun","Mon","Tues","Wed","Thu","Fri","Sat"]
+// const weekdays = ["Sun","Mon","Tues","Wed","Thu","Fri","Sat"]
 
 const fetcher = (url: string) => axios.get(url, {headers:{ Authorization: Cookies.get("token")}}).then((res) => res.data);
 
@@ -49,12 +49,12 @@ export function TableBatchEntries() {
  if (data?.length === 0) return <div>Empty list for Batches</div>;
 
  // Format time for batch entries
- const handleTime = (timeArray:string[])=>{
-  return timeArray
-    .map((time, index)=> time!=='' ? `${weekdays[index]} - ${time}` : null)
-    .filter((time)=>time!==null)
-    .join(", ")
- }
+//  const handleTime = (timeArray:string[])=>{
+//   return timeArray
+//     .map((time, index)=> time!=='' ? `${weekdays[index]} - ${time}` : null)
+//     .filter((time)=>time!==null)
+//     .join(", ")
+//  }
 
   return (
     <Table className="border border-black">
@@ -63,7 +63,7 @@ export function TableBatchEntries() {
         <TableRow>
           <TableHead className="w-[100px]">Teacher Name</TableHead>
           <TableHead>Batch Name</TableHead>
-          <TableHead>Times</TableHead>
+          {/* <TableHead>Times</TableHead> */}
           <TableHead>Edit</TableHead>
           <TableHead>Delete</TableHead>
         </TableRow>
@@ -73,7 +73,7 @@ export function TableBatchEntries() {
           <TableRow key={batch._id}>
             <TableCell className="font-medium">{batch.teacher}</TableCell>
             <TableCell>{batch.batch}</TableCell>
-            <TableCell className="text-right"> {handleTime(batch.time)} </TableCell>
+            {/* <TableCell className="text-right"> {handleTime(batch.time)} </TableCell> */}
             <TableCell className="text-right">
               <Link href={`/newBatchEntry/edit/${batch._id}`}>
               <EditButton name="Edit" type="button" />

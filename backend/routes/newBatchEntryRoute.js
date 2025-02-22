@@ -9,11 +9,10 @@ const router = express.Router();
 // create new batch
 router.post("/newBatchEntries", authMiddleware, roleMiddleware("teacher", "admin"), async (req, res) => {
   try {
-    const { teacher, batch, time } = req.body;
+    const { teacher, batch } = req.body;
     const data = await NewBatchEntries.create({
       teacher,
       batch,
-      time,
     });
 
     console.log(data);
@@ -70,10 +69,10 @@ router.get("/newBatchEntries/:id", authMiddleware, roleMiddleware("teacher", "ad
 router.put("/newBatchEntries/:id", authMiddleware, roleMiddleware("teacher", "admin"), async (req, res) => {
   try {
     const { id } = req.params;
-    const { teacher, batch, time } = req.body;
+    const { teacher, batch } = req.body;
     const data = await NewBatchEntries.findByIdAndUpdate(
       id,
-      { teacher, batch, time },
+      { teacher, batch },
       { new: true }
     );
     console.log(data);

@@ -23,11 +23,9 @@ import { useEffect, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import PhoneInput from "react-phone-input-2";
 import { Label } from "@/components/ui/label";
+import { courseType } from "@/types/Types";
 
-interface courseType{
-_id:string;
-course:string;
-}
+
 
 // for mapping checkbox value and label
 const countries = [
