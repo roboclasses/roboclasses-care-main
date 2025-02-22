@@ -10,6 +10,7 @@ import attendancesRoute from "./routes/attendancesRoute.js"
 import normalClassAppointmentsRoute from "./routes/normalClassAppointmentsRoute.js"
 import userRoutes from "./routes/userRoutes.js"
 import courseRoutes from "./routes/courseRoute.js"
+import studentRoutes from "./routes/studentRegRoute.js"
 
 dotenv.config();
 const app = express();
@@ -27,6 +28,7 @@ app.use(helmet());
 
 // routes
 app.use('/api/v1',userRoutes)
+app.use('/api/v1',studentRoutes)
 app.use('/api/v1',appointmentsRoute)
 app.use('/api/v1',normalClassAppointmentsRoute)
 app.use('/api/v1', newBatchEntryRoute)
