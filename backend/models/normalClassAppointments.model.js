@@ -14,6 +14,11 @@ const normalClassSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    email:{
+      type:String,
+      unique:true,
+      required:true,
+    },
     batch: {
       type: String,
       required: true,

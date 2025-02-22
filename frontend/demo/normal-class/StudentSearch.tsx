@@ -4,22 +4,39 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { students } from '@/data/dataStorage';
-import { studentSearchType} from '@/types/Types';
-import React, { useState } from 'react'
+import { StudentRegUrl } from '@/constants';
+import { studentSearchType, studentType} from '@/types/Types';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
 
 const StudentSearch = ({onSelect, selectedStudent}:studentSearchType) => {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [data, setData] = useState<studentType[]>([])
 
-  const filteredStudents = students.filter((student)=>student.name.toLowerCase().includes(searchQuery.toLocaleLowerCase()))
+  // Get students details
+  useEffect(()=>{
+    const handleFetch = async()=>{
+      try {
+        const res = await axios.get(StudentRegUrl)
+        console.log(res.data);
+        setData(res.data)
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    handleFetch()
+
+  },[])
+
+  const filteredStudents = data.filter((student)=>student.studentName.toLowerCase().includes(searchQuery.toLocaleLowerCase()))
 
   return (
     <div className="w-full">
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button variant="outline" role="combobox" aria-expanded={open} className="w-full justify-between">
-          {selectedStudent ? selectedStudent.name : "Select student..."}
+          {selectedStudent ? selectedStudent.studentName : "Select student..."}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full p-0">
@@ -30,14 +47,14 @@ const StudentSearch = ({onSelect, selectedStudent}:studentSearchType) => {
             <CommandGroup>
               {filteredStudents.map((student) => (
                 <CommandItem
-                  key={student.id}
+                  key={student._id}
                   onSelect={() => {
                     onSelect(student);
                     setOpen(false);
                   }}
                 >
                   <ScrollArea>
-                    {student.name}
+                    {student.studentName}
                   </ScrollArea>
                 </CommandItem>
               ))}
@@ -46,7 +63,7 @@ const StudentSearch = ({onSelect, selectedStudent}:studentSearchType) => {
         </Command>
       </PopoverContent>
     </Popover>
-    <Input type="hidden" name="selectedStudentId" value={selectedStudent?.id ?? ""} />
+    <Input type="hidden" name="selectedStudentId" value={selectedStudent?._id ?? ""} />
   </div>
   )
 }

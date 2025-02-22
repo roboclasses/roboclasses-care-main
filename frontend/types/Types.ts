@@ -55,8 +55,14 @@ export type courseType={
 }
 
 export type studentType = {
-  id: number;
-  name: string;
+  _id: string;
+  studentName: string;
+  parentName?:string;
+  destination?: string;
+  email?:string;
+  address?:string;
+  grade?:string;
+  course?:string;
 }
 
 export type studentSearchType = {
