@@ -44,7 +44,7 @@ const page = () => {
           className="min-h-screen object-cover"
         />
         <div className="w-[600px] flex flex-col gap-5 p-20">
-          <p className="text-4xl font-bold mb-2">Book Bulk Appointments</p>
+          <p className="text-4xl font-bold mb-2">Create Normal Class</p>
           <MultiDatePickerForm />
         </div>
       </div>

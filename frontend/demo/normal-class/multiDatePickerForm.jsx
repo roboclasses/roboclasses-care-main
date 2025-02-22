@@ -37,6 +37,7 @@ import Cookies from "js-cookie";
 import PhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
 import MultiDateTimeEntry from "./MultiDateTimeEntry";
+import { Input } from "@/components/ui/input";
 
 
 const items = [
@@ -91,6 +92,7 @@ const FormSchema = z.object({
   batch: z.string().min(2, { message: "Batch name must be atleast 2 characters long." }),
   userName: z.string().min(2, { message:"Student name must be atlest 2 characters long." }),
   destination:z.string().min(7,{message:"Phone number must be valid."}),
+  email:z.string().email({message: "Email must be valid."}),
   dateTimeEntries: z.array(z.object({
     date: z.string(),
     time: z.string(),
@@ -153,6 +155,7 @@ export function MultiDatePickerForm() {
       teacher: "",
       userName:"",
       destination:"",
+      email:"",
       batch: "",
       items: ["1hour"],
       dateTimeEntries:{
@@ -255,6 +258,25 @@ export function MultiDatePickerForm() {
                   {...field}         
                   inputStyle={{ width: "440px" }}
                   inputProps={{ ref: field.ref, required: true }}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+<FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="font-semibold">Email Address</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Enter your email"
+                  {...field}
+                  required
+                  className="bg-white"
                 />
               </FormControl>
               <FormMessage />

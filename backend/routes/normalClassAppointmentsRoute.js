@@ -9,8 +9,8 @@ const router = express.Router();
 // Create appointments
 router.post("/appointments/normalClass", async (req, res) => {
   try {
-    const { teacher, userName, destination, batch, time, date, items } = req.body;
-    const newAppointment = { teacher, userName, destination, batch, time, date, items }
+    const { teacher, userName, destination, email, batch, time, date, items } = req.body;
+    const newAppointment = { teacher, userName, destination, email, batch, time, date, items }
     const data = await NormalClass.create(newAppointment);
     
     scheduleReminders(newAppointment)
@@ -64,10 +64,10 @@ router.get("/appointments/normalClass/:id", async (req, res) => {
 router.put("/appointments/normalClass/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { teacher, userName, destination, batch, time, date, items } = req.body;
+    const { teacher, userName, destination, email, batch, time, date, items } = req.body;
     const data = await NormalClass.findByIdAndUpdate(
       id,
-      { teacher, userName, destination, batch, time, date, items },
+      { teacher, userName, destination, email, batch, time, date, items },
       { new: true }
     );
     console.log(data);
