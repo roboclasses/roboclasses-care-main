@@ -16,6 +16,7 @@ import { Separator } from "@radix-ui/react-separator";
 import React from "react";
 import { TableAttendance } from "@/demo/admin-dashboard/TableAttendance";
 import { TableCourseEntries } from "@/demo/admin-dashboard/TableCourseEntries";
+import { StudentsTable } from "@/demo/student-register-demo/StudentsTable";
 
 const page = () => {
   return (
@@ -41,6 +42,7 @@ const page = () => {
       </header>
       <div className="w-[1200px] grid grid-cols-1 space-y-10 px-20 mt-10">
         <p className="font-bold text-4xl">Manage Appointments</p>
+        <StudentsTable />
         <TableDemoClass />
         <TableNormalClass />
       </div>

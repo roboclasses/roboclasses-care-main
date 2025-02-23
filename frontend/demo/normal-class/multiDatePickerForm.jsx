@@ -217,7 +217,7 @@ export function MultiDatePickerForm() {
                   country={"ae"}
                   {...field}  
                   disabled       
-                  inputStyle={{ width: "440px" }}
+                  inputStyle={{ width: "540px" }}
                   inputProps={{ ref: field.ref, required: true }}
                 />
               </FormControl>
