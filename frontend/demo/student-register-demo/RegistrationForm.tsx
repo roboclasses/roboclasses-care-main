@@ -17,24 +17,20 @@ import { Input } from "@/components/ui/input";
 
 import axios from "axios";
 import 'react-phone-input-2/lib/style.css'
-import { CoursesUrl, StudentRegUrl } from "@/constants";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { StudentRegUrl } from "@/constants";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import PhoneInput from "react-phone-input-2";
 import { Label } from "@/components/ui/label";
-import { courseType } from "@/types/Types";
 
 
 
-// for mapping checkbox value and label
 const countries = [
   {
     id: 1,
     name: "UAE",
   },
   {
-    id: 1,
+    id: 2,
     name: "INDIA",
   },
 ];
@@ -52,19 +48,6 @@ const FormSchema = z.object({
 });
 
 export function RegistrationForm() {
-  const pathname = usePathname();
-  const [courses, setCourses] = useState<courseType[]>([]);
-  
-// Handle fetching logged-in users credentials from cookie storage
-  useEffect(() => {
-    const handleFetch = async () => {
-      const res = await axios.get(CoursesUrl)
-      console.log(res.data);
-      
-     setCourses(res.data)
-    };
-    handleFetch();
-  }, [pathname]);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -245,29 +228,23 @@ export function RegistrationForm() {
 
         <FormField
           control={form.control}
-              name="courses"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="font-semibold">Course Details</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    required
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select course"/>
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {courses.map((item)=>(
-                        <SelectItem value={item.course} key={item._id}>{item.course}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormItem>
+          name="courses"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="font-semibold">Courses Done</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Enter Courses done earlier"
+                  {...field}
+                  required
+                  className="bg-white"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="grade"
