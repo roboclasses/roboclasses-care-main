@@ -62,7 +62,7 @@ export type studentType = {
   email?:string;
   address?:string;
   grade?:string;
-  course?:string;
+  courses?:string;
 }
 
 export type studentSearchType = {

@@ -13,7 +13,7 @@ router.post("/appointments/normalClass", async (req, res) => {
     const newAppointment = { teacher, userName, destination, email, batch, time, date, items }
     const data = await NormalClass.create(newAppointment);
     
-    scheduleReminders(newAppointment)
+    // scheduleReminders(newAppointment)
 
     console.log(data);
     return res.status(201).json({
