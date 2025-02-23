@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -9,35 +10,22 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { toast } from "@/hooks/use-toast";
-// import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-// import {
-//   Table,
-//   TableBody,
-//   TableCaption,
-//   TableCell,
-//   TableHead,
-//   TableHeader,
-//   TableRow,
-// } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import StudentSearch from "./StudentSearch";
-import { getUserSession } from "@/lib/session";
-import { NewBatchEntryUrl, NormalClassUrl } from "@/constants";
-import { teachers } from "@/data/dataStorage";
+import MultiDateTimeEntry from "./MultiDateTimeEntry";
+import { toast } from "@/hooks/use-toast";
+
+import { NewBatchEntryUrl, NormalClassUrl, StudentRegUrl } from "@/constants";
 
 import { z } from "zod";
 import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import PhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
-import MultiDateTimeEntry from "./MultiDateTimeEntry";
-import { Input } from "@/components/ui/input";
 
 
 const items = [
@@ -51,48 +39,14 @@ const items = [
   },
 ];
 
-// const weekdays = [
-//   {
-//     id: "sun",
-//     label: "Sunday",
-//   },
-//   {
-//     id: "mon",
-//     label: "Monday",
-//   },
-//   {
-//     id: "tue",
-//     label: "Tuesday",
-//   },
-//   {
-//     id: "wed",
-//     label: "Wednesday",
-//   },
-//   {
-//     id: "thu",
-//     label: "Thursday",
-//   },
-//   {
-//     id: "fri",
-//     label: "Friday",
-//   },
-//   {
-//     id: "sat",
-//     label: "Saturday",
-//   },
-// ];
-
-// const times = [{id:0},{id:1},{id:2},{id:3},{id:4},{id:5},{id:6}]
-
 
 const FormSchema = z.object({
-  // time: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one time."}),
   items: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one item."}),
-  teacher: z.string().min(2, { message: "Teacher name must be atleast 2 characters long." }),
   batch: z.string().min(2, { message: "Batch name must be atleast 2 characters long." }),
   userName: z.string().min(2, { message:"Student name must be atlest 2 characters long." }),
-  destination:z.string().min(7,{message:"Phone number must be valid."}),
-  email:z.string().email({message: "Email must be valid."}),
+  destination:z.string().optional(),
+  email:z.string().optional(),
+  teacher: z.string().optional(),
   dateTimeEntries: z.array(z.object({
     date: z.string(),
     time: z.string(),
@@ -100,26 +54,11 @@ const FormSchema = z.object({
 });
 
 export function MultiDatePickerForm() {
-  const pathname = usePathname();
-  const [name, setName] = useState("");
-  const [role, setRole] = useState("");
 
   const [data, setData] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null)
   const [dateTimeEntries, setDateTimeEntries] = useState([]);
-
-  console.log("date and time"+dateTimeEntries);
   
-  
-// Handle fetching logged-in users credentials from cookie storage
-  useEffect(() => {
-    const handleFetch = async () => {
-      const user = await getUserSession();
-      setRole(user.role || "");
-      setName(user.name || "");
-    };
-    handleFetch();
-  }, [pathname]);
 
 // Handle fetch batches
   useEffect(()=>{
@@ -139,8 +78,7 @@ export function MultiDatePickerForm() {
 // Handle select student
   const handleStudentSelect = (student)=>{
     setSelectedStudent(student)
-    form.setValue("userName",student.name)
-
+    form.setValue("userName",student.studentName)
   }
 
   // Handle multiple date and time add, remove and update
@@ -165,6 +103,60 @@ export function MultiDatePickerForm() {
       
     },
   });
+
+  const studentName = form.watch("userName");
+  const batchName = form.watch("batch");
+  
+
+  // Fetch student details (Phone & Address)
+  useEffect(()=>{
+    const handleFetch=async()=>{
+      try {
+        const res = await axios.get(`${StudentRegUrl}?name=${studentName}`)
+        
+        if(res.data){
+          const selectedStudent = res.data.find((item)=>item.studentName === studentName)
+          if(selectedStudent){
+            form.setValue("destination", selectedStudent.destination || '')
+            form.setValue("email",selectedStudent.email || '')
+          }
+        }
+        
+      } catch (error) {
+      console.error(error);
+      form.setValue("destination", "")
+      form.setValue("email","")  
+      }
+    }
+    if(studentName){
+      handleFetch();
+    }
+  },[studentName, form])
+
+  // Fetch batch details (teacher name)
+  useEffect(()=>{
+    const handleFetch = async()=>{
+      try {
+        const res = await axios.get(`${NewBatchEntryUrl}?name=${batchName}`,{headers: { Authorization: Cookies.get("token") }})
+
+        if(res.data){
+          const selectedBatch = res.data.find((item)=>item.batch === batchName)
+          if(selectedBatch){
+            console.log(selectedBatch.teacher);
+            form.setValue("teacher",selectedBatch.teacher || '') 
+          }
+        }
+        
+      } catch (error) {
+        console.error(error);
+        form.setValue("teacher", "") 
+      }
+    }
+    if(batchName){
+      handleFetch()
+    }
+
+  },[batchName, form])
 
   
   async function onSubmit(data) {
@@ -199,38 +191,7 @@ export function MultiDatePickerForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
-        {/* <Table>
-          <TableCaption>A list of weekdays with time slot</TableCaption>
-          <TableHeader>
-            <TableRow>
-              {weekdays.map((item) => (
-                <TableHead className="w-[100px]" key={item.id}>
-                  {item.label}
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow>
-              {times.map((item) => (
-                <TableCell className="font-medium" key={item.id}>
-                  <FormField
-                    control={form.control}
-                    name={`time.${item.id}`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Input type="time" {...field} className="bg-white" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableBody>
-        </Table> */}
+       
          <MultiDateTimeEntry onEntriesChange={handleDateTimeEntriesChange} />
 
         <FormField
@@ -254,8 +215,8 @@ export function MultiDatePickerForm() {
               <FormControl>
               <PhoneInput
                   country={"ae"}
-                  placeholder="Parents Contact/Whatsapp number"   
-                  {...field}         
+                  {...field}  
+                  disabled       
                   inputStyle={{ width: "440px" }}
                   inputProps={{ ref: field.ref, required: true }}
                 />
@@ -265,7 +226,7 @@ export function MultiDatePickerForm() {
           )}
         />
 
-<FormField
+        <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
@@ -273,9 +234,9 @@ export function MultiDatePickerForm() {
               <FormLabel className="font-semibold">Email Address</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Enter your email"
                   {...field}
                   required
+                  disabled
                   className="bg-white"
                 />
               </FormControl>
@@ -283,7 +244,6 @@ export function MultiDatePickerForm() {
             </FormItem>
           )}
         />
-
 
         <FormField
           control={form.control}
@@ -313,29 +273,20 @@ export function MultiDatePickerForm() {
 
         <FormField
           control={form.control}
-              name="teacher"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="font-semibold">Teachers Details</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    required
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select teacher"/>
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {role === "teacher" ? 
-                        <SelectItem value={name}>{name}</SelectItem> : 
-                          role === "admin" ? 
-                            teachers.map((item)=>(<SelectItem value={item.name} key={item.id}>{item.name}</SelectItem>)) : 
-                              '' }
-                    </SelectContent>
-                  </Select>
-                </FormItem>
+          name="teacher"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="font-semibold">Teacher Name</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  required
+                  disabled
+                  className="bg-white"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
         />
 

@@ -128,9 +128,7 @@ useEffect(()=>{
         teacher:data.teacher,
         batch:batch
       }
-      const res = await axios.post(NewBatchEntryUrl, payload, {
-        headers: { Authorization: Cookies.get("token") },
-      });
+      const res = await axios.post(NewBatchEntryUrl, payload, {headers: { Authorization: Cookies.get("token") }});
       console.log(res.data);
       form.reset();
       
