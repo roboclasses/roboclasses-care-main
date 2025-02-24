@@ -11,25 +11,20 @@ import {
 } from "@/components/ui/table";
 import { EditButton } from "./EditButton";
 
-import { DateTime } from "luxon";
 import useSWR from "swr";
 import axios from "axios";
 import Link from "next/link";
 import { appointmentTypes } from "@/types/Types";
 import { DemoClassUrl } from "@/constants";
 import { toast } from "@/hooks/use-toast";
+import { format } from "date-fns";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 export function TableDemoClass() {
   const { data, error, isLoading, isValidating, mutate } = useSWR<appointmentTypes[]>(DemoClassUrl,fetcher);
 
-// Format date and time with timezone  
-  const handleTime = (date:Date, time:string, timeZone:string) =>{
-    return DateTime.fromFormat(`${date} ${time}`, "yyyy-MM-dd HH:mm", {
-      zone: timeZone,  // Use the user's timezone directly
-    }).toFormat("MMM dd, yyyy HH:mm");
-  }
+
 
   // Handle delete appointment
   const handleDelete = async (appointmentId: string) => {
@@ -61,7 +56,8 @@ export function TableDemoClass() {
           <TableHead className="w-[100px]">Student Name</TableHead>
           <TableHead className="w-[100px]">Course Name</TableHead>
           <TableHead className="w-[100px]">Teacher Name</TableHead>
-          <TableHead>Date and Time</TableHead>
+          <TableHead>Date</TableHead>
+          <TableHead>Time</TableHead>
           <TableHead>Status</TableHead>
           <TableHead>Edit</TableHead>
           <TableHead>Delete</TableHead>
@@ -75,7 +71,8 @@ export function TableDemoClass() {
             </TableCell>
             <TableCell className="font-medium">{appointment.course}</TableCell>
             <TableCell className="font-medium">{appointment.teacher}</TableCell>
-            <TableCell className="text-right">{handleTime(appointment.date, appointment.time, appointment.timeZone)}</TableCell>
+            <TableCell className="text-right">{format(appointment.date, "MMM dd, yyyy")}</TableCell>
+            <TableCell className="text-right">{appointment.time}</TableCell>
             <TableCell className="text-right">
               <EditButton
                 name={appointment.status === true ? "Cancelled" : "Active"}
