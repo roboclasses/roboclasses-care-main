@@ -58,6 +58,7 @@ export function TableDemoClass() {
           <TableHead className="w-[100px]">Teacher Name</TableHead>
           <TableHead>Date</TableHead>
           <TableHead>Time</TableHead>
+          <TableHead>Timezone</TableHead>
           <TableHead>Status</TableHead>
           <TableHead>Edit</TableHead>
           <TableHead>Delete</TableHead>
@@ -73,6 +74,7 @@ export function TableDemoClass() {
             <TableCell className="font-medium">{appointment.teacher}</TableCell>
             <TableCell className="text-right">{format(appointment.date, "MMM dd, yyyy")}</TableCell>
             <TableCell className="text-right">{appointment.time}</TableCell>
+            <TableCell className="text-right">{appointment.timeZone}</TableCell>
             <TableCell className="text-right">
               <EditButton
                 name={appointment.status === true ? "Cancelled" : "Active"}
