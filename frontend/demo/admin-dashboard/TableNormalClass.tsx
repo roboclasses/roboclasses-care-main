@@ -21,8 +21,7 @@ import moment from 'moment-timezone'
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
-// For mapping weekdays in time cell
-// const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
 
 export function TableNormalClass() {
   const { data, isLoading, isValidating, error, mutate } = useSWR<normalClassType[]>(NormalClassUrl, fetcher);

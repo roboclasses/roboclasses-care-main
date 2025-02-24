@@ -56,7 +56,7 @@ export function StudentsTable() {
           <TableHead>Email Address</TableHead>
           <TableHead>Location Details</TableHead>
           <TableHead>Grade</TableHead>
-          <TableHead>Courses Persued</TableHead>
+          <TableHead>Courses Done</TableHead>
           <TableHead>Edit</TableHead>
           <TableHead>Delete</TableHead>
         </TableRow>
