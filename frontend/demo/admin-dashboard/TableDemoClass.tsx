@@ -102,7 +102,7 @@ export function TableDemoClass() {
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={7}>Total Rows</TableCell>
+          <TableCell colSpan={8}>Total Rows</TableCell>
           <TableCell className="text-right">{data?.length}</TableCell>
         </TableRow>
       </TableFooter>
