@@ -1,7 +1,7 @@
 import express from "express";
 import { Appointment } from "../models/appointment.model.js";
 
-import scheduleReminders from "../jobs/scheduler.js"
+// import scheduleReminders from "../jobs/scheduler.js"
 
 const router = express.Router();
 
@@ -23,7 +23,7 @@ console.log(newAppointment);
     const createAppointments = await Appointment.create(newAppointment)
     console.log(createAppointments);
     
-    await scheduleReminders(newAppointment)
+    // await scheduleReminders(newAppointment)
     return res.status(201).json({
       success: true,
       message: "appointment created successfully.", createAppointments

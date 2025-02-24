@@ -1,6 +1,6 @@
 import express from "express";
 import { NormalClass } from "../models/normalClassAppointments.model.js";
-import scheduleReminders from "../jobs/scheduler.js";
+// import scheduleReminders from "../jobs/scheduler.js";
 
 
 const router = express.Router();
