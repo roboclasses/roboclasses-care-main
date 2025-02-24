@@ -8,7 +8,7 @@ const router = express.Router();
 // create appointments
 router.post("/appointments/demoClass", async (req, res) => {
   try {
-    const { date, userName, destination, course, teacher, time, items } = req.body;
+    const { date, userName, destination, course, teacher, time, items,timeZone} = req.body;
     const newAppointment = {
       date,
       userName,
@@ -16,6 +16,7 @@ router.post("/appointments/demoClass", async (req, res) => {
       course,
       teacher,
       time,
+      timeZone,
       items,
     };
 console.log(newAppointment);
@@ -72,11 +73,11 @@ router.get("/appointments/demoClass/:id", async (req, res) => {
 router.put("/appointments/demoClass/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { date, userName, destination, time, items, course, teacher } =
+    const { date, userName, destination, time, items, course, teacher, timeZone} =
       req.body;
     const data = await Appointment.findByIdAndUpdate(
       id,
-      { date, userName, destination, time, items, course, teacher },
+      { date, userName, destination, time, items, course, teacher, timeZone},
       { new: true }
     );
     console.log(data);

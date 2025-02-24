@@ -40,12 +40,14 @@ const items = [
 ];
 
 
-const FormSchema = z.object({date: z.string({ required_error: "A date is required." }),
+const FormSchema = z.object({
+  date: z.string({ required_error: "A date is required." }),
   userName: z.string({ required_error: "A date is required." }).min(2, { message: "name must contain atleast 2 character." }),
   destination: z.string().min(12, { message: "mobile is incorrect." }),
   course: z.string({ required_error: "A date is required." }).min(1, { message: "course must contain atleast 2 chracter" }),
   teacher: z.string({ required_error: "A date is required." }).min(2, { message: "Teacher name must contain atleast 2 character." }),
   time: z.string({ required_error: "Time slot is required." }),
+  timeZone: z.string(),
   items: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one item.",}),
 });
 
@@ -71,17 +73,42 @@ export function DatePickerForm() {
       destination: "",
       course: "",
       teacher: "",
-      date: new Date().toISOString().split("T")[0],
+      date: "",
       time: "",
+      timeZone:"",
       items: ["1hour"],
     },
   });
 
+// For detect system timezone
+    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      const res = await axios.post(DemoClassUrl,data);
+
+      // const localDateTime = `${data.date}T${data.time}`
+      // const userDateTime = new Date(localDateTime)
+      // console.log("user date-time"+userDateTime);
+
+      // const utcDateTime = userDateTime.toISOString();
+            
+
+      const payload = {
+        userName:data.userName,
+        destination: data.destination,
+        course:data.course,
+        teacher:data.teacher,
+        time:data.time,
+        timeZone:data.timeZone,
+        date:data.date,
+        items:data.items,
+        // utcDateTime
+      }
+      console.log(JSON.stringify(payload));
+      
+      const res = await axios.post(DemoClassUrl,payload);
       console.log(res.data);
-      console.log(res.data?.destination);
       
       form.reset();
       toast({
@@ -203,7 +230,7 @@ export function DatePickerForm() {
                 Book an Appointment
               </FormLabel>
               <FormControl>
-                <Input type="date" {...field} required className="bg-white" />
+                <Input type="date" {...field} required min={new Date().toISOString().split('T')[0]} className="bg-white" />
               </FormControl>
               <FormDescription>
                 Book an appointment for demo class
@@ -233,6 +260,37 @@ export function DatePickerForm() {
             </FormItem>
           )}
         />
+
+        <FormField
+          control={form.control}
+              name="timeZone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-semibold">Timezone Details</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    required
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select timezone"/>
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                       {userTimeZone === 'Asia/Dubai' ? <SelectItem value={userTimeZone}>Local Timezone: {userTimeZone}</SelectItem> :
+                        <>
+                        <SelectItem value={'Asia/Dubai'}>UAE Timezone</SelectItem>
+                        <SelectItem value={userTimeZone}>Local Timezone</SelectItem>
+                        </>
+                       }
+                       
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+          )}
+        />
+
 
         <FormField
           control={form.control}

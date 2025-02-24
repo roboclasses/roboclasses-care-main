@@ -17,6 +17,7 @@ export type appointmentTypes = {
   userName?: string;
   date: Date;
   time: string;
+  timeZone: string;
   destination?:string,
   course?: string;
   teacher?: string;
