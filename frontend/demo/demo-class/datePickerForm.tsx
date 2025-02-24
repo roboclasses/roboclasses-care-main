@@ -39,6 +39,18 @@ const items = [
   },
 ];
 
+// For detect system timezone
+const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+const timezone = [
+  {id:0, name:"Asia/Kolkata", country:"India"},
+  {id:1, name:"America/New_York", country:"USA"},
+  {id:2, name:"Asia/Riyadh", country:"Saudi Arab"},
+  {id:3, name:"America/Toronto", country:"Canada"},
+  {id:4, name:"Asia/Dubai", country:"UAE"},
+  {id:5, name:userTimeZone, country:"Your Timezone"},
+]
+
 
 const FormSchema = z.object({
   date: z.string({ required_error: "A date is required." }),
@@ -75,24 +87,15 @@ export function DatePickerForm() {
       teacher: "",
       date: "",
       time: "",
-      timeZone:"",
+      timeZone:userTimeZone,
       items: ["1hour"],
     },
   });
-
-// For detect system timezone
-    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
 
-      // const localDateTime = `${data.date}T${data.time}`
-      // const userDateTime = new Date(localDateTime)
-      // console.log("user date-time"+userDateTime);
-
-      // const utcDateTime = userDateTime.toISOString();
-            
 
       const payload = {
         userName:data.userName,
@@ -103,7 +106,6 @@ export function DatePickerForm() {
         timeZone:data.timeZone,
         date:data.date,
         items:data.items,
-        // utcDateTime
       }
       console.log(JSON.stringify(payload));
       
@@ -278,11 +280,9 @@ export function DatePickerForm() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                       {userTimeZone === 'Asia/Dubai' ? <SelectItem value={userTimeZone}>Local Timezone: {userTimeZone}</SelectItem> :
-                        <>
-                        <SelectItem value={'Asia/Dubai'}>UAE Timezone</SelectItem>
-                        <SelectItem value={userTimeZone}>Local Timezone</SelectItem>
-                        </>
+                       {timezone.map((item)=>(
+                        <SelectItem value={item.name} key={item.id}>{item.country}</SelectItem>
+                       ))
                        }
                        
                     </SelectContent>
