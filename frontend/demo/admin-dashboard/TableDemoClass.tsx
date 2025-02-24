@@ -26,11 +26,9 @@ export function TableDemoClass() {
 
 // Format date and time with timezone  
   const handleTime = (date:Date, time:string, timeZone:string) =>{
-    const localDateTime = `${date}T${time}`
-    const userDateTime = new Date(localDateTime)
-    const utcDateTime = userDateTime.toISOString();
-
-    return DateTime.fromISO(utcDateTime).setZone(timeZone).toFormat("MMM dd, yyyy HH:mm");
+    return DateTime.fromFormat(`${date} ${time}`, "yyyy-MM-dd HH:mm", {
+      zone: timeZone,  // Use the user's timezone directly
+    }).toFormat("MMM dd, yyyy HH:mm");
   }
 
   // Handle delete appointment
