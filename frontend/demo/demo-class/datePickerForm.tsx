@@ -1,6 +1,5 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -72,7 +71,7 @@ export function DatePickerForm() {
       destination: "",
       course: "",
       teacher: "",
-      date: format(new Date(), "yyyy-MM-dd"),
+      date: new Date().toISOString().split("T")[0],
       time: "",
       items: ["1hour"],
     },
