@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -14,15 +13,6 @@ import {
 } from "@/components/ui/form";
 import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { CoursesUrl, NewBatchEntryUrl } from "@/constants";
 
 import axios from "axios";
@@ -33,54 +23,30 @@ import { usePathname } from "next/navigation";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { teachers } from "@/data/dataStorage";
-import { courseType } from "@/types/Types";
+import MultiDayTimeEntry from "./MultiDayTimeEntry";
+// import { format } from "date-fns";
 
-// const weekdays = [
-//   {
-//     id: "sun",
-//     label: "Sunday",
-//   },
-//   {
-//     id: "mon",
-//     label: "Monday",
-//   },
-//   {
-//     id: "tue",
-//     label: "Tuesday",
-//   },
-//   {
-//     id: "wed",
-//     label: "Wednesday",
-//   },
-//   {
-//     id: "thu",
-//     label: "Thursday",
-//   },
-//   {
-//     id: "fri",
-//     label: "Friday",
-//   },
-//   {
-//     id: "sat",
-//     label: "Saturday",
-//   },
-// ];
-
-// const times = [{id:0},{id:1},{id:2},{id:3},{id:4},{id:5},{id:6}]
 
 
 const FormSchema = z.object({
   batch: z.string().min(2, { message: "Batch number must be atleast 2 characters long." }),
   course: z.string().min(2, { message: "Course name must be atleast 2 characters long." }),
   teacher: z.string().min(2, { message: "Teacher name must be atleast 2 characters long." }),
-  // time: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one time.",}),
+  startDate: z.string(),
+  dayTimeEntries: z.array(z.object({
+    day: z.string(),
+    time: z.string(),
+  }))
 });
 
 export function NewBatchEntryForm() {
   const pathname = usePathname();
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
-  const [courses, setCourses] = useState<courseType[]>([]);
+  const [courses, setCourses] = useState([]);
+
+  const [dayTimeEntries, setDayTimeEntries] = useState([]);
+
   
 // For fetching logged-in users name and role
   useEffect(() => {
@@ -93,7 +59,7 @@ export function NewBatchEntryForm() {
   }, [pathname]);
 
 // Get courses
-useEffect(()=>{
+  useEffect(()=>{
   const handleFetch = async()=>{
     try {
       const res = await axios.get(CoursesUrl)
@@ -105,32 +71,49 @@ useEffect(()=>{
   }
   handleFetch()
 
-},[])
+  },[])
 
 
-
-  const form = useForm<z.infer<typeof FormSchema>>({
+  const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       batch:"",
       course:"",
       teacher:"",
-      // time: ["", "", "", "", "", "", ""],
+      startDate:"",
+      dayTimeEntries:{
+        day:"",
+        time:"",
+      }
     },
   });
 
+// Handle multiple date and time add, remove and update
+    const handleDateTimeEntriesChange = (entries) => {
+      setDayTimeEntries(entries);
+      form.setValue("dayTimeEntries", entries); // Update form value
+    };
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
+
+  async function onSubmit(data) {
+    console.log(JSON.stringify(data));
+  
     try {
       const batch = `${data.course} - ${data.batch}`
+      const transformedDateTimeEntries = {
+        day: dayTimeEntries.map(entry => entry.day), // Extract all dates into an array
+        time: dayTimeEntries.map(entry => entry.time), // Extract all times into an array
+      };
+      const startDate = new Date(data.startDate)
       const payload = {
-        // time:data.time,
+        startDate:startDate,
         teacher:data.teacher,
-        batch:batch
+        batch:batch,
+        ...transformedDateTimeEntries
       }
       const res = await axios.post(NewBatchEntryUrl, payload, {headers: { Authorization: Cookies.get("token") }});
       console.log(res.data);
-      form.reset();
+      // form.reset();
       
       const {message} = res.data;
       toast({
@@ -153,43 +136,28 @@ useEffect(()=>{
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
-      >
-        {/* <Table>
-          <TableCaption>A list of weekdays with time slot</TableCaption>
-          <TableHeader>
-            <TableRow>
-              {weekdays.map((item, index) => (
-                <TableHead className="w-[100px]" key={index}>
-                  {item.label}
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow>
-              {times.map((item) => (
-                <TableCell className="font-medium" key={item.id}>
-                  <FormField
-                    control={form.control}
-                    name={`time.${item.id}`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Input type="time" {...field} className="bg-white" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableBody>
-        </Table> */}
+      >         
+      
+      <MultiDayTimeEntry onEntriesChange={handleDateTimeEntriesChange} />
+
+        <FormField
+          control={form.control}
+          name="startDate"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel className="font-semibold">
+                Select a Start Date
+              </FormLabel>
+              <FormControl>
+                <Input type="date" {...field} required className="bg-white" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <div className="flex gap-1 items-center">
         <Label className="font-semibold">Batch Name</Label>
-
         <FormField
           control={form.control}
                       name="course"

@@ -47,6 +47,8 @@ export type batchType = {
   teacher: string;
   batch: string;
   time: string[];
+  day: string[];
+  startDate:string;
 };
 
 export type courseType={

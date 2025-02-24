@@ -35,19 +35,6 @@ const page = () => {
           </Breadcrumb>
         </div>
       </header>
-      {/* <div className="grid grid-cols-2">
-        <Image
-          width={1200}
-          height={1200}
-          src={PRIVATE_WALLPAPER}
-          alt="wallpaper"
-          className="min-h-screen object-cover"
-        />
-        <div className="w-[600px] flex flex-col gap-5 p-20">
-          <p className="text-4xl font-bold mb-2">Create Normal Class</p>
-          <MultiDatePickerForm />
-        </div>
-      </div> */}
       <div className="relative flex-1">
         <Image
           src={PRIVATE_WALLPAPER}
