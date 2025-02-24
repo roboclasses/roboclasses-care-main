@@ -26,6 +26,14 @@ const appointmentSchema = new Schema(
       required: true,
       type: String,
     },
+    timeZone:{
+      required:true,
+      type:String,
+    },
+    // utcDateTime:{
+    //   required:true,
+    //   type:Date,
+    // },
     items: {
       required: true,
       type: [String],
