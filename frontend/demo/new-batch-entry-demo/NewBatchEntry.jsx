@@ -94,7 +94,6 @@ export function NewBatchEntryForm() {
       form.setValue("dayTimeEntries", entries); // Update form value
     };
 
-
   async function onSubmit(data) {
     console.log(JSON.stringify(data));
   
@@ -104,7 +103,7 @@ export function NewBatchEntryForm() {
         day: dayTimeEntries.map(entry => entry.day), // Extract all dates into an array
         time: dayTimeEntries.map(entry => entry.time), // Extract all times into an array
       };
-      const startDate = new Date(data.startDate)
+      const startDate = new Date(data.startDate).toISOString().split("T")[0]
       const payload = {
         startDate:startDate,
         teacher:data.teacher,
