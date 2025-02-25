@@ -132,7 +132,7 @@ export function EditDemoClassForm() {
       console.error(error);
       toast({
         title: "Failed",
-        description: "Unable to update Normal Class appointment",
+        description: "Unable to update Demo Class appointment",
         variant: "destructive",
       });
     }

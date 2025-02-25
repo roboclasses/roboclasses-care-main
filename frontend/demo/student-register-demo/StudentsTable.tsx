@@ -73,7 +73,7 @@ export function StudentsTable() {
             <TableCell className="text-right">{Student.grade}</TableCell>
             <TableCell className="text-right">{Student.courses}</TableCell>
             <TableCell className="text-right">
-              <Link href={'#'}>
+              <Link href={`/appointment/studentRegister/edit/${Student._id}`}>
                 <EditButton name="Edit" type="button" />
               </Link>
             </TableCell>
