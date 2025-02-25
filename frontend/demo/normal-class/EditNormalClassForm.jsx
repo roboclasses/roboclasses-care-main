@@ -12,15 +12,6 @@ import {
 import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-// import {
-//   Table,
-//   TableBody,
-//   TableCaption,
-//   TableCell,
-//   TableHead,
-//   TableHeader,
-//   TableRow,
-// } from "@/components/ui/table";
 
 import { z } from "zod";
 import axios from "axios";
@@ -43,46 +34,7 @@ const items = [
   },
 ];
 
-// const weekdays = [
-//   {
-//     id: "sun",
-//     label: "Sunday",
-//   },
-//   {
-//     id: "mon",
-//     label: "Monday",
-//   },
-//   {
-//     id: "tue",
-//     label: "Tuesday",
-//   },
-//   {
-//     id: "wed",
-//     label: "Wednesday",
-//   },
-//   {
-//     id: "thu",
-//     label: "Thursday",
-//   },
-//   {
-//     id: "fri",
-//     label: "Friday",
-//   },
-//   {
-//     id: "sat",
-//     label: "Saturday",
-//   },
-// ];
 
-// const times = [
-//   { id: 0 },
-//   { id: 1 },
-//   { id: 2 },
-//   { id: 3 },
-//   { id: 4 },
-//   { id: 5 },
-//   { id: 6 },
-// ];
 
 const FormSchema = z.object({
   time: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one time."}),
@@ -140,7 +92,6 @@ export function EditNormalClassForm() {
       userName: "",
       destination: "+971",
       batch: "",
-      // time: ["", "", "", "", "", "", ""],
       items: ["1hour"],
       dateTimeEntries:{
         date:"",
@@ -182,38 +133,6 @@ export function EditNormalClassForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
-        {/* <Table>
-          <TableCaption>A list of weekdays with time slot</TableCaption>
-          <TableHeader>
-            <TableRow>
-              {weekdays.map((item) => (
-                <TableHead className="w-[100px]" key={item.id}>
-                  {item.label}
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow>
-              {times.map((item) => (
-                <TableCell className="font-medium" key={item.id}>
-                  <FormField
-                    control={form.control}
-                    name={`time.${item.id}`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Input type="time" {...field} className="bg-white" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableBody>
-        </Table> */}
 
         <MultiDateTimeEntry onEntriesChange={handleDateTimeEntriesChange} />
 
