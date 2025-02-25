@@ -23,6 +23,7 @@ import Cookies from "js-cookie";
 import { DemoClassUrl } from "@/constants";
 import { format } from "date-fns";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { timezone } from "./datePickerForm";
 
 const items = [
   {
@@ -45,7 +46,7 @@ const FormSchema = z.object({
     time: z.string(),
     timeZone: z.string(),
     items: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one item.",}),
-    batchNumber: z.string().min(2,{message: "Batch Number must be atleast 2 characters long."}),
+    batchNumber: z.string().optional(),
     converted: z.string(),
 
   });
@@ -56,7 +57,7 @@ export function EditDemoClassForm() {
   const [destination, setDestination] = useState("");
   const [course, setCourse] = useState("");
   const [teacher, setTeacher] = useState("");
-  const [date, setDate] = useState<Date|null>(null);
+  const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [timeZone, setTimeZone] = useState("");
   const [batchNumber, setBatchNumber] = useState("");
@@ -73,10 +74,10 @@ export function EditDemoClassForm() {
         setDestination(res.data.destination)
         setCourse(res.data.course)
         setTeacher(res.data.teacher)
-        setDate(res.data.date)
+        setDate(res.data.date ? format(new Date(res.data.date), "yyyy-MM-dd") : "");
         setTime(res.data.time)
         setTimeZone(res.data.timeZone)
-        setBatchNumber(res.data.batch)
+        setBatchNumber(res.data.batchNumber)
         setConverted(res.data.converted)
       } catch (error) {
         console.log(error);
@@ -109,7 +110,7 @@ export function EditDemoClassForm() {
         destination: data.destination || destination,
         course: data.course || course,
         teacher: data.teacher || teacher,
-        date: data.date || (date ? format(date, "yyyy-MM-dd") : ""),
+        date: data.date || date,
         time: data.time || time,
         timeZone: data.timeZone || timeZone,
         batchNumber: data.batchNumber || batchNumber,
@@ -239,11 +240,10 @@ export function EditDemoClassForm() {
                   required
                   type="date"
                   {...field}
-                  value={date ? format(date, "yyyy-MM-dd") : ""} 
+                  value={date} 
                   onChange={(e) => {
-                    const newDate = e.target.value ? new Date(e.target.value) : null;
-                    setDate(newDate);
-                    field.onChange(newDate);
+                    setDate(e.target.value);
+                    field.onChange(e);
                   }}
                 />
               </FormControl>
@@ -274,24 +274,33 @@ export function EditDemoClassForm() {
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="timeZone"
-          render={({field}) => (
-            <FormItem>
-              <FormLabel className="font-semibold">Edit Timezone</FormLabel>
-              <Input  
-                {...field}
-                required 
-                value={timeZone} 
-                onChange={(e)=>{
-                setTimeZone(e.target.value)
-                field.onChange(e) }} 
-              />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+         <FormField
+            control={form.control}
+                      name="timeZone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="font-semibold">Edit Timezone Details</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                            required
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select timezone"/>
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                               {timezone.map((item)=>(
+                                <SelectItem value={item.name} key={item.id}>{item.country}</SelectItem>
+                               ))
+                               }
+                               
+                            </SelectContent>
+                          </Select>
+                        </FormItem>
+            )}
+          />
 
         <FormField
           control={form.control}

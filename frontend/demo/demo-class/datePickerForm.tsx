@@ -42,14 +42,14 @@ const items = [
 // For detect system timezone
 const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-const timezone = [
+export const timezone = [
   {id:0, name:"Asia/Kolkata", country:"India"},
   {id:1, name:"America/New_York", country:"USA"},
   {id:2, name:"Asia/Riyadh", country:"Saudi Arab"},
   {id:3, name:"America/Toronto", country:"Canada"},
   {id:4, name:"Asia/Dubai", country:"UAE"},
-  {id:5, name:userTimeZone, country:"Your Timezone"},
-]
+  {id:5, name:userTimeZone, country:"Your Timezone"},]
+
 
 
 const FormSchema = z.object({
