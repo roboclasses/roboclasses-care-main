@@ -16,15 +16,15 @@ import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 
 import axios from "axios";
-import 'react-phone-input-2/lib/style.css'
 import { StudentRegUrl } from "@/constants";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import PhoneInput from "react-phone-input-2";
+import 'react-phone-input-2/lib/style.css'
 import { Label } from "@/components/ui/label";
 
 
 
-const countries = [
+export const countries = [
   {
     id: 1,
     name: "UAE",
