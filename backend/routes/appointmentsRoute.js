@@ -8,7 +8,7 @@ const router = express.Router();
 // create appointments
 router.post("/appointments/demoClass", async (req, res) => {
   try {
-    const { date, userName, destination, course, teacher, time, items,timeZone} = req.body;
+    const { date, userName, destination, course, teacher, time, items,timeZone, converted, batchNumber} = req.body;
     const newAppointment = {
       date,
       userName,
@@ -18,6 +18,8 @@ router.post("/appointments/demoClass", async (req, res) => {
       time,
       timeZone,
       items,
+      converted,
+      batchNumber,
     };
 console.log(newAppointment);
 
@@ -69,15 +71,15 @@ router.get("/appointments/demoClass/:id", async (req, res) => {
   }
 });
 
-// edit appointment
-router.put("/appointments/demoClass/:id", async (req, res) => {
+// edit appointment 
+router.patch("/appointments/demoClass/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { date, userName, destination, time, items, course, teacher, timeZone} =
+    const { date, userName, destination, time, items, course, teacher, timeZone, converted, batchNumber} =
       req.body;
     const data = await Appointment.findByIdAndUpdate(
       id,
-      { date, userName, destination, time, items, course, teacher, timeZone},
+      { date, userName, destination, time, items, course, teacher, timeZone, converted, batchNumber},
       { new: true }
     );
     console.log(data);
@@ -114,29 +116,6 @@ router.delete("/appointments/demoClass/:id", async (req, res) => {
   }
 });
 
-// update appointment status
-router.patch("/appointments/demoClass/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const data = await Appointment.findByIdAndUpdate(
-      id,
-      { status: true },
-      { new: true }
-    );
-    console.log(data);
-
-    return res.status(200).json({
-      success: true,
-      message: "Your appointment status updated successfully.", data
-    });
-  } catch (error) {
-    console.error(error);
-   return res.status(500).json({
-      success: false,
-      message: "Internal server error!",
-    });
-  }
-});
 
 
 export default router;

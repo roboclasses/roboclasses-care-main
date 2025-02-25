@@ -59,7 +59,8 @@ export function TableDemoClass() {
           <TableHead>Date</TableHead>
           <TableHead>Time</TableHead>
           <TableHead>Timezone</TableHead>
-          <TableHead>Status</TableHead>
+          <TableHead>Converted</TableHead>
+          <TableHead>Batch Number</TableHead>
           <TableHead>Edit</TableHead>
           <TableHead>Delete</TableHead>
         </TableRow>
@@ -67,42 +68,35 @@ export function TableDemoClass() {
       <TableBody>
         {data?.map((appointment: appointmentTypes) => (
           <TableRow key={appointment._id}>
-            <TableCell className="font-medium">
-              {appointment.userName}
-            </TableCell>
+            <TableCell className="font-medium">{appointment.userName}</TableCell>
             <TableCell className="font-medium">{appointment.course}</TableCell>
             <TableCell className="font-medium">{appointment.teacher}</TableCell>
-            <TableCell className="text-right">{format(appointment.date, "MMM dd, yyyy")}</TableCell>
+            <TableCell className="text-right">{appointment.date ? format(appointment.date, "MMM dd, yyyy") : ""}</TableCell>
             <TableCell className="text-right">{appointment.time}</TableCell>
             <TableCell className="text-right">{appointment.timeZone}</TableCell>
+            <TableCell className="text-right">{appointment.converted}</TableCell>
+            <TableCell className="text-right">{appointment.batchNumber}</TableCell>
+
             <TableCell className="text-right">
-              <EditButton
-                name={appointment.status === true ? "Cancelled" : "Active"}
-                type="button"
-                varient="ghost"
-              />
-            </TableCell>
-            <TableCell className="text-right">
-              <Link href={`/appointment/edit/${appointment._id}`}>
+              <Link href={`/appointment/reminder/demo-class/edit/${appointment._id}`}>
                 <EditButton name="Edit" type="button" />
               </Link>
             </TableCell>
 
             <TableCell className="text-right">
-              {appointment.status === true ? (
                 <EditButton
                   name="Delete"
                   type="button"
                   varient="destructive"
                   onClick={() => handleDelete(appointment._id ?? "")}
-                />) : ("")}
+                />
             </TableCell>
           </TableRow>
         ))}
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={8}>Total Rows</TableCell>
+          <TableCell colSpan={9}>Total Rows</TableCell>
           <TableCell className="text-right">{data?.length}</TableCell>
         </TableRow>
       </TableFooter>

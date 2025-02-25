@@ -15,18 +15,14 @@ export type btnType = {
 export type appointmentTypes = {
   _id?: string;
   userName?: string;
-  date: Date;
+  date: string;
   time: string;
   timeZone?: string;
-  destination?:string,
+  destination?:string;
   course?: string;
   teacher?: string;
-  status?: boolean;
-  handleDateChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleTimeChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleSubmit?: (event: React.FormEvent<HTMLFormElement>) => void;
-  handleDelete?: () => void;
-  handlePhoneChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  converted?:string;
+  batchNumber?:string;
 };
 
 export type editAttendance = {
