@@ -22,6 +22,10 @@ const newBatchEntrySchema = new mongoose.Schema({
         type:Date,
         required:true
     },
+    timeZone:{
+        required:true,
+        type:String,
+    }
 },{timestamps:true})
 
 export const NewBatchEntries = mongoose.models.NewBatchEntries ?? mongoose.model('NewBatchEntries',newBatchEntrySchema)

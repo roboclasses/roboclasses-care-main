@@ -27,6 +27,18 @@ import MultiDayTimeEntry from "./MultiDayTimeEntry";
 // import { format } from "date-fns";
 
 
+// For detect system timezone
+const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+ const timezone = [
+  {id:0, name:"Asia/Kolkata", country:"India"},
+  {id:1, name:"America/New_York", country:"USA"},
+  {id:2, name:"Asia/Riyadh", country:"Saudi Arab"},
+  {id:3, name:"America/Toronto", country:"Canada"},
+  {id:4, name:"Asia/Dubai", country:"UAE"},
+  {id:5, name:userTimeZone, country:"Your Timezone"},]
+
+
 
 const FormSchema = z.object({
   batch: z.string().min(2, { message: "Batch number must be atleast 2 characters long." }),
@@ -36,7 +48,8 @@ const FormSchema = z.object({
   dayTimeEntries: z.array(z.object({
     day: z.string(),
     time: z.string(),
-  }))
+  })),
+  timeZone: z.string(),
 });
 
 export function NewBatchEntryForm() {
@@ -84,7 +97,8 @@ export function NewBatchEntryForm() {
       dayTimeEntries:{
         day:"",
         time:"",
-      }
+      },
+      timeZone:userTimeZone,
     },
   });
 
@@ -94,9 +108,7 @@ export function NewBatchEntryForm() {
       form.setValue("dayTimeEntries", entries); // Update form value
     };
 
-  async function onSubmit(data) {
-    console.log(JSON.stringify(data));
-  
+  async function onSubmit(data) {  
     try {
       const batch = `${data.course} - ${data.batch}`
       const transformedDateTimeEntries = {
@@ -108,6 +120,7 @@ export function NewBatchEntryForm() {
         startDate:startDate,
         teacher:data.teacher,
         batch:batch,
+        timeZone:data.timeZone,
         ...transformedDateTimeEntries
       }
       const res = await axios.post(NewBatchEntryUrl, payload, {headers: { Authorization: Cookies.get("token") }});
@@ -230,6 +243,34 @@ export function NewBatchEntryForm() {
                 </FormItem>
             )}
         />
+
+         <FormField
+            control={form.control}
+                      name="timeZone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="font-semibold">Timezone Details</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                            required
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select timezone"/>
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                               {timezone.map((item)=>(
+                                <SelectItem value={item.name} key={item.id}>{item.country}</SelectItem>
+                               ))
+                               }
+                               
+                            </SelectContent>
+                          </Select>
+                        </FormItem>
+            )}
+         />
 
         <Button type="submit">Submit</Button>
       </form>
