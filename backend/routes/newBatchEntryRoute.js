@@ -9,13 +9,14 @@ const router = express.Router();
 // create new batch
 router.post("/newBatchEntries", authMiddleware, roleMiddleware("teacher", "admin"), async (req, res) => {
   try {
-    const {day, time, startDate, teacher, batch } = req.body;
+    const {day, time, startDate, teacher, batch, timeZone } = req.body;
     const data = await NewBatchEntries.create({
       day,
       time,
       startDate,
       teacher,
       batch,
+      timeZone
     });
 
     console.log(data);
@@ -72,10 +73,10 @@ router.get("/newBatchEntries/:id", authMiddleware, roleMiddleware("teacher", "ad
 router.put("/newBatchEntries/:id", authMiddleware, roleMiddleware("teacher", "admin"), async (req, res) => {
   try {
     const { id } = req.params;
-    const {day, time, startDate, teacher, batch } = req.body;
+    const {day, time, startDate, teacher, batch, timeZone } = req.body;
     const data = await NewBatchEntries.findByIdAndUpdate(
       id,
-      {day, time, startDate,  teacher, batch },
+      {day, time, startDate,  teacher, batch, timeZone },
       { new: true }
     );
     console.log(data);
