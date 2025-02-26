@@ -95,8 +95,7 @@ export function DatePickerForm() {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-
-
+      const formattedDate = new Date(data.date).toISOString().split("T")[0]
       const payload = {
         userName:data.userName,
         destination: data.destination,
@@ -104,7 +103,7 @@ export function DatePickerForm() {
         teacher:data.teacher,
         time:data.time,
         timeZone:data.timeZone,
-        date:data.date,
+        date:formattedDate,
         items:data.items,
       }
       console.log(JSON.stringify(payload));

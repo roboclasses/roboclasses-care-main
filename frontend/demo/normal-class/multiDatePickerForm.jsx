@@ -12,22 +12,22 @@ import {
 } from "@/components/ui/form";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import StudentSearch from "./StudentSearch";
-import MultiDateTimeEntry from "./MultiDateTimeEntry";
-import { toast } from "@/hooks/use-toast";
-
 import { NewBatchEntryUrl, NormalClassUrl, StudentRegUrl } from "@/constants";
+import StudentSearch from "./StudentSearch";
 
 import { z } from "zod";
-import axios from "axios";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "@/hooks/use-toast";
+
+import axios from "axios";
 import Cookies from "js-cookie";
 import PhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
+import { useEffect, useState } from "react";
 
 
+// For mapping time value to send reminder checkbox
 const items = [
   {
     id: "24hours",
@@ -39,7 +39,6 @@ const items = [
   },
 ];
 
-
 const FormSchema = z.object({
   items: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one item."}),
   batch: z.string().min(2, { message: "Batch name must be atleast 2 characters long." }),
@@ -47,19 +46,48 @@ const FormSchema = z.object({
   destination:z.string().optional(),
   email:z.string().optional(),
   teacher: z.string().optional(),
-  dateTimeEntries: z.array(z.object({
-    date: z.string(),
-    time: z.string(),
-  }))
+  allDates: z.array(
+    z.object({
+      date: z.string(),
+      time: z.string(),
+      weekDay: z.string(),
+    })
+  ).optional(),
+  timeZone:z.string().optional(),
 });
 
-export function MultiDatePickerForm() {
+const getNextClassDate = (startDate, daysOfWeek, times)=>{
 
+  const weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const start = new Date(startDate);
+  const nextClassDates = [];
+
+  daysOfWeek.forEach((day, index)=>{
+    const targetDay = weekDays.indexOf(day);
+    const startDay = start.getDay()
+
+    let daysToAdd = targetDay - startDay;
+    if(daysToAdd < 0){
+      daysToAdd += 7;
+    }
+
+    const nextDate = new Date(start);
+    nextDate.setDate(start.getDate() + daysToAdd);
+
+    nextClassDates.push({
+      date: new Date(nextDate).toISOString().split("T")[0], // YYYY-MM-DD
+      // date: nextDate,
+      time:times[index], // HH:mm
+      weekDay: day, // Eg. Sunday
+    })
+  })
+  return nextClassDates;
+}
+
+export function MultiDatePickerForm() {
   const [data, setData] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null)
-  const [dateTimeEntries, setDateTimeEntries] = useState([]);
   
-
 // Handle fetch batches
   useEffect(()=>{
     const handleFetch = async()=>{
@@ -81,12 +109,6 @@ export function MultiDatePickerForm() {
     form.setValue("userName",student.studentName)
   }
 
-  // Handle multiple date and time add, remove and update
-  const handleDateTimeEntriesChange = (entries) => {
-    setDateTimeEntries(entries);
-    form.setValue("dateTimeEntries", entries); // Update form value
-  };
-
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -96,11 +118,11 @@ export function MultiDatePickerForm() {
       email:"",
       batch: "",
       items: ["1hour"],
-      dateTimeEntries:{
-        date:"",
-        time:"",
-      }
-      
+      date:"",
+      time:"",
+      weekDay:"",
+      allDates: [],
+      timeZone:"",
     },
   });
 
@@ -133,7 +155,7 @@ export function MultiDatePickerForm() {
     }
   },[studentName, form])
 
-  // Fetch batch details (teacher name)
+  // Fetch batch details (teachername, day, time, startDate)
   useEffect(()=>{
     const handleFetch = async()=>{
       try {
@@ -144,12 +166,29 @@ export function MultiDatePickerForm() {
           if(selectedBatch){
             console.log(selectedBatch.teacher);
             form.setValue("teacher",selectedBatch.teacher || '') 
+            form.setValue("timeZone",selectedBatch.timeZone || '')
+
+            const nextClassDates = getNextClassDate(
+              selectedBatch.startDate,
+              selectedBatch.day,
+              selectedBatch.time
+            );
+
+            if(nextClassDates.length > 0){
+              form.setValue("date", nextClassDates[0].date)
+              form.setValue("time", nextClassDates[0].time)
+              form.setValue("weekDay", nextClassDates[0].weekDay) 
+              
+              form.setValue("allDates", nextClassDates);
+            }
           }
         }
         
       } catch (error) {
         console.error(error);
         form.setValue("teacher", "") 
+        form.setValue("timeZone", "") 
+        form.setValue("allDates", []) 
       }
     }
     if(batchName){
@@ -161,25 +200,29 @@ export function MultiDatePickerForm() {
   
   async function onSubmit(data) {
     try {
-      const transformedDateTimeEntries = {
-        date: dateTimeEntries.map(entry => new Date(entry.date)), // Extract all dates into an array
-        time: dateTimeEntries.map(entry => entry.time), // Extract all times into an array
-      };
-
-      const payload = {...data, ...transformedDateTimeEntries}
-      const res = await axios.post(NormalClassUrl,payload, { headers: { Authorization: Cookies.get("token") }});
+      const mappedDates = {
+      date: data.allDates.map(item=>item.date),
+      time: data.allDates.map(item=>item.time),
+      weekDay: data.allDates.map(item=>item.weekDay)
+      }   
+      const payload = {...data,...mappedDates};
+      
+      const res = await axios.post(NormalClassUrl, payload, {
+        headers: { Authorization: Cookies.get("token") },
+      });
+  
       console.log(res.data);
-      form.reset();
+      // form.reset();
       toast({
         title: "Success✅",
-        description: "Your appointment for normal class has been submitted successfully",
+        description: res.data.message,
         variant: "default",
       });
     } catch (error) {
       console.error("Error booking appointment", error);
       toast({
         title: "Failed ",
-        description: "unable to submit Normal Class appointment",
+        description: "Unable to submit Normal Class appointment",
         variant: "destructive",
       });
     }
@@ -191,8 +234,69 @@ export function MultiDatePickerForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
-       
-         <MultiDateTimeEntry onEntriesChange={handleDateTimeEntriesChange} />
+
+{form.watch("allDates")?.map((entry, index) => (
+  <div key={index} className="flex gap-2 items-center">
+    <FormField
+      control={form.control}
+      name={`allDates.${index}.date`}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel className="font-semibold">Date</FormLabel>
+          <FormControl>
+            <Input
+              {...field}
+              required
+              disabled
+              type="date"
+              className="bg-white"
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+
+    <FormField
+      control={form.control}
+      name={`allDates.${index}.time`}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel className="font-semibold">Time</FormLabel>
+          <FormControl>
+            <Input
+              {...field}
+              required
+              disabled
+              type="time"
+              className="bg-white"
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+
+    <FormField
+      control={form.control}
+      name={`allDates.${index}.weekDay`}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel className="font-semibold">WeekDay</FormLabel>
+          <FormControl>
+            <Input
+              {...field}
+              required
+              disabled
+              className="bg-white"
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  </div>
+))}
 
         <FormField
           control={form.control}
@@ -277,6 +381,25 @@ export function MultiDatePickerForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="font-semibold">Teacher Name</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  required
+                  disabled
+                  className="bg-white"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="timeZone"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="font-semibold">Timezone</FormLabel>
               <FormControl>
                 <Input
                   {...field}
