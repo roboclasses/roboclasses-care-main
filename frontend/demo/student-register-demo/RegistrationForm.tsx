@@ -15,7 +15,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { StudentRegUrl } from "@/constants";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import PhoneInput from "react-phone-input-2";
@@ -84,15 +84,17 @@ export function RegistrationForm() {
         description: message,
         variant:"default"
       });
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: "Failed ",
-        description: "Unable to register",
-        variant:"destructive"
-      });
-    }
-    
+    } catch (error:unknown) {
+          if(error instanceof AxiosError){
+            const {message} = error.response?.data
+            console.log(error);
+            toast({
+              title: "Failed",
+              description: message,
+              variant: "destructive",
+            });
+          }
+        }
   }
 
   return (

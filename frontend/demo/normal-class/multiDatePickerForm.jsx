@@ -219,12 +219,13 @@ export function MultiDatePickerForm() {
         variant: "default",
       });
     } catch (error) {
-      console.error("Error booking appointment", error);
-      toast({
-        title: "Failed ",
-        description: "Unable to submit Normal Class appointment",
-        variant: "destructive",
-      });
+        const {message} = error.response?.data
+        console.error(error);
+        toast({
+          title: "Failed ",
+          description: message,
+          variant: "destructive",
+        });      
     }
   }
 

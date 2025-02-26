@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
 "use client";
 import * as React from "react";
 import { z } from "zod";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -47,17 +46,19 @@ export function LoginForm() {
         router.push("/");
         toast({ title: "Success✅", description: message, variant: "default" });
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error:any) {
-      const {message} = error.response.data;
-      console.log(error);
-      toast({
-        title: "Failed",
-        description: message || "Unable to login",
-        variant: "destructive",
-      });
+    } catch (error:unknown) {
+      if(error instanceof AxiosError){
+        const {message} = error.response?.data
+        console.log(error);
+        toast({
+          title: "Failed",
+          description: message,
+          variant: "destructive",
+        });
+      }
     }
   };
+  
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full px-20">
