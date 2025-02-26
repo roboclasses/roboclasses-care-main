@@ -27,9 +27,17 @@ const normalClassSchema = new mongoose.Schema(
       type: [String],
       required: true,
     },
+    weekDay:{
+      type: [String],
+      required: true,
+    },
     date:{
       type: [Date],
       required: true,
+    },
+    timeZone:{
+      type:String,
+      required:true,
     },
     items: {
       type: [String],

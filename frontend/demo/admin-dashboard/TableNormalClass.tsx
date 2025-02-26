@@ -17,7 +17,7 @@ import { normalClassType } from "@/types/Types";
 import axios from "axios";
 import useSWR from "swr";
 import Link from "next/link";
-import moment from 'moment-timezone'
+import {format} from "date-fns"
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -55,8 +55,8 @@ export function TableNormalClass() {
     return timeArray.map((time, index)=>{
       const date = dateArray[index];
       if(date && time){
-        const desiredDate = moment(date).format('MMM D');
-        const weekday = moment(date).format('dddd')
+        const desiredDate = date ? format(date, 'MMM d') : '';
+        const weekday = date ? format(date, "EEEE") : '';
         return `${weekday} - ${time} - ${desiredDate}`
       }
       return null;
