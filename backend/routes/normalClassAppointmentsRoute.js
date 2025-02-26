@@ -10,6 +10,11 @@ const router = express.Router();
 router.post("/appointments/normalClass", async (req, res) => {
   try {
     const { teacher, userName, destination, email, batch, time, date, items, weekDay, timeZone } = req.body;
+
+  const batchName = await NormalClass.findOne({batch, userName})
+  if(batchName && userName){
+  return res.status(409).json({success:false, message:"Student exist for this batch, select a different one."})
+  }
     const newAppointment = { teacher, userName, destination, email, batch, time, date, items, weekDay, timeZone }
     const data = await NormalClass.create(newAppointment);
     
