@@ -48,9 +48,9 @@ router.get("/courses/:id", async(req, res)=>{
 // Update course
 router.put("/courses/:id", async(req, res)=>{
     try {
-        const {course} = req.body;
+        const {course, numberOfClasses} = req.body;
         const {id} = req.params;
-        const data = await Course.findByIdAndUpdate(id, {course}, {new:true})
+        const data = await Course.findByIdAndUpdate(id, {course, numberOfClasses}, {new:true})
         console.log(data);
         return res.status(200).json({success:true, message: "Course updated successfully."})
         

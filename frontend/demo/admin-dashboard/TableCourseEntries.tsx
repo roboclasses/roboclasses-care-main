@@ -53,6 +53,7 @@ export function TableCourseEntries() {
       <TableHeader>
         <TableRow>
           <TableHead className="w-[100px]">Course Name</TableHead>
+          <TableHead className="w-[100px]">Number of Classes</TableHead>
           <TableHead>Edit</TableHead>
           <TableHead>Delete</TableHead>
         </TableRow>
@@ -61,6 +62,7 @@ export function TableCourseEntries() {
         {data?.map((courses: courseType) => (
           <TableRow key={courses._id}>
             <TableCell className="font-medium">{courses.course}</TableCell>
+            <TableCell className="font-medium">{courses.numberOfClasses}</TableCell>
             <TableCell className="text-right">
               <Link href={`/courseEntry/edit/${courses._id}`}>
               <EditButton name="Edit" type="button" />
@@ -74,7 +76,7 @@ export function TableCourseEntries() {
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={7}>Total Rows</TableCell>
+          <TableCell colSpan={3}>Total Rows</TableCell>
           <TableCell className="text-right">{data?.length}</TableCell>
         </TableRow>
       </TableFooter>

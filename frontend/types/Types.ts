@@ -52,6 +52,7 @@ export type batchType = {
 export type courseType={
   _id:string;
   course:string;
+  numberOfClasses:string;
 }
 
 export type studentType = {

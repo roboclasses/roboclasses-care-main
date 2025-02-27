@@ -22,11 +22,13 @@ import { useParams } from "next/navigation";
 
 
 const FormSchema = z.object({
-  course: z.string().min(3, { message: "Course name must be 3 characters long." })
+  course: z.string().optional(),
+  numberOfClasses: z.string().optional(),
 });
 
 export function EditCourseEntryForm() {
     const [course, setCourse] = useState("");
+    const [numberOfClasses, setNumbeOfClasses] = useState("");
     const {id} = useParams();
 
     // Handle fetch course
@@ -36,7 +38,7 @@ export function EditCourseEntryForm() {
                 const res = await axios.get(`${CoursesUrl}/${id}`)
                 console.log(res.data);
                 setCourse(res.data.course)
-  
+                setNumbeOfClasses(res.data.numberOfClasses)
             } catch (error) {
                 console.log(error);
  
@@ -47,13 +49,17 @@ handleFetch();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-    defaultValues: { course: "Scratch L1" }
+    defaultValues: { course: "", numberOfClasses:"", }
   });
 
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      const res = await axios.put(`${CoursesUrl}/${id}`, data, { headers:{ Authorization: Cookies.get("token") }});
+      const payload = {
+        course:data.course || course,
+        numberOfClasses:data.numberOfClasses || numberOfClasses,
+      }
+      const res = await axios.put(`${CoursesUrl}/${id}`, payload, { headers:{ Authorization: Cookies.get("token") }});
       console.log(res.data);
       form.reset();
       
@@ -87,13 +93,12 @@ handleFetch();
               <FormLabel className="font-semibold">Course Name</FormLabel>
               <FormControl>
                 <Input
-                //   placeholder=""
                   {...field}
                   required
                   value={course}
                   onChange={(e) => {
-                    setCourse(e.target.value); // Update the state
-                    field.onChange(e); // Update the form field
+                    setCourse(e.target.value); 
+                    field.onChange(e); 
                 }}
                   className="bg-white"
                 />
@@ -102,7 +107,31 @@ handleFetch();
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+
+        <FormField
+          control={form.control}
+          name="numberOfClasses"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="font-semibold">Number of Classes</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  required
+                  value={numberOfClasses}
+                  onChange={(e) => {
+                    setNumbeOfClasses(e.target.value); 
+                    field.onChange(e); 
+                }}
+                  className="bg-white"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <Button type="submit">Update</Button>
       </form>
     </Form>
   );
