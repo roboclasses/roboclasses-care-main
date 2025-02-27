@@ -1,6 +1,6 @@
 import express from "express";
 import { NormalClass } from "../models/normalClassAppointments.model.js";
-// import scheduleReminders from "../jobs/scheduler.js";
+import scheduleReminders from "../jobs/scheduler.js";
 
 
 const router = express.Router();
@@ -18,7 +18,7 @@ router.post("/appointments/normalClass", async (req, res) => {
     const newAppointment = { teacher, userName, destination, email, batch, time, date, items, weekDay, timeZone, numberOfClasses }
     const data = await NormalClass.create(newAppointment);
     
-    // scheduleReminders(newAppointment)
+    scheduleReminders(newAppointment)
 
     console.log(data);
     return res.status(201).json({
