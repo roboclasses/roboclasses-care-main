@@ -83,6 +83,7 @@ export type normalClassType = {
   batch: string;
   userName: string;
   destination: string;
+  numberOfClasses: string;
 };
 
 export type attendanceRowAndColumnType = {
