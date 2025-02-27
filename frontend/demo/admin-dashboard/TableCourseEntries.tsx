@@ -18,6 +18,7 @@ import Cookies from 'js-cookie'
 import useSWR from "swr";
 import axios from "axios";
 import Link from "next/link";
+import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 
 
 const fetcher = (url: string) => axios.get(url, {headers:{ Authorization: Cookies.get("token")}}).then((res) => res.data);
@@ -69,7 +70,7 @@ export function TableCourseEntries() {
               </Link>
             </TableCell>
             <TableCell className="text-right">
-              <EditButton name="Delete" type="button" varient="destructive" onClick={()=>handleDelete(courses._id)}/>
+              <DeleteAlertDemo onCancel={()=>console.log("Delete action canceled")} onDelete={()=>handleDelete(courses._id)}/>
             </TableCell>
           </TableRow>
         ))}

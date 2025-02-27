@@ -17,6 +17,7 @@ import { studentType } from "@/types/Types";
 import { StudentRegUrl } from "@/constants";
 import { toast } from "@/hooks/use-toast";
 import { EditButton } from "../admin-dashboard/EditButton";
+import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -79,12 +80,7 @@ export function StudentsTable() {
             </TableCell>
 
             <TableCell className="text-right">
-                <EditButton
-                  name="Delete"
-                  type="button"
-                  varient="destructive"
-                  onClick={() => handleDelete(Student._id ?? "")}
-                />
+              <DeleteAlertDemo onCancel={()=>console.log("Delete action canceled")} onDelete={()=>handleDelete(Student._id)}/>
             </TableCell>
           </TableRow>
         ))}

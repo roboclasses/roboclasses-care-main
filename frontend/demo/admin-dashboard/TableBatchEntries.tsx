@@ -19,6 +19,7 @@ import useSWR from "swr";
 import axios from "axios";
 import Link from "next/link";
 import { format } from "date-fns";
+import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 
 
 const fetcher = (url: string) => axios.get(url, {headers:{ Authorization: Cookies.get("token")}}).then((res) => res.data);
@@ -88,7 +89,7 @@ return timeArray.map((time, index)=>{
               </Link>
             </TableCell>
             <TableCell className="text-right">
-              <EditButton name="Delete" type="button" varient="destructive" onClick={()=>handleDelete(batch._id)}/>
+              <DeleteAlertDemo onCancel={()=>console.log("Delete action canceled")} onDelete={()=>handleDelete(batch._id)}/>
             </TableCell>
           </TableRow>
         ))}
