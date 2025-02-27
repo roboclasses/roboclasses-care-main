@@ -18,6 +18,7 @@ import axios from "axios";
 import useSWR from "swr";
 import Link from "next/link";
 import {format} from "date-fns"
+import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -96,19 +97,14 @@ export function TableNormalClass() {
               </Link>
             </TableCell>
             <TableCell className="text-right">
-              <EditButton
-                name="Delete"
-                type="button"
-                varient="destructive"
-                onClick={() => handleDelete(appointment._id)}
-              />
+              <DeleteAlertDemo onCancel={()=>console.log("Delete action canceled")} onDelete={()=>handleDelete(appointment._id)}/>
             </TableCell>
           </TableRow>
         ))}
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={6}>Total Rows</TableCell>
+          <TableCell colSpan={7}>Total Rows</TableCell>
           <TableCell className="text-right">{data?.length}</TableCell>
         </TableRow>
       </TableFooter>

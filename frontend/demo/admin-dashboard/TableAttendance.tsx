@@ -17,6 +17,7 @@ import React from "react";
 import Link from "next/link";
 import { toast } from "@/hooks/use-toast";
 import { AttendanceUrl } from "@/constants";
+import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -75,12 +76,7 @@ export function TableAttendance() {
               </Link>
             </TableCell>
             <TableCell className="text-right">
-              <EditButton
-                name="Delete"
-                type="button"
-                varient="destructive"
-                onClick={() => handleDelete(record._id)}
-              />
+              <DeleteAlertDemo onCancel={()=>console.log("Delete action canceled")} onDelete={()=>handleDelete(record._id)}/>
             </TableCell>
           </TableRow>
         ))}

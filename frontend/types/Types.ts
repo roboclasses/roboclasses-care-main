@@ -13,7 +13,7 @@ export type btnType = {
 };
 
 export type appointmentTypes = {
-  _id?: string;
+  _id: string;
   userName?: string;
   date: string;
   time: string;

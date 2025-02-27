@@ -18,6 +18,7 @@ import { appointmentTypes } from "@/types/Types";
 import { DemoClassUrl } from "@/constants";
 import { toast } from "@/hooks/use-toast";
 import { format } from "date-fns";
+import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -35,7 +36,7 @@ export function TableDemoClass() {
       mutate((data) => data?.filter((appointment) => appointment._id !== appointmentId));
 
       const {message} = res.data;
-      toast({title: "Success✅", description: message,variant: "default",});
+      toast({title: "Success✅", description: message, variant: "default",});
     } catch (error) {
       console.log(error);
       toast({title:"Failed", description:"Unable to delete Demo Class", variant:"destructive"})
@@ -84,12 +85,7 @@ export function TableDemoClass() {
             </TableCell>
 
             <TableCell className="text-right">
-                <EditButton
-                  name="Delete"
-                  type="button"
-                  varient="destructive"
-                  onClick={() => handleDelete(appointment._id ?? "")}
-                />
+              <DeleteAlertDemo onCancel={()=>console.log("Delete action canceled")} onDelete={()=>handleDelete(appointment._id)}/>
             </TableCell>
           </TableRow>
         ))}
