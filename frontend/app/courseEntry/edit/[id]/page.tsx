@@ -7,7 +7,7 @@ import {
   BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-import { EditCourseEntryForm } from "@/demo/new-course-entry-demo/EditBatchEntryForm";
+import { EditCourseEntryForm } from "@/demo/new-course-entry-demo/EditCourseEntryForm";
 import { Separator } from "@radix-ui/react-separator";
 import Image from "next/image";
 import React from "react";
