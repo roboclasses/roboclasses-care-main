@@ -128,7 +128,7 @@ useEffect(()=>{
       } 
     } catch (error) {
       console.error(error);
-      form.setValue("numberOfClasses", selectedCourse.numberOfClasses)  
+      form.setValue("numberOfClasses", "")  
     }
   }
 
@@ -150,6 +150,7 @@ useEffect(()=>{
         teacher:data.teacher,
         batch:batch,
         timeZone:data.timeZone,
+        numberOfClasses:data.numberOfClasses,
         ...transformedDateTimeEntries
       }
       const res = await axios.post(NewBatchEntryUrl, payload, {headers: { Authorization: Cookies.get("token") }});

@@ -27,7 +27,6 @@ const newBatchEntrySchema = new mongoose.Schema({
         type:String,
     },
     numberOfClasses:{
-        required:true,
         type:String,
     }
 },{timestamps:true})
