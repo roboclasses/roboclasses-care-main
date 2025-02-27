@@ -50,6 +50,7 @@ const FormSchema = z.object({
     time: z.string(),
   })),
   timeZone: z.string(),
+  numberOfClasses: z.string().optional(),
 });
 
 export function NewBatchEntryForm() {
@@ -99,6 +100,7 @@ export function NewBatchEntryForm() {
         time:"",
       },
       timeZone:userTimeZone,
+      numberOfClasses:"",
     },
   });
 
@@ -107,6 +109,33 @@ export function NewBatchEntryForm() {
       setDayTimeEntries(entries);
       form.setValue("dayTimeEntries", entries); // Update form value
     };
+
+    const courseName = form.watch("course")
+
+// Handle pre populating numberOfClasses from batch
+useEffect(()=>{
+  const handleFetch = async()=>{
+    try {
+      const res  = await axios.get(`${CoursesUrl}?name=${courseName}`,{headers: { Authorization: Cookies.get("token") }})
+      console.log(res.data);
+
+      if(res.data){
+        const selectedCourse = res.data.find((item)=>item.course === courseName)
+        if(selectedCourse){
+          console.log(selectedCourse.numberOfClasses);
+          form.setValue("numberOfClasses", selectedCourse.numberOfClasses || '')
+        }
+      } 
+    } catch (error) {
+      console.error(error);
+      form.setValue("numberOfClasses", selectedCourse.numberOfClasses)  
+    }
+  }
+
+  if(courseName){
+    handleFetch();
+  }
+},[courseName, form])
 
   async function onSubmit(data) {  
     try {
@@ -214,6 +243,25 @@ export function NewBatchEntryForm() {
         />
 
         </div>
+
+        <FormField
+          control={form.control}
+          name="numberOfClasses"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="font-semibold">Number of Classes</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  required
+                  disabled
+                  className="bg-white"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <FormField
             control={form.control}
