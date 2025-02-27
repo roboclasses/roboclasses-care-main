@@ -54,6 +54,7 @@ const FormSchema = z.object({
     })
   ).optional(),
   timeZone:z.string().optional(),
+  numberOfClasses:z.string().optional(),
 });
 
 const getNextClassDate = (startDate, daysOfWeek, times)=>{
@@ -123,6 +124,7 @@ export function MultiDatePickerForm() {
       weekDay:"",
       allDates: [],
       timeZone:"",
+      numberOfClasses:"",
     },
   });
 
@@ -167,6 +169,7 @@ export function MultiDatePickerForm() {
             console.log(selectedBatch.teacher);
             form.setValue("teacher",selectedBatch.teacher || '') 
             form.setValue("timeZone",selectedBatch.timeZone || '')
+            form.setValue("numberOfClasses", selectedBatch.numberOfClasses || '')
 
             const nextClassDates = getNextClassDate(
               selectedBatch.startDate,
@@ -188,6 +191,7 @@ export function MultiDatePickerForm() {
         console.error(error);
         form.setValue("teacher", "") 
         form.setValue("timeZone", "") 
+        form.setValue("numberOfClasses", "")
         form.setValue("allDates", []) 
       }
     }
@@ -401,6 +405,25 @@ export function MultiDatePickerForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="font-semibold">Timezone</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  required
+                  disabled
+                  className="bg-white"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+<FormField
+          control={form.control}
+          name="numberOfClasses"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="font-semibold">Number of Classes</FormLabel>
               <FormControl>
                 <Input
                   {...field}

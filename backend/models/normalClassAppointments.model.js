@@ -38,6 +38,9 @@ const normalClassSchema = new mongoose.Schema(
       type:String,
       required:true,
     },
+    numberOfClasses:{
+      type:String,
+    },
     items: {
       type: [String],
       required: true,

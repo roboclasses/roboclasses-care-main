@@ -9,16 +9,16 @@ const router = express.Router();
 // Create appointments
 router.post("/appointments/normalClass", async (req, res) => {
   try {
-    const { teacher, userName, destination, email, batch, time, date, items, weekDay, timeZone } = req.body;
+    const { teacher, userName, destination, email, batch, time, date, items, weekDay, timeZone, numberOfClasses } = req.body;
 
   const batchName = await NormalClass.findOne({batch, userName})
   if(batchName && userName){
   return res.status(409).json({success:false, message:"Student exist for this batch, select a different one."})
   }
-    const newAppointment = { teacher, userName, destination, email, batch, time, date, items, weekDay, timeZone }
+    const newAppointment = { teacher, userName, destination, email, batch, time, date, items, weekDay, timeZone, numberOfClasses }
     const data = await NormalClass.create(newAppointment);
     
-    scheduleReminders(newAppointment)
+    // scheduleReminders(newAppointment)
 
     console.log(data);
     return res.status(201).json({
@@ -69,10 +69,10 @@ router.get("/appointments/normalClass/:id", async (req, res) => {
 router.put("/appointments/normalClass/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { teacher, userName, destination, email, batch, time, date, items, weekDay, timeZone } = req.body;
+    const { teacher, userName, destination, email, batch, time, date, items, weekDay, timeZone, numberOfClasses } = req.body;
     const data = await NormalClass.findByIdAndUpdate(
       id,
-      { teacher, userName, destination, email, batch, time, date, items, weekDay, timeZone },
+      { teacher, userName, destination, email, batch, time, date, items, weekDay, timeZone, numberOfClasses },
       { new: true }
     );
     console.log(data);
