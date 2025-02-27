@@ -55,6 +55,7 @@ export function TableDemoClass() {
       <TableHeader>
         <TableRow>
           <TableHead className="w-[100px]">Student Name</TableHead>
+          <TableHead className="w-[100px]">Contact Details</TableHead>
           <TableHead className="w-[100px]">Course Name</TableHead>
           <TableHead className="w-[100px]">Teacher Name</TableHead>
           <TableHead>Date</TableHead>
@@ -70,6 +71,7 @@ export function TableDemoClass() {
         {data?.map((appointment: appointmentTypes) => (
           <TableRow key={appointment._id}>
             <TableCell className="font-medium">{appointment.userName}</TableCell>
+            <TableCell className="font-medium">{appointment.destination}</TableCell>
             <TableCell className="font-medium">{appointment.course}</TableCell>
             <TableCell className="font-medium">{appointment.teacher}</TableCell>
             <TableCell className="text-right">{appointment.date ? format(appointment.date, "MMM dd, yyyy") : ""}</TableCell>
@@ -92,7 +94,7 @@ export function TableDemoClass() {
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={9}>Total Rows</TableCell>
+          <TableCell colSpan={10}>Total Rows</TableCell>
           <TableCell className="text-right">{data?.length}</TableCell>
         </TableRow>
       </TableFooter>
