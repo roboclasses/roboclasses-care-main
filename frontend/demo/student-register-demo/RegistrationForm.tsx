@@ -54,7 +54,7 @@ export function RegistrationForm() {
     defaultValues: {
       studentName: "",
       parentName: "",
-      destination: "",
+      destination: "+971",
       email:"",
       courses: "",
       address:"",

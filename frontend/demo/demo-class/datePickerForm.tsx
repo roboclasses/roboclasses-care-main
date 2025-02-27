@@ -82,7 +82,7 @@ export function DatePickerForm() {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       userName: "",
-      destination: "",
+      destination: "+971",
       course: "",
       teacher: "",
       date: "",
