@@ -17,7 +17,7 @@ import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import 'react-phone-input-2/lib/style.css'
 import { DemoClassUrl } from "@/constants";
 import { usePathname } from "next/navigation";
@@ -117,15 +117,17 @@ export function DatePickerForm() {
         description: "Your appointment has been submitted successfully",
         variant:"default"
       });
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: "Failed ",
-        description: "Unable to submit appointment",
-        variant:"destructive"
-      });
-    }
-    
+    } catch (error:unknown) {
+      if(error instanceof AxiosError){
+        const {message} = error.response?.data
+        console.error(error);
+        toast({
+          title: "Failed",
+          description: message,
+          variant:"destructive"
+        });
+      }
+    } 
   }
 
   return (
