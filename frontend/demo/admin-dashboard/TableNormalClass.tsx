@@ -76,6 +76,7 @@ export function TableNormalClass() {
           <TableHead>Student Name</TableHead>
           <TableHead>Contact Details</TableHead>
           <TableHead className="text-center">Time</TableHead>
+          <TableHead className="text-center">Number of Classes</TableHead>
           <TableHead>Edit</TableHead>
           <TableHead>Delete</TableHead>
         </TableRow>
@@ -88,6 +89,7 @@ export function TableNormalClass() {
             <TableCell>{appointment.userName}</TableCell>
             <TableCell>{appointment.destination}</TableCell>
             <TableCell className="text-center"> {handleTime(appointment.time, appointment.date)} </TableCell>
+            <TableCell>{appointment.numberOfClasses}</TableCell>
             <TableCell>
               <Link href={`/appointment/reminder/normal-class/edit/${appointment._id}`}>
               <EditButton name="Edit" type="button" />
