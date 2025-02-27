@@ -1,4 +1,5 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
+import { Student } from "./student.model.js";
 
 const normalClassSchema = new mongoose.Schema(
   {
@@ -10,13 +11,18 @@ const normalClassSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    studId: { 
+      type: Schema.Types.ObjectId,
+      ref:'Student',
+      required:true,
+    },
     destination: {
       type: String,
       required: true,
     },
-    email:{
-      type:String,
-      required:true,
+    email: {
+      type: String,
+      required: true,
     },
     batch: {
       type: String,
@@ -26,20 +32,20 @@ const normalClassSchema = new mongoose.Schema(
       type: [String],
       required: true,
     },
-    weekDay:{
+    weekDay: {
       type: [String],
       required: true,
     },
-    date:{
+    date: {
       type: [Date],
       required: true,
     },
-    timeZone:{
-      type:String,
-      required:true,
+    timeZone: {
+      type: String,
+      required: true,
     },
-    numberOfClasses:{
-      type:String,
+    numberOfClasses: {
+      type: String,
     },
     items: {
       type: [String],
@@ -49,4 +55,16 @@ const normalClassSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const NormalClass = mongoose.models.NormalClass ?? mongoose.model("NormalClass", normalClassSchema);
+// Automatically update the Student's classes array after saving a NormalClass.
+normalClassSchema.post("save", async function (doc, next) {
+  try {
+    await Student.findByIdAndUpdate(doc.studId, { $push: { classes: doc._id } });
+    next();
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
+
+export const NormalClass = mongoose.model("NormalClass", normalClassSchema);

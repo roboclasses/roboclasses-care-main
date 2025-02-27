@@ -1,6 +1,7 @@
 import express from "express";
 import { NormalClass } from "../models/normalClassAppointments.model.js";
-import scheduleReminders from "../jobs/scheduler.js";
+import { Student } from "../models/student.model.js";
+// import scheduleReminders from "../jobs/scheduler.js";
 
 
 const router = express.Router();
@@ -11,12 +12,13 @@ router.post("/appointments/normalClass", async (req, res) => {
   try {
     const { teacher, userName, destination, email, batch, time, date, items, weekDay, timeZone, numberOfClasses } = req.body;
 
-  const batchName = await NormalClass.findOne({batch, userName})
-  if(batchName && userName){
-  return res.status(409).json({success:false, message:"Student exist for this batch, select a different one."})
-  }
-    const newAppointment = { teacher, userName, destination, email, batch, time, date, items, weekDay, timeZone, numberOfClasses }
-    const data = await NormalClass.create(newAppointment);
+    console.log({ teacher, userName, destination, email, batch, time, date, items, weekDay, timeZone, numberOfClasses });
+    
+    const student = await Student.findOne({email})
+
+    const normalClassModel = new NormalClass({teacher, userName, studId:student._id, destination, email, batch, time, date, items, weekDay, timeZone, numberOfClasses})
+
+    const data = await normalClassModel.save();
     
     scheduleReminders(newAppointment)
 
