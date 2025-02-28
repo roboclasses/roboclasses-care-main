@@ -21,6 +21,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "lib/utils.ts", "demo/normal-class/multiDatePickerForm.jsx", "demo/normal-class/EditNormalClassForm.jsx", "demo/new-batch-entry-demo/NewBatchEntry.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "lib/utils.ts", "demo/normal-class/multiDatePickerForm.jsx", "demo/normal-class/EditNormalClassForm.jsx", "demo/new-batch-entry-demo/NewBatchEntry.jsx", "demo/new-batch-entry-demo/EditBatchForm.jsx"],
   "exclude": ["node_modules"]
 }
