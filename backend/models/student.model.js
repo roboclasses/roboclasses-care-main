@@ -1,8 +1,6 @@
 import mongoose from "mongoose";
-// import { nanoid }from "nanoid"
 
 const studentSchema = new mongoose.Schema({
-    // studId:{type:String, default:()=>nanoid(), unique:true},
     classes: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'NormalClass'
@@ -18,4 +16,4 @@ const studentSchema = new mongoose.Schema({
 
 
 
-export const Student =  mongoose.model("Student", studentSchema);
+export const Student = mongoose.models.Student ?? mongoose.model("Student", studentSchema);
