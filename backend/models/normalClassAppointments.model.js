@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 import { Student } from "./student.model.js";
 
 const normalClassSchema = new mongoose.Schema(
@@ -12,7 +12,7 @@ const normalClassSchema = new mongoose.Schema(
       required: true,
     },
     studId: { 
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref:'Student',
       required:true,
     },
@@ -67,4 +67,4 @@ normalClassSchema.post("save", async function (doc, next) {
 });
 
 
-export const NormalClass = mongoose.model("NormalClass", normalClassSchema);
+export const NormalClass = mongoose.models.NormalClass ?? mongoose.model("NormalClass", normalClassSchema);

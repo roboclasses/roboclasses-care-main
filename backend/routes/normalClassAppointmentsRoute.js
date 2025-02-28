@@ -72,9 +72,12 @@ router.put("/appointments/normalClass/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const { teacher, userName, destination, email, batch, time, date, items, weekDay, timeZone, numberOfClasses } = req.body;
+
+    const student = await Student.findOne({email})
+
     const data = await NormalClass.findByIdAndUpdate(
       id,
-      { teacher, userName, destination, email, batch, time, date, items, weekDay, timeZone, numberOfClasses },
+      { teacher, userName, studId:student._id, destination, email, batch, time, date, items, weekDay, timeZone, numberOfClasses },
       { new: true }
     );
     console.log(data);
