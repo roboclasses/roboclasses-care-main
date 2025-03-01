@@ -12,7 +12,7 @@ const studentSchema = new mongoose.Schema({
     address:{type:String, required:true},
     grade:{type:String, required:true},
     courses:{type:String, required:true}
-})
+},{timestamps:true})
 
 
 
