@@ -71,13 +71,21 @@ router.get("/appointments/normalClass/:id", async (req, res) => {
 router.put("/appointments/normalClass/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { teacher, userName, destination, email, batch, time, date, items, weekDay, timeZone, numberOfClasses } = req.body;
+    const { teacher, userName, studId, destination, email, batch, time, date, items, weekDay, timeZone, numberOfClasses } = req.body;
 
-    const student = await Student.findOne({email})
+    // const student = await Student.findOne({email})
+
+    // Check if the student exists
+    // if (!student) {
+    //   return res.status(404).json({
+    //     success: false,
+    //     message: "Student not found with the provided email.",
+    //   });
+    // }
 
     const data = await NormalClass.findByIdAndUpdate(
       id,
-      { teacher, userName, studId:student._id, destination, email, batch, time, date, items, weekDay, timeZone, numberOfClasses },
+      { teacher, userName, studId, destination, email, batch, time, date, items, weekDay, timeZone, numberOfClasses },
       { new: true }
     );
     console.log(data);
