@@ -8,7 +8,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-import { CollapsibleDemo } from "@/demo/admin-dashboard/CollapsibleDemo";
+// import { CollapsibleDemo } from "@/demo/admin-dashboard/CollapsibleDemo";
 import { TableDemoClass } from "@/demo/admin-dashboard/TableDemoClass";
 import { TableBatchEntries } from "@/demo/admin-dashboard/TableBatchEntries";
 import { TableNormalClass } from "@/demo/admin-dashboard/TableNormalClass";
@@ -41,15 +41,25 @@ const page = () => {
         </div>
       </header>
       <div className="w-[1200px] grid grid-cols-1 space-y-10 px-20 mt-10">
-        <p className="font-bold text-4xl">Manage Appointments</p>
+        <p className="font-bold text-4xl">Manage Students</p>
         <StudentsTable />
+
+        <p className="font-bold text-4xl">Demo-Class Appointments</p>
         <TableDemoClass />
+
+        <p className="font-bold text-4xl">Normal-Class Appointments</p>
         <TableNormalClass />
       </div>
-      <div className="w-[1200px] grid grid-cols-1 space-y-10 p-20">
-        <CollapsibleDemo />
+      <div className="w-[1200px] grid grid-cols-1 space-y-10 px-20 mt-10">
+        {/* <CollapsibleDemo /> */}
+
+        <p className="font-bold text-4xl">Manage Attendances</p>
         <TableAttendance />
+
+        <p className="font-bold text-4xl">Available Batches</p>
         <TableBatchEntries />
+
+        <p className="font-bold text-4xl">Current Courses</p>
         <TableCourseEntries />
       </div>
     </SidebarInset>
