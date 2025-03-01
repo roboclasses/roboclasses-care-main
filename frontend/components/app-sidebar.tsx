@@ -75,7 +75,7 @@ useEffect(()=>{
         ],
       },
       {
-        title:  "Admnin Dashboard",
+        title:  "Admin Dashboard",
         url:  "/adminDashboard",
         icon: LayoutDashboard,
         isActive: false,
