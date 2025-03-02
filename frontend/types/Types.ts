@@ -58,6 +58,7 @@ export type courseType={
 
 export type studentType = {
   _id: string;
+  studentId:string;
   studentName: string;
   parentName?:string;
   destination?: string;

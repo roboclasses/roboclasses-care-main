@@ -51,7 +51,7 @@ export function StudentsTable() {
       <TableCaption>A list of Students</TableCaption>
       <TableHeader>
         <TableRow>
-        <TableHead className="w-[100px]">Roll Number</TableHead>
+        <TableHead className="w-[100px]">Student ID</TableHead>
           <TableHead className="w-[100px]">Student Name</TableHead>
           <TableHead className="w-[100px]">Parent Name</TableHead>
           <TableHead className="w-[100px]">Contact Details</TableHead>
@@ -64,9 +64,9 @@ export function StudentsTable() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {data?.map((Student: studentType, index) => (
+        {data?.map((Student: studentType) => (
           <TableRow key={Student._id}>
-            <TableCell className="font-medium">{index+1}</TableCell>
+            <TableCell className="font-medium">{Student.studentId}</TableCell>
             <TableCell className="font-medium">{Student.studentName}</TableCell>
             <TableCell className="font-medium">{Student.parentName}</TableCell>
             <TableCell className="font-medium">{Student.destination}</TableCell>
