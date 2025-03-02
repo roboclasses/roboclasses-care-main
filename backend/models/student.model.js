@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { nanoid } from "nanoid";
 
 const studentSchema = new mongoose.Schema({
     classes: [{
@@ -6,6 +7,7 @@ const studentSchema = new mongoose.Schema({
         ref: 'NormalClass'
     }],
     studentName:{type:String, required:true},
+    studentId:{type:String, index:true, required:true, unique:true, default:()=>nanoid(5)},
     parentName:{type:String, required:true},
     destination:{type:String, required:true},
     email:{type:String, unique:true, index:true, required:true},
