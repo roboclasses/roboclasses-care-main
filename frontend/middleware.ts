@@ -4,7 +4,7 @@ import { type NextRequest, NextResponse } from "next/server";
 export function middleware(req: NextRequest) {
     const protectedRoutePrefixes = ["/", "/adminDashboard", "/appointment", "/newBatchEntry", "/teacherView", "/courseEntry"];
     const studentRoutePrefixes = ["/newBatchEntry", "/adminDashboard", "/teacherView", "/courseEntry", "/appointment/reminder/normal-class", "/appointment/reminder/demo-class"] ;
-    const teacherRoutePrefixes = ["/courseEntry", "/newBatchEntry", "/appointment/studentRegister"]
+    // const teacherRoutePrefixes = ["/courseEntry", "/newBatchEntry", "/appointment/studentRegister"]
     const publicRoutes = ["/login", "/signup"];
     const currentPath = req.nextUrl.pathname;
 
@@ -15,7 +15,7 @@ export function middleware(req: NextRequest) {
 
     const isProtectedRoute = protectedRoutePrefixes.some(prefix => currentPath.startsWith(prefix));
     const isStudentRoute = studentRoutePrefixes.some(prefix => currentPath.startsWith(prefix));
-    const isTeacherRoute  = teacherRoutePrefixes.some(prefix => currentPath.startsWith(prefix));
+    // const isTeacherRoute  = teacherRoutePrefixes.some(prefix => currentPath.startsWith(prefix));
 
     if (isProtectedRoute) {
         const isAuth = req.cookies.get("token")?.value;
@@ -30,9 +30,9 @@ export function middleware(req: NextRequest) {
             return NextResponse.redirect(new URL("/", req.nextUrl));
         }
         // Teacher views
-        if(isTeacherRoute && !(role === "admin" || role === "student")){
-            return NextResponse.redirect(new URL("/", req.nextUrl))
-        }
+        // if(isTeacherRoute && !(role === "admin" || role === "student")){
+        //     return NextResponse.redirect(new URL("/", req.nextUrl))
+        // }
     }
 
     return NextResponse.next();

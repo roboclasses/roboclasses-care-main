@@ -50,7 +50,6 @@ useEffect(()=>{
   fetchUserSession();
 },[pathname])
 
- 
   const data = {
     user: {
       name: name ,
@@ -151,6 +150,10 @@ useEffect(()=>{
         isActive: true,
         items: [
           {
+            title: "Register a Student",
+            url: "/appointment/studentRegister",
+          },
+          {
             title: "Demo Class",
             url: "/appointment/reminder/demo-class",
           },
@@ -171,7 +174,46 @@ useEffect(()=>{
         url: "/teacherView",
         icon: View,
       },
+      {
+        title: "New Batch Entry",
+        url: "/newBatchEntry",
+        icon: School,
+      },
+      {
+        title: "New Course Entry",
+        url: "/courseEntry",
+        icon: BookIcon,
+      },
     ],
+    // navMainTeacher: [
+    //   {
+    //     title: "Take Appointment",
+    //     url: "#",
+    //     icon: SquareTerminal,
+    //     isActive: true,
+    //     items: [
+    //       {
+    //         title: "Demo Class",
+    //         url: "/appointment/reminder/demo-class",
+    //       },
+    //       {
+    //         title: "Normal Class",
+    //         url: "/appointment/reminder/normal-class",
+    //       },
+    //     ],
+    //   },
+    //   {
+    //     title:  "Admin Dashboard",
+    //     url:  "/adminDashboard",
+    //     icon: LayoutDashboard,
+    //     isActive: false,
+    //   },
+    //   {
+    //     title: "Teachers View",
+    //     url: "/teacherView",
+    //     icon: View,
+    //   },
+    // ],
     navMainStudent: [
       {
         title: "Take Appointment",
