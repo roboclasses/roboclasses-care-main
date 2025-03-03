@@ -45,7 +45,7 @@ export function TableDemoClass() {
     handleFetch();  
   },[])
 
-// Handle role and name based rows filering 
+  // Handle role and name based rows filering 
   function handleRoleBasedMapping(){
     if(role === 'teacher'){
       const filteredData = data?.filter((items)=>items.teacher === name)
