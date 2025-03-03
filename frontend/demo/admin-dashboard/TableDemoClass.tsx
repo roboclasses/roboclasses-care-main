@@ -26,7 +26,6 @@ export function TableDemoClass() {
   const { data, error, isLoading, isValidating, mutate } = useSWR<appointmentTypes[]>(DemoClassUrl,fetcher);
 
 
-
   // Handle delete appointment
   const handleDelete = async (appointmentId: string) => {
     try {
