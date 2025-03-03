@@ -207,7 +207,7 @@ useEffect(()=>{
         return data.navMainAdmin;
       case "teacher":
         return data.navMainTeacher;
-      case "user":
+      case "student":
         return data.navMainStudent;
       default:
         return [];
