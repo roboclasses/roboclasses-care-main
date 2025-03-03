@@ -20,12 +20,43 @@ import axios from "axios";
 import Link from "next/link";
 import { format } from "date-fns";
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
+import { getUserSession } from "@/lib/session";
+import { useEffect, useState } from "react";
 
 
 const fetcher = (url: string) => axios.get(url, {headers:{ Authorization: Cookies.get("token")}}).then((res) => res.data);
 
 export function TableBatchEntries() {
+  const [role, setRole] = useState("");
+  const [name, setName] = useState("");
   const { data, isLoading, isValidating, error, mutate } = useSWR<batchType[]>(NewBatchEntryUrl,fetcher);
+
+    // Fetch logged-in teacher session
+   useEffect(()=>{
+      const handleFetch = async()=>{
+        try {
+          const user = await getUserSession();
+          if(user){
+            setRole(user.role || '')
+            setName(user.name || '')
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      }
+  handleFetch();
+    },[])
+  
+    // Handle role and name based rows filering 
+    function handleRoleBasedMapping(){
+      if(role === "teacher"){
+        const filteredData = data?.filter((items)=>items.teacher === name)
+        return filteredData;
+      }
+      else if(role === "admin"){
+        return data;
+      }
+    }
 
   // Handle delete a batch
   const handleDelete = async(id:string)=>{
@@ -42,7 +73,8 @@ export function TableBatchEntries() {
       toast({title:"Failed", description:"Unable to delete batch entry", variant:"destructive"})
     }
   }
- // Handle edge cases
+
+  // Handle edge cases
  if (isLoading) return <div>Loading...</div>;
  if (error) return <div>Failed to load</div>;
  if (isValidating) return <div>Refreshing...</div>;
@@ -75,7 +107,7 @@ return timeArray.map((time, index)=>{
         </TableRow>
       </TableHeader>
       <TableBody>
-        {data?.map((batch: batchType) => (
+        {handleRoleBasedMapping()?.map((batch: batchType) => (
           <TableRow key={batch._id}>
             <TableCell className="font-medium">{batch.teacher}</TableCell>
             <TableCell>{batch.batch}</TableCell>

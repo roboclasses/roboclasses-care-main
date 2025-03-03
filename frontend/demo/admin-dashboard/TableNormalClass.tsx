@@ -19,14 +19,45 @@ import useSWR from "swr";
 import Link from "next/link";
 import {format} from "date-fns"
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
+import { useEffect, useState } from "react";
+import { getUserSession } from "@/lib/session";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 
 
 export function TableNormalClass() {
+const [role, setRole] = useState("");
+const [name, setName] = useState("");
+
   const { data, isLoading, isValidating, error, mutate } = useSWR<normalClassType[]>(NormalClassUrl, fetcher);
 
+  // Fetch logged-in teacher session
+ useEffect(()=>{
+    const handleFetch = async()=>{
+      try {
+        const user = await getUserSession();
+        if(user){
+          setRole(user.role || '')
+          setName(user.name || '')
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+handleFetch();
+  },[])
+
+  // Handle role and name based rows filering 
+  function handleRoleBasedMapping(){
+    if(role === "teacher"){
+      const filteredData = data?.filter((items)=>items.teacher === name)
+      return filteredData;
+    }
+    else if(role === "admin"){
+      return data;
+    }
+  }
   
   // handle delete appointment for normal class
   const handleDelete = async (id: string) => {
@@ -83,7 +114,7 @@ export function TableNormalClass() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {data?.map((appointment: normalClassType) => (
+        {handleRoleBasedMapping()?.map((appointment: normalClassType) => (
           <TableRow key={appointment._id}>
             <TableCell>{appointment.teacher}</TableCell>
             <TableCell>{appointment.batch}</TableCell>
