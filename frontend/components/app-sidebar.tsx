@@ -34,14 +34,18 @@ const pathname = usePathname();
 const [name, setName] = useState("")
 const [email, setEmail] = useState("")
 const [avatar, setAvatar] = useState("")
+const [role, setRole] = useState("")
 
 // Fetch user credentials to set user profile
 useEffect(()=>{
   const fetchUserSession = async()=>{
     const user = await getUserSession();
-    setName(user.name || 'Guest')  
-    setEmail(user.email || 'guest@gmail.com')
-    setAvatar(user.name?.slice(0,2) || 'G')
+    if(user){
+      setName(user.name || 'Guest')  
+      setEmail(user.email || 'guest@gmail.com')
+      setRole(user.role || '')
+      setAvatar(user.name?.slice(0,2) || 'G')
+    }
   }
   fetchUserSession();
 },[pathname])
@@ -53,7 +57,50 @@ useEffect(()=>{
       email: email ,
       avatar: avatar,
     },
-    navMain: [
+    // navMain: [
+    //   {
+    //     title: "Take Appointment",
+    //     url: "#",
+    //     icon: SquareTerminal,
+    //     isActive: true,
+    //     items: [
+    //       {
+    //         title: "Register a Student",
+    //         url: "/appointment/studentRegister",
+    //       },
+    //       {
+    //         title: "Demo Class",
+    //         url: "/appointment/reminder/demo-class",
+    //       },
+    //       {
+    //         title: "Normal Class",
+    //         url: "/appointment/reminder/normal-class",
+    //       },
+    //     ],
+    //   },
+    //   {
+    //     title:  "Admin Dashboard",
+    //     url:  "/adminDashboard",
+    //     icon: LayoutDashboard,
+    //     isActive: false,
+    //   },
+    //   {
+    //     title: "Teachers View",
+    //     url: "/teacherView",
+    //     icon: View,
+    //   },
+    //   {
+    //     title: "New Batch Entry",
+    //     url: "/newBatchEntry",
+    //     icon: School,
+    //   },
+    //   {
+    //     title: "New Course Entry",
+    //     url: "/courseEntry",
+    //     icon: BookIcon,
+    //   },
+    // ],
+    navMainAdmin: [
       {
         title: "Take Appointment",
         url: "#",
@@ -96,6 +143,50 @@ useEffect(()=>{
         icon: BookIcon,
       },
     ],
+    navMainTeacher: [
+      {
+        title: "Take Appointment",
+        url: "#",
+        icon: SquareTerminal,
+        isActive: true,
+        items: [
+          {
+            title: "Demo Class",
+            url: "/appointment/reminder/demo-class",
+          },
+          {
+            title: "Normal Class",
+            url: "/appointment/reminder/normal-class",
+          },
+        ],
+      },
+      {
+        title:  "Admin Dashboard",
+        url:  "/adminDashboard",
+        icon: LayoutDashboard,
+        isActive: false,
+      },
+      {
+        title: "Teachers View",
+        url: "/teacherView",
+        icon: View,
+      },
+    ],
+    navMainStudent: [
+      {
+        title: "Take Appointment",
+        url: "#",
+        icon: SquareTerminal,
+        isActive: true,
+        items: [
+          {
+            title: "Register a Student",
+            url: "/appointment/studentRegister",
+          },
+        ],
+      },
+    ],
+
     navSecondary: [
       {
         title: "Support",
@@ -108,28 +199,27 @@ useEffect(()=>{
         icon: Send,
       },
     ],
-    // projects: [
-    //   {
-    //     name: "Upcoming Appointments",
-    //     url: "#",
-    //     icon: EqualApproximatelyIcon,
-    //   },
-    //   {
-    //     name: "Bulk Appointments",
-    //     url: "#",
-    //     icon: MessageCircleQuestion,
-    //   },
-    //   {
-    //     name: "Modify Appointments",
-    //     url: "#",
-    //     icon: Edit2Icon,
-    //   },
-    // ],
   };
+  // Swith-Case statement to render specific navitems based on roles
+  const getNavItems = (role: string) => {
+    switch (role) {
+      case "admin":
+        return data.navMainAdmin;
+      case "teacher":
+        return data.navMainTeacher;
+      case "user":
+        return data.navMainStudent;
+      default:
+        return [];
+    }
+  };
+  // Used use-memo hook to prevent unnecessary re renders
+  const navItems = React.useMemo(() => getNavItems(role), [role]);
+  
 
   return (
     <>
-      {pathname !== "/login" && pathname !== "/signup" && (
+      {!pathname.startsWith("/login") && !pathname.startsWith("/signup") &&  (
         <Sidebar variant="inset" {...props}>
           <SidebarHeader className="rounded">
             <SidebarMenu>
@@ -148,8 +238,7 @@ useEffect(()=>{
             </SidebarMenu>
           </SidebarHeader>
           <SidebarContent>
-            <NavMain items={data.navMain} />
-            {/* <NavProjects projects={data.projects} /> */}
+            <NavMain items={navItems} />
             <NavSecondary items={data.navSecondary} className="mt-auto" />
           </SidebarContent>
           <SidebarFooter>

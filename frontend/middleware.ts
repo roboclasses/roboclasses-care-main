@@ -1,38 +1,44 @@
 'use server'
-import { cookies } from "next/headers";
-import { type NextRequest, NextResponse } from "next/server"
+import { type NextRequest, NextResponse } from "next/server";
 
-export default function middleware(req:NextRequest){
-    // 1.Check if route is protected
-    const protectedRoutes = ["/","/adminDashboard", "/appointment", "/newBatchEntry", "/teacherView"]
-    const adminRoutes = ["/adminDashboard", "/newBatchEntry", "/teacherView"]
+export function middleware(req: NextRequest) {
+    const protectedRoutePrefixes = ["/", "/adminDashboard", "/appointment", "/newBatchEntry", "/teacherView", "/courseEntry"];
+    const studentRoutePrefixes = ["/newBatchEntry", "/adminDashboard", "/teacherView", "/courseEntry", "/appointment/reminder/normal-class", "/appointment/reminder/demo-class"] ;
+    const teacherRoutePrefixes = ["/courseEntry", "/newBatchEntry", "/appointment/studentRegister"]
+    const publicRoutes = ["/login", "/signup"];
     const currentPath = req.nextUrl.pathname;
-    const isProtectedRoute = protectedRoutes.includes(currentPath);
-    const isAdminRoutes = adminRoutes.includes(currentPath);
 
+    // Exclude public routes from middleware
+    if (publicRoutes.includes(currentPath)) {
+        return NextResponse.next();
+    }
 
-    if(isProtectedRoute)
-    {
-        //2. Check for user session
-        const isAuth = cookies().get("token")?.value
-        const role = cookies().get("role")?.value
+    const isProtectedRoute = protectedRoutePrefixes.some(prefix => currentPath.startsWith(prefix));
+    const isStudentRoute = studentRoutePrefixes.some(prefix => currentPath.startsWith(prefix));
+    const isTeacherRoute  = teacherRoutePrefixes.some(prefix => currentPath.startsWith(prefix));
 
-        //3. Redirect unauthorized users
-        if(!isAuth)
-        {
-            return NextResponse.redirect(new URL("/login", req.nextUrl))
+    if (isProtectedRoute) {
+        const isAuth = req.cookies.get("token")?.value;
+        const role = req.cookies.get("role")?.value;
+
+        // Protection from not authenticated users
+        if (!isAuth) {
+            return NextResponse.redirect(new URL("/login", req.nextUrl));
         }
-
-        // 4. Give routes access to admin and teacher role only
-        if(isAdminRoutes && !(role === "admin" || role === "teacher"))
-        {
+        // Student views
+        if (isStudentRoute && !(role === "admin" || role === "teacher")) {
+            return NextResponse.redirect(new URL("/", req.nextUrl));
+        }
+        // Teacher views
+        if(isTeacherRoute && !(role === "admin" || role === "user")){
             return NextResponse.redirect(new URL("/", req.nextUrl))
         }
     }
+
     return NextResponse.next();
 }
 
-// Routes middleware should not run on
+// Exclude API routes, static files, and assets
 export const config = {
-    matcher: ['/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)']
-}
+    matcher: ["/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|assets/).*)"]
+};
