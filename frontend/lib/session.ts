@@ -19,7 +19,12 @@ export async function createUserSession(token:string, role:string, _id:string, e
 }
 
 export async function getUserSession() {
-    return { name: cookies().get("name")?.value, role: cookies().get("role")?.value, email: cookies().get("email")?.value, token: cookies().get("token")?.value };
+    return { 
+        name: cookies().get("name")?.value, 
+        role: cookies().get("role")?.value, 
+        email: cookies().get("email")?.value, 
+        token: cookies().get("token")?.value 
+        };
 }
 
 export async function deleteUserSession(){

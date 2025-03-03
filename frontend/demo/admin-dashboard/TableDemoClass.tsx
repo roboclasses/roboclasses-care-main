@@ -19,12 +19,41 @@ import { DemoClassUrl } from "@/constants";
 import { toast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
+import { useEffect, useState } from "react";
+import { getUserSession } from "@/lib/session";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 export function TableDemoClass() {
+  const [role, setRole] = useState("");
+  const [name, setName] = useState("");
   const { data, error, isLoading, isValidating, mutate } = useSWR<appointmentTypes[]>(DemoClassUrl,fetcher);
 
+  // Fetch logged-in teacher session
+  useEffect(()=>{
+    const handleFetch = async()=>{
+      try {
+        const user = await getUserSession();
+        if(user){
+          setRole(user.role || '')
+          setName(user.name || '')
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    handleFetch();  
+  },[])
+
+// Handle role and name based rows filering 
+  function handleRoleBasedMapping(){
+    if(role === 'teacher'){
+      const filteredData = data?.filter((items)=>items.teacher === name)
+      return filteredData;
+    }
+    else if(role === "admin")
+      return data;
+  }
 
   // Handle delete appointment
   const handleDelete = async (appointmentId: string) => {
@@ -67,7 +96,7 @@ export function TableDemoClass() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {data?.map((appointment: appointmentTypes) => (
+        {handleRoleBasedMapping()?.map((appointment: appointmentTypes) => (
           <TableRow key={appointment._id}>
             <TableCell className="font-medium">{appointment.userName}</TableCell>
             <TableCell className="font-medium">{appointment.destination}</TableCell>
