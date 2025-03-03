@@ -30,7 +30,7 @@ export function middleware(req: NextRequest) {
             return NextResponse.redirect(new URL("/", req.nextUrl));
         }
         // Teacher views
-        if(isTeacherRoute && !(role === "admin" || role === "user")){
+        if(isTeacherRoute && !(role === "admin" || role === "student")){
             return NextResponse.redirect(new URL("/", req.nextUrl))
         }
     }
