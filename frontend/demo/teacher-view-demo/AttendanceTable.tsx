@@ -1,16 +1,24 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import axios from 'axios'
 import { toast } from '@/hooks/use-toast'
 import { EditButton } from '../admin-dashboard/EditButton'
+import { AttendanceUrl, NewBatchEntryUrl } from '@/constants'
 
+import axios from 'axios'
 import useSWR from "swr"
 import Link from 'next/link'
-import { AttendanceUrl } from '@/constants'
+import Cookies from "js-cookie";
+import { format } from 'date-fns'
+
+interface dataType {
+  startDate: string;
+  batch: string;
+  numberOfClasses: string;
+}
 
 type Column = {
   id: string
@@ -23,21 +31,17 @@ type Row = {
   cells: { [key: string]: string }
 }
 
-const fetcher = (url:string)=>axios.get(url).then(res=>res.data)
+const fetcher = (url: string) => axios.get(url).then(res => res.data)
 
 export default function AttendanceTable() {
   const [columns, setColumns] = useState<Column[]>([
-    { id: 'startDate', name: 'Start Date', type: 'date', },
+    { id: 'startDate', name: 'Start Date', type: 'date' },
     { id: 'batchName', name: 'Batch Name', type: 'batch' },
-    { id: 'class1', name: 'Class 1', type: 'class' },
-    // { id: 'assessment1', name: 'Assessment', type: 'assessment' },
   ])
 
-  const [rows, setRows] = useState<Row[]>([
-    { id: '1', cells: {} }
-  ])
+  const [rows, setRows] = useState<Row[]>([])
 
- 
+  const [batch, setBatch] = useState<dataType[]>([])
 
   const addColumn = (type: 'class' | 'assessment') => {
     if (columns.length >= 60) {
@@ -68,43 +72,87 @@ export default function AttendanceTable() {
   }
 
   const handleInputChange = (rowId: string, columnId: string, value: string) => {
-    setRows(rows.map(row => 
-      row.id === rowId 
+    setRows(rows.map(row =>
+      row.id === rowId
         ? { ...row, cells: { ...row.cells, [columnId]: value } }
         : row
     ))
   }
 
-  const { data, isLoading, isValidating, error, mutate } = useSWR(AttendanceUrl,fetcher);
+  // Fetch batches
+  useEffect(() => {
+    const handleFetch = async () => {
+      try {
+        const res = await axios.get(NewBatchEntryUrl, { headers: { Authorization: Cookies.get("token") } })
+        console.log(res.data);
+        setBatch(res.data)
 
-  
+        // Generate rows and columns based on batch data
+        const newRows: Row[] = res.data.map((batchItem: dataType, index: number) => {
+          const row: Row = {
+            id: (index + 1).toString(),
+            cells: {
+              startDate: batchItem.startDate ? format(batchItem.startDate, 'MMM dd, yyyy') : "",
+              batchName: batchItem.batch,
+            }
+          }
+
+          // Add class columns based on numberOfClasses
+          for (let i = 1; i <= parseInt(batchItem.numberOfClasses); i++) {
+            const classColumnId = `class${i}`
+            row.cells[classColumnId] = ''
+          }
+
+          return row
+        })
+
+        // Generate class columns based on the maximum numberOfClasses
+        const maxClasses = Math.max(...res.data.map((batchItem: dataType) => parseInt(batchItem.numberOfClasses)))
+        const newColumns: Column[] = [
+          { id: 'startDate', name: 'Start Date', type: 'date' },
+          { id: 'batchName', name: 'Batch Name', type: 'batch' },
+        ]
+
+        for (let i = 1; i <= maxClasses; i++) {
+          newColumns.push({ id: `class${i}`, name: `Class ${i}`, type: 'class' })
+        }
+
+        setColumns(newColumns)
+        setRows(newRows)
+
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    handleFetch();
+  }, [])
+
+  const { data, isLoading, isValidating, error, mutate } = useSWR(AttendanceUrl, fetcher);
+
   // handle form submit
-  const handleSubmit = async(e:React.FormEvent)=>{
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const formData = {
-      rows:rows,
-      columns:columns
+      rows: rows,
+      columns: columns
     }
     try {
-      const res = await axios.post(AttendanceUrl,formData)
+      const res = await axios.post(AttendanceUrl, formData)
       console.log(res.data);
       mutate();
-      const {message} = res.data
-      toast({title:"Success✅",description:message, variant:"default"})
+      const { message } = res.data
+      toast({ title: "Success✅", description: message, variant: "default" })
     } catch (error) {
       console.error(error);
-      toast({title:"Failed",description:"unable to submit data!", variant:"destructive"})
+      toast({ title: "Failed", description: "unable to submit data!", variant: "destructive" })
 
     }
   }
 
-
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Data fetching error!</div>;
   if (isValidating) return <div>Refreshing...</div>;
-  // if (data?.length === 0) return <div>Empty list for Batches.</div>;
-
 
   return (
     <div className="container mx-auto p-4 space-y-10">
@@ -120,7 +168,6 @@ export default function AttendanceTable() {
               {columns.map((column) => (
                 <TableHead key={column.id}>{column.name}</TableHead>
               ))}
-              
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -128,8 +175,8 @@ export default function AttendanceTable() {
               <TableRow key={row.id}>
                 {columns.map((column) => (
                   <TableCell key={`${row.id}-${column.id}`}>
-                    <Input 
-                      type="text" 
+                    <Input
+                      type="text"
                       placeholder={`Enter ${column.name}`}
                       value={row.cells[column.id] || ''}
                       onChange={(e) => handleInputChange(row.id, column.id, e.target.value)}
@@ -143,43 +190,41 @@ export default function AttendanceTable() {
         <Button type='submit'>Save</Button>
       </form>
       <form>
-      <Table className="border border-black">
-        <TableCaption>A list of attendances</TableCaption>
-        <TableHeader>
-          <TableRow>
-           {data[0]?.columns.map((column:any)=>(
-            <TableHead className="w-[100px]" key={column.id}>{column.name}</TableHead>
-           )) }
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-        {data.map((record: any) => (
-          <TableRow key={record._id}>
-            {record.rows.map((row: any) => (
-              <React.Fragment key={row.id}>
-                {record.columns.map((column: any) => (
-                  <TableCell key={column.id}>{row.cells[column.id]}</TableCell>
+        <Table className="border border-black">
+          <TableCaption>A list of attendances</TableCaption>
+          <TableHeader>
+            <TableRow>
+              {data[0]?.columns.map((column: any) => (
+                <TableHead className="w-[100px]" key={column.id}>{column.name}</TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {data.map((record: any) => (
+              <TableRow key={record._id}>
+                {record.rows.map((row: any) => (
+                  <React.Fragment key={row.id}>
+                    {record.columns.map((column: any) => (
+                      <TableCell key={column.id}>{row.cells[column.id]}</TableCell>
+                    ))}
+                  </React.Fragment>
                 ))}
-              </React.Fragment>
+                <TableCell className="text-right">
+                  <Link href={`/teacherView/edit/${record._id}`}>
+                    <EditButton name="Edit" type="button" />
+                  </Link>
+                </TableCell>
+              </TableRow>
             ))}
-             <TableCell className="text-right">
-              <Link href={`/teacherView/edit/${record._id}`}>
-              <EditButton name="Edit" type="button" />
-              </Link>
-            </TableCell>
-          </TableRow>
-        ))}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={7}>Total Rows</TableCell>
-            <TableCell className="text-right">{data?.length}</TableCell>
-          </TableRow>
-        </TableFooter>
-      </Table>
-
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TableCell colSpan={7}>Total Rows</TableCell>
+              <TableCell className="text-right">{data?.length}</TableCell>
+            </TableRow>
+          </TableFooter>
+        </Table>
       </form>
     </div>
   )
 }
-
