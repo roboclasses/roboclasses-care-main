@@ -13,43 +13,27 @@ import Link from 'next/link'
 import Cookies from "js-cookie"
 import { format } from 'date-fns'
 
-interface dataType {
-  startDate: string;
-  batch: string;
-  numberOfClasses: string;
-}
-
-type Column = {
-  id: string
-  name: string
-  type: 'date' | 'batch' | 'class' | 'assessment'
-}
-
-type Row = {
-  id: string
-  cells: { [key: string]: string }
-}
-
-const fetcher = (url: string) => axios.get(url).then(res => res.data)
+const fetcher = (url) => axios.get(url).then(res => res.data)
 
 export default function AttendanceTable() {
-  const [columns, setColumns] = useState<Column[]>([
+  const [columns, setColumns] = useState([
     { id: 'startDate', name: 'Start Date', type: 'date' },
     { id: 'batchName', name: 'Batch Name', type: 'batch' },
   ])
 
-  const [rows, setRows] = useState<Row[]>([])
+  const [rows, setRows] = useState([])
 
-  const [batch, setBatch] = useState<dataType[]>([])
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [batch, setBatch] = useState([])
 
-  const addColumn = (type: 'class' | 'assessment') => {
+  const addColumn = (type) => {
     if (columns.length >= 60) {
       alert('Maximum limit of 60 columns reached')
       return
     }
 
     const count = columns.filter(col => col.type === type).length + 1
-    const newColumn: Column = {
+    const newColumn = {
       id: `${type}${count}`,
       name: type === 'assessment' ? 'Assessment' : `${type.charAt(0).toUpperCase() + type.slice(1)} ${count}`,
       type: type
@@ -63,14 +47,14 @@ export default function AttendanceTable() {
   const handleAddAssessment = () => addColumn('assessment')
 
   const handleAddRow = () => {
-    const newRow: Row = {
+    const newRow = {
       id: (rows.length + 1).toString(),
       cells: {}
     }
     setRows([...rows, newRow])
   }
 
-  const handleInputChange = (rowId: string, columnId: string, value: string) => {
+  const handleInputChange = (rowId, columnId, value) => {
     setRows(rows.map(row =>
       row.id === rowId
         ? { ...row, cells: { ...row.cells, [columnId]: value } }
@@ -87,8 +71,8 @@ export default function AttendanceTable() {
         setBatch(res.data)
 
         // Generate rows and columns based on batch data
-        const newRows: Row[] = res.data.map((batchItem: dataType, index: number) => {
-          const row: Row = {
+        const newRows = res.data.map((batchItem, index) => {
+          const row = {
             id: (index + 1).toString(),
             cells: {
               startDate: batchItem.startDate ? format(batchItem.startDate, 'MMM dd, yyyy') : "",
@@ -106,8 +90,8 @@ export default function AttendanceTable() {
         })
 
         // Generate class columns based on the maximum numberOfClasses
-        const maxClasses = Math.max(...res.data.map((batchItem: dataType) => parseInt(batchItem.numberOfClasses)))
-        const newColumns: Column[] = [
+        const maxClasses = Math.max(...res.data.map((batchItem) => parseInt(batchItem.numberOfClasses)))
+        const newColumns = [
           { id: 'startDate', name: 'Start Date', type: 'date' },
           { id: 'batchName', name: 'Batch Name', type: 'batch' },
         ]
@@ -129,7 +113,7 @@ export default function AttendanceTable() {
   const { data, isLoading, isValidating, error, mutate } = useSWR(AttendanceUrl, fetcher);
 
   // handle form submit
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formData = {
@@ -155,12 +139,15 @@ export default function AttendanceTable() {
 
   return (
     <div className="container mx-auto p-4 space-y-10">
-      <div className="flex items-center gap-2">
-        <Button onClick={handleAddClass}>Add Class</Button>
-        <Button onClick={handleAddAssessment}>Add Assessment</Button>
-        <Button onClick={handleAddRow}>Add Row</Button>
-      </div>
       <form className="overflow-x-auto space-y-2 w-[1200px]" onSubmit={handleSubmit}>
+        <div className='flex justify-between items-center'>
+          <div className="flex items-center gap-2">
+            <Button onClick={handleAddClass}>Add Class</Button>
+            <Button onClick={handleAddAssessment}>Add Assessment</Button>
+            <Button onClick={handleAddRow}>Add Row</Button>
+          </div>
+          <Button type='submit'>Save</Button>
+        </div>
         <div className="grid grid-cols-1 gap-4 p-2">
           {rows.map((row) => (
             <div key={row.id} className="grid grid-cols-1 gap-2">
@@ -197,42 +184,42 @@ export default function AttendanceTable() {
             </div>
           ))}
         </div>
-        <Button type='submit'>Save</Button>
       </form>
-        <Table className="border border-black">
-          <TableCaption>A list of attendances</TableCaption>
-          <TableHeader>
-            <TableRow>
-              {data[0]?.columns.map((column: any) => (
-                <TableHead className="w-[100px]" key={column.id}>{column.name}</TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data.map((record: any) => (
-              <TableRow key={record._id}>
-                {record.rows.map((row: any) => (
-                  <React.Fragment key={row.id}>
-                    {record.columns.map((column: any) => (
-                      <TableCell key={column.id}>{row.cells[column.id]}</TableCell>
-                    ))}
-                  </React.Fragment>
-                ))}
-                <TableCell className="text-right">
-                  <Link href={`/teacherView/edit/${record._id}`}>
-                    <EditButton name="Edit" type="button" />
-                  </Link>
-                </TableCell>
-              </TableRow>
+      <h1 className='font-semibold text-4xl'>All Attendance</h1>
+      <Table className="border border-black">
+        <TableCaption>A list of attendances</TableCaption>
+        <TableHeader>
+          <TableRow>
+            {data[0]?.columns.map((column) => (
+              <TableHead className="w-[100px]" key={column.id}>{column.name}</TableHead>
             ))}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TableCell colSpan={7}>Total Rows</TableCell>
-              <TableCell className="text-right">{data?.length}</TableCell>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {data.map((record) => (
+            <TableRow key={record._id}>
+              {record.rows.map((row) => (
+                <React.Fragment key={row.id}>
+                  {record.columns.map((column) => (
+                    <TableCell key={column.id}>{row.cells[column.id]}</TableCell>
+                  ))}
+                </React.Fragment>
+              ))}
+              <TableCell className="text-right">
+                <Link href={`/teacherView/edit/${record._id}`}>
+                  <EditButton name="Edit" type="button" />
+                </Link>
+              </TableCell>
             </TableRow>
-          </TableFooter>
-        </Table>
+          ))}
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TableCell colSpan={7}>Total Rows</TableCell>
+            <TableCell className="text-right">{data?.length}</TableCell>
+          </TableRow>
+        </TableFooter>
+      </Table>
     </div>
   )
 }
