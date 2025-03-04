@@ -7,11 +7,10 @@ import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, Tabl
 import { toast } from '@/hooks/use-toast'
 import { EditButton } from '../admin-dashboard/EditButton'
 import { AttendanceUrl, NewBatchEntryUrl } from '@/constants'
-
 import axios from 'axios'
 import useSWR from "swr"
 import Link from 'next/link'
-import Cookies from "js-cookie";
+import Cookies from "js-cookie"
 import { format } from 'date-fns'
 
 interface dataType {
@@ -161,35 +160,45 @@ export default function AttendanceTable() {
         <Button onClick={handleAddAssessment}>Add Assessment</Button>
         <Button onClick={handleAddRow}>Add Row</Button>
       </div>
-      <form className="overflow-x-auto" onSubmit={handleSubmit}>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              {columns.map((column) => (
-                <TableHead key={column.id}>{column.name}</TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.id}>
-                {columns.map((column) => (
-                  <TableCell key={`${row.id}-${column.id}`}>
+      <form className="overflow-x-auto space-y-2 w-[1200px]" onSubmit={handleSubmit}>
+        <div className="grid grid-cols-1 gap-4 p-2">
+          {rows.map((row) => (
+            <div key={row.id} className="grid grid-cols-1 gap-2">
+              {/* Start Date and Batch Name in a single row */}
+              <div className="flex gap-2">
+                <Input
+                  type="text"
+                  placeholder="Enter Start Date"
+                  value={row.cells['startDate'] || ''}
+                  onChange={(e) => handleInputChange(row.id, 'startDate', e.target.value)}
+                />
+                <Input
+                  type="text"
+                  placeholder="Enter Batch Name"
+                  value={row.cells['batchName'] || ''}
+                  onChange={(e) => handleInputChange(row.id, 'batchName', e.target.value)}
+                />
+              </div>
+
+              {/* Classes in a single column */}
+              <div className="grid grid-cols-1 gap-2">
+                {columns
+                  .filter(col => col.type === 'class')
+                  .map((column) => (
                     <Input
+                      key={`${row.id}-${column.id}`}
                       type="text"
                       placeholder={`Enter ${column.name}`}
                       value={row.cells[column.id] || ''}
                       onChange={(e) => handleInputChange(row.id, column.id, e.target.value)}
                     />
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                  ))}
+              </div>
+            </div>
+          ))}
+        </div>
         <Button type='submit'>Save</Button>
       </form>
-      <form>
         <Table className="border border-black">
           <TableCaption>A list of attendances</TableCaption>
           <TableHeader>
@@ -224,7 +233,6 @@ export default function AttendanceTable() {
             </TableRow>
           </TableFooter>
         </Table>
-      </form>
     </div>
   )
 }
