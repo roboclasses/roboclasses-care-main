@@ -14,9 +14,9 @@ import { TableBatchEntries } from "@/demo/admin-dashboard/TableBatchEntries";
 import { TableNormalClass } from "@/demo/admin-dashboard/TableNormalClass";
 import { Separator } from "@radix-ui/react-separator";
 import React from "react";
-import { TableAttendance } from "@/demo/admin-dashboard/TableAttendance";
 import { TableCourseEntries } from "@/demo/admin-dashboard/TableCourseEntries";
 import { StudentsTable } from "@/demo/student-register-demo/StudentsTable";
+import { TableAttendance } from "@/demo/admin-dashboard/TableAttendance";
 
 const page = () => {
   return (
@@ -54,7 +54,7 @@ const page = () => {
         {/* <CollapsibleDemo /> */}
 
         <p className="font-bold text-4xl">Manage Attendances</p>
-        <TableAttendance />
+        <TableAttendance/>
 
         <p className="font-bold text-4xl">Available Batches</p>
         <TableBatchEntries />

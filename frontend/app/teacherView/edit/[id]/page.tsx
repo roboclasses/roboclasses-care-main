@@ -29,7 +29,7 @@ const page = () => {
           </Breadcrumb>
         </div>
       </header>
-        <EditAttendanceTable />
+      <EditAttendanceTable />
       </SidebarInset>
   );
 };
