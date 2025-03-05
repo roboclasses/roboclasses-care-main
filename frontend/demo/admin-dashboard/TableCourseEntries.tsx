@@ -49,6 +49,8 @@ export function TableCourseEntries() {
 
 
   return (
+    <div>
+    <h1 className="text-4xl font-semibold mb-6">Current Courses</h1>
     <Table className="border border-black">
       <TableCaption>A list of courses</TableCaption>
       <TableHeader>
@@ -82,5 +84,6 @@ export function TableCourseEntries() {
         </TableRow>
       </TableFooter>
     </Table>
+    </div>
   );
 }

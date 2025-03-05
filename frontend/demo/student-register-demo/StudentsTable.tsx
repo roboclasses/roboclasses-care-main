@@ -47,6 +47,8 @@ export function StudentsTable() {
   if (isValidating) return <div>Refershing data...</div>;
 
   return (
+    <div>
+      <h1 className="text-4xl font-semibold mb-6">All Students</h1>
     <Table className="border border-black">
       <TableCaption>A list of Students</TableCaption>
       <TableHeader>
@@ -94,5 +96,6 @@ export function StudentsTable() {
         </TableRow>
       </TableFooter>
     </Table>
+    </div>
   );
 }
