@@ -27,7 +27,10 @@ import MultiDayTimeEntry from "./MultiDayTimeEntry";
 import { useParams } from "next/navigation";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
-import { NewBatchEntryUrl } from "@/constants";
+import { NewBatchEntryUrl, StudentRegUrl } from "@/constants";
+import 'react-phone-input-2/lib/style.css'
+import PhoneInput from "react-phone-input-2";
+import StudentSearch from "../normal-class/StudentSearch";
 
 // Get user's timezone
 const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -56,13 +59,23 @@ const FormSchema = z.object({
     .optional(),
   timeZone: z.string().optional(),
   numberOfClasses: z.string().optional(),
+  studentName: z.string().min(2, { message:"Student name must be atlest 2 characters long." }),
+  destination:z.string().optional(),
+  email:z.string().optional(),
 });
 
 export function EditBatchForm() {
   const { id } = useParams();
-    const [dayTimeEntries, setDayTimeEntries] = useState([]);
-  
+  const [dayTimeEntries, setDayTimeEntries] = useState([]);
+  const [selectedStudent, setSelectedStudent] = useState(null)
 
+    // Handle select student
+    const handleStudentSelect = (student)=>{
+      setSelectedStudent(student)
+      form.setValue("studentName",student.studentName)
+    }
+  
+  
   // Initialize react-hook-form
   const form = useForm({
     resolver: zodResolver(FormSchema),
@@ -73,6 +86,9 @@ export function EditBatchForm() {
       dayTimeEntries: [],
       timeZone: userTimeZone, // Default to user's timezone
       numberOfClasses: "",
+      studentName:"",
+      destination:"+971",
+      email:"",
     },
   });
 
@@ -108,9 +124,35 @@ const handleDateTimeEntriesChange = (entries) => {
   form.setValue("dayTimeEntries", entries); // Update form value
 };
 
+const studentName = form.watch("studentName")
+
+  // Handle populate phone and email of a selected student
+  useEffect(()=>{
+    const handleFetch = async()=>{
+      try {
+        const res = await axios.get(`${StudentRegUrl}?name=${studentName}`)
+        if(res.data){
+          const selectedStudent = res.data.find((item)=>item.studentName === studentName)
+          if(selectedStudent){
+            form.setValue("destination", selectedStudent.destination || '')
+            form.setValue("email", selectedStudent.email || '')
+          }
+        }
+      } catch (error) {
+        console.error(error); 
+        form.setValue("email", '')
+        form.setValue("email", '')
+      }
+    }
+    handleFetch();
+  },[form, studentName])
+
+
 
   // Submit handler
   async function onSubmit(data) {
+    console.log(JSON.stringify(data));
+    
     try {
       const transformedDateTimeEntries = {
         day: dayTimeEntries.map(entry => entry.day), // Extract all dates into an array
@@ -124,6 +166,9 @@ const handleDateTimeEntriesChange = (entries) => {
         teacher: data.teacher,
         timeZone:data.timeZone,
         numberOfClasses:data.numberOfClasses,
+        studentName:data.studentName,
+        destination:data.destination,
+        email:data.email,
         ...transformedDateTimeEntries
       };
 
@@ -201,6 +246,57 @@ const handleDateTimeEntriesChange = (entries) => {
               <FormLabel className="font-semibold">Number of Classes</FormLabel>
               <FormControl>
                 <Input {...field} className="bg-white" required />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="userName"
+          render={() => (
+            <FormItem>
+              <FormLabel className="font-semibold">Student Name</FormLabel>
+              <StudentSearch onSelect={handleStudentSelect} selectedStudent={selectedStudent}/>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="destination"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="font-semibold">Contact Details</FormLabel>
+              <FormControl>
+              <PhoneInput
+                  country={"ae"}
+                  {...field}  
+                  disabled       
+                  inputStyle={{ width: "540px" }}
+                  inputProps={{ ref: field.ref, required: true }}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="font-semibold">Email Address</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  required
+                  disabled
+                  className="bg-white"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

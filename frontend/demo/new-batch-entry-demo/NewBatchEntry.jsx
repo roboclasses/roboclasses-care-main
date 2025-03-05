@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/form";
 import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
-import { CoursesUrl, NewBatchEntryUrl } from "@/constants";
+import { CoursesUrl, NewBatchEntryUrl, StudentRegUrl } from "@/constants";
 
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -24,7 +24,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label";
 import { teachers } from "@/data/dataStorage";
 import MultiDayTimeEntry from "./MultiDayTimeEntry";
-// import { format } from "date-fns";
+import 'react-phone-input-2/lib/style.css'
+import PhoneInput from "react-phone-input-2";
+import StudentSearch from "../normal-class/StudentSearch";
 
 
 // For detect system timezone
@@ -51,6 +53,9 @@ const FormSchema = z.object({
   })),
   timeZone: z.string(),
   numberOfClasses: z.string().optional(),
+  studentName: z.string().min(2, { message:"Student name must be atlest 2 characters long." }),
+  destination:z.string().optional(),
+  email:z.string().optional(),
 });
 
 export function NewBatchEntryForm() {
@@ -60,9 +65,16 @@ export function NewBatchEntryForm() {
   const [courses, setCourses] = useState([]);
 
   const [dayTimeEntries, setDayTimeEntries] = useState([]);
+  const [selectedStudent, setSelectedStudent] = useState(null)
 
-  
-// For fetching logged-in users name and role
+
+  // Handle select student
+  const handleStudentSelect = (student)=>{
+    setSelectedStudent(student)
+    form.setValue("studentName",student.studentName)
+  }
+
+  // For fetching logged-in users name and role
   useEffect(() => {
     const handleFetch = async () => {
       const user = await getUserSession();
@@ -72,7 +84,7 @@ export function NewBatchEntryForm() {
     handleFetch();
   }, [pathname]);
 
-// Get courses
+  // Get courses
   useEffect(()=>{
   const handleFetch = async()=>{
     try {
@@ -101,18 +113,43 @@ export function NewBatchEntryForm() {
       },
       timeZone:userTimeZone,
       numberOfClasses:"",
+      studentName:"",
+      destination:"+971",
+      email:"",
     },
   });
 
-// Handle multiple date and time add, remove and update
+  // Handle multiple date and time add, remove and update
     const handleDateTimeEntriesChange = (entries) => {
       setDayTimeEntries(entries);
       form.setValue("dayTimeEntries", entries); // Update form value
     };
 
     const courseName = form.watch("course")
+    const studentName = form.watch("studentName")
 
-// Handle pre populating numberOfClasses from batch
+  // Handle populate phone and email of a selected student
+  useEffect(()=>{
+    const handleFetch = async()=>{
+      try {
+        const res = await axios.get(`${StudentRegUrl}?name=${studentName}`)
+        if(res.data){
+          const selectedStudent = res.data.find((item)=>item.studentName === studentName)
+          if(selectedStudent){
+            form.setValue("destination", selectedStudent.destination || '')
+            form.setValue("email", selectedStudent.email || '')
+          }
+        }
+      } catch (error) {
+        console.error(error); 
+        form.setValue("email", '')
+        form.setValue("email", '')
+      }
+    }
+    handleFetch();
+  },[form, studentName])
+
+  // Handle populate numberOfClasses from batch
 useEffect(()=>{
   const handleFetch = async()=>{
     try {
@@ -151,6 +188,9 @@ useEffect(()=>{
         batch:batch,
         timeZone:data.timeZone,
         numberOfClasses:data.numberOfClasses,
+        studentName:data.studentName,
+        destination:data.destination,
+        email:data.email,
         ...transformedDateTimeEntries
       }
       const res = await axios.post(NewBatchEntryUrl, payload, {headers: { Authorization: Cookies.get("token") }});
@@ -178,8 +218,8 @@ useEffect(()=>{
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
-      >         
-      
+      >  
+             
       <MultiDayTimeEntry onEntriesChange={handleDateTimeEntriesChange} />
 
         <FormField
@@ -251,6 +291,57 @@ useEffect(()=>{
           render={({ field }) => (
             <FormItem>
               <FormLabel className="font-semibold">Number of Classes</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  required
+                  disabled
+                  className="bg-white"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="userName"
+          render={() => (
+            <FormItem>
+              <FormLabel className="font-semibold">Student Name</FormLabel>
+              <StudentSearch onSelect={handleStudentSelect} selectedStudent={selectedStudent}/>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="destination"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="font-semibold">Contact Details</FormLabel>
+              <FormControl>
+              <PhoneInput
+                  country={"ae"}
+                  {...field}  
+                  disabled       
+                  inputStyle={{ width: "440px" }}
+                  inputProps={{ ref: field.ref, required: true }}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="font-semibold">Email Address</FormLabel>
               <FormControl>
                 <Input
                   {...field}
