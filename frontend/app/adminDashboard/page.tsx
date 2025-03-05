@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -17,6 +17,9 @@ import React from "react";
 import { TableCourseEntries } from "@/demo/admin-dashboard/TableCourseEntries";
 import { StudentsTable } from "@/demo/student-register-demo/StudentsTable";
 import { TableAttendance } from "@/demo/admin-dashboard/TableAttendance";
+import Link from "next/link";
+import Image from "next/image";
+import { imageIcons } from "@/data/dataStorage";
 
 const page = () => {
   return (
@@ -32,14 +35,26 @@ const page = () => {
               </BreadcrumbItem>
               <BreadcrumbSeparator className="hidden md:block" />
               <BreadcrumbItem>
-                <BreadcrumbPage>
-                 {"Admin Dashboard"}
-                </BreadcrumbPage>
+                <BreadcrumbPage>{"Admin Dashboard"}</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
         </div>
       </header>
+      <div className="flex gap-5 items-center p-5">
+        {imageIcons.map((items) => (
+          <Link href={"#"} key={items.id}>
+            <Image
+              src={items.img}
+              height={150}
+              width={180}
+              alt={items.alt}
+              className="rounded-xl shadow-sm hover:shadow-2xl transition-all duration-100 delay-75 
+              active:scale-95 active:opacity-75 active:brightness-75 active:sepia active:blur-sm  "
+            />
+          </Link>
+        ))}
+      </div>
       <div className="w-[1200px] grid grid-cols-1 space-y-10 px-20 mt-10">
         <p className="font-bold text-4xl">Manage Students</p>
         <StudentsTable />
@@ -54,7 +69,7 @@ const page = () => {
         {/* <CollapsibleDemo /> */}
 
         <p className="font-bold text-4xl">Manage Attendances</p>
-        <TableAttendance/>
+        <TableAttendance />
 
         <p className="font-bold text-4xl">Available Batches</p>
         <TableBatchEntries />
