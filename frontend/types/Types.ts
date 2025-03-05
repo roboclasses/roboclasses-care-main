@@ -48,6 +48,9 @@ export type batchType = {
   startDate:string;
   timeZone:string;
   numberOfClasses:string;
+  studentName:string;
+  destination:string;
+  email:string;
 };
 
 export type courseType={

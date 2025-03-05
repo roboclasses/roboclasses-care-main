@@ -28,7 +28,19 @@ const newBatchEntrySchema = new mongoose.Schema({
     },
     numberOfClasses:{
         type:String,
-    }
+    },
+    studentName:{
+        type:String,
+        required:true,
+    },
+    destination:{
+        type:String,
+        required:true,
+    },
+    email:{
+        type:String,
+        required:true,
+    },
 },{timestamps:true})
 
 export const NewBatchEntries = mongoose.models.NewBatchEntries ?? mongoose.model('NewBatchEntries',newBatchEntrySchema)

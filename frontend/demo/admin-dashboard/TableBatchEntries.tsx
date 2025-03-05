@@ -98,6 +98,9 @@ return timeArray.map((time, index)=>{
         <TableRow>
           <TableHead className="w-[100px]">Teacher Name</TableHead>
           <TableHead>Batch Name</TableHead>
+          <TableHead>Student Name</TableHead>
+          <TableHead>Contact Details</TableHead>
+          <TableHead>Email Address</TableHead>
           <TableHead>Start Date</TableHead>
           <TableHead>Times</TableHead>
           <TableHead>Timezone</TableHead>
@@ -111,6 +114,9 @@ return timeArray.map((time, index)=>{
           <TableRow key={batch._id}>
             <TableCell className="font-medium">{batch.teacher}</TableCell>
             <TableCell>{batch.batch}</TableCell>
+            <TableCell>{batch.studentName}</TableCell>
+            <TableCell>{batch.destination}</TableCell>
+            <TableCell>{batch.email}</TableCell>
             <TableCell>{batch.startDate ? format(batch.startDate, 'MMM dd, yyyy') : ""}</TableCell>
             <TableCell className="text-right"> {handleTime(batch.day, batch.time)} </TableCell>
             <TableCell className="text-right">{batch.timeZone}</TableCell>
@@ -128,7 +134,7 @@ return timeArray.map((time, index)=>{
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={7}>Total Rows</TableCell>
+          <TableCell colSpan={10}>Total Rows</TableCell>
           <TableCell className="text-right">{data?.length}</TableCell>
         </TableRow>
       </TableFooter>
