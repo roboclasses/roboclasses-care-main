@@ -78,6 +78,8 @@ export function TableDemoClass() {
   if (isValidating) return <div>Refershing data...</div>;
 
   return (
+    <div>
+    <h1 className="text-4xl font-semibold mb-6">Demo-Class Appointments</h1>
     <Table className="border border-black">
       <TableCaption>A list of booked appointments for Demo Class</TableCaption>
       <TableHeader>
@@ -127,5 +129,6 @@ export function TableDemoClass() {
         </TableRow>
       </TableFooter>
     </Table>
+    </div>
   );
 }

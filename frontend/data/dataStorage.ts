@@ -11,12 +11,12 @@ export const teachers = [
 
 // For mapping image-icons
 export const imageIcons = [
-  {id:0, img:STUDENT_IMAGE, alt:"student-pic"},
-  {id:1, img:DEMO_CLASS_IMAGE, alt:"demo-class-pic"},
-  {id:2, img:NORMAL_CLASS_IMAGE, alt:"normal-class-pic"},
-  {id:3, img:ATTENDANCES_IMAGE, alt:"attendances-pic"},
-  {id:4, img:BATCHES_IMAGE, alt:"batches-pic"},
-  {id:5, img:COURSES_IMAGE, alt:"courses-pic"},
+  {id:"student", img:STUDENT_IMAGE, alt:"student-pic"},
+  {id:"democlass", img:DEMO_CLASS_IMAGE, alt:"demo-class-pic"},
+  {id:"normalclass", img:NORMAL_CLASS_IMAGE, alt:"normal-class-pic"},
+  {id:"attendance", img:ATTENDANCES_IMAGE, alt:"attendances-pic"},
+  {id:"batch", img:BATCHES_IMAGE, alt:"batches-pic"},
+  {id:"course", img:COURSES_IMAGE, alt:"courses-pic"},
 ]
 
 

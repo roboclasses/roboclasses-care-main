@@ -51,6 +51,8 @@ export function TableAttendance() {
   if (data?.length === 0) return <div>Empty list for Attendances</div>
 
   return (
+    <div>
+     <h1 className="text-4xl font-semibold mb-6">Manage Attendances</h1>
     <Table className="border border-black">
       <TableCaption>A list of attendances</TableCaption>
       <TableHeader>
@@ -95,5 +97,6 @@ export function TableAttendance() {
         </TableRow>
       </TableFooter>
     </Table>
+    </div>
   )
 }

@@ -92,6 +92,8 @@ return timeArray.map((time, index)=>{
  }
 
   return (
+    <div>
+    <h1 className="text-4xl font-semibold mb-6">Available Batches</h1>
     <Table className="border border-black">
       <TableCaption>A list of batches</TableCaption>
       <TableHeader>
@@ -139,5 +141,6 @@ return timeArray.map((time, index)=>{
         </TableRow>
       </TableFooter>
     </Table>
+    </div>
   );
 }

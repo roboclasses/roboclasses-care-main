@@ -97,6 +97,8 @@ handleFetch();
 
 
   return (
+    <div>
+    <h1 className="text-4xl font-semibold mb-6">Normal-Class Appointments</h1>
     <Table className="border border-black">
       <TableCaption>
         A list of booked appointments for Normal Class
@@ -140,5 +142,6 @@ handleFetch();
         </TableRow>
       </TableFooter>
     </Table>
+    </div>
   );
 }
