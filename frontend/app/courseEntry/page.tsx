@@ -7,6 +7,7 @@ import {
   BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
+import { PRIVATE_WALLPAPER } from "@/constants/images";
 import { NewCourseEntryForm } from "@/demo/new-course-entry-demo/NewCourseEntryForm";
 import { Separator } from "@radix-ui/react-separator";
 import Image from "next/image";
@@ -36,7 +37,7 @@ const page = () => {
         <Image
           width={1200}
           height={1200}
-          src={"/assests/images/spikeprime.webp"}
+          src={PRIVATE_WALLPAPER}
           alt="wallpaper"
           className="min-h-screen object-cover"
         />
