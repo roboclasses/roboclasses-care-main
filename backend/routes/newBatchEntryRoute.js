@@ -75,12 +75,8 @@ router.get("/newBatchEntries/:id", authMiddleware, roleMiddleware("teacher", "ad
 router.put("/newBatchEntries/:id", authMiddleware, roleMiddleware("teacher", "admin"), async (req, res) => {
   try {
     const { id } = req.params;
-    const {day, time, startDate, teacher, batch, timeZone, numberOfClasses } = req.body;
-    const data = await NewBatchEntries.findByIdAndUpdate(
-      id,
-      {day, time, startDate,  teacher, batch, timeZone, numberOfClasses },
-      { new: true }
-    );
+    const batchDetails = req.body;
+    const data = await NewBatchEntries.findByIdAndUpdate(id, batchDetails, { new: true });
     console.log(data);
 
     return res.status(200).json({

@@ -254,7 +254,7 @@ const studentName = form.watch("studentName")
 
         <FormField
           control={form.control}
-          name="userName"
+          name="studentName"
           render={() => (
             <FormItem>
               <FormLabel className="font-semibold">Student Name</FormLabel>
