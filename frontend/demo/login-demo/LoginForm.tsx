@@ -13,14 +13,24 @@ import { FormField, FormItem, FormControl, Form } from "@/components/ui/form";
 import { toast } from "@/hooks/use-toast";
 import { LoginUrl } from "@/constants";
 import { createUserSession } from "@/lib/session";
+import { Button } from "@/components/ui/button";
+import { Eye, EyeOff } from "lucide-react";
 
 const FormSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email" }),
-  password: z.string().min(6, { message: "Password must be 6 characters long" })
+  password: z
+    .string()
+    .min(6, { message: "Password must be 6 characters long" }),
 });
 
 export function LoginForm() {
   const router = useRouter();
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  // Mode toggle for password visibility
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -42,13 +52,13 @@ export function LoginForm() {
         // localStorage.setItem("email", email),
         // localStorage.setItem("name", name),
         // localStorage.setItem("role", role),
-        await createUserSession(jwtToken, role, _id, email, name)
+        await createUserSession(jwtToken, role, _id, email, name);
         router.push("/");
         toast({ title: "Success✅", description: message, variant: "default" });
       }
-    } catch (error:unknown) {
-      if(error instanceof AxiosError){
-        const {message} = error.response?.data
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        const { message } = error.response?.data;
         console.log(error);
         toast({
           title: "Failed",
@@ -58,7 +68,7 @@ export function LoginForm() {
       }
     }
   };
-  
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full px-20">
@@ -95,16 +105,28 @@ export function LoginForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input
-                      {...field}
-                      id="password"
-                      name="password"
-                      required
-                      autoComplete="password"
-                      type="password"
-                      placeholder="Please confirm your password"
-                      className="h-12"
-                    />
+                    <div className="relative">
+                      <Input
+                        {...field}
+                        id="password"
+                        name="password"
+                        required
+                        autoComplete="password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Please confirm your password"
+                        className="h-12 pr-10"
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={togglePasswordVisibility}
+                        aria-label={ showPassword ? "Hide password" : "Show password" }
+                      >
+                        {showPassword ? (<EyeOff className="h-4 w-4 text-muted-foreground" />) : (<Eye className="h-4 w-4 text-muted-foreground" />)}
+                      </Button>
+                    </div>
                   </FormControl>
                 </FormItem>
               )}
