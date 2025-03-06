@@ -15,7 +15,7 @@ const page = () => {
           alt="wallpaper"
           className="min-h-screen object-cover"
         />
-        <div className="w-[600px] flex flex-col justify-center gap-5 p-20">
+        <div className="w-[600px] flex flex-col gap-5 p-20">
           <p className="text-4xl font-bold">Edit Course</p>
           <EditCourseEntryForm/>
         </div>

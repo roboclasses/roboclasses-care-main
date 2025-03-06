@@ -52,7 +52,7 @@ export function TableAttendance() {
 
   return (
     <div>
-     <h1 className="text-4xl font-semibold mb-6">Manage Attendances</h1>
+     <h1 className="text-4xl font-semibold mb-6 text-center">Manage Attendances</h1>
     <Table className="border border-black">
       <TableCaption>A list of attendances</TableCaption>
       <TableHeader>

@@ -23,7 +23,6 @@ import 'react-phone-input-2/lib/style.css'
 import { Label } from "@/components/ui/label";
 
 
-
 export const countries = [
   {
     id: 1,
@@ -34,7 +33,6 @@ export const countries = [
     name: "INDIA",
   },
 ];
-
 
 const FormSchema = z.object({
   studentName: z.string().min(2, { message: "student name must be atleast 2 characters long." }),
