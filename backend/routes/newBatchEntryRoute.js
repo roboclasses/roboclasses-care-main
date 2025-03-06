@@ -1,7 +1,7 @@
 import express from "express";
-import { NewBatchEntries } from "../models/newBatchEntry.model.js";
 import {authMiddleware} from "../middlewares/auth.middleware.js"
 import { roleMiddleware } from "../middlewares/role.middleware.js";
+import { NewBatchEntries } from "../models/batch.model.js";
 
 const router = express.Router();
 

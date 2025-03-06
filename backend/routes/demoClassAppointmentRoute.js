@@ -1,5 +1,5 @@
 import express from "express";
-import { Appointment } from "../models/appointment.model.js";
+import { Appointment } from "../models/demoClass.model.js";
 
 import scheduleReminders from "../jobs/scheduler.js"
 
