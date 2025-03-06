@@ -4,13 +4,13 @@ import dotenv from "dotenv";
 import helmet from "helmet";
 
 import { dbConnect } from "./config/db.js";
-import appointmentsRoute from "./routes/appointmentsRoute.js"
+import demoClassAppointmentRoute from "./routes/demoClassAppointmentRoute.js"
 import newBatchEntryRoute from "./routes/newBatchEntryRoute.js"
-import attendancesRoute from "./routes/attendancesRoute.js"
-import normalClassAppointmentsRoute from "./routes/normalClassAppointmentsRoute.js"
+import attendanceRoute from "./routes/attendanceRoute.js"
+import normalClassAppointmentRoute from "./routes/normalClassAppointmentRoute.js"
 import userRoutes from "./routes/userRoutes.js"
-import courseRoutes from "./routes/courseRoute.js"
-import studentRoutes from "./routes/studentRegRoute.js"
+import newCourseEntry from "./routes/newCourseEntryRoute.js"
+import studentRoutes from "./routes/studentRoute.js"
 
 dotenv.config();
 const app = express();
@@ -29,11 +29,11 @@ app.use(helmet());
 // routes
 app.use('/api/v1',userRoutes)
 app.use('/api/v1',studentRoutes)
-app.use('/api/v1',appointmentsRoute)
-app.use('/api/v1',normalClassAppointmentsRoute)
+app.use('/api/v1',demoClassAppointmentRoute)
+app.use('/api/v1',normalClassAppointmentRoute)
 app.use('/api/v1', newBatchEntryRoute)
-app.use('/api/v1',courseRoutes)
-app.use('/api/v1',attendancesRoute)
+app.use('/api/v1',newCourseEntry)
+app.use('/api/v1',attendanceRoute)
 
 // listning on port
 const port = process.env.PORT || 5000;

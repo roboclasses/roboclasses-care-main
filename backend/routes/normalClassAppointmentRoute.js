@@ -1,6 +1,6 @@
 import express from "express";
-import { NormalClass } from "../models/normalClassAppointments.model.js";
 import { Student } from "../models/student.model.js";
+import { NormalClass } from "../models/normalClass.model.js";
 // import scheduleReminders from "../jobs/scheduler.js";
 
 
