@@ -55,19 +55,21 @@ const FormSchema = z.object({
         day: z.string(),
         time: z.string(),
       })
-    )
-    .optional(),
+    ).optional(),
   timeZone: z.string().optional(),
   numberOfClasses: z.string().optional(),
-  studentName: z.string().min(2, { message:"Student name must be atlest 2 characters long." }),
+  studentName: z.string().optional(),
   destination:z.string().optional(),
   email:z.string().optional(),
+  completed:z.string(),
 });
 
 export function EditBatchForm() {
   const { id } = useParams();
   const [dayTimeEntries, setDayTimeEntries] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null)
+
+  const [email, setEmail] = useState("");
 
     // Handle select student
     const handleStudentSelect = (student)=>{
@@ -89,6 +91,7 @@ export function EditBatchForm() {
       studentName:"",
       destination:"+971",
       email:"",
+      completed:"",
     },
   });
 
@@ -101,15 +104,34 @@ export function EditBatchForm() {
         });
 
         const batchDetails = res.data;
+        setEmail(batchDetails.email)
 
-        form.reset({
-          batch: batchDetails.batch || "",
-          teacher: batchDetails.teacher || "",
-          startDate: batchDetails.startDate ? format(new Date(batchDetails.startDate), "yyyy-MM-dd") : "",
-          dayTimeEntries: {...batchDetails.dayTimeEntries} || [],
-          timeZone: batchDetails.timeZone || userTimeZone,
-          numberOfClasses: batchDetails.numberOfClasses || "",
-        });
+if(!email?.trim()){
+  form.reset({
+    batch: batchDetails.batch || "",
+    teacher: batchDetails.teacher || "",
+    startDate: batchDetails.startDate ? format(new Date(batchDetails.startDate), "yyyy-MM-dd") : "",
+    dayTimeEntries: {...batchDetails.dayTimeEntries} || [],
+    timeZone: batchDetails.timeZone || userTimeZone,
+    numberOfClasses: batchDetails.numberOfClasses || "",
+    studentName: batchDetails.studentName || "",
+    email:batchDetails.email || "",
+    destination:batchDetails.destination || "",
+    completed: batchDetails.completed || "",
+  });
+}
+else{
+  form.reset({
+    batch: batchDetails.batch || "",
+    teacher: batchDetails.teacher || "",
+    startDate: batchDetails.startDate ? format(new Date(batchDetails.startDate), "yyyy-MM-dd") : "",
+    dayTimeEntries: {...batchDetails.dayTimeEntries} || [],
+    timeZone: batchDetails.timeZone || userTimeZone,
+    numberOfClasses: batchDetails.numberOfClasses || "",
+    completed: batchDetails.completed || "",
+  });
+}
+
       } catch (error) {
         console.error("Failed to fetch batch details:", error);
       }
@@ -169,8 +191,10 @@ const studentName = form.watch("studentName")
         studentName:data.studentName,
         destination:data.destination,
         email:data.email,
+        completed:data.completed,
         ...transformedDateTimeEntries
       };
+
 
       const res = await axios.put(`${NewBatchEntryUrl}/${id}`, payload, {
         headers: { Authorization: Cookies.get("token") },
@@ -251,7 +275,65 @@ const studentName = form.watch("studentName")
             </FormItem>
           )}
         />
+{email?.trim() ? (
+  <>
+   <FormField
+   control={form.control}
+   name="studentName"
+   render={({ field }) => (
+     <FormItem>
+       <FormLabel className="font-semibold">Student Name</FormLabel>
+       <FormControl>
+         <Input
+           {...field}
+           required
+           className="bg-white"
+         />
+       </FormControl>
+       <FormMessage />
+     </FormItem>
+   )}
+ />
 
+ <FormField
+   control={form.control}
+   name="destination"
+   render={({ field }) => (
+     <FormItem>
+       <FormLabel className="font-semibold">Contact Details</FormLabel>
+       <FormControl>
+       <PhoneInput
+           country={"ae"}
+           {...field}  
+           inputStyle={{ width: "440px" }}
+           inputProps={{ ref: field.ref, required: true }}
+         />
+       </FormControl>
+       <FormMessage />
+     </FormItem>
+   )}
+ />
+
+ <FormField
+   control={form.control}
+   name="email"
+   render={({ field }) => (
+     <FormItem>
+       <FormLabel className="font-semibold">Email Address</FormLabel>
+       <FormControl>
+         <Input
+           {...field}
+           required
+           className="bg-white"
+         />
+       </FormControl>
+       <FormMessage />
+     </FormItem>
+   )}
+ />
+ </>
+) : (
+  <>
         <FormField
           control={form.control}
           name="studentName"
@@ -303,6 +385,8 @@ const studentName = form.watch("studentName")
           )}
         />
 
+  </>
+) }
         {/* Teacher Name */}
         <FormField
           control={form.control}
@@ -343,6 +427,31 @@ const studentName = form.watch("studentName")
             </FormItem>
           )}
         />
+
+          <FormField
+            control={form.control}
+                      name="completed"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="font-semibold">Batch Completed?</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                            required
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select (Yes/No)"/>
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                                <SelectItem value={"Yes"} >{"Yes"}</SelectItem>
+                                <SelectItem value={"No"} >{"No"}</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </FormItem>
+            )}
+         />
 
         <Button type="submit">Submit</Button>
       </form>

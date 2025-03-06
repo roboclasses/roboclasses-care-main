@@ -9,7 +9,7 @@ const router = express.Router();
 // create new batch
 router.post("/newBatchEntries", authMiddleware, roleMiddleware("teacher", "admin"), async (req, res) => {
   try {
-    const {day, time, startDate, teacher, batch, timeZone, numberOfClasses, studentName, destination, email, } = req.body;
+    const {day, time, startDate, teacher, batch, timeZone, numberOfClasses, studentName, destination, email, completed } = req.body;
     
     const data = await NewBatchEntries.create({
       day,
@@ -18,7 +18,7 @@ router.post("/newBatchEntries", authMiddleware, roleMiddleware("teacher", "admin
       teacher,
       batch,
       timeZone,
-      numberOfClasses, studentName, destination, email,
+      numberOfClasses, studentName, destination, email, completed,
     });
 
     console.log(data);

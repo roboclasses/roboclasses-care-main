@@ -41,6 +41,11 @@ const newBatchEntrySchema = new mongoose.Schema({
         type:String,
         required:true,
     },
+    completed:{
+        type:String,
+        required:true,
+        default:"No"
+    }
 },{timestamps:true})
 
 export const NewBatchEntries = mongoose.models.NewBatchEntries ?? mongoose.model('NewBatchEntries',newBatchEntrySchema)

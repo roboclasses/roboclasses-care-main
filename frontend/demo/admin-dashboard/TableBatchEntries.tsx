@@ -107,6 +107,7 @@ return timeArray.map((time, index)=>{
           <TableHead>Times</TableHead>
           <TableHead>Timezone</TableHead>
           <TableHead>Number of Classes</TableHead>
+          <TableHead>Status</TableHead>
           <TableHead>Edit</TableHead>
           <TableHead>Delete</TableHead>
         </TableRow>
@@ -123,6 +124,7 @@ return timeArray.map((time, index)=>{
             <TableCell className="text-right"> {handleTime(batch.day, batch.time)} </TableCell>
             <TableCell className="text-right">{batch.timeZone}</TableCell>
             <TableCell className="text-right">{batch.numberOfClasses}</TableCell>
+            <TableCell className="text-right">{batch.completed === "Yes" ? "Completed" : batch.completed === "No" ? "Active" : ""}</TableCell>
             <TableCell className="text-right">
               <Link href={`/newBatchEntry/edit/${batch._id}`}>
               <EditButton name="Edit" type="button" />
