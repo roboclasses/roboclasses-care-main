@@ -159,7 +159,7 @@ export function EditNormalClassForm() {
             <FormItem>
               <FormLabel className="font-semibold">Batch Name</FormLabel>
               <FormControl>
-                <Input {...field} className="bg-white" required />
+                <Input {...field} disabled className="bg-white" required />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -174,7 +174,7 @@ export function EditNormalClassForm() {
             <FormItem>
               <FormLabel className="font-semibold">Teacher Name</FormLabel>
               <FormControl>
-                <Input {...field} className="bg-white" required />
+                <Input {...field} disabled className="bg-white" required />
               </FormControl>
               <FormMessage />
             </FormItem>
