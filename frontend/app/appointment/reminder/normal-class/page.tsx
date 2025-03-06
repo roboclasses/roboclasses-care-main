@@ -1,40 +1,11 @@
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { PRIVATE_WALLPAPER } from "@/constants/images";
 import { MultiDatePickerForm } from "@/demo/normal-class/multiDatePickerForm";
-import { Separator } from "@radix-ui/react-separator";
+
 import Image from "next/image";
 import React from "react";
 
 const page = () => {
   return (
-    <SidebarInset className="w-screen">
-      <header className="flex h-16 shrink-0 items-center gap-2 border-b">
-        <div className="flex items-center gap-2 px-3">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-2 h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/">Dashboard</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>
-                  {"Normal Class"}
-                </BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </header>
       <div className="relative flex-1">
         <Image
           src={PRIVATE_WALLPAPER}
@@ -50,7 +21,6 @@ const page = () => {
           </div>
         </div>
       </div>
-    </SidebarInset>
   );
 };
 
