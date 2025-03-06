@@ -245,6 +245,7 @@ export function EditStudentDetails() {
               <Input  
                 {...field}
                 required 
+                disabled
                 value={courses} 
                 onChange={(e)=>{
                 setCourses(e.target.value)

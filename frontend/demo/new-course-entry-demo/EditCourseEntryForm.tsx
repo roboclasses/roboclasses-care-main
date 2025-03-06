@@ -95,6 +95,7 @@ handleFetch();
                 <Input
                   {...field}
                   required
+                  disabled
                   value={course}
                   onChange={(e) => {
                     setCourse(e.target.value); 

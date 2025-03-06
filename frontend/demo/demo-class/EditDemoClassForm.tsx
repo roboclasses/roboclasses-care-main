@@ -193,8 +193,9 @@ export function EditDemoClassForm() {
               <FormLabel className="font-semibold">Edit Course</FormLabel>
               <FormControl>
                 <Input
-                  required
                   {...field}
+                  required
+                  disabled
                   value={course} 
                   onChange={(e)=>{
                   setCourse(e.target.value)
@@ -214,8 +215,9 @@ export function EditDemoClassForm() {
               <FormLabel className="font-semibold">Edit Teacher</FormLabel>
               <FormControl>
                 <Input
-                  required
                   {...field}
+                  required
+                  disabled
                   value={teacher} 
                   onChange={(e)=>{
                   setTeacher(e.target.value)
