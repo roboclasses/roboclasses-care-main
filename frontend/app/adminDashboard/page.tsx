@@ -14,7 +14,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 
-
 const Page = () => {
   const [activeComponent, setActiveComponent] = useState("student")
 
@@ -39,16 +38,16 @@ const Page = () => {
   }
 
   return (
-    <>
-      <div className="flex gap-5 items-center p-5">
+    <div className="flex flex-col justify-center items-center">
+      <div className="flex gap-5 items-center p-5 bg-muted/50 ">
         {imageIcons.map((items) => (
-          <Link href={"#"} key={items.id} onClick={()=>setActiveComponent(items.id)}>
+          <Link href={"#"} key={items.id} onClick={()=>setActiveComponent(items.id)} className="">
             <Image
               src={items.img}
-              height={150}
-              width={180}
+              height={400}
+              width={450}
               alt={items.alt}
-              className={`rounded-xl shadow-sm hover:shadow-2xl transition-all duration-100 delay-75 
+              className={`rounded-xl shadow-sm hover:shadow-2xl transition-all duration-100 delay-75  
               ${activeComponent === items.id ? "filter grayscale blur-sm transition-all duration-150 delay-75 hover:shadow-none" : ""}`}
             />
           </Link>
@@ -57,7 +56,7 @@ const Page = () => {
       <div className="w-[1300px] px-20 mt-10 ">
         {renderComponnets()}
       </div>
-    </>
+    </div>
 
   );
 };

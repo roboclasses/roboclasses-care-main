@@ -165,7 +165,7 @@ export function EditStudentDetails() {
                     field.onChange({ target: {value}});
                   }}
                   specialLabel= ""
-                  inputStyle={{width: "540px"}}
+                  inputStyle={{width: "440px"}}
                   inputProps={{ ref: field.ref, required: true }}
                 />
               </FormControl>

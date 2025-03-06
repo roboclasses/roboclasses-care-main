@@ -275,7 +275,7 @@ const studentName = form.watch("studentName")
                   country={"ae"}
                   {...field}  
                   disabled       
-                  inputStyle={{ width: "540px" }}
+                  inputStyle={{ width: "440px" }}
                   inputProps={{ ref: field.ref, required: true }}
                 />
               </FormControl>
