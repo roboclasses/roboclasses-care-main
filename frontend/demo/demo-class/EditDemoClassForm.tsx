@@ -118,9 +118,7 @@ export function EditDemoClassForm() {
         items: data.items.length > 0 ? data.items : ["1hour"], // Ensure at least one item is selected
       };
   
-      const res = await axios.patch(`${DemoClassUrl}/${id}`, updatedData, {
-        headers: { Authorization: Cookies.get("token") },
-      });
+      const res = await axios.put(`${DemoClassUrl}/${id}`, updatedData);
   
       console.log(res.data);
       toast({

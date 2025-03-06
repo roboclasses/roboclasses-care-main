@@ -78,7 +78,7 @@ router.get("/appointments/demoClass/:id", async (req, res) => {
 });
 
 // edit appointment 
-router.patch("/appointments/demoClass/:id", async (req, res) => {
+router.put("/appointments/demoClass/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const { date, userName, destination, time, items, course, teacher, timeZone, converted, batchNumber} =

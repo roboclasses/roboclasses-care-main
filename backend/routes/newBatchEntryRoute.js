@@ -92,30 +92,6 @@ router.put("/newBatchEntries/:id", authMiddleware, roleMiddleware("teacher", "ad
   }
 });
 
-// partially update a batch
-router.patch("/newBatchEntries/:id", authMiddleware, roleMiddleware("teacher", "admin"), async (req, res) => {
-  try {
-    const { id } = req.params;
-    const data = await NewBatchEntries.findByIdAndUpdate(
-      id,
-      { status: true },
-      { new: true }
-    );
-    console.log(data);
-
-    return res.status(200).json({
-      success: true,
-      message: "New batch partially updated.", data
-    });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: "Internal server error!",
-    });
-  }
-});
-
 // delete a batch
 router.delete("/newBatchEntries/:id", authMiddleware, roleMiddleware("teacher", "admin"), async (req, res) => {
   try {
