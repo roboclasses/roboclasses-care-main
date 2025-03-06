@@ -51,6 +51,7 @@ export type batchType = {
   studentName:string;
   destination:string;
   email:string;
+  completed:string;
 };
 
 export type courseType={
