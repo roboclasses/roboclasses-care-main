@@ -20,14 +20,14 @@ import Cookies from "js-cookie";
 
 
 const FormSchema = z.object({
-  course: z.string().min(3, { message: "Course name must be 3 characters long." })
+  course: z.string().min(3, { message: "Course Name must be atleast 3 characters long" })
 });
 
 export function NewCourseEntryForm() {
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-    defaultValues: { course: "Scratch L1" }
+    defaultValues: { course: "" }
   });
 
 

@@ -40,9 +40,9 @@ const items = [
 ];
 
 const FormSchema = z.object({
-  items: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one item."}),
-  batch: z.string().min(2, { message: "Batch name must be atleast 2 characters long." }),
-  userName: z.string().min(2, { message:"Student name must be atlest 2 characters long." }),
+  items: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select atleast one item"}),
+  batch: z.string().min(2, { message: "Batch Name must be atleast 2 characters long"}),
+  userName: z.string().min(3, { message:"Student Name must be atlest 3 characters long"}),
   destination:z.string().optional(),
   email:z.string().optional(),
   teacher: z.string().optional(),

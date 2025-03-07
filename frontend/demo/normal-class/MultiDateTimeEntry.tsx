@@ -53,6 +53,7 @@ export default function MultiDateTimeEntry({ onEntriesChange }: DateTimePickerPr
               <Label htmlFor={`date-${index}`}>Date</Label>
               <Input
                 type="date"
+                min={new Date().toISOString().split('T')[0]}
                 id={`date-${index}`}
                 value={entry.date}
                 onChange={(e) => updateEntry(index, "date", e.target.value)}
