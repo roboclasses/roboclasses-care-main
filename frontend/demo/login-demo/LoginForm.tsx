@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import SubmitButton from "../button-demo/SubmitButton";
-import { FormField, FormItem, FormControl, Form } from "@/components/ui/form";
+import { FormField, FormItem, FormControl, Form, FormMessage } from "@/components/ui/form";
 import { toast } from "@/hooks/use-toast";
 import { LoginUrl } from "@/constants";
 import { createUserSession } from "@/lib/session";
@@ -18,9 +18,7 @@ import { Eye, EyeOff } from "lucide-react";
 
 const FormSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email" }),
-  password: z
-    .string()
-    .min(6, { message: "Password must be 6 characters long" }),
+  password: z.string().min(6, { message: "Password must be 6 characters long" }),
 });
 
 export function LoginForm() {
@@ -92,6 +90,7 @@ export function LoginForm() {
                       className="h-12"
                     />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             ></FormField>
@@ -128,6 +127,7 @@ export function LoginForm() {
                       </Button>
                     </div>
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             ></FormField>

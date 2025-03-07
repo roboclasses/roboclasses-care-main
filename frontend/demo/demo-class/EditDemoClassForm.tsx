@@ -42,12 +42,12 @@ const FormSchema = z.object({
     destination: z.string().optional(),
     course: z.string().optional(),
     teacher: z.string().optional(),
-    date: z.string(),
-    time: z.string(),
-    timeZone: z.string(),
-    items: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one item.",}),
+    date: z.string().optional(),
+    time: z.string().optional(),
+    timeZone: z.string().optional(),
+    items: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one item."}),
     batchNumber: z.string().optional(),
-    converted: z.string(),
+    converted: z.string().optional(),
 
   });
 

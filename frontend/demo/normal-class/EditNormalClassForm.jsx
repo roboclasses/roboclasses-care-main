@@ -23,10 +23,10 @@ import { NormalClassUrl } from "@/constants";
 
 // Define form schema
 const FormSchema = z.object({
-  teacher: z.string().min(2, { message: "Teacher name must be at least 2 characters long." }),
-  batch: z.string().min(2, { message: "Batch name must be at least 2 characters long." }),
-  userName: z.string().min(2, { message: "Student name must be at least 2 characters long." }),
-  destination: z.string().min(7, { message: "Phone number must be valid." }),
+  teacher: z.string().optional(),
+  batch: z.string().optional(),
+  userName: z.string().optional(),
+  destination: z.string().optional(),
   dateTimeEntries: z.array(z.object({
     date: z.string(),
     time: z.string(),

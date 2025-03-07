@@ -43,9 +43,9 @@ const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 
 const FormSchema = z.object({
-  batch: z.string().min(2, { message: "Batch number must be atleast 2 characters long." }),
-  course: z.string().min(2, { message: "Course name must be atleast 2 characters long." }),
-  teacher: z.string().min(2, { message: "Teacher name must be atleast 2 characters long." }),
+  batch: z.string().min(2, { message: "Batch Number must be atleast 2 characters long"}),
+  course: z.string().min(2, { message: "Course Name must be atleast 2 characters long"}),
+  teacher: z.string().min(3, { message: "Teacher Name must be atleast 3 characters long"}),
   startDate: z.string(),
   dayTimeEntries: z.array(z.object({
     day: z.string(),
@@ -53,7 +53,7 @@ const FormSchema = z.object({
   })),
   timeZone: z.string(),
   numberOfClasses: z.string().optional(),
-  studentName: z.string().min(2, { message:"Student name must be atlest 2 characters long." }),
+  studentName: z.string().min(3, { message:"Student Name must be atlest 3 characters long"}),
   destination:z.string().optional(),
   email:z.string().optional(),
 });
@@ -231,7 +231,7 @@ useEffect(()=>{
                 Select a Start Date
               </FormLabel>
               <FormControl>
-                <Input type="date" {...field} required className="bg-white" />
+                <Input type="date" {...field} min={new Date().toISOString().split('T')[0]} required className="bg-white" />
               </FormControl>
               <FormMessage />
             </FormItem>

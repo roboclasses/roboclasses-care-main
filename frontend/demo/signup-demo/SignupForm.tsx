@@ -14,6 +14,7 @@ import {
   FormItem,
   FormControl,
   Form,
+  FormMessage,
 } from "@/components/ui/form";
 import { SignupUrl } from "@/constants";
 import { toast } from "@/hooks/use-toast";
@@ -29,7 +30,7 @@ const FormSchema = z.object({
   name: z.string().min(3, { message: "Name must be 3 characters long" }),
   email: z.string().email({ message: "Please enter a valid email" }),
   password: z.string().min(6, { message: "Password must be 6 characters long" }),
-  role: z.string()
+  role: z.enum(["student","teacher","admin"],{message: "Roles must be one of: Student, Teacher, Admin"}),
 });
 
 export function SignupForm() {
@@ -41,7 +42,7 @@ export function SignupForm() {
       name: "",
       email: "",
       password: "",
-      role:"",
+      role:"student",
     },
   });
 
@@ -92,6 +93,7 @@ export function SignupForm() {
                       className="h-12"
                     />
                   </FormControl>
+                  <FormMessage/>
                 </FormItem>
               )}
             ></FormField>
@@ -114,6 +116,7 @@ export function SignupForm() {
                         <SelectValue placeholder="Select your role" id="roles"/>
                       </SelectTrigger>
                     </FormControl>
+                    <FormMessage/>
                     <SelectContent>
                       <SelectItem value="student">Student</SelectItem>
                       <SelectItem value="teacher">Teacher</SelectItem>
@@ -144,6 +147,7 @@ export function SignupForm() {
                       className="h-12"
                     />
                   </FormControl>
+                  <FormMessage/>
                 </FormItem>
               )}
             ></FormField>
@@ -168,6 +172,7 @@ export function SignupForm() {
                       className="h-12"
                     />
                   </FormControl>
+                  <FormMessage/>
                 </FormItem>
               )}
             ></FormField>

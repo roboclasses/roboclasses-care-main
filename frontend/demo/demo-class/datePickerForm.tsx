@@ -51,16 +51,15 @@ export const timezone = [
   {id:5, name:userTimeZone, country:"Your Timezone"},]
 
 
-
 const FormSchema = z.object({
-  date: z.string({ required_error: "A date is required." }),
-  userName: z.string({ required_error: "A date is required." }).min(2, { message: "name must contain atleast 2 character." }),
-  destination: z.string().min(12, { message: "mobile is incorrect." }),
-  course: z.string({ required_error: "A date is required." }).min(1, { message: "course must contain atleast 2 chracter" }),
-  teacher: z.string({ required_error: "A date is required." }).min(2, { message: "Teacher name must contain atleast 2 character." }),
-  time: z.string({ required_error: "Time slot is required." }),
+  date: z.string(),
+  userName: z.string().min(3, { message: "Student Name must be atleast 3 characters long"}),
+  destination: z.string().min(12, { message: "Please enter a valid phone number"}),
+  course: z.string().min(2, { message: "Course must be atleast 2 characters long"}),
+  teacher: z.string().min(3, { message: "Teacher name must be atleast 3 characters long"}),
+  time: z.string(),
   timeZone: z.string(),
-  items: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one item.",}),
+  items: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select atleast one item"}),
 });
 
 export function DatePickerForm() {

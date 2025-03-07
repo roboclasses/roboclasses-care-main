@@ -35,14 +35,14 @@ export const countries = [
 ];
 
 const FormSchema = z.object({
-  studentName: z.string().min(2, { message: "student name must be atleast 2 characters long." }),
-  parentName: z.string().min(2, { message: "parent name must be atleast 2 characters long." }),
-  destination: z.string().min(12, { message: "mobile is incorrect." }),
-  email: z.string().email({message:"email is incorrect."}),
-  address: z.string().min(2, {message: "address must be atleast 2 characters long."}),
-  country: z.string().min(2, {message: "country must be atleast 2 characters long."}),
-  grade: z.string().min(1, {message: "grade must be atlest 1 digit long."}),
-  courses: z.string().min(2, { message: "course must be atleast 2 characters long." }),
+  studentName: z.string().min(3, { message: "Student Name must be atleast 3 characters long"}),
+  parentName: z.string().min(3, { message: "Parent Name must be atleast 3 characters long"}),
+  destination: z.string().min(12, { message: "Please enter a valid phone number"}),
+  email: z.string().email({message:"Please enter a valid email"}),
+  address: z.string().min(3, {message: "Address must be atleast 3 characters long"}),
+  country: z.string().min(2, {message: "Country must be atleast 2 characters long"}),
+  grade: z.string().min(1, {message: "Grade must be atlest 1 digit long"}),
+  courses: z.string().min(2, { message: "Course must be atleast 2 characters long"}),
 });
 
 export function RegistrationForm() {
