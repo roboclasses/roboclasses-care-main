@@ -7,4 +7,10 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 
+export function handleNumber(value:string){
+  const formattedNumber = parseInt(value, 10)
+  return formattedNumber;
+}
+
+
 
