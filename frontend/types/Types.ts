@@ -25,19 +25,6 @@ export type appointmentTypes = {
   batchNumber?:string;
 };
 
-export type editAttendance = {
-  _id?: string;
-  date: Date;
-  batch: string;
-  score: string;
-  studentsPresent: string;
-  handleBatchChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleDateChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleStudentsPresent: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleScore: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-  handleDelete?: () => void;
-};
 
 export type batchType = {
   _id: string;
@@ -78,7 +65,6 @@ export type studentSearchType = {
 }
 
 
-
 export type normalClassType = {
   _id: string;
   time: string[];
@@ -91,20 +77,6 @@ export type normalClassType = {
   numberOfClasses: string;
 };
 
-export type attendanceRowAndColumnType = {
-  columns: Array<{
-    _id:string;
-    id: string;
-    name: string;
-    type: string;
-  }>;
-  rows: Array<{
-    _id:string;
-    id: string;
-    cells: {
-      [key: string]: string;
-    };
-  }>;
-};
+
 
 
