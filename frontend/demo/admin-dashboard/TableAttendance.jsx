@@ -18,6 +18,8 @@ import Link from "next/link"
 import { toast } from "@/hooks/use-toast"
 import { AttendanceUrl } from "@/constants"
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo"
+import { format } from "date-fns"
+
 
 const fetcher = (url) => axios.get(url).then((res) => res.data)
 
@@ -57,38 +59,30 @@ export function TableAttendance() {
       <TableCaption>A list of attendances</TableCaption>
       <TableHeader>
         <TableRow>
-          {data[0]?.columns.map((column) => (
-            <TableHead className="w-[100px]" key={column.id}>
-              {column.name}
-            </TableHead>
-          ))}
-          <TableHead>Edit</TableHead>
-          <TableHead>Delete</TableHead>
+          <TableHead className="w-[100px]">Batch Name</TableHead>
+          <TableHead>Start Date</TableHead>
+          <TableHead>Classes</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {data.map((record) => (
-          <TableRow key={record._id}>
-            {record.rows.map((row) => (
-              <React.Fragment key={row.id}>
-                {record.columns.map((column) => (
-                  <TableCell key={column.id}>{row.cells[column.id]}</TableCell>
-                ))}
-              </React.Fragment>
-            ))}
+         {data.map((items)=>(
+          <TableRow key={items._id}>
+            <TableCell>{items.batchName}</TableCell>
+            <TableCell>{items.startDate ? format(items.startDate, "MMM dd, yyyy") : ""}</TableCell>
+            <TableCell>{items.classes ? items.classes.map((date)=> format(date, "MMM dd, yyyy")).join(", ") : ""}</TableCell>
             <TableCell className="text-right">
-              <Link href={`/teacherView/edit/${record._id}`}>
+              <Link href={`/teacherView/edit/${items._id}`}>
                 <EditButton name="Edit" type="button" />
               </Link>
             </TableCell>
             <TableCell className="text-right">
               <DeleteAlertDemo
                 onCancel={() => console.log("Delete action canceled")}
-                onDelete={() => handleDelete(record._id)}
+                onDelete={() => handleDelete(items._id)}
               />
             </TableCell>
           </TableRow>
-        ))}
+         )) }
       </TableBody>
       <TableFooter>
         <TableRow>
