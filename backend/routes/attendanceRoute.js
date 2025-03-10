@@ -6,9 +6,9 @@ const router = express.Router();
 // create attendance
 router.post("/attendances", async (req, res) => {
   try {
-    const { batchName, startDate, classes } = req.body;
+    const { batchName, startDate, classes, teacher } = req.body;
     const data = await Attendance.create({
-      batchName, startDate, classes
+      batchName, startDate, classes, teacher
     });
     console.log(data);
 
@@ -62,9 +62,9 @@ router.get("/attendances/:id",async(req,res)=>{
 // delete attendance
 router.put('/attendances/:id',async(req,res)=>{
   try {
-    const {batchName, startDate, classes} = req.body;
+    const {batchName, startDate, classes, teacher} = req.body;
     const {id} = req.params;
-    const data = await Attendance.findByIdAndUpdate(id,{batchName, startDate, classes},{new:true})
+    const data = await Attendance.findByIdAndUpdate(id,{batchName, startDate, classes, teacher},{new:true})
     console.log(data);
     return res.status(200).json({
       success:true,

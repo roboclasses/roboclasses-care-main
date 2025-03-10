@@ -37,9 +37,18 @@ export const loginController = async(req, res)=>{
             return res.status(403).json({success:false, message: "Invalid credentials."})
         }
 
-        const jwtToken = jwt.sign({email:user.email, _id:user._id, name:user.name}, process.env.JWT_SECRET, {expiresIn: "10d"})
+        const jwtToken = jwt.sign({email:user.email, _id:user._id, name:user.name, role:user.role}, process.env.JWT_SECRET, {expiresIn: "10d"})
 
-        return res.status(200).json({success:true, message: "Logged-in successfully.", jwtToken, name:user.name, email:user.email, _id:user._id, role:user.role})
+        return res.status(200).json(
+        {
+            success:true, 
+            message: "Logged-in successfully.", 
+            jwtToken, 
+            name:user.name, 
+            email:user.email, 
+            _id:user._id, 
+            role:user.role
+        })
 
     } catch (error) {
         console.error(error);
