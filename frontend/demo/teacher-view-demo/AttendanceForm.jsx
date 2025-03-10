@@ -37,6 +37,7 @@ const FormSchema = z.object({
   batchName: z.string().min(2, { message: "Batch Name must be at least 2 characters long" }),
   startDate: z.string().optional(),
   classes: z.array(z.string()).optional(),
+  teacher:z.string(),
 });
 
 export function AttendanceForm() {
@@ -44,12 +45,13 @@ export function AttendanceForm() {
   const [batches, setBatches] = useState([]);
 
   const [role, setRole] = useState("");
+
   const [name, setName] = useState("");
+  
 
   const [numberOfClasses, setNumberOfClasses] = useState(0);
 
   // const formattedNumber = parseInt(numberOfClasses ,10)
-
 
 
   const form = useForm({
@@ -58,6 +60,7 @@ export function AttendanceForm() {
       batchName: "",
       startDate: "",
       classes: [],
+      teacher: "",
     },
   });
 
@@ -67,9 +70,12 @@ export function AttendanceForm() {
        const user = await getUserSession();
        setRole(user.role);
        setName(user.name);
+    if(user.role === "teacher"){
+      form.reset({teacher: name})
+    }
     }
     handleFetch();
-  },[pathname])
+  },[form, name, pathname])
 
   // Fetching batches from newBatchEntry api based on role and teacher name
     useEffect(()=>{
@@ -106,6 +112,9 @@ export function AttendanceForm() {
 
             if(selectedBatch){
               form.setValue("startDate", selectedBatch.startDate ? format(selectedBatch.startDate, 'yyyy-MM-dd') : '')
+              if(role === "admin"){
+                form.setValue("teacher", selectedBatch.teacher)
+              }
               setNumberOfClasses(selectedBatch.numberOfClasses)
               form.setValue("classes", Array(selectedBatch.numberOfClasses).fill(""))
             }
@@ -114,11 +123,13 @@ export function AttendanceForm() {
           console.error(error);
           form.setValue("startDate", "")
           form.setValue("classes" ,[])
+          if(role === "admin"){
+            form.setValue("teacher", "")
+          }
         }
-
       }
       handleFetch();
-    },[batchName, form])
+    },[batchName, form, role])
 
     // For adding class
     const handleAddClass = () => {
@@ -137,7 +148,8 @@ export function AttendanceForm() {
       const payload={
         batchName: data.batchName,
         startDate: startDate,
-        classes:classes
+        classes:classes,
+        teacher: data.teacher
       }
       console.log("payload is"+JSON.stringify(payload));
       
@@ -189,6 +201,34 @@ export function AttendanceForm() {
           </div>
           <Button type="submit">Submit</Button>
         </div>
+
+        {role === "teacher" ? (<FormField
+          control={form.control}
+          name="teacher"
+          render={({ field }) => (
+          <FormItem>
+            <FormLabel>Teacher Name</FormLabel>
+            <FormControl>
+              <Input {...field} disabled required/>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+            )}
+        />) : 
+        ( <FormField
+          control={form.control}
+          name="teacher"
+          render={({ field }) => (
+          <FormItem>
+            <FormLabel>Teacher Name</FormLabel>
+            <FormControl>
+              <Input {...field} disabled required/>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+            )}
+        /> 
+      )}
 
         <FormField
           control={form.control}
