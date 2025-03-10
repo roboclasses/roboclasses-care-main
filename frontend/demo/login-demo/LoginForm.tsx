@@ -43,6 +43,7 @@ export function LoginForm() {
       const res = await axios.post(LoginUrl, data);
       console.log(res.data);
       const { message, success, jwtToken, _id, name, email, role } = res.data;
+      
 
       if (success) {
         // localStorage.setItem("token", jwtToken),
