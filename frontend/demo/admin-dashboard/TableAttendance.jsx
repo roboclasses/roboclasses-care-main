@@ -13,18 +13,47 @@ import { EditButton } from "./EditButton"
 
 import useSWR from "swr"
 import axios from "axios"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import Link from "next/link"
 import { toast } from "@/hooks/use-toast"
 import { AttendanceUrl } from "@/constants"
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo"
 import { format } from "date-fns"
+import { getUserSession } from "@/lib/session"
 
 
 const fetcher = (url) => axios.get(url).then((res) => res.data)
 
 export function TableAttendance() {
+  const [role, setRole] = useState("");
+  const [name, setName] = useState("");
   const { data, isLoading, isValidating, error, mutate } = useSWR(AttendanceUrl, fetcher)
+
+  // Fetch user session
+  useEffect(()=>{
+    const handleFetch = async()=>{
+      try {
+        const user = await getUserSession();
+        setRole(user.role);
+        setName(user.name);
+        
+      } catch (error) {
+        console.error(error);  
+      }
+    }  
+    handleFetch();
+  },[])
+
+  // Filter data by their login session's role properties
+const handleTeacher = ()=>{
+  if(role === "teacher"){
+    const filteredAttendance = data.filter((item)=>item.teacher === name)
+    return filteredAttendance;
+  }
+  else if(role === "admin"){
+    return data;
+  }
+}
 
   // Handle delete attendance
   const handleDelete = async (id) => {
@@ -60,14 +89,16 @@ export function TableAttendance() {
       <TableHeader>
         <TableRow>
           <TableHead className="w-[100px]">Batch Name</TableHead>
+          <TableHead className="w-[100px]">Teacher Name</TableHead>
           <TableHead>Start Date</TableHead>
           <TableHead>Classes</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-         {data.map((items)=>(
+         {handleTeacher()?.map((items)=>(
           <TableRow key={items._id}>
             <TableCell>{items.batchName}</TableCell>
+            <TableCell>{items.teacher}</TableCell>
             <TableCell>{items.startDate ? format(items.startDate, "MMM dd, yyyy") : ""}</TableCell>
             <TableCell>{items.classes ? items.classes.map((date)=> format(date, "MMM dd, yyyy")).join(", ") : ""}</TableCell>
             <TableCell className="text-right">
