@@ -1,5 +1,7 @@
+import jwt from "jsonwebtoken"
+
 import { User } from "../models/user.model.js";
-import { loginService, signupService } from "../services/user.service.js";
+import { signupService } from "../services/user.service.js";
 
 import bcrypt from "bcrypt";
 
@@ -35,10 +37,9 @@ export const loginController = async(req, res)=>{
             return res.status(403).json({success:false, message: "Invalid credentials."})
         }
 
-        const payload = {email:user.email, _id:user._id, role:user.role}
-        const token = loginService(payload)
+        const jwtToken = jwt.sign({email:user.email, _id:user._id, name:user.name}, process.env.JWT_SECRET, {expiresIn: "10d"})
 
-        return res.status(200).json({success:true, message: "Logged-in successfully.", token})
+        return res.status(200).json({success:true, message: "Logged-in successfully.", jwtToken, name:user.name, email:user.email, _id:user._id, role:user.role})
 
     } catch (error) {
         console.error(error);
