@@ -21,6 +21,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "lib/utils.ts", "demo/normal-class/multiDatePickerForm.jsx", "demo/normal-class/EditNormalClassForm.jsx", "demo/new-batch-entry-demo/NewBatchEntry.jsx", "demo/new-batch-entry-demo/EditBatchForm.jsx", "demo/teacher-view-demo/AttendanceForm.jsx", "demo/teacher-view-demo/EditAttendanceTable.jsx", "demo/admin-dashboard/TableAttendance.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "lib/utils.ts", "demo/normal-class/multiDatePickerForm.jsx", "demo/normal-class/EditNormalClassForm.jsx", "demo/new-batch-entry-demo/NewBatchEntry.jsx", "demo/new-batch-entry-demo/EditBatchForm.jsx", "demo/teacher-view-demo/AttendanceForm.jsx", "demo/teacher-view-demo/EditAttendanceForm.jsx", "demo/admin-dashboard/TableAttendance.jsx"],
   "exclude": ["node_modules"]
 }
