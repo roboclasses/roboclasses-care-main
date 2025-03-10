@@ -182,9 +182,11 @@ export function AttendanceForm() {
             </FormItem>
           )}
         />
-        <div className="flex items-center gap-2">
-          <Button type="button">Add Row</Button>
+        <div className="flex justify-between">
+          <div className="flex items-center gap-2">
+          <Button type="button" disabled>Add Row</Button>
           <Button type="button" onClick={handleAddClass} disabled={handleNumber(numberOfClasses) >= 60 }>Add Class</Button>
+          </div>
           <Button type="submit">Submit</Button>
         </div>
 
