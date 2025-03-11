@@ -18,8 +18,8 @@ const attendanceSchema = new mongoose.Schema({
         required:true,
     },
     leave:{
-        type:Date,
-        default:"",
+        type:[Date],
+        default:[],
         required:true,
     },
 })
