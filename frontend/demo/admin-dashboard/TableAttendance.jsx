@@ -101,7 +101,7 @@ const handleTeacher = ()=>{
             <TableCell>{items.batchName}</TableCell>
             <TableCell>{items.teacher}</TableCell>
             <TableCell>{items.startDate ? format(items.startDate, "MMM dd, yyyy") : ""}</TableCell>
-            <TableCell>{items.leave ? format(items.leave, "MMM dd, yyyy") : ""}</TableCell>
+            <TableCell>{items.leave ? items.leave.map((item)=>format(item, "MMM dd, yyyy")).join(", ") : ""}</TableCell>
             <TableCell>{items.classes ? items.classes.map((date)=> format(date, "MMM dd, yyyy")).join(", ") : ""}</TableCell>
             <TableCell className="text-right">
               <Link href={`/teacherView/edit/${items._id}`}>
