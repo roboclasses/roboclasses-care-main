@@ -115,7 +115,7 @@ export function EditAttendanceForm() {
           name="batchName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Batch Name</FormLabel>
+              <FormLabel className="font-semibold">Batch Name</FormLabel>
               <FormControl>
                 <Input {...field}/>
               </FormControl>
@@ -136,7 +136,7 @@ export function EditAttendanceForm() {
           name="startDate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Start Date</FormLabel>
+              <FormLabel className="font-semibold">Start Date</FormLabel>
               <FormControl>
                 <Input {...field} type="date" />
               </FormControl>
@@ -145,7 +145,7 @@ export function EditAttendanceForm() {
           )}
         />
 
-        <Label>Classes</Label>
+        <Label className="font-semibold">Classes</Label>
 
         {Array.from({ length: handleNumber(numberOfClasses) }).map((_, index) => (
           <FormField

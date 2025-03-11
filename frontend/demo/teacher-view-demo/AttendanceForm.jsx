@@ -220,7 +220,7 @@ export function AttendanceForm() {
           name="teacher"
           render={({ field }) => (
           <FormItem>
-            <FormLabel>Teacher Name</FormLabel>
+            <FormLabel className="font-semibold">Teacher Name</FormLabel>
             <FormControl>
               <Input {...field} disabled required/>
             </FormControl>
@@ -235,7 +235,7 @@ export function AttendanceForm() {
           name="startDate"
           render={({ field }) => (
           <FormItem>
-            <FormLabel>Start Date</FormLabel>
+            <FormLabel className="font-semibold">Start Date</FormLabel>
             <FormControl>
               <Input {...field} type="date" disabled required/>
             </FormControl>
@@ -244,7 +244,7 @@ export function AttendanceForm() {
             )}
         />
 
-        <Label>Classes</Label>
+        <Label className="font-semibold">Classes</Label>
 
       {Array.from({length: handleNumber(numberOfClasses)}).map((_, index)=>(
         <FormField

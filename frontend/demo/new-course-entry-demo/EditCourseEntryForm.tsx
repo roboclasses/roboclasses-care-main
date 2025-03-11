@@ -114,7 +114,7 @@ handleFetch();
           name="numberOfClasses"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Number of Classes</FormLabel>
+              <FormLabel className="font-semibold">Edit Number of Classes</FormLabel>
               <FormControl>
                 <Input
                   {...field}

@@ -24,6 +24,8 @@ import { DemoClassUrl } from "@/constants";
 import { format } from "date-fns";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { timezone } from "./datePickerForm";
+import 'react-phone-input-2/lib/style.css'
+import PhoneInput from "react-phone-input-2";
 
 const items = [
   {
@@ -171,13 +173,11 @@ export function EditDemoClassForm() {
             <FormItem>
               <FormLabel className="font-semibold">Contact Details</FormLabel>
               <FormControl>
-                <Input
-                  required
-                  {...field}
-                  value={destination} 
-                  onChange={(e)=>{
-                  setDestination(e.target.value)
-                  field.onChange(e) }} 
+              <PhoneInput
+                  country={"ae"}
+                  {...field}  
+                  inputStyle={{ width: "440px" }}
+                  inputProps={{ ref: field.ref, required: true }}
                 />
               </FormControl>
               <FormMessage />
@@ -326,7 +326,7 @@ export function EditDemoClassForm() {
               name="converted"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-semibold">Status</FormLabel>
+                  <FormLabel className="font-semibold">Class Converted?</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={converted}
@@ -334,7 +334,7 @@ export function EditDemoClassForm() {
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select to convert"/>
+                        <SelectValue placeholder="Select Yes to convert"/>
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
