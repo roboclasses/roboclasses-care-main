@@ -55,16 +55,15 @@ router.get("/attendances/:id",async(req,res)=>{
       success:false,
       message:"Internal server error!"
     })
-
   }
 })
 
 // delete attendance
 router.put('/attendances/:id',async(req,res)=>{
   try {
-    const {batchName, startDate, classes, teacher} = req.body;
+    const {batchName, startDate, classes, teacher, leave} = req.body;
     const {id} = req.params;
-    const data = await Attendance.findByIdAndUpdate(id,{batchName, startDate, classes, teacher},{new:true})
+    const data = await Attendance.findByIdAndUpdate(id,{batchName, startDate, classes, teacher, leave},{new:true})
     console.log(data);
     return res.status(200).json({
       success:true,
