@@ -16,7 +16,12 @@ const attendanceSchema = new mongoose.Schema({
     teacher:{
         type:String,
         required:true,
-    }
+    },
+    leave:{
+        type:Date,
+        default:"",
+        required:true,
+    },
 })
 
 export const Attendance = mongoose.models.Attendance ?? mongoose.model('Attendance',attendanceSchema)

@@ -29,6 +29,7 @@ const FormSchema = z.object({
   batchName: z.string().min(2, { message: "Batch Name must be at least 2 characters long" }).optional(),
   startDate: z.string().optional(),
   classes: z.array(z.string()).optional(),
+  leave: z.string(),
 });
 
 export function EditAttendanceForm() {
@@ -41,6 +42,7 @@ export function EditAttendanceForm() {
       batchName: "",
       startDate: "",
       classes: [],
+      leave: "",
     },
   });
 
@@ -82,13 +84,15 @@ export function EditAttendanceForm() {
   // Handle form submission
   async function onSubmit(data) {
     try {
-      const startDate = data.startDate ? new Date(data.startDate).toISOString().split('T')[0] : undefined;
-      const classes = data.classes ? data.classes.map((item) => new Date(item).toISOString().split('T')[0]) : undefined;
+      const startDate = data.startDate ? new Date(data.startDate).toISOString().split('T')[0] : '';
+      const leaveDate = data.leave ? new Date(data.leave).toISOString().split('T')[0] : '';
+      const classes = data.classes ? data.classes.map((item) => new Date(item).toISOString().split('T')[0]) : '';
 
       const payload = {
         batchName: data.batchName,
         startDate: startDate,
         classes: classes,
+        leave: leaveDate,
       };
 
       const res = await axios.put(`${AttendanceUrl}/${id}`, payload, {
@@ -137,6 +141,20 @@ export function EditAttendanceForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="font-semibold">Start Date</FormLabel>
+              <FormControl>
+                <Input {...field} type="date" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+<FormField
+          control={form.control}
+          name="leave"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="font-semibold">Apply Leave</FormLabel>
               <FormControl>
                 <Input {...field} type="date" />
               </FormControl>
