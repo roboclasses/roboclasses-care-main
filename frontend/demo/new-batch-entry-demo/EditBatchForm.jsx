@@ -231,7 +231,7 @@ const studentName = form.watch("studentName")
           render={({ field }) => (
             <FormItem>
               <FormLabel className="font-semibold">
-                Select a Start Date
+                Edit Start Date
               </FormLabel>
               <FormControl>
                 <Input type="date" {...field} className="bg-white" required />
@@ -250,10 +250,10 @@ const studentName = form.watch("studentName")
               <FormLabel className="font-semibold">Batch Name</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Batch Number"
                   {...field}
                   className="bg-white"
                   required
+                  disabled
                 />
               </FormControl>
               <FormMessage />
@@ -267,7 +267,7 @@ const studentName = form.watch("studentName")
           name="numberOfClasses"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Number of Classes</FormLabel>
+              <FormLabel className="font-semibold">Edit Number of Classes</FormLabel>
               <FormControl>
                 <Input {...field} className="bg-white" required />
               </FormControl>
@@ -395,7 +395,7 @@ const studentName = form.watch("studentName")
             <FormItem>
               <FormLabel className="font-semibold">Teacher Name</FormLabel>
               <FormControl>
-                <Input {...field} className="bg-white" required />
+                <Input {...field} className="bg-white" required disabled/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -412,7 +412,7 @@ const studentName = form.watch("studentName")
               <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select timezone" />
+                    <SelectValue placeholder="Edit timezone" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>

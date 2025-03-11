@@ -241,7 +241,7 @@ export function EditStudentDetails() {
           name="courses"
           render={({field}) => (
             <FormItem>
-              <FormLabel className="font-semibold">Edit Courses</FormLabel>
+              <FormLabel className="font-semibold">Courses done</FormLabel>
               <Input  
                 {...field}
                 required 

@@ -20,6 +20,8 @@ import MultiDateTimeEntry from "./MultiDateTimeEntry";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { NormalClassUrl } from "@/constants";
+import 'react-phone-input-2/lib/style.css'
+import PhoneInput from "react-phone-input-2";
 
 // Define form schema
 const FormSchema = z.object({
@@ -138,18 +140,23 @@ export function EditNormalClassForm() {
 
         {/* Phone Number */}
         <FormField
-          control={form.control}
-          name="destination"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-semibold">Phone</FormLabel>
-              <FormControl>
-                <Input {...field} className="bg-white" required />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+   control={form.control}
+   name="destination"
+   render={({ field }) => (
+     <FormItem>
+       <FormLabel className="font-semibold">Contact Details</FormLabel>
+       <FormControl>
+       <PhoneInput
+           country={"ae"}
+           {...field}  
+           inputStyle={{ width: "440px" }}
+           inputProps={{ ref: field.ref, required: true }}
+         />
+       </FormControl>
+       <FormMessage />
+     </FormItem>
+   )}
+ />
 
         {/* Batch Name */}
         <FormField

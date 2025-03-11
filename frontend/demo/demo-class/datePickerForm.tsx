@@ -143,7 +143,7 @@ export function DatePickerForm() {
               <FormLabel className="font-semibold">Full Name</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Student/Parent name"
+                  placeholder="Enter Student/Parent name"
                   {...field}
                   required
                   className="bg-white"
@@ -163,12 +163,9 @@ export function DatePickerForm() {
                 <FormControl>
                 <PhoneInput
                   country={"ae"}
-                  placeholder="Parents Contact/Whatsapp number"   
                   {...field}  
-                  specialLabel= ""
                   inputStyle={{width: "440px"}}
                   inputProps={{ ref: field.ref, required: true }}
-                
                 />
               </FormControl>
               <FormMessage />
@@ -184,7 +181,7 @@ export function DatePickerForm() {
               <FormLabel className="font-semibold">Course Details</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="e.g. - AI for kids"
+                  placeholder="AI for kids"
                   {...field}
                   required
                   className="bg-white"

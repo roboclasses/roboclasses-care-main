@@ -238,7 +238,7 @@ useEffect(()=>{
           )}
         />
 
-        <div className="flex gap-1 items-center">
+        <div className="flex gap-4 items-center">
         <Label className="font-semibold">Batch Name</Label>
         <FormField
           control={form.control}
@@ -272,10 +272,10 @@ useEffect(()=>{
             <FormItem>
               <FormControl>
                 <Input
-                  placeholder="Batch Number"
+                  placeholder="Enter a Batch Number"
                   {...field}
                   required
-                  className="bg-white"
+                  className="bg-white "
                 />
               </FormControl>
               <FormMessage />
@@ -309,7 +309,7 @@ useEffect(()=>{
           name="studentName"
           render={() => (
             <FormItem>
-              <FormLabel className="font-semibold">Student Name</FormLabel>
+              <FormLabel className="font-semibold">Find Student</FormLabel>
               <StudentSearch onSelect={handleStudentSelect} selectedStudent={selectedStudent}/>
               <FormMessage />
             </FormItem>
@@ -360,7 +360,7 @@ useEffect(()=>{
               name="teacher"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-semibold">Teacher Name</FormLabel>
+                  <FormLabel className="font-semibold">Teachers</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}

@@ -14,7 +14,7 @@ const page = () => {
           className="min-h-screen object-cover"
         />
         <div className="w-[600px] flex flex-col p-20 gap-5">
-          <p className="text-4xl font-bold">Edit Details for a Student</p>
+          <p className="text-4xl font-bold">Edit Student Details</p>
           <EditStudentDetails />
         </div>
 

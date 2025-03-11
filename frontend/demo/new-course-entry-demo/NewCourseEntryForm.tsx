@@ -69,7 +69,7 @@ export function NewCourseEntryForm() {
               <FormLabel className="font-semibold">Course Name</FormLabel>
               <FormControl>
                 <Input
-                //   placeholder=""
+                  placeholder="Scratch L1"
                   {...field}
                   required
                   className="bg-white"
