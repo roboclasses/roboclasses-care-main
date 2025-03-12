@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const courseSchema = new mongoose.Schema({
-    course: { type: String, required: true },
+    course: { type: String, required: true, index:true },
     numberOfClasses:{type:String, default:""}
   },
   { timestamps: true }
