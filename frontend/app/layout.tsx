@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+
+import NavBar from "@/components/NavBar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
-
 import { Toaster } from "@/components/ui/toaster";
-import NavBar from "@/components/NavBar";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -37,7 +37,7 @@ export default function RootLayout({
           <AppSidebar />
           <SidebarInset>
             <NavBar/>
-            <main className="">{children}</main>
+            <main>{children}</main>
           </SidebarInset>
         </SidebarProvider>
         <Toaster />
