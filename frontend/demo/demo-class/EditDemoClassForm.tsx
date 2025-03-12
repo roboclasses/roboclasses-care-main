@@ -23,9 +23,9 @@ import Cookies from "js-cookie";
 import { DemoClassUrl } from "@/constants";
 import { format } from "date-fns";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { timezone } from "./datePickerForm";
 import 'react-phone-input-2/lib/style.css'
 import PhoneInput from "react-phone-input-2";
+import { timezone } from "@/data/dataStorage";
 
 const items = [
   {

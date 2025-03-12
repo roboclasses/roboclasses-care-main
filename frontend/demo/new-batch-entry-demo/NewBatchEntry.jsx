@@ -22,23 +22,11 @@ import { getUserSession } from "@/lib/session";
 import { usePathname } from "next/navigation";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { teachers } from "@/data/dataStorage";
+import { teachers, timezone, userTimeZone } from "@/data/dataStorage";
 import MultiDayTimeEntry from "./MultiDayTimeEntry";
 import 'react-phone-input-2/lib/style.css'
 import PhoneInput from "react-phone-input-2";
 import StudentSearch from "../normal-class/StudentSearch";
-
-
-// For detect system timezone
-const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
- const timezone = [
-  {id:0, name:"Asia/Kolkata", country:"India"},
-  {id:1, name:"America/New_York", country:"USA"},
-  {id:2, name:"Asia/Riyadh", country:"Saudi Arab"},
-  {id:3, name:"America/Toronto", country:"Canada"},
-  {id:4, name:"Asia/Dubai", country:"UAE"},
-  {id:5, name:userTimeZone, country:"Your Timezone"},]
 
 
 
