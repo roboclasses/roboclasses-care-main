@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Trash2, PlusCircle } from "lucide-react"
+import { weekDays } from "@/data/dataStorage"
 
 export type DayTimeEntry = {
   day: string
@@ -15,7 +16,6 @@ type DayTimePickerProps = {
   onEntriesChange?: (entries: DayTimeEntry[]) => void // Make the callback optional
 }
 
-const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
 export default function MultiDayTimeEntry({ onEntriesChange }: DayTimePickerProps) {
   const [entries, setEntries] = useState<DayTimeEntry[]>([])
@@ -63,7 +63,7 @@ export default function MultiDayTimeEntry({ onEntriesChange }: DayTimePickerProp
                   <SelectValue placeholder="Select a day" />
                 </SelectTrigger>
                 <SelectContent>
-                  {WEEKDAYS.map((day) => (
+                  {weekDays.map((day) => (
                     <SelectItem key={day} value={day}>
                       {day}
                     </SelectItem>

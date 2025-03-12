@@ -25,6 +25,7 @@ import Cookies from "js-cookie";
 import PhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
 import { useEffect, useState } from "react";
+import { weekDays } from "@/data/dataStorage";
 
 
 // For mapping time value to send reminder checkbox
@@ -59,7 +60,6 @@ const FormSchema = z.object({
 
 const getNextClassDate = (startDate, daysOfWeek, times)=>{
 
-  const weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   const start = new Date(startDate);
   const nextClassDates = [];
 

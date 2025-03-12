@@ -32,7 +32,7 @@ export const imageIcons = [
   {id:"course", img:COURSES_IMAGE, alt:"courses-pic"},
 ]
 
-
+// For mapping countries
 export const countries = [
   {id: 1, name: "UAE"},
   {id: 2, name: "INDIA"},
@@ -40,6 +40,10 @@ export const countries = [
   {id: 4, name: "CANADA"},
   {id: 2, name: "SAUDI ARAB"},
 ];
+
+// For mapping weekdays
+export const weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
 
 
 
