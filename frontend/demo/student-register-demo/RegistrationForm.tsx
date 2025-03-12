@@ -21,29 +21,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import PhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
 import { Label } from "@/components/ui/label";
+import { countries } from "@/data/dataStorage";
 
-
-export const countries = [
-  {
-    id: 1,
-    name: "UAE",
-  },
-  {
-    id: 2,
-    name: "INDIA",
-  },
-  {
-    id: 3,
-    name: "USA",
-  }, {
-    id: 4,
-    name: "CANADA",
-  },
-  {
-    id: 2,
-    name: "SAUDI ARAB",
-  },
-];
 
 const FormSchema = z.object({
   studentName: z.string().min(3, { message: "Student Name must be atleast 3 characters long"}),
