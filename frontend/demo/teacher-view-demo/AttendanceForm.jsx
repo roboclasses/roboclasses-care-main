@@ -254,7 +254,7 @@ export function AttendanceForm() {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder={`Add Class ${index+1}`} {...field} type="date" min={new Date().toISOString().split('T')[0]} />
+                <Input placeholder={`Add Class ${index+1}`} {...field} type="date" />
               </FormControl>
               <FormMessage />
             </FormItem>
