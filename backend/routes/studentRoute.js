@@ -6,6 +6,12 @@ const router = express.Router();
 router.post("/students", async(req,res)=>{
     try {
         const {studentName, parentName, destination, email, address, grade, courses} = req.body
+
+        const student = await Student.findOne({email})
+        if(student){
+            console.log(student);
+            return res.status(409).json({success:false, message: "Student already registered."})   
+        }
     
         const data = await Student.create({studentName, parentName, destination, email, address, grade, courses});
         console.log(data);
@@ -50,11 +56,11 @@ router.get("/students/:id", async(req,res)=>{
 router.put("/students/:id", async(req,res)=>{
     try {
         const {id} = req.params;
-        const {studentName, parentName, destination, email, address, grade, courses} = req.body;
-        const data = await Student.findByIdAndUpdate(id, {studentName, parentName, destination, email, address, grade, courses}, {new: true});
+        const studentDetails = req.body;
+        const data = await Student.findByIdAndUpdate(id, studentDetails, {new: true});
         console.log(data);
 
-        return res.status(201).json({success:true, message:"Student data updated successfully."})
+        return res.status(201).json({success:true, message:"Student details updated successfully."})
     } catch (error) {
         console.error(error);
         return res.status(500).json({success:false, message:"Internal server error."}) 

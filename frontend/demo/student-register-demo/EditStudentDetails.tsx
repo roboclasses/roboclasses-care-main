@@ -12,7 +12,7 @@ import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 
 import { z } from "zod";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useParams } from "next/navigation";
@@ -89,13 +89,17 @@ export function EditStudentDetails() {
         grade: data.grade || grade,
         courses: data.courses || courses,
       };
-      const res = await axios.put(`${StudentRegUrl}/${id}`, updatedData, { headers: { Authorization: Cookies.get("token") }});
+      const res = await axios.put(`${StudentRegUrl}/${id}`, updatedData);
       console.log(res.data);
 
-      toast({ title: "Success✅", description: res.data.message, variant: "default" });
-    } catch (error) {
-      console.error(error);
-      toast({ title: "Failed", description: "Unable to update Student Details", variant: "destructive" });
+      const {message} = res.data;
+      toast({ title: "Success✅", description: message, variant: "default" });
+    } catch (error:unknown) {
+      if(error instanceof AxiosError){
+        console.error(error);
+        const {message} = error.response?.data
+        toast({ title: "Failed", description: message || "An unknown error has occurred.", variant: "destructive" });
+      }
     }
   }
   
