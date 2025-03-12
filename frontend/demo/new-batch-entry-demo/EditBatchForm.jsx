@@ -31,18 +31,8 @@ import { NewBatchEntryUrl, StudentRegUrl } from "@/constants";
 import 'react-phone-input-2/lib/style.css'
 import PhoneInput from "react-phone-input-2";
 import StudentSearch from "../normal-class/StudentSearch";
+import { timezone, userTimeZone } from "@/data/dataStorage";
 
-// Get user's timezone
-const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-const timezoneOptions = [
-  { id: 0, name: "Asia/Kolkata", country: "India" },
-  { id: 1, name: "America/New_York", country: "USA" },
-  { id: 2, name: "Asia/Riyadh", country: "Saudi Arabia" },
-  { id: 3, name: "America/Toronto", country: "Canada" },
-  { id: 4, name: "Asia/Dubai", country: "UAE" },
-  { id: 5, name: userTimeZone, country: "Your Timezone" },
-];
 
 // Define form schema
 const FormSchema = z.object({
@@ -416,7 +406,7 @@ const studentName = form.watch("studentName")
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {timezoneOptions.map((item) => (
+                  {timezone.map((item) => (
                     <SelectItem value={item.name} key={item.id}>
                       {item.country}
                     </SelectItem>

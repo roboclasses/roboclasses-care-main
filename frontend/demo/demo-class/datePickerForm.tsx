@@ -24,7 +24,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getUserSession } from "@/lib/session";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { teachers } from "@/data/dataStorage";
+import { teachers, timezone, userTimeZone } from "@/data/dataStorage";
 import PhoneInput from "react-phone-input-2";
 
 // for mapping checkbox value and label
@@ -38,17 +38,6 @@ const items = [
     label: "1 Hour",
   },
 ];
-
-// For detect system timezone
-const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-export const timezone = [
-  {id:0, name:"Asia/Kolkata", country:"India"},
-  {id:1, name:"America/New_York", country:"USA"},
-  {id:2, name:"Asia/Riyadh", country:"Saudi Arab"},
-  {id:3, name:"America/Toronto", country:"Canada"},
-  {id:4, name:"Asia/Dubai", country:"UAE"},
-  {id:5, name:userTimeZone, country:"Your Timezone"},]
 
 
 const FormSchema = z.object({
