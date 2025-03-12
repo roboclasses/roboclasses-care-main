@@ -6,6 +6,12 @@ const router = express.Router();
 router.post("/courses", async(req,res)=>{
     try {
         const {course} = req.body;
+
+        const courseName = await Course.findOne({course})
+        if(courseName){
+            return res.status(409).json({success:false, message: "Course already exsist."})
+        }
+
         const data = await Course.create({course})
         console.log(data);
         return res.status(201).json({success:true, message:"Course created successfully."})

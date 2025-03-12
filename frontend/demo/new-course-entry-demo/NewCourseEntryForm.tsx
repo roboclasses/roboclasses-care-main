@@ -15,7 +15,7 @@ import { CoursesUrl } from "@/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 
 const FormSchema = z.object({
@@ -39,16 +39,15 @@ export function NewCourseEntryForm() {
       const {message} = res.data;
       toast({
         title: "Success✅",
-        description: message || "New course has been created",
+        description: message,
         variant: "default",
       });
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: "Failed",
-        description: "Unable to create course",
-        variant: "destructive",
-      });
+    } catch (error:unknown) {
+      if(error instanceof AxiosError){
+        console.error(error);
+        const {message} = error.response?.data;
+        toast({ title: "Failed", description: message || "An Unknown error is occurred", variant: "destructive" })
+      }
     }
   }
 
