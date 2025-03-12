@@ -37,7 +37,7 @@ export const countries = [
   {id: 2, name: "INDIA"},
   {id: 3, name: "USA"}, 
   {id: 4, name: "CANADA"},
-  {id: 2, name: "SAUDI ARAB"},
+  {id: 5, name: "SAUDI ARAB"},
 ];
 
 // For mapping weekdays

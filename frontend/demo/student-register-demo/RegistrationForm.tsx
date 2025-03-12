@@ -52,35 +52,28 @@ export function RegistrationForm() {
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    const payload = {
-      studentName:data.studentName,
-      parentName: data.parentName,
-      destination: data.destination,
-      email:data.email,
-      address:`${data.address},${data.country}`,
-      courses:data.courses,
-      grade:data.grade,
-    }
     try {
+      const payload = {
+        studentName:data.studentName,
+        parentName: data.parentName,
+        destination: data.destination,
+        email:data.email,
+        address:`${data.address},${data.country}`,
+        courses:data.courses,
+        grade:data.grade,
+      }
+
       const res = await axios.post(StudentRegUrl,payload);
       console.log(res.data);
-      
       form.reset();
+
       const {message} = res.data;
-      toast({
-        title: "Success✅",
-        description: message,
-        variant:"default"
-      });
+      toast({ title: "Success✅", description: message, variant:"default" });
     } catch (error:unknown) {
           if(error instanceof AxiosError){
-            const {message} = error.response?.data
             console.log(error);
-            toast({
-              title: "Failed",
-              description: message,
-              variant: "destructive",
-            });
+            const {message} = error.response?.data
+            toast({ title: "Failed", description: message || "An unknown error has occurred.", variant: "destructive" });
           }
         }
   }

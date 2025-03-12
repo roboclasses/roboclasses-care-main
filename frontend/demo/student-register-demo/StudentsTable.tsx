@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table";
 
 import useSWR from "swr";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import Link from "next/link";
 import { studentType } from "@/types/Types";
 import { StudentRegUrl } from "@/constants";
@@ -33,16 +33,23 @@ export function StudentsTable() {
       mutate((data) => data?.filter((Student) => Student._id !== studentId));
 
       const {message} = res.data;
-      toast({title: "Success✅", description: message,variant: "default",});
-    } catch (error) {
-      console.log(error);
-      toast({title:"Failed", description:"Unable to delete Student details", variant:"destructive"})
+      toast({title: "Success✅", description: message, variant: "default"});
+
+    } catch (error: unknown) {
+      if(error instanceof AxiosError){
+        console.log(error);
+        const {message} = error.response?.data
+        toast({title:"Failed", description: message || "An unknown error has occurred.", variant:"destructive"})
+      }
     }
   };
 
   // Handle edge cases
   if (data?.length === 0) return <div>Empty list for Students</div>;
-  if (error) return <div>Failed to load</div>;
+  if (error instanceof AxiosError){
+    const {message} = error.response?.data
+    return <div>{message || 'An unknown error has occurred.'}</div>;
+  } 
   if (isLoading) return <div>Loading...</div>;
   if (isValidating) return <div>Refershing data...</div>;
 
