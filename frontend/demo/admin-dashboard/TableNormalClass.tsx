@@ -25,11 +25,11 @@ import { getUserSession } from "@/lib/session";
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 
-
 export function TableNormalClass() {
 const [role, setRole] = useState("");
 const [name, setName] = useState("");
 
+  // Handle fetch normal classes
   const { data, isLoading, isValidating, error, mutate } = useSWR<normalClassType[]>(NormalClassUrl, fetcher);
 
   // Fetch logged-in teacher session

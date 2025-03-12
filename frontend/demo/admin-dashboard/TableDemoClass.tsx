@@ -27,6 +27,8 @@ const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 export function TableDemoClass() {
   const [role, setRole] = useState("");
   const [name, setName] = useState("");
+
+  // Handle fetch demo classes 
   const { data, error, isLoading, isValidating, mutate } = useSWR<appointmentTypes[]>(DemoClassUrl,fetcher);
 
   // Fetch logged-in teacher session

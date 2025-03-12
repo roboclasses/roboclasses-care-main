@@ -11,6 +11,7 @@ export const teachers = [
 // For detect system timezone
 export const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
+// For mapping timezones in drop down
 export const timezone = [
   {id:0, name:"Asia/Kolkata", country:"India"},
   {id:1, name:"America/New_York", country:"USA"},

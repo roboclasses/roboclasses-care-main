@@ -29,6 +29,8 @@ const fetcher = (url: string) => axios.get(url, {headers:{ Authorization: Cookie
 export function TableBatchEntries() {
   const [role, setRole] = useState("");
   const [name, setName] = useState("");
+
+  // Handle fetching batches
   const { data, isLoading, isValidating, error, mutate } = useSWR<batchType[]>(NewBatchEntryUrl,fetcher);
 
     // Fetch logged-in teacher session

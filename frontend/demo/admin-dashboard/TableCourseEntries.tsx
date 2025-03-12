@@ -24,6 +24,8 @@ import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 const fetcher = (url: string) => axios.get(url, {headers:{ Authorization: Cookies.get("token")}}).then((res) => res.data);
 
 export function TableCourseEntries() {
+
+  // Handle fetching courses
   const { data, isLoading, isValidating, error, mutate } = useSWR<courseType[]>(CoursesUrl,fetcher);
 
   // Handle delete a course

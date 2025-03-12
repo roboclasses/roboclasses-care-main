@@ -22,6 +22,8 @@ import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 export function StudentsTable() {
+
+  // Handle fetch students form db
   const { data, error, isLoading, isValidating, mutate } = useSWR<studentType[]>(StudentRegUrl,fetcher);
 
   // Handle delete Student

@@ -27,6 +27,8 @@ const fetcher = (url) => axios.get(url).then((res) => res.data)
 export function TableAttendance() {
   const [role, setRole] = useState("");
   const [name, setName] = useState("");
+
+  // Handle fetch teacher attendances
   const { data, isLoading, isValidating, error, mutate } = useSWR(AttendanceUrl, fetcher)
 
   // Fetch user session
@@ -44,7 +46,7 @@ export function TableAttendance() {
     handleFetch();
   },[])
 
-  // Filter data by their login session's role properties
+  // Filter rows by their role and name
 const handleTeacher = ()=>{
   if(role === "teacher"){
     const filteredAttendance = data.filter((item)=>item.teacher === name)
