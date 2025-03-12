@@ -14,14 +14,13 @@ import { EditButton } from "./EditButton";
 import { courseType } from "@/types/Types";
 import { CoursesUrl } from "@/constants";
 
-import Cookies from 'js-cookie'
 import useSWR from "swr";
 import axios from "axios";
 import Link from "next/link";
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 
 
-const fetcher = (url: string) => axios.get(url, {headers:{ Authorization: Cookies.get("token")}}).then((res) => res.data);
+const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 export function TableCourseEntries() {
 
@@ -31,7 +30,7 @@ export function TableCourseEntries() {
   // Handle delete a course
   const handleDelete = async(id:string)=>{
     try {
-      const res = await axios.delete(`${CoursesUrl}/${id}`, {headers:{ Authorization:Cookies.get("token") }})
+      const res = await axios.delete(`${CoursesUrl}/${id}`)
       console.log(res.data);
 
       mutate((data)=>data?.filter((course)=>course._id !== id))

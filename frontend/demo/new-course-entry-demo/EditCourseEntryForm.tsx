@@ -16,7 +16,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import axios from "axios";
-import Cookies from "js-cookie";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 
@@ -59,7 +58,7 @@ handleFetch();
         course:data.course || course,
         numberOfClasses:data.numberOfClasses || numberOfClasses,
       }
-      const res = await axios.put(`${CoursesUrl}/${id}`, payload, { headers:{ Authorization: Cookies.get("token") }});
+      const res = await axios.put(`${CoursesUrl}/${id}`, payload);
       console.log(res.data);
       form.reset();
       
