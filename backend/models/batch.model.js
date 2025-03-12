@@ -40,6 +40,7 @@ const newBatchEntrySchema = new mongoose.Schema({
     email:{
         type:String,
         required:true,
+        index:true,
     },
     completed:{
         type:String,
