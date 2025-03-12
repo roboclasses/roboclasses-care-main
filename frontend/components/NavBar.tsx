@@ -1,10 +1,12 @@
 'use client'
 
-import { Separator } from '@radix-ui/react-separator'
 import React from 'react'
+import { usePathname } from 'next/navigation'
+
+import { Separator } from '@radix-ui/react-separator'
 import { SidebarTrigger } from './ui/sidebar'
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator } from './ui/breadcrumb'
-import { usePathname } from 'next/navigation'
+
 
 const NavBar = () => {
     const pathname = usePathname();

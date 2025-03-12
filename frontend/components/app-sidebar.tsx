@@ -1,4 +1,5 @@
 "use client";
+
 import * as React from "react";
 import {
   BookIcon,
@@ -21,12 +22,13 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { LOGO_IMG } from "@/constants/images";
+import { getUserSession } from "@/lib/session";
+
 import Link from "next/link";
 import Image from "next/image";
-import { getUserSession } from "@/lib/session";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { LOGO_IMG } from "@/constants/images";
 
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -56,6 +58,7 @@ useEffect(()=>{
       email: email ,
       avatar: avatar,
     },
+
     // navMain: [
     //   {
     //     title: "Take Appointment",
@@ -142,6 +145,7 @@ useEffect(()=>{
         icon: BookIcon,
       },
     ],
+
     navMainTeacher: [
       {
         title: "Take Appointment",
@@ -185,6 +189,7 @@ useEffect(()=>{
         icon: BookIcon,
       },
     ],
+
     // navMainTeacher: [
     //   {
     //     title: "Take Appointment",
@@ -242,7 +247,9 @@ useEffect(()=>{
       },
     ],
   };
+
   // Swith-Case statement to render specific navitems based on roles
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const getNavItems = (role: string) => {
     switch (role) {
       case "admin":
@@ -255,10 +262,10 @@ useEffect(()=>{
         return [];
     }
   };
-  // Used use-memo hook to prevent unnecessary re renders
-  const navItems = React.useMemo(() => getNavItems(role), [role]);
   
-
+  // Used use-memo hook to prevent unnecessary re renders
+  const navItems = React.useMemo(() => getNavItems(role), [getNavItems, role]);
+  
   return (
     <>
       {!pathname.startsWith("/login") && !pathname.startsWith("/signup") &&  (
