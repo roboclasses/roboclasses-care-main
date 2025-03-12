@@ -16,7 +16,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import axios from "axios";
-import Cookies from "js-cookie";
 
 
 const FormSchema = z.object({
@@ -33,9 +32,7 @@ export function NewCourseEntryForm() {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      const res = await axios.post(CoursesUrl, data, {
-        headers: { Authorization: Cookies.get("token") },
-      });
+      const res = await axios.post(CoursesUrl, data);
       console.log(res.data);
       form.reset();
       
