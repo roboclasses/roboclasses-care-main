@@ -23,7 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import MultiDayTimeEntry from "./MultiDayTimeEntry";
+// import MultiDayTimeEntry from "./MultiDayTimeEntry";
 import { useParams } from "next/navigation";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
@@ -39,13 +39,13 @@ const FormSchema = z.object({
   batch: z.string().optional(),
   teacher: z.string().optional(),
   startDate: z.string().optional(),
-  dayTimeEntries: z
-    .array(
-      z.object({
-        day: z.string(),
-        time: z.string(),
-      })
-    ).optional(),
+  // dayTimeEntries: z
+  //   .array(
+  //     z.object({
+  //       day: z.string(),
+  //       time: z.string(),
+  //     })
+  //   ).optional(),
   timeZone: z.string().optional(),
   numberOfClasses: z.string().optional(),
   studentName: z.string().optional(),
@@ -56,7 +56,7 @@ const FormSchema = z.object({
 
 export function EditBatchForm() {
   const { id } = useParams();
-  const [dayTimeEntries, setDayTimeEntries] = useState([]);
+  // const [dayTimeEntries, setDayTimeEntries] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null)
 
   const [email, setEmail] = useState("");
@@ -75,7 +75,7 @@ export function EditBatchForm() {
       batch: "",
       teacher: "",
       startDate: "",
-      dayTimeEntries: [],
+      // dayTimeEntries: [],
       timeZone: userTimeZone, // Default to user's timezone
       numberOfClasses: "",
       studentName:"",
@@ -131,10 +131,10 @@ else{
   }, [id, form]);
 
 // Handle multiple date and time add, remove and update
-const handleDateTimeEntriesChange = (entries) => {
-  setDayTimeEntries(entries);
-  form.setValue("dayTimeEntries", entries); // Update form value
-};
+// const handleDateTimeEntriesChange = (entries) => {
+//   setDayTimeEntries(entries);
+//   form.setValue("dayTimeEntries", entries); // Update form value
+// };
 
 const studentName = form.watch("studentName")
 
@@ -166,10 +166,10 @@ const studentName = form.watch("studentName")
     console.log(JSON.stringify(data));
     
     try {
-      const transformedDateTimeEntries = {
-        day: dayTimeEntries.map(entry => entry.day), // Extract all dates into an array
-        time: dayTimeEntries.map(entry => entry.time), // Extract all times into an array
-      };
+      // const transformedDateTimeEntries = {
+      //   day: dayTimeEntries.map(entry => entry.day), // Extract all dates into an array
+      //   time: dayTimeEntries.map(entry => entry.time), // Extract all times into an array
+      // };
       const startDate = new Date(data.startDate).toISOString().split("T")[0];
 
       const payload = {
@@ -182,7 +182,7 @@ const studentName = form.watch("studentName")
         destination:data.destination,
         email:data.email,
         completed:data.completed,
-        ...transformedDateTimeEntries
+        // ...transformedDateTimeEntries
       };
 
 
@@ -212,7 +212,7 @@ const studentName = form.watch("studentName")
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
-        <MultiDayTimeEntry onEntriesChange={handleDateTimeEntriesChange} />
+        {/* <MultiDayTimeEntry onEntriesChange={handleDateTimeEntriesChange} /> */}
 
         {/* Start Date */}
         <FormField
