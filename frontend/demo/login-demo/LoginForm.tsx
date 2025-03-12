@@ -1,4 +1,5 @@
 "use client";
+
 import * as React from "react";
 import { z } from "zod";
 import axios, { AxiosError } from "axios";
@@ -37,6 +38,7 @@ export function LoginForm() {
       password: "",
     },
   });
+
   // handle user login
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     try {
@@ -44,17 +46,12 @@ export function LoginForm() {
       console.log(res.data);
       const { message, success, jwtToken, _id, name, email, role } = res.data;
       
-
       if (success) {
-        // localStorage.setItem("token", jwtToken),
-        // localStorage.setItem("_id", _id),
-        // localStorage.setItem("email", email),
-        // localStorage.setItem("name", name),
-        // localStorage.setItem("role", role),
         await createUserSession(jwtToken, role, _id, email, name);
         router.push("/");
         toast({ title: "Success✅", description: message, variant: "default" });
       }
+      
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         const { message } = error.response?.data;
@@ -72,6 +69,8 @@ export function LoginForm() {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full px-20">
         <div className="grid items-center gap-4">
+
+          {/* Email Address */}
           <div className="flex flex-col gap-2">
             <Label htmlFor="email">Email Address</Label>
             <FormField
@@ -97,6 +96,7 @@ export function LoginForm() {
             ></FormField>
           </div>
 
+          {/* Password */}
           <div className="flex flex-col gap-2">
             <Label htmlFor="password">Password</Label>
             <FormField

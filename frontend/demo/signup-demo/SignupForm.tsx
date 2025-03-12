@@ -1,4 +1,5 @@
 "use client";
+
 import * as React from "react";
 import { z } from "zod";
 import axios from "axios";
@@ -74,6 +75,8 @@ export function SignupForm() {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full px-20">
         <div className="grid items-center gap-4">
+
+          {/* Full Name */}
           <div className="flex flex-col gap-2">
             <Label htmlFor="name">Full Name</Label>
             <FormField
@@ -99,6 +102,7 @@ export function SignupForm() {
             ></FormField>
           </div>
 
+          {/* Roles drop-down */}
           <div className="flex flex-col gap-2">
             <Label htmlFor="roles">Roles</Label>
             <FormField
@@ -128,6 +132,7 @@ export function SignupForm() {
             />
           </div>
 
+          {/* Email Address */}
           <div className="flex flex-col gap-2">
             <Label htmlFor="email">Email Address</Label>
             <FormField
@@ -153,6 +158,7 @@ export function SignupForm() {
             ></FormField>
           </div>
 
+          {/* Password */}
           <div className="flex flex-col gap-2">
             <Label htmlFor="password">Password</Label>
             <FormField
