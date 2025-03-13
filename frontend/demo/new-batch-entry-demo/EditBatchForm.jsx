@@ -23,7 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-// import MultiDayTimeEntry from "./MultiDayTimeEntry";
+import MultiDayTimeEntry from "./MultiDayTimeEntry";
 import { useParams } from "next/navigation";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
@@ -33,41 +33,38 @@ import PhoneInput from "react-phone-input-2";
 import StudentSearch from "../normal-class/StudentSearch";
 import { timezone, userTimeZone } from "@/data/dataStorage";
 
-
 // Define form schema
 const FormSchema = z.object({
   batch: z.string().optional(),
   teacher: z.string().optional(),
   startDate: z.string().optional(),
-  // dayTimeEntries: z
-  //   .array(
-  //     z.object({
-  //       day: z.string(),
-  //       time: z.string(),
-  //     })
-  //   ).optional(),
+  dayTimeEntries: z
+    .array(
+      z.object({
+        day: z.string(),
+        time: z.string(),
+      })
+    ).optional(),
   timeZone: z.string().optional(),
   numberOfClasses: z.string().optional(),
   studentName: z.string().optional(),
-  destination:z.string().optional(),
-  email:z.string().optional(),
-  completed:z.string(),
+  destination: z.string().optional(),
+  email: z.string().optional(),
+  completed: z.string(),
 });
 
 export function EditBatchForm() {
   const { id } = useParams();
-  // const [dayTimeEntries, setDayTimeEntries] = useState([]);
-  const [selectedStudent, setSelectedStudent] = useState(null)
-
+  const [dayTimeEntries, setDayTimeEntries] = useState([]);
+  const [selectedStudent, setSelectedStudent] = useState(null);
   const [email, setEmail] = useState("");
 
-    // Handle select student
-    const handleStudentSelect = (student)=>{
-      setSelectedStudent(student)
-      form.setValue("studentName",student.studentName)
-    }
-  
-  
+  // Handle select student
+  const handleStudentSelect = (student) => {
+    setSelectedStudent(student);
+    form.setValue("studentName", student.studentName);
+  };
+
   // Initialize react-hook-form
   const form = useForm({
     resolver: zodResolver(FormSchema),
@@ -75,13 +72,13 @@ export function EditBatchForm() {
       batch: "",
       teacher: "",
       startDate: "",
-      // dayTimeEntries: [],
+      dayTimeEntries: [],
       timeZone: userTimeZone, // Default to user's timezone
       numberOfClasses: "",
-      studentName:"",
-      destination:"+971",
-      email:"",
-      completed:"",
+      studentName: "",
+      destination: "+971",
+      email: "",
+      completed: "",
     },
   });
 
@@ -94,34 +91,25 @@ export function EditBatchForm() {
         });
 
         const batchDetails = res.data;
-        setEmail(batchDetails.email)
+        setEmail(batchDetails.email);
 
-if(!email?.trim()){
-  form.reset({
-    batch: batchDetails.batch || "",
-    teacher: batchDetails.teacher || "",
-    startDate: batchDetails.startDate ? format(new Date(batchDetails.startDate), "yyyy-MM-dd") : "",
-    dayTimeEntries: {...batchDetails.dayTimeEntries} || [],
-    timeZone: batchDetails.timeZone || userTimeZone,
-    numberOfClasses: batchDetails.numberOfClasses || "",
-    studentName: batchDetails.studentName || "",
-    email:batchDetails.email || "",
-    destination:batchDetails.destination || "",
-    completed: batchDetails.completed || "",
-  });
-}
-else{
-  form.reset({
-    batch: batchDetails.batch || "",
-    teacher: batchDetails.teacher || "",
-    startDate: batchDetails.startDate ? format(new Date(batchDetails.startDate), "yyyy-MM-dd") : "",
-    dayTimeEntries: {...batchDetails.dayTimeEntries} || [],
-    timeZone: batchDetails.timeZone || userTimeZone,
-    numberOfClasses: batchDetails.numberOfClasses || "",
-    completed: batchDetails.completed || "",
-  });
-}
+        const initialDayTimeEntries = batchDetails.dayTimeEntries || [];
 
+        // Initialize dayTimeEntries state
+        setDayTimeEntries(initialDayTimeEntries);
+
+        form.reset({
+          batch: batchDetails.batch || "",
+          teacher: batchDetails.teacher || "",
+          startDate: batchDetails.startDate ? format(new Date(batchDetails.startDate), "yyyy-MM-dd") : "",
+          dayTimeEntries: initialDayTimeEntries,
+          timeZone: batchDetails.timeZone || userTimeZone,
+          numberOfClasses: batchDetails.numberOfClasses || "",
+          studentName: batchDetails.studentName || "",
+          email: batchDetails.email || "",
+          destination: batchDetails.destination || "",
+          completed: batchDetails.completed || "",
+        });
       } catch (error) {
         console.error("Failed to fetch batch details:", error);
       }
@@ -130,65 +118,71 @@ else{
     fetchBatchDetails();
   }, [id, form]);
 
-// Handle multiple date and time add, remove and update
-// const handleDateTimeEntriesChange = (entries) => {
-//   setDayTimeEntries(entries);
-//   form.setValue("dayTimeEntries", entries); // Update form value
-// };
+  // Handle multiple date and time add, remove and update
+  const handleDateTimeEntriesChange = (entries) => {
+    setDayTimeEntries(entries);
+    form.setValue("dayTimeEntries", entries); // Update form value
+  };
 
-const studentName = form.watch("studentName")
+  const studentName = form.watch("studentName");
 
   // Handle populate phone and email of a selected student
-  useEffect(()=>{
-    const handleFetch = async()=>{
+  useEffect(() => {
+    const handleFetch = async () => {
       try {
-        const res = await axios.get(`${StudentRegUrl}?name=${studentName}`)
-        if(res.data){
-          const selectedStudent = res.data.find((item)=>item.studentName === studentName)
-          if(selectedStudent){
-            form.setValue("destination", selectedStudent.destination || '')
-            form.setValue("email", selectedStudent.email || '')
+        const res = await axios.get(`${StudentRegUrl}?name=${studentName}`);
+        if (res.data) {
+          const selectedStudent = res.data.find((item) => item.studentName === studentName);
+          if (selectedStudent) {
+            form.setValue("destination", selectedStudent.destination || '');
+            form.setValue("email", selectedStudent.email || '');
           }
         }
       } catch (error) {
-        console.error(error); 
-        form.setValue("email", '')
-        form.setValue("email", '')
+        console.error(error);
+        form.setValue("email", '');
+        form.setValue("destination", '');
       }
-    }
+    };
     handleFetch();
-  },[form, studentName])
-
-
+  }, [form, studentName]);
 
   // Submit handler
   async function onSubmit(data) {
-    console.log(JSON.stringify(data));
-    
     try {
-      // const transformedDateTimeEntries = {
-      //   day: dayTimeEntries.map(entry => entry.day), // Extract all dates into an array
-      //   time: dayTimeEntries.map(entry => entry.time), // Extract all times into an array
-      // };
+      const currentDayTimeEntries = form.getValues("dayTimeEntries") || [];
+      
+      const transformedDateTimeEntries = dayTimeEntries.length > 0
+        ? {day: dayTimeEntries.map((item)=>item.day), time: dayTimeEntries.map((item)=>item.time)}// Use new entries directly
+        : currentDayTimeEntries; // Use existing entries
+
+        console.log("Current Day Time Entries"+JSON.stringify(currentDayTimeEntries));
+
+
       const startDate = new Date(data.startDate).toISOString().split("T")[0];
 
       const payload = {
-        batch:data.batch, 
+        batch: data.batch,
         startDate,
         teacher: data.teacher,
-        timeZone:data.timeZone,
-        numberOfClasses:data.numberOfClasses,
-        studentName:data.studentName,
-        destination:data.destination,
-        email:data.email,
-        completed:data.completed,
-        // ...transformedDateTimeEntries
+        timeZone: data.timeZone,
+        numberOfClasses: data.numberOfClasses,
+        studentName: data.studentName,
+        destination: data.destination,
+        email: data.email,
+        completed: data.completed,
+        ...transformedDateTimeEntries, // Ensure this is included
       };
 
+      console.log("Payload is"+JSON.stringify(payload));
+      
 
       const res = await axios.put(`${NewBatchEntryUrl}/${id}`, payload, {
         headers: { Authorization: Cookies.get("token") },
       });
+
+      console.log(res.data);
+      
 
       form.reset();
       toast({
@@ -212,7 +206,7 @@ const studentName = form.watch("studentName")
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
-        {/* <MultiDayTimeEntry onEntriesChange={handleDateTimeEntriesChange} /> */}
+        <MultiDayTimeEntry onEntriesChange={handleDateTimeEntriesChange} />
 
         {/* Start Date */}
         <FormField
@@ -265,118 +259,119 @@ const studentName = form.watch("studentName")
             </FormItem>
           )}
         />
-{email?.trim() ? (
-  <>
-   <FormField
-   control={form.control}
-   name="studentName"
-   render={({ field }) => (
-     <FormItem>
-       <FormLabel className="font-semibold">Student Name</FormLabel>
-       <FormControl>
-         <Input
-           {...field}
-           required
-           className="bg-white"
-         />
-       </FormControl>
-       <FormMessage />
-     </FormItem>
-   )}
- />
 
- <FormField
-   control={form.control}
-   name="destination"
-   render={({ field }) => (
-     <FormItem>
-       <FormLabel className="font-semibold">Contact Details</FormLabel>
-       <FormControl>
-       <PhoneInput
-           country={"ae"}
-           {...field}  
-           inputStyle={{ width: "440px" }}
-           inputProps={{ ref: field.ref, required: true }}
-         />
-       </FormControl>
-       <FormMessage />
-     </FormItem>
-   )}
- />
+        {email?.trim() ? (
+          <>
+            <FormField
+              control={form.control}
+              name="studentName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-semibold">Student Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      required
+                      className="bg-white"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
- <FormField
-   control={form.control}
-   name="email"
-   render={({ field }) => (
-     <FormItem>
-       <FormLabel className="font-semibold">Email Address</FormLabel>
-       <FormControl>
-         <Input
-           {...field}
-           required
-           className="bg-white"
-         />
-       </FormControl>
-       <FormMessage />
-     </FormItem>
-   )}
- />
- </>
-) : (
-  <>
-        <FormField
-          control={form.control}
-          name="studentName"
-          render={() => (
-            <FormItem>
-              <FormLabel className="font-semibold">Student Name</FormLabel>
-              <StudentSearch onSelect={handleStudentSelect} selectedStudent={selectedStudent}/>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="destination"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-semibold">Contact Details</FormLabel>
+                  <FormControl>
+                    <PhoneInput
+                      country={"ae"}
+                      {...field}
+                      inputStyle={{ width: "440px" }}
+                      inputProps={{ ref: field.ref, required: true }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="destination"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-semibold">Contact Details</FormLabel>
-              <FormControl>
-              <PhoneInput
-                  country={"ae"}
-                  {...field}  
-                  disabled       
-                  inputStyle={{ width: "440px" }}
-                  inputProps={{ ref: field.ref, required: true }}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-semibold">Email Address</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      required
+                      className="bg-white"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </>
+        ) : (
+          <>
+            <FormField
+              control={form.control}
+              name="studentName"
+              render={() => (
+                <FormItem>
+                  <FormLabel className="font-semibold">Student Name</FormLabel>
+                  <StudentSearch onSelect={handleStudentSelect} selectedStudent={selectedStudent} />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-semibold">Email Address</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  required
-                  disabled
-                  className="bg-white"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="destination"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-semibold">Contact Details</FormLabel>
+                  <FormControl>
+                    <PhoneInput
+                      country={"ae"}
+                      {...field}
+                      disabled
+                      inputStyle={{ width: "440px" }}
+                      inputProps={{ ref: field.ref, required: true }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-  </>
-) }
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-semibold">Email Address</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      required
+                      disabled
+                      className="bg-white"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </>
+        )}
+
         {/* Teacher Name */}
         <FormField
           control={form.control}
@@ -385,7 +380,7 @@ const studentName = form.watch("studentName")
             <FormItem>
               <FormLabel className="font-semibold">Teacher Name</FormLabel>
               <FormControl>
-                <Input {...field} className="bg-white" required disabled/>
+                <Input {...field} className="bg-white" required disabled />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -418,30 +413,32 @@ const studentName = form.watch("studentName")
           )}
         />
 
-          <FormField
-            control={form.control}
-                      name="completed"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="font-semibold">Batch Completed?</FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                            required
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select (Yes/No)"/>
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                                <SelectItem value={"Yes"} >{"Yes"}</SelectItem>
-                                <SelectItem value={"No"} >{"No"}</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </FormItem>
-            )}
-         />
+        {/* Batch Completed */}
+        <FormField
+          control={form.control}
+          name="completed"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="font-semibold">Batch Completed?</FormLabel>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                required
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select (Yes/No)" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value={"Yes"}>{"Yes"}</SelectItem>
+                  <SelectItem value={"No"}>{"No"}</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <Button type="submit">Submit</Button>
       </form>
