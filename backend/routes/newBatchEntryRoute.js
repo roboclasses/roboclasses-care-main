@@ -11,11 +11,6 @@ router.post("/newBatchEntries", authMiddleware, roleMiddleware("teacher", "admin
   try {
     const {day, time, startDate, teacher, batch, timeZone, numberOfClasses, studentName, destination, email, completed } = req.body;
 
-    const batchEntries = await NewBatchEntries.findOne({email})
-    if(batchEntries.batch){
-      return res.status(409).json({success:false, message: "Batch already exsist."})
-    }
-    
     const data = await NewBatchEntries.create({
       day,
       time,
