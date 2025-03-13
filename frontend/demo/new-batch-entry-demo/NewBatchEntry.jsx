@@ -15,7 +15,7 @@ import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { CoursesUrl, NewBatchEntryUrl, StudentRegUrl } from "@/constants";
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { getUserSession } from "@/lib/session";
@@ -183,21 +183,18 @@ useEffect(()=>{
       }
       const res = await axios.post(NewBatchEntryUrl, payload, {headers: { Authorization: Cookies.get("token") }});
       console.log(res.data);
-      // form.reset();
+
+      form.reset();
       
       const {message} = res.data;
-      toast({
-        title: "Success✅",
-        description: message || "New batch has been created",
-        variant: "default",
-      });
+      toast({ title: "Success✅", description: message, variant: "default" });
+
     } catch (error) {
-      console.error(error);
-      toast({
-        title: "Failed",
-        description: "Unable to create batch",
-        variant: "destructive",
-      });
+      if(error instanceof AxiosError){
+        console.error(error);
+        const {message} = error.response.data;
+        toast({ title: "Failed", description: message || "An unknown error has occurred.", variant: "destructive" });
+      }
     }
   }
 
