@@ -36,7 +36,7 @@ import { handleNumber } from "@/lib/utils";
 const FormSchema = z.object({
   batchName: z.string().min(2, { message: "Batch Name must be at least 2 characters long" }),
   startDate: z.string().optional(),
-  classes: z.array(z.string()).optional(),
+  classes: z.array(z.string().optional()),
   teacher:z.string(),
 });
 
@@ -144,7 +144,7 @@ export function AttendanceForm() {
   async function onSubmit(data) {
     try {
       const startDate = new Date(data.startDate).toISOString().split('T')[0];
-      const classes = data.classes.map((item)=>new Date(item).toISOString().split('T')[0])
+      const classes = data.classes.map((item)=> item ? new Date(item).toISOString().split('T')[0] : "").filter((item)=>item !== "")
       const payload={
         batchName: data.batchName,
         startDate: startDate,
