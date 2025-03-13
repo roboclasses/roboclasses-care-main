@@ -59,14 +59,19 @@ export function EditNormalClassForm() {
           headers: { Authorization: Cookies.get("token") },
         });
 
-        const normalClassDetails = res.data;
+        const normalClassDetails = res.data; 
+
+        const initialDateTimeEntries = normalClassDetails.dateTimeEntries || []
+
+        //Initialize dayTimeEntries state
+        setDateTimeEntries(initialDateTimeEntries)
 
         form.reset({
           teacher: normalClassDetails.teacher || "",
           batch: normalClassDetails.batch || "",
           userName: normalClassDetails.userName || "",
           destination: normalClassDetails.destination || "+971",
-          dateTimeEntries: normalClassDetails.dateTimeEntries || [],
+          dateTimeEntries: initialDateTimeEntries,
         });
       } catch (error) {
         console.error("Failed to fetch normal class details:", error);
@@ -85,10 +90,11 @@ export function EditNormalClassForm() {
   // Submit handler
   async function onSubmit(data) {
     try {
-      const transformedDateTimeEntries = {
+      const currentDateTimeEntries = form.getValues("dateTimeEntries") || []
+      const transformedDateTimeEntries = dateTimeEntries.length > 0 ? {
         date: dateTimeEntries.map(entry => entry.date), // Extract all dates into an array
         time: dateTimeEntries.map(entry => entry.time), // Extract all times into an array
-      };
+      } : currentDateTimeEntries
 
       const payload = {
         ...data,
