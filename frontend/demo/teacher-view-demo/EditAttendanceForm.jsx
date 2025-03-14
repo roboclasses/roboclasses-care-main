@@ -30,6 +30,7 @@
     startDate: z.string().optional(),
     classes: z.array(z.string()).optional(),
     leave: z.array(z.string()).optional(),
+    classesDone: z.string().optional(),
   });
 
   export function EditAttendanceForm() {
@@ -44,6 +45,7 @@
         startDate: "",
         classes: [],
         leave: [],
+        classesDone: "",
       },
     });
 
@@ -62,6 +64,7 @@
             startDate: attendanceData.startDate ? format(new Date(attendanceData.startDate), 'yyyy-MM-dd') : '',
             classes: attendanceData.classes.map((cls) => format(new Date(cls), 'yyyy-MM-dd')),
             leave: attendanceData.leave.map((cls) => format(new Date(cls), 'yyyy-MM-dd')),
+            classesDone: attendanceData.classesDone,
           });
 
           setNumberOfClasses(attendanceData.classes.length);
@@ -104,6 +107,7 @@
           startDate: startDate,
           classes: classes,
           leave: leaveDate,
+          classesDone: data.classesDone
         };
 
         const res = await axios.put(`${AttendanceUrl}/${id}`, payload, {
@@ -193,6 +197,20 @@
               )}
             />
           ))}
+
+          <FormField
+            control={form.control}
+            name="classesDone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="font-semibold">Number of Classes Done</FormLabel>
+                <FormControl>
+                  <Input {...field}/>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </form>
       </Form>
     );

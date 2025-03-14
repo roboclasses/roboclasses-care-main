@@ -95,6 +95,7 @@ const handleTeacher = ()=>{
           <TableHead>Start Date</TableHead>
           <TableHead>Leaves</TableHead>
           <TableHead>Classes</TableHead>
+          <TableHead>Number of Classes Done</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -105,6 +106,7 @@ const handleTeacher = ()=>{
             <TableCell>{items.startDate ? format(items.startDate, "MMM dd, yyyy") : ""}</TableCell>
             <TableCell>{items.leave ? items.leave.map((item)=>format(item, "MMM dd, yyyy")).join(", ") : ""}</TableCell>
             <TableCell>{items.classes ? items.classes.map((date)=> format(date, "MMM dd, yyyy")).join(", ") : ""}</TableCell>
+            <TableCell>{items.classesDone}</TableCell>
             <TableCell className="text-right">
               <Link href={`/teacherView/edit/${items._id}`}>
                 <EditButton name="Edit" type="button" />
