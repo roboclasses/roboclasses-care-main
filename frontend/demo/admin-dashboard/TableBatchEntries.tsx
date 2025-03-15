@@ -31,7 +31,7 @@ const fetcher = (url: string) => axios.get(url, { headers: { Authorization: Cook
 export function TableBatchEntries() {
   const [role, setRole] = useState("");
   const [name, setName] = useState("");
-  const [filter, setFilter] = useState("active")
+  const [batchStatus, setBatchStatus] = useState("active")
 
   const { data, isLoading, isValidating, error, mutate } = useSWR<batchType[]>(NewBatchEntryUrl, fetcher);
 
@@ -55,7 +55,7 @@ export function TableBatchEntries() {
     const filteredBatches = ()=>{
       if(!data) return [];
 
-      if(filter === "active"){
+      if(batchStatus === "active"){
         if(role === "teacher"){
           return data.filter((item)=> item.completed === "No" && item.teacher === name)
         }
@@ -63,7 +63,7 @@ export function TableBatchEntries() {
           return data.filter((item)=>item.completed === "No")
         }
       }
-      else if(filter === "completed"){
+      else if(batchStatus === "completed"){
         if(role === "teacher"){
           return data.filter((item)=>item.completed === "Yes" && item.teacher === name)
         }
@@ -128,7 +128,7 @@ export function TableBatchEntries() {
       <h1 className="text-4xl font-semibold mb-6 text-center">
         Available Batches
       </h1>
-      <CollapsibleDemo onFilterActiveBatches={()=>setFilter("active")} onFilterCompletedBatches={()=>setFilter("completed")}/>
+      <CollapsibleDemo onFilterActiveBatches={()=>setBatchStatus("active")} onFilterCompletedBatches={()=>setBatchStatus("completed")}/>
      </div>
       <Table className="border border-black">
         <TableCaption>A list of batches</TableCaption>
