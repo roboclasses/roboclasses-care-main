@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form";
 import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import MultiDateTimeEntry from "./MultiDateTimeEntry";
 import { useParams } from "next/navigation";
@@ -105,19 +105,15 @@ export function EditNormalClassForm() {
         headers: { Authorization: Cookies.get("token") },
       });
 
-      form.reset();
-      toast({
-        title: "Success✅",
-        description: res.data.message,
-        variant: "default",
-      });
+      const {message} = res.data;
+      toast({ title: "Success✅", description: message, variant: "default" });
+
     } catch (error) {
-      console.error(error);
-      toast({
-        title: "Error",
-        description: "Unable to update normal class",
-        variant: "destructive",
-      });
+      if(error instanceof AxiosError){
+        console.error(error);
+        const {message} = error.response.data;
+        toast({ title: "Error", description: message || "An unknown error has occurred.", variant: "destructive" });
+      }
     }
   }
 

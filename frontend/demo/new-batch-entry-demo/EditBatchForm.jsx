@@ -176,7 +176,7 @@ export function EditBatchForm() {
       
       form.reset();
 
-      const {message} = res.data.message;
+      const {message} = res.data;
       toast({ title: "Success✅", description: message, variant: "default" });
 
     } catch (error) {

@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 
 import { z } from "zod";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useParams } from "next/navigation";
@@ -121,20 +121,17 @@ export function EditDemoClassForm() {
       };
   
       const res = await axios.put(`${DemoClassUrl}/${id}`, updatedData);
-  
       console.log(res.data);
-      toast({
-        title: "Success✅",
-        description: res.data.message,
-        variant: "default",
-      });
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: "Failed",
-        description: "Unable to update Demo Class appointment",
-        variant: "destructive",
-      });
+
+      const {message} = res.data;
+      toast({ title: "Success✅", description: message, variant: "default"});
+      
+    } catch (error:unknown) {
+      if(error instanceof AxiosError){
+        console.error(error);
+        const {message} = error.response?.data;
+        toast({ title: "Failed", description: message || "An unknown error has occurred.", variant: "destructive"});
+      }
     }
   }
   
