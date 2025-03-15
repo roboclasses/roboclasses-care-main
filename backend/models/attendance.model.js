@@ -22,11 +22,7 @@ const attendanceSchema = new mongoose.Schema({
         default:[],
         required:true,
     },
-    classesDone:{
-        type:String,
-        default: "",
-        // required: true,
-    }
+
 })
 
 export const Attendance = mongoose.models.Attendance ?? mongoose.model('Attendance',attendanceSchema)
