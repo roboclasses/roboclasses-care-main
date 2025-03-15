@@ -114,9 +114,10 @@
           headers: { Authorization: Cookies.get("token") }
         });
         console.log(res.data);
-        
 
-        toast({ title: "Success✅", description: res.data.message, variant: "default" });
+        const {message} = res.data;
+        toast({ title: "Success✅", description: message, variant: "default" });
+        
       } catch (error) {
         if (error instanceof AxiosError) {
           console.error(error);

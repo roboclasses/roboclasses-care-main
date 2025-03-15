@@ -20,7 +20,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "@/hooks/use-toast";
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import PhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
@@ -216,20 +216,16 @@ export function MultiDatePickerForm() {
       });
   
       console.log(res.data);
-      // form.reset();
-      toast({
-        title: "Success✅",
-        description: res.data.message,
-        variant: "default",
-      });
+      form.reset();
+
+      const {message} = res.data;
+      toast({ title: "Success✅", description: message, variant: "default" });
     } catch (error) {
+      if(error instanceof AxiosError){
         const {message} = error.response?.data
         console.error(error);
-        toast({
-          title: "Failed ",
-          description: message,
-          variant: "destructive",
-        });      
+        toast({ title: "Failed ", description: message || 'An unknown error has occurred.', variant: "destructive" });  
+      }
     }
   }
 

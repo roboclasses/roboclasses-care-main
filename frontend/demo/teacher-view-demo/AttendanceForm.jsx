@@ -155,8 +155,9 @@ export function AttendanceForm() {
       
       const res = await axios.post(AttendanceUrl ,payload)
       console.log(res.data);
-
-      toast({title:"Success✅", description: res.data.message, variant:"default"})
+      
+      const {message} = res.data;
+      toast({title:"Success✅", description: message, variant:"default"})
 
     } catch (error) {
       if(error instanceof AxiosError){

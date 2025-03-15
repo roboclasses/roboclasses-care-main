@@ -14,7 +14,7 @@ import { NormalClassUrl } from "@/constants";
 import { toast } from "@/hooks/use-toast";
 import { normalClassType } from "@/types/Types";
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import useSWR from "swr";
 import Link from "next/link";
 import {format} from "date-fns"
@@ -68,16 +68,23 @@ handleFetch();
       mutate((data) => data?.filter((item) => item._id !== id));
 
       const {message} = res.data;
-      toast({title: "Success✅", description: message,variant: "default",});
-    } catch (error) {
-      console.log(error);
-      toast({title:"Failed", description:"Unable to delete Normal Class", variant:"destructive"})
+      toast({title: "Success✅", description: message ,variant: "default" });
+
+    } catch (error:unknown) {
+      if(error instanceof AxiosError){
+        console.log(error);
+        const {message} = error.response?.data;
+        toast({title:"Failed", description: message || "An unknown error has occurred.", variant:"destructive"})
+      }
     }
   };
 
   // Handle edge cases
   if (data?.length === 0) return <div>Empty list for Normal Class</div>;
-  if (error) return <div>Failed to load</div>;
+  if (error instanceof AxiosError){
+    const {message} = error.response?.data;
+    return <div>{message || "An unknown error has occurred."}</div>;
+  } 
   if (isLoading) return <div>Loading...</div>;
   if (isValidating) return <div>Refershing data...</div>;
 

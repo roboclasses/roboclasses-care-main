@@ -100,20 +100,15 @@ export function DatePickerForm() {
       console.log(res.data);
       
       form.reset();
-      toast({
-        title: "Success✅",
-        description: "Your appointment has been submitted successfully",
-        variant:"default"
-      });
+
+      const {message} = res.data;
+      toast({ title: "Success✅", description: message, variant:"default" });
+      
     } catch (error:unknown) {
       if(error instanceof AxiosError){
         const {message} = error.response?.data
         console.error(error);
-        toast({
-          title: "Failed",
-          description: message,
-          variant:"destructive"
-        });
+        toast({ title: "Failed", description: message || 'An unknown error has occurred.', variant:"destructive" });
       }
     } 
   }

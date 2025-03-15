@@ -12,7 +12,7 @@ import {
 import { EditButton } from "./EditButton"
 
 import useSWR from "swr"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import React, { useEffect, useState } from "react"
 import Link from "next/link"
 import { toast } from "@/hooks/use-toast"
@@ -66,18 +66,20 @@ const handleTeacher = ()=>{
       const { message } = res.data
       toast({ title: "Success✅", description: message, variant: "default" })
     } catch (error) {
-      console.log(error)
-      toast({
-        title: "Failed",
-        description: "Unable to delete attendance",
-        variant: "destructive",
-      })
+      if(error instanceof AxiosError){
+        console.log(error)
+        const {message} = error.response.data;
+        toast({ title: "Failed", description: message || "An unknown error has occurred.", variant: "destructive" })
+      }
     }
   }
 
   // Handle edge cases
   if (isLoading) return <div>Loading...</div>
-  if (error) return <div>Failed to load</div>
+  if (error instanceof AxiosError){
+    const {message} = error.response.data;
+    return <div>{message || "An unknown error has occurred."}</div>
+  } 
   if (isValidating) return <div>Refreshing...</div>
   if (data?.length === 0) return <div>Empty list for Attendances</div>
 
