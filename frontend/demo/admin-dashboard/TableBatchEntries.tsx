@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Table,
   TableBody,
@@ -9,32 +10,30 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { toast } from "@/hooks/use-toast";
 import { EditButton } from "./EditButton";
+import { CollapsibleDemo } from "./CollapsibleDemo";
+import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
+
+import { toast } from "@/hooks/use-toast";
+import { getUserSession } from "@/lib/session";
 import { batchType } from "@/types/Types";
 import { NewBatchEntryUrl } from "@/constants";
 
+import { useEffect, useState } from "react";
+import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import useSWR from "swr";
-import axios, { AxiosError } from "axios";
 import Link from "next/link";
 import { format } from "date-fns";
-import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
-import { getUserSession } from "@/lib/session";
-import { useEffect, useState } from "react";
 
-const fetcher = (url: string) =>
-  axios
-    .get(url, { headers: { Authorization: Cookies.get("token") } })
-    .then((res) => res.data);
+const fetcher = (url: string) => axios.get(url, { headers: { Authorization: Cookies.get("token") } }).then((res) => res.data);
 
 export function TableBatchEntries() {
   const [role, setRole] = useState("");
   const [name, setName] = useState("");
-  const { data, isLoading, isValidating, error, mutate } = useSWR<batchType[]>(
-    NewBatchEntryUrl,
-    fetcher
-  );
+  const [filter, setFilter] = useState("active")
+
+  const { data, isLoading, isValidating, error, mutate } = useSWR<batchType[]>(NewBatchEntryUrl, fetcher);
 
   // Fetch logged-in teacher session
   useEffect(() => {
@@ -52,15 +51,27 @@ export function TableBatchEntries() {
     handleFetch();
   }, []);
 
-  // Handle role and name based rows filering
-  function handleRoleBasedMapping() {
-    if (role === "teacher") {
-      const filteredData = data?.filter((items) => items.teacher === name);
-      return filteredData;
-    } else if (role === "admin") {
-      return data;
+    // For Filter batches
+    const filteredBatches = ()=>{
+      if(!data) return [];
+
+      if(filter === "active"){
+        if(role === "teacher"){
+          return data.filter((item)=> item.completed === "No" && item.teacher === name)
+        }
+        else if(role === "admin"){
+          return data.filter((item)=>item.completed === "No")
+        }
+      }
+      else if(filter === "completed"){
+        if(role === "teacher"){
+          return data.filter((item)=>item.completed === "Yes" && item.teacher === name)
+        }
+        else if(role === "admin"){
+          return data.filter((Item)=>Item.completed === "Yes")
+        }
+      }
     }
-  }
 
   // Handle delete a batch
   const handleDelete = async (id: string) => {
@@ -110,11 +121,15 @@ export function TableBatchEntries() {
       .join(", ");
   };
 
+
   return (
     <div>
+      <div className="flex justify-between items-center">
       <h1 className="text-4xl font-semibold mb-6 text-center">
         Available Batches
       </h1>
+      <CollapsibleDemo onFilterActiveBatches={()=>setFilter("active")} onFilterCompletedBatches={()=>setFilter("completed")}/>
+     </div>
       <Table className="border border-black">
         <TableCaption>A list of batches</TableCaption>
         <TableHeader>
@@ -134,7 +149,7 @@ export function TableBatchEntries() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {handleRoleBasedMapping()?.map((batch: batchType) => (
+          {filteredBatches()?.map((batch: batchType) => (
             <TableRow key={batch._id}>
               <TableCell className="font-medium">{batch.teacher}</TableCell>
               <TableCell>{batch.batch}</TableCell>
@@ -145,7 +160,6 @@ export function TableBatchEntries() {
                 {batch.startDate ? format(batch.startDate, "MMM dd, yyyy") : ""}
               </TableCell>
               <TableCell className="text-right">
-                {" "}
                 {handleTime(batch.day, batch.time)}{" "}
               </TableCell>
               <TableCell className="text-right">{batch.timeZone}</TableCell>
@@ -176,7 +190,7 @@ export function TableBatchEntries() {
         <TableFooter>
           <TableRow>
             <TableCell colSpan={10}>Total Rows</TableCell>
-            <TableCell className="text-right">{data?.length}</TableCell>
+            <TableCell className="text-right">{filteredBatches()?.length}</TableCell>
           </TableRow>
         </TableFooter>
       </Table>

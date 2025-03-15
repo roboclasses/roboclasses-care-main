@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { ChevronsUpDown } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -9,19 +10,23 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import Link from "next/link";
 
-export function CollapsibleDemo() {
+interface filterTypes{
+  onFilterActiveBatches: ()=> void,
+  onFilterCompletedBatches: ()=>void,
+}
+
+export function CollapsibleDemo({onFilterActiveBatches, onFilterCompletedBatches}:filterTypes) {
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
     <Collapsible
       open={isOpen}
       onOpenChange={setIsOpen}
-      className="w-[350px] space-y-2"
+      className="p-2"
     >
       <div className="flex items-center justify-between space-x-4 px-4 ">
-        <h4 className="text-4xl font-semibold">Manage Attendances</h4>
+        <h4 className="text-xl font-semibold">Filter Views</h4>
         <CollapsibleTrigger asChild>
           <Button variant="ghost" size="sm" className="w-9 p-0">
             <ChevronsUpDown className="h-4 w-4" />
@@ -30,24 +35,21 @@ export function CollapsibleDemo() {
         </CollapsibleTrigger>
       </div>
       <Link
-        href="/newBatchEntry"
-        className="rounded-md border flex items-center p-2 h-10 font-bold text-sm hover:underline"
+      href="#"
+      onClick={onFilterActiveBatches}
+      className="rounded-md border flex items-center p-2 h-10 font-bold text-sm hover:underline"
       >
-        Create a Batch
+        Active Batches
       </Link>
       <CollapsibleContent className="space-y-2">
         <Link
-          href="/teacherView"
+          href="#"
+          onClick={onFilterCompletedBatches}
           className="rounded-md border flex items-center p-2 h-10 font-bold text-sm hover:underline"
         >
-          Teacher View
+          Completed Batches
         </Link>
-        <Link
-          href="/teacherView"
-          className="rounded-md border flex items-center p-2 h-10 font-bold text-sm hover:underline"
-        >
-          Take Attendance
-        </Link>
+
       </CollapsibleContent>
     </Collapsible>
   );
