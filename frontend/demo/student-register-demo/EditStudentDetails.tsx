@@ -1,4 +1,5 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -8,19 +9,20 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
+import { StudentRegUrl } from "@/constants";
 
 import { z } from "zod";
-import axios, { AxiosError } from "axios";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "@/hooks/use-toast";
+
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
-import { StudentRegUrl } from "@/constants";
-import PhoneInput from "react-phone-input-2";
+import { useEffect} from "react";
 import 'react-phone-input-2/lib/style.css'
+import PhoneInput from "react-phone-input-2";
+import axios, { AxiosError } from "axios";
+import Cookies from "js-cookie";
 
 
 const FormSchema = z.object({
@@ -33,37 +35,9 @@ const FormSchema = z.object({
     courses: z.string().optional(),
   });
 
+  
 export function EditStudentDetails() {
   const {id}  = useParams();
-  const [studentName, setStudentName] = useState("");
-  const [parentName, setParentName] = useState("");
-  const [destination, setDestination] = useState("");
-  const [email, setEmail] = useState("");
-  const [address, setAddress] = useState("");
-  const [grade, setGrade] = useState("");
-  const [courses, setCourses] = useState("");
-
-
-  // Handle fetch batches
-  useEffect(() => {
-    const handleFetch = async () => {
-      try {
-        const res = await axios.get(`${StudentRegUrl}/${id}`, { headers: { Authorization: Cookies.get("token") }});
-        console.log(res.data);
-        setStudentName(res.data.studentName)
-        setParentName(res.data.parentName)
-        setDestination(res.data.destination)
-        setEmail(res.data.email)
-        setAddress(res.data.address)
-        setGrade(res.data.grade)
-        setCourses(res.data.courses)
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    handleFetch();
-  }, [id]);
-
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -78,16 +52,39 @@ export function EditStudentDetails() {
     },
   });
 
+  // Handle fetch batches
+  useEffect(() => {
+    const handleFetch = async () => {
+      try {
+        const res = await axios.get(`${StudentRegUrl}/${id}`, { headers: { Authorization: Cookies.get("token") }});
+        console.log(res.data);
+        form.reset({
+          studentName: res.data.studentName,
+          parentName: res.data.parentName,
+          destination: res.data.destination,
+          email: res.data.email,
+          address: res.data.address,
+          grade: res.data.grade,
+          courses: res.data.courses,
+        })
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    handleFetch();
+  }, [form, id]);
+
+
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
       const updatedData = {
-        studentName: data.studentName || studentName,
-        parentName: data.parentName || parentName,
-        destination: data.destination || destination,
-        email: data.email || email,
-        address: data.address || address,
-        grade: data.grade || grade,
-        courses: data.courses || courses,
+        studentName: data.studentName,
+        parentName: data.parentName,
+        destination: data.destination,
+        email: data.email,
+        address: data.address,
+        grade: data.grade,
+        courses: data.courses,
       };
       const res = await axios.put(`${StudentRegUrl}/${id}`, updatedData);
       console.log(res.data);
@@ -110,7 +107,7 @@ export function EditStudentDetails() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
-
+        {/* Student Full Name */}
         <FormField
           control={form.control}
           name="studentName"
@@ -119,18 +116,14 @@ export function EditStudentDetails() {
               <FormLabel className="font-semibold">Student Name</FormLabel>
               <Input  
                 {...field}
-                required 
-                value={studentName} 
-                onChange={(e)=>{
-                setStudentName(e.target.value)
-                field.onChange(e)
-                 }} 
+                required  
               />
               <FormMessage />
             </FormItem>
           )}
         />
 
+        {/* Parent Full Name */}
         <FormField
           control={form.control}
           name="parentName"
@@ -140,11 +133,7 @@ export function EditStudentDetails() {
               <FormControl>
                 <Input
                   required
-                  {...field}
-                  value={parentName} 
-                  onChange={(e)=>{
-                  setParentName(e.target.value)
-                  field.onChange(e) }} 
+                  {...field}                  
                 />
               </FormControl>
               <FormMessage />
@@ -152,6 +141,7 @@ export function EditStudentDetails() {
           )}
         />
 
+        {/* Student/Parent Mobile Number */}
         <FormField
           control={form.control}
           name="destination"
@@ -163,12 +153,6 @@ export function EditStudentDetails() {
                   country={"ae"}
                   placeholder="Parents Contact/Whatsapp number"   
                   {...field}  
-                  value={destination}
-                  onChange={(value) => {
-                    setDestination(value);
-                    field.onChange({ target: {value}});
-                  }}
-                  specialLabel= ""
                   inputStyle={{width: "440px"}}
                   inputProps={{ ref: field.ref, required: true }}
                 />
@@ -178,6 +162,7 @@ export function EditStudentDetails() {
           )}
         />
 
+        {/* Email Address */}
         <FormField
           control={form.control}
           name="email"
@@ -187,11 +172,7 @@ export function EditStudentDetails() {
               <FormControl>
                 <Input
                   required
-                  {...field}
-                  value={email} 
-                  onChange={(e)=>{
-                  setEmail(e.target.value)
-                  field.onChange(e) }} 
+                  {...field}                
                 />
               </FormControl>
               <FormMessage />
@@ -199,6 +180,7 @@ export function EditStudentDetails() {
           )}
         />
 
+        {/* Location */}
         <FormField
           control={form.control}
           name="address"
@@ -208,12 +190,7 @@ export function EditStudentDetails() {
               <FormControl>
                 <Input
                   required
-                  {...field}
-                  value={address} 
-                  onChange={(e) => {
-                    setAddress(e.target.value);
-                    field.onChange(e);
-                  }}
+                  {...field}                 
                 />
               </FormControl>
               <FormMessage />
@@ -221,6 +198,7 @@ export function EditStudentDetails() {
           )}
         />
 
+        {/* Grade */}
         <FormField
           control={form.control}
           name="grade"
@@ -229,17 +207,14 @@ export function EditStudentDetails() {
               <FormLabel className="font-semibold">Edit Grade</FormLabel>
               <Input  
                 {...field}
-                required 
-                value={grade} 
-                onChange={(e)=>{
-                setGrade(e.target.value)
-                field.onChange(e) }} 
+                required                
               />
               <FormMessage />
             </FormItem>
           )}
         />
 
+        {/* Courses */}
         <FormField
           control={form.control}
           name="courses"
@@ -249,16 +224,11 @@ export function EditStudentDetails() {
               <Input  
                 {...field}
                 required 
-                disabled
-                value={courses} 
-                onChange={(e)=>{
-                setCourses(e.target.value)
-                field.onChange(e) }} 
+                disabled              
               />
               <FormMessage />
             </FormItem>
           )}
-
         />
          
         <Button type="submit">Update</Button>
