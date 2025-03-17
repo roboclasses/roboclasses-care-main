@@ -11,7 +11,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { EditButton } from "./EditButton";
-import { CollapsibleDemo } from "./CollapsibleDemo";
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 
 import { toast } from "@/hooks/use-toast";
@@ -25,12 +24,14 @@ import Cookies from "js-cookie";
 import useSWR from "swr";
 import Link from "next/link";
 import { format } from "date-fns";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const fetcher = (url: string) => axios.get(url, { headers: { Authorization: Cookies.get("token") } }).then((res) => res.data);
 
 export function TableBatchEntries() {
   const [role, setRole] = useState("");
   const [name, setName] = useState("");
+
   const [batchStatus, setBatchStatus] = useState("active")
 
   const { data, isLoading, isValidating, error, mutate } = useSWR<batchType[]>(NewBatchEntryUrl, fetcher);
@@ -128,7 +129,17 @@ export function TableBatchEntries() {
       <h1 className="text-4xl font-semibold mb-6 text-center">
         Available Batches
       </h1>
-      <CollapsibleDemo onFilterActiveBatches={()=>setBatchStatus("active")} onFilterCompletedBatches={()=>setBatchStatus("completed")}/>
+      <div>
+    <Select onValueChange={(value)=>setBatchStatus(value)}>
+  <SelectTrigger className="w-[180px]">
+    <SelectValue placeholder="Filter Batches"/>
+  </SelectTrigger>
+  <SelectContent defaultValue={"active"}>
+    <SelectItem value="active">Active Batches</SelectItem>
+    <SelectItem value="completed">Completed batches</SelectItem>
+  </SelectContent>
+</Select>
+      </div>
      </div>
       <Table className="border border-black">
         <TableCaption>A list of batches</TableCaption>
