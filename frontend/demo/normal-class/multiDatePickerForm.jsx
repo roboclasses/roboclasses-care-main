@@ -322,7 +322,7 @@ export function MultiDatePickerForm() {
                   country={"ae"}
                   {...field}  
                   disabled       
-                  inputStyle={{ width: "540px" }}
+                  inputStyle={{ width: "336px" }}
                   inputProps={{ ref: field.ref, required: true }}
                 />
               </FormControl>
@@ -414,7 +414,7 @@ export function MultiDatePickerForm() {
           )}
         />
 
-<FormField
+        <FormField
           control={form.control}
           name="numberOfClasses"
           render={({ field }) => (
