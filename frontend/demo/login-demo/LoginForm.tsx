@@ -87,7 +87,7 @@ export function LoginForm() {
                       autoComplete="email"
                       type="email"
                       placeholder="Enter your email address"
-                      className="h-12"
+                      className="lg:h-12"
                     />
                   </FormControl>
                   <FormMessage />
@@ -113,8 +113,8 @@ export function LoginForm() {
                         required
                         autoComplete="password"
                         type={showPassword ? "text" : "password"}
-                        placeholder="Please confirm your password"
-                        className="h-12 pr-10"
+                        placeholder="Confirm your password"
+                        className="lg:h-12 pr-10"
                       />
                       <Button
                         type="button"

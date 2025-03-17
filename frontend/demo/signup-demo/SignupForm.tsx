@@ -93,7 +93,7 @@ export function SignupForm() {
                       autoComplete="name"
                       type="text"
                       placeholder="James Bond"
-                      className="h-12"
+                      className="lg:h-12"
                     />
                   </FormControl>
                   <FormMessage/>
@@ -115,7 +115,7 @@ export function SignupForm() {
                     defaultValue={field.value}
                     required
                   >
-                    <FormControl className="h-12">
+                    <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select your role" id="roles"/>
                       </SelectTrigger>
@@ -149,7 +149,7 @@ export function SignupForm() {
                       autoComplete="email"
                       type="email"
                       placeholder="bond@gmail.com"
-                      className="h-12"
+                      className="lg:h-12"
                     />
                   </FormControl>
                   <FormMessage/>
@@ -175,7 +175,7 @@ export function SignupForm() {
                       autoComplete="password"
                       type="password"
                       placeholder="Enter a strong password"
-                      className="h-12"
+                      className="lg:h-12"
                     />
                   </FormControl>
                   <FormMessage/>
