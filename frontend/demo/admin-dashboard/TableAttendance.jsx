@@ -108,7 +108,7 @@ const handleTeacher = ()=>{
             <TableCell>{items.classes ? items.classes.map((date)=> format(date, "MMM dd, yyyy")).join(", ") : ""}</TableCell>
             <TableCell>{items.classes.length}</TableCell>
             <TableCell className="text-right">
-              <Link href={`/teacherView/edit/${items._id}`}>
+              <Link href={`/manageAttendance/edit/${items._id}`}>
                 <EditButton name="Edit" type="button" />
               </Link>
             </TableCell>
