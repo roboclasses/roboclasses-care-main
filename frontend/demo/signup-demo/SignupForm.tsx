@@ -73,7 +73,7 @@ export function SignupForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full px-20">
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="grid items-center gap-4">
 
           {/* Full Name */}
