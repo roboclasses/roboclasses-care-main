@@ -7,7 +7,7 @@ import { LOGO_IMG, PUBLIC_WALLPAPER } from "@/constants/images";
 
 const page = () => {
   return (
-    <div className="grid lg:grid-cols-2 grid-cols-1">  
+    <div className="grid lg:grid-cols-2 grid-cols-1 h-full">  
       <Image
         src={PUBLIC_WALLPAPER}
         width={1200}
