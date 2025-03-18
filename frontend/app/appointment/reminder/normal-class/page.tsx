@@ -11,7 +11,7 @@ const page = () => {
           src={PRIVATE_WALLPAPER}
           alt="wallpaper"
           fill
-          className="object-cover lg:min-h-screen"
+          className="object-cover min-h-screen"
           priority
         />
         <div className="relative z-10 flex items-center justify-center h-full backdrop-blur-sm">
