@@ -73,7 +73,7 @@ export function SignupForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="lg:w-full lg:px-20">
         <div className="grid items-center gap-4">
 
           {/* Full Name */}
@@ -93,7 +93,7 @@ export function SignupForm() {
                       autoComplete="name"
                       type="text"
                       placeholder="James Bond"
-                      className="lg:h-12"
+                      className="lg:h-12 bg-lime-100"
                     />
                   </FormControl>
                   <FormMessage/>
@@ -109,7 +109,7 @@ export function SignupForm() {
               control={form.control}
               name="role"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="bg-lime-100">
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -149,7 +149,7 @@ export function SignupForm() {
                       autoComplete="email"
                       type="email"
                       placeholder="bond@gmail.com"
-                      className="lg:h-12"
+                      className="lg:h-12 bg-lime-100"
                     />
                   </FormControl>
                   <FormMessage/>
@@ -175,7 +175,7 @@ export function SignupForm() {
                       autoComplete="password"
                       type="password"
                       placeholder="Enter a strong password"
-                      className="lg:h-12"
+                      className="lg:h-12 bg-lime-100"
                     />
                   </FormControl>
                   <FormMessage/>
