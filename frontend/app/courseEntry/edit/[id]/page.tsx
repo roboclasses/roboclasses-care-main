@@ -4,22 +4,25 @@ import { EditCourseEntryForm } from "@/demo/new-course-entry-demo/EditCourseEntr
 import Image from "next/image";
 import React from "react";
 
-
 const page = () => {
   return (
-      <div className="grid grid-cols-2">
-        <Image
-          width={1200}
-          height={1200}
-          src={PRIVATE_WALLPAPER}
-          alt="wallpaper"
-          className="min-h-screen object-cover"
-        />
-        <div className="w-[600px] flex flex-col gap-5 p-20">
-          <p className="text-4xl font-bold">Edit Course</p>
-          <EditCourseEntryForm/>
+    <div className="relative">
+      <Image
+        src={PRIVATE_WALLPAPER}
+        alt="wallpaper"
+        className="min-h-screen object-cover"
+        fill
+        priority
+      />
+      <div className="relative z-10 flex items-center justify-center h-full backdrop-blur-sm">
+        <div className="lg:w-full lg:max-w-[600px] w-[400px] lg:mt-5 mt-64 bg-background/95 p-8 m-4 rounded-xl shadow-lg">
+          <p className="lg:text-4xl text-xl font-bold mb-6 text-center">
+            Edit Course
+          </p>
+          <EditCourseEntryForm />
         </div>
       </div>
+    </div>
   );
 };
 
