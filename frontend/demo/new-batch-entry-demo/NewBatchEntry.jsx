@@ -312,7 +312,7 @@ useEffect(()=>{
                   country={"ae"}
                   {...field}  
                   disabled       
-                  inputStyle={{ width: "440px" }}
+                  inputStyle={{ width: "336px" }}
                   inputProps={{ ref: field.ref, required: true }}
                 />
               </FormControl>
