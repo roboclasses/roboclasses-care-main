@@ -10,7 +10,7 @@ const page = () => {
             <Image
                 src={PRIVATE_WALLPAPER}
                 alt="wallpaper"
-                className="object-cover lg:min-h-screen"
+                className="object-cover min-h-screen"
                 fill
                 priority
             />
