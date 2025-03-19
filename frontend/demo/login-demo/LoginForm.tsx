@@ -39,6 +39,9 @@ export function LoginForm() {
     },
   });
 
+  // Handle login status
+  const {isSubmitting, isSubmitSuccessful} = form.formState;
+
   // handle user login
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     try {
@@ -134,7 +137,7 @@ export function LoginForm() {
             ></FormField>
           </div>
 
-          <SubmitButton name="Login" type="submit" />
+          <SubmitButton name={isSubmitting ? 'Pending...' : isSubmitSuccessful ? 'Logged-in' : 'Login'} type="submit" disabled={isSubmitting}/>
         </div>
       </form>
     </Form>

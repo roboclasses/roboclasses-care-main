@@ -47,6 +47,9 @@ export function SignupForm() {
     },
   });
 
+  // Handle form status
+  const {isSubmitting, isSubmitSuccessful} = form.formState;
+
   // handle user signup
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     try {
@@ -184,7 +187,7 @@ export function SignupForm() {
             ></FormField>
           </div>
 
-          <SubmitButton name="Signup" type="submit" />
+          <SubmitButton name={isSubmitting ? 'Pending...' : isSubmitSuccessful ? 'Signed-up' : 'Signup'} type="submit" disabled = {isSubmitting}/>
         </div>
       </form>
     </Form>
