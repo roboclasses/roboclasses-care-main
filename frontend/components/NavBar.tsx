@@ -19,23 +19,23 @@ const NavBar = () => {
     <div className="flex items-center gap-2 px-3">
       <SidebarTrigger />
       <Separator orientation="vertical" className="mr-2 h-4" />
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem className="hidden md:block">
+      <Breadcrumb >
+        <BreadcrumbList className='lg:text-base text-xs font-sans'>
+          <BreadcrumbItem className="">
             <BreadcrumbLink href="/">
              {'Dashboard'}
             </BreadcrumbLink>
           </BreadcrumbItem>
-          <BreadcrumbSeparator className="hidden md:block" />  
+          <BreadcrumbSeparator className="" />  
           {
             segments.map((segment, index)=>(
             <React.Fragment key={index}>
-                <BreadcrumbItem className="hidden md:block">
+                <BreadcrumbItem className="">
                 <BreadcrumbLink href={pathname}>
                  {segment}
                 </BreadcrumbLink>
               </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" /> 
+              <BreadcrumbSeparator className="" /> 
             </React.Fragment> 
             ))
           }       
