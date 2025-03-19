@@ -1,13 +1,14 @@
 'use client'
+
+import React from 'react'
+
 import { Button } from '@/components/ui/button'
 import { btnType } from '@/types/Types'
-import React from 'react'
-import { useFormStatus } from 'react-dom'
 
-const SubmitButton = ({name, type, onClick}:btnType) => {
-    const {pending} = useFormStatus();
+
+const SubmitButton = ({name, type, onClick, disabled}:btnType) => {
   return (
-    <Button type={type} onClick={onClick} disabled={pending}>
+    <Button type={type} onClick={onClick} disabled={disabled}>
       {name}
     </Button>
   )

@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+
 import {
   Form,
   FormControl,
@@ -26,6 +26,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import 'react-phone-input-2/lib/style.css'
 import PhoneInput from "react-phone-input-2";
 import { timezone } from "@/data/dataStorage";
+import SubmitButton from "../button-demo/SubmitButton";
 
 const items = [
   {
@@ -104,6 +105,9 @@ export function EditDemoClassForm() {
       items: ["1hour"],
     },
   });
+
+  // Handle form status
+  const { isSubmitting } = form.formState;
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
@@ -394,7 +398,7 @@ export function EditDemoClassForm() {
           )}
         />
 
-        <Button type="submit">Book</Button>
+        <SubmitButton name={isSubmitting ? 'Updating...' : 'Upadte'} type="submit" disabled={isSubmitting}/>
       </form>
     </Form>
   );

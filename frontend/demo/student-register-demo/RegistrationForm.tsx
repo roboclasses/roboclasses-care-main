@@ -3,7 +3,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -22,6 +21,7 @@ import PhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
 import { Label } from "@/components/ui/label";
 import { countries } from "@/data/dataStorage";
+import SubmitButton from "../button-demo/SubmitButton";
 
 
 const FormSchema = z.object({
@@ -50,6 +50,9 @@ export function RegistrationForm() {
       grade:"",
     }
   });
+
+  // Handle form status 
+  const { isSubmitting }  = form.formState;
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
@@ -247,7 +250,7 @@ export function RegistrationForm() {
           )}
         />
 
-        <Button type="submit">Register</Button>
+        <SubmitButton name={isSubmitting ? 'Submitting...' : 'Register'} type="submit" disabled={isSubmitting}/>
       </form>
     </Form>
   );

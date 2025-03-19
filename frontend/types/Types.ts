@@ -1,14 +1,8 @@
 export type btnType = {
   name: string;
   type: "submit" | "button" | "reset";
+  disabled?: boolean;
   onClick?: () => void;
-  varient?:
-    | "default"
-    | "destructive"
-    | "outline"
-    | "secondary"
-    | "ghost"
-    | "link";
   className?: string;
 };
 

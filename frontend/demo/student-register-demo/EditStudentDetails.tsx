@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -23,6 +22,7 @@ import 'react-phone-input-2/lib/style.css'
 import PhoneInput from "react-phone-input-2";
 import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
+import SubmitButton from "../button-demo/SubmitButton";
 
 
 const FormSchema = z.object({
@@ -73,6 +73,9 @@ export function EditStudentDetails() {
     };
     handleFetch();
   }, [form, id]);
+
+  // Handle form status
+  const {isSubmitting} = form.formState;
 
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -231,7 +234,7 @@ export function EditStudentDetails() {
           )}
         />
          
-        <Button type="submit">Update</Button>
+        <SubmitButton name={isSubmitting ? 'Updating...' : 'Update'} type="submit" disabled={isSubmitting} />
       </form>
     </Form>
   );

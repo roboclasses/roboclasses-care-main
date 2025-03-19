@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -32,6 +31,7 @@ import 'react-phone-input-2/lib/style.css'
 import PhoneInput from "react-phone-input-2";
 import StudentSearch from "../normal-class/StudentSearch";
 import { timezone, userTimeZone } from "@/data/dataStorage";
+import SubmitButton from "../button-demo/SubmitButton";
 
 // Define form schema
 const FormSchema = z.object({
@@ -146,6 +146,9 @@ export function EditBatchForm() {
     };
     handleFetch();
   }, [form, studentName]);
+
+  // Handle form status
+  const {isSubmitting} = form.formState;
 
   // Submit handler
   async function onSubmit(data) {
@@ -428,7 +431,7 @@ export function EditBatchForm() {
           )}
         />
 
-        <Button type="submit">Submit</Button>
+        <SubmitButton name={isSubmitting ? 'Updating...' : 'Update'} type="submit" disabled={isSubmitting}/>
       </form>
     </Form>
   );

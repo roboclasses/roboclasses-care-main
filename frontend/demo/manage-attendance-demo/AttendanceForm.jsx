@@ -31,6 +31,7 @@ import { getUserSession } from "@/lib/session";
 import { usePathname } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import { handleNumber } from "@/lib/utils";
+import SubmitButton from "../button-demo/SubmitButton";
 
 
 const FormSchema = z.object({
@@ -140,6 +141,9 @@ export function AttendanceForm() {
       }
       };
 
+    // Handle form status
+    const { isSubmitting } = form.formState;
+
 
   async function onSubmit(data) {
     try {
@@ -196,11 +200,8 @@ export function AttendanceForm() {
           )}
         />
         <div className="flex justify-between">
-          <div className="flex items-center gap-2">
-          <Button type="button" disabled>Add Row</Button>
-          <Button type="button" onClick={handleAddClass} disabled={handleNumber(numberOfClasses) >= 60 }>Add Class</Button>
-          </div>
-          <Button type="submit">Submit</Button>
+          <Button type="button" onClick={handleAddClass} disabled={handleNumber(numberOfClasses) >= 60 } style={{background : "maroon"}}>Add Class</Button>
+          <SubmitButton name={isSubmitting ? 'Submitting...' : 'Submit'} type="submit" disabled={isSubmitting}/>
         </div>
 
         {role === "teacher" ? (<FormField

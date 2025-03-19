@@ -23,6 +23,7 @@
   import { Label } from "@/components/ui/label";
   import { handleNumber } from "@/lib/utils";
   import { useParams } from "next/navigation";
+import SubmitButton from "../button-demo/SubmitButton";
 
   // Make all fields optional in the Zod schema
   const FormSchema = z.object({
@@ -95,6 +96,9 @@
       }
     }
 
+    // Handle form status
+    const {isSubmitting} = form.formState;
+
     // Handle form submission
     async function onSubmit(data) {
       try {
@@ -145,10 +149,10 @@
           />
           <div className="flex justify-between">
             <div className="flex items-center gap-2">
-              <Button type="button" onClick={handleAddClass} disabled={handleNumber(numberOfClasses) >= 60}>Add Classes</Button>
-              <Button type="button" onClick={handleAddLeave} disabled={numberOfLeaves >= 5}>Add Leaves</Button>
+              <Button type="button" onClick={handleAddClass} disabled={handleNumber(numberOfClasses) >= 60} style={{background : "maroon"}}>Add Classes</Button>
+              <Button type="button" onClick={handleAddLeave} disabled={numberOfLeaves >= 5} style={{background : "gray"}}>Add Leaves</Button>
             </div>
-            <Button type="submit">Submit</Button>
+            <SubmitButton name={isSubmitting ? 'Updating...' : 'Update'} type="submit" disabled={isSubmitting}/>
           </div>
 
           <FormField
