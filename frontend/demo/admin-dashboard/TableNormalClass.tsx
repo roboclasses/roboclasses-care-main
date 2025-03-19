@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { EditButton } from "./EditButton";
+import { EditButton } from "../button-demo/EditButton";
 import { NormalClassUrl } from "@/constants";
 import { toast } from "@/hooks/use-toast";
 import { normalClassType } from "@/types/Types";

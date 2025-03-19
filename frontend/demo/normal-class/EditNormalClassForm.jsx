@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -22,6 +21,7 @@ import { useEffect, useState } from "react";
 import { NormalClassUrl } from "@/constants";
 import 'react-phone-input-2/lib/style.css'
 import PhoneInput from "react-phone-input-2";
+import SubmitButton from "../button-demo/SubmitButton";
 
 // Define form schema
 const FormSchema = z.object({
@@ -87,6 +87,9 @@ export function EditNormalClassForm() {
     form.setValue("dateTimeEntries", entries); // Update form value
   };
 
+  // Handle form status
+  const {isSubmitting} = form.formState;
+
   // Submit handler
   async function onSubmit(data) {
     try {
@@ -142,23 +145,23 @@ export function EditNormalClassForm() {
 
         {/* Phone Number */}
         <FormField
-   control={form.control}
-   name="destination"
-   render={({ field }) => (
-     <FormItem>
-       <FormLabel className="font-semibold">Contact Details</FormLabel>
-       <FormControl>
-       <PhoneInput
-           country={"ae"}
-           {...field}  
-           inputStyle={{ width: "336px" }}
-           inputProps={{ ref: field.ref, required: true }}
-         />
-       </FormControl>
-       <FormMessage />
-     </FormItem>
-   )}
- />
+          control={form.control}
+          name="destination"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="font-semibold">Contact Details</FormLabel>
+              <FormControl>
+                <PhoneInput
+                  country={"ae"}
+                  {...field}  
+                  inputStyle={{ width: "336px" }}
+                  inputProps={{ ref: field.ref, required: true }}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+         )}
+        />
 
         {/* Batch Name */}
         <FormField
@@ -190,7 +193,7 @@ export function EditNormalClassForm() {
           )}
         />
 
-        <Button type="submit">Submit</Button>
+        <SubmitButton name={isSubmitting ? 'Updating...' : 'Update'} type="submit" disabled={isSubmitting}/>
       </form>
     </Form>
   );

@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Form,
@@ -26,6 +25,7 @@ import PhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
 import { useEffect, useState } from "react";
 import { weekDays } from "@/data/dataStorage";
+import SubmitButton from "../button-demo/SubmitButton";
 
 
 // For mapping time value to send reminder checkbox
@@ -115,7 +115,7 @@ export function MultiDatePickerForm() {
     defaultValues: {
       teacher: "",
       userName:"",
-      destination:"",
+      destination:"+971",
       email:"",
       batch: "",
       items: ["1hour"],
@@ -200,6 +200,9 @@ export function MultiDatePickerForm() {
     }
 
   },[batchName, form])
+
+  // Handle form status
+  const {isSubmitting} = form.formState;
 
   
   async function onSubmit(data) {
@@ -484,7 +487,7 @@ export function MultiDatePickerForm() {
           )}
         />
 
-        <Button type="submit">Book</Button>
+        <SubmitButton name={isSubmitting ? 'Booking...' : 'Book'} type="submit" disabled={isSubmitting}/>
       </form>
     </Form>
   );

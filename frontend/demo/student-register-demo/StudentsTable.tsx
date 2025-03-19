@@ -16,7 +16,7 @@ import Link from "next/link";
 import { studentType } from "@/types/Types";
 import { StudentRegUrl } from "@/constants";
 import { toast } from "@/hooks/use-toast";
-import { EditButton } from "../admin-dashboard/EditButton";
+import { EditButton } from "../button-demo/EditButton";
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);

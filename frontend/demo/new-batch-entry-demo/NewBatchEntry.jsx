@@ -1,8 +1,8 @@
 "use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -27,6 +27,7 @@ import MultiDayTimeEntry from "./MultiDayTimeEntry";
 import 'react-phone-input-2/lib/style.css'
 import PhoneInput from "react-phone-input-2";
 import StudentSearch from "../normal-class/StudentSearch";
+import SubmitButton from "../button-demo/SubmitButton";
 
 
 
@@ -138,7 +139,7 @@ export function NewBatchEntryForm() {
   },[form, studentName])
 
   // Handle populate numberOfClasses from batch
-useEffect(()=>{
+  useEffect(()=>{
   const handleFetch = async()=>{
     try {
       const res  = await axios.get(`${CoursesUrl}?name=${courseName}`,{headers: { Authorization: Cookies.get("token") }})
@@ -160,7 +161,10 @@ useEffect(()=>{
   if(courseName){
     handleFetch();
   }
-},[courseName, form])
+  },[courseName, form])
+
+  // Handle form status
+  const { isSubmitting } = form.formState;
 
   async function onSubmit(data) {  
     try {
@@ -398,7 +402,7 @@ useEffect(()=>{
          />
 
 
-        <Button type="submit">Submit</Button>
+        <SubmitButton name={isSubmitting ? 'Creating...' : 'Create'} type="submit" disabled={isSubmitting}/>
       </form>
     </Form>
   );

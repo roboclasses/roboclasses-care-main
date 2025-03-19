@@ -3,7 +3,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -26,6 +25,7 @@ import { getUserSession } from "@/lib/session";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { teachers, timezone, userTimeZone } from "@/data/dataStorage";
 import PhoneInput from "react-phone-input-2";
+import SubmitButton from "../button-demo/SubmitButton";
 
 // for mapping checkbox value and label
 const items = [
@@ -79,6 +79,9 @@ export function DatePickerForm() {
       items: ["1hour"],
     },
   });
+
+  // Handle form status
+  const {isSubmitting} = form.formState; 
 
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -177,7 +180,7 @@ export function DatePickerForm() {
         />
 
         <FormField
-            control={form.control}
+          control={form.control}
               name="teacher"
               render={({ field }) => (
                 <FormItem>
@@ -201,7 +204,7 @@ export function DatePickerForm() {
                     </SelectContent>
                   </Select>
                 </FormItem>
-            )}
+          )}
         />
         
         <FormField
@@ -323,7 +326,7 @@ export function DatePickerForm() {
           )}
         />
 
-        <Button type="submit">Book</Button>
+        <SubmitButton name={isSubmitting ? 'Booking...' : 'Book'} type="submit" disabled={isSubmitting}/>
       </form>
     </Form>
   );

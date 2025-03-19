@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { EditButton } from "./EditButton"
+import { EditButton } from "../button-demo/EditButton"
 
 import useSWR from "swr"
 import axios, { AxiosError } from "axios"

@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -18,6 +17,7 @@ import { z } from "zod";
 import axios, { AxiosError } from "axios";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import SubmitButton from "../button-demo/SubmitButton";
 
 
 const FormSchema = z.object({
@@ -49,6 +49,9 @@ export function EditCourseEntryForm() {
     resolver: zodResolver(FormSchema),
     defaultValues: { course: "", numberOfClasses:"", }
   });
+
+    // Handle form status
+    const {isSubmitting} = form.formState;
 
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -125,7 +128,7 @@ export function EditCourseEntryForm() {
           )}
         />
 
-        <Button type="submit">Update</Button>
+        <SubmitButton name={isSubmitting ? 'Updating...' : 'Update'} type="submit" disabled={isSubmitting}/>
       </form>
     </Form>
   );

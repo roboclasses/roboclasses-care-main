@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { toast } from "@/hooks/use-toast";
-import { EditButton } from "./EditButton";
+import { EditButton } from "../button-demo/EditButton";
 import { courseType } from "@/types/Types";
 import { CoursesUrl } from "@/constants";
 
