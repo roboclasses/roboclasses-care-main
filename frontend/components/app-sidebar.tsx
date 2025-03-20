@@ -174,8 +174,8 @@ useEffect(()=>{
         isActive: false,
       },
       {
-        title: "Teachers View",
-        url: "/teacherView",
+        title: "Manage Attendance",
+        url: "/manageAttendance",
         icon: View,
       },
       {
