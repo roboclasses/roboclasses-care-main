@@ -96,7 +96,7 @@ export function SignupForm() {
                       autoComplete="name"
                       type="text"
                       placeholder="James Bond"
-                      className="lg:h-12 bg-lime-100"
+                      className="lg:h-12 "
                     />
                   </FormControl>
                   <FormMessage/>
@@ -112,7 +112,7 @@ export function SignupForm() {
               control={form.control}
               name="role"
               render={({ field }) => (
-                <FormItem className="bg-lime-100">
+                <FormItem className="">
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -152,7 +152,7 @@ export function SignupForm() {
                       autoComplete="email"
                       type="email"
                       placeholder="bond@gmail.com"
-                      className="lg:h-12 bg-lime-100"
+                      className="lg:h-12 "
                     />
                   </FormControl>
                   <FormMessage/>
@@ -178,7 +178,7 @@ export function SignupForm() {
                       autoComplete="password"
                       type="password"
                       placeholder="Enter a strong password"
-                      className="lg:h-12 bg-lime-100"
+                      className="lg:h-12 "
                     />
                   </FormControl>
                   <FormMessage/>
