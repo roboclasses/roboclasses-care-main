@@ -55,3 +55,59 @@ export const loginController = async(req, res)=>{
         return res.status(500).json({success:false, message: "Internal server error."}) 
     }
 }
+
+export const getUsersController = async(req,res)=>{
+    try {
+        const data = await User.find();
+        console.log(data);
+
+        return res.status(200).json(data)
+        
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({success:false, message: "Internal server error."})
+    }
+}
+
+export const getUserController = async(req,res)=>{
+    try {
+        const {id} = req.params;
+        const data = await User.findById(id);
+        console.log(data);
+
+        return res.status(200).json(data)
+        
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({success:false, message: "Internal server error."})
+    }
+}
+
+export const updateUserController = async(req, res)=>{
+    try {
+        const userDetails = req.body;
+        const {id} = req.params;
+        const data = await User.findByIdAndUpdate(id, userDetails, {new: true})
+        console.log(data);
+
+        return res.status(200).json({success:true, message: "User credentials successfully updated."})
+          
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({success:false, message: "Internal server error."}) 
+    }
+}
+
+export const deleteUserController = async(req, res)=>{
+    try {
+        const {id} = req.params;
+        const data = await User.findByIdAndDelete(id)
+        console.log(data);
+
+        return res.status(200).json({success:true, message: "User successfully deleted."})
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({success:false, message: "Internal server error."})   
+    }
+}

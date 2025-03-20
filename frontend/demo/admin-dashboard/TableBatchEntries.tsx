@@ -131,14 +131,14 @@ export function TableBatchEntries() {
       </h1>
       <div>
     <Select onValueChange={(value)=>setBatchStatus(value)}>
-  <SelectTrigger className="w-[180px]">
-    <SelectValue placeholder="Filter Batches"/>
-  </SelectTrigger>
-  <SelectContent defaultValue={"active"}>
-    <SelectItem value="active">Active Batches</SelectItem>
-    <SelectItem value="completed">Completed batches</SelectItem>
-  </SelectContent>
-</Select>
+      <SelectTrigger className="w-[180px]">
+        <SelectValue placeholder="Filter Batches"/>
+      </SelectTrigger>
+      <SelectContent defaultValue={"active"}>
+        <SelectItem value="active">Active Batches</SelectItem>
+        <SelectItem value="completed">Completed batches</SelectItem>
+      </SelectContent>
+    </Select>
       </div>
      </div>
       <Table className="border border-black">

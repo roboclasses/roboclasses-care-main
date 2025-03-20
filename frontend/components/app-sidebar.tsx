@@ -8,6 +8,7 @@ import {
   School,
   Send,
   SquareTerminal,
+  Users,
   View,
 } from "lucide-react";
 import { NavMain } from "@/components/nav-main";
@@ -103,6 +104,7 @@ useEffect(()=>{
     //   },
     // ],
     navMainAdmin: [
+      
       {
         title: "Take Appointment",
         url: "#",
@@ -143,6 +145,11 @@ useEffect(()=>{
         title: "New Course Entry",
         url: "/courseEntry",
         icon: BookIcon,
+      },
+      {
+        title: "User Dashboard",
+        url: "/userDashboard",
+        icon: Users,
       },
     ],
 

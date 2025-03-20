@@ -2,8 +2,8 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
-    const protectedRoutePrefixes = ["/", "/adminDashboard", "/appointment", "/newBatchEntry", "/teacherView", "/courseEntry"];
-    const studentRoutePrefixes = ["/newBatchEntry", "/adminDashboard", "/teacherView", "/courseEntry", "/appointment/reminder/normal-class", "/appointment/reminder/demo-class"] ;
+    const protectedRoutePrefixes = ["/", "/adminDashboard", "/appointment", "/newBatchEntry", "/manageAttendance", "/courseEntry", "/userDashboard"];
+    const studentRoutePrefixes = ["/newBatchEntry", "/adminDashboard", "/manageAttendance", "/courseEntry", "/userDashboard",  "/appointment/reminder/normal-class", "/appointment/reminder/demo-class"] ;
     // const teacherRoutePrefixes = ["/courseEntry", "/newBatchEntry", "/appointment/studentRegister"]
     const publicRoutes = ["/login", "/signup"];
     const currentPath = req.nextUrl.pathname;

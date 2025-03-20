@@ -41,6 +41,14 @@ export type courseType={
   numberOfClasses:string;
 }
 
+export type usersType={
+  _id:string;
+  name:string;
+  email:string;
+  password:string;
+  role:string;
+}
+
 export type studentType = {
   _id: string;
   studentId:string;
