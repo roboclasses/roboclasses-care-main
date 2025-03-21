@@ -1,4 +1,8 @@
 "use client";
+
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -9,15 +13,13 @@ import {
 } from "@/components/ui/form";
 import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
-import { CoursesUrl } from "@/constants";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import axios, { AxiosError } from "axios";
-import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { CoursesUrl } from "@/constants";
 import SubmitButton from "../button-demo/SubmitButton";
+
+import axios, { AxiosError } from "axios";
+import { useEffect } from "react";
+import { useParams } from "next/navigation";
 
 
 const FormSchema = z.object({
@@ -26,9 +28,12 @@ const FormSchema = z.object({
 });
 
 export function EditCourseEntryForm() {
-    const [course, setCourse] = useState("");
-    const [numberOfClasses, setNumbeOfClasses] = useState("");
     const {id} = useParams();
+
+    const form = useForm<z.infer<typeof FormSchema>>({
+      resolver: zodResolver(FormSchema),
+      defaultValues: { course: "", numberOfClasses:"", }
+    });
 
     // Handle fetch course
     useEffect(()=>{
@@ -36,19 +41,18 @@ export function EditCourseEntryForm() {
             try {
                 const res = await axios.get(`${CoursesUrl}/${id}`)
                 console.log(res.data);
-                setCourse(res.data.course)
-                setNumbeOfClasses(res.data.numberOfClasses)
+
+                form.reset({
+                  course: res.data.course,
+                  numberOfClasses: res.data.numberOfClasses,
+                })
+               
             } catch (error) {
                 console.log(error);
             }
         }
       handleFetch();
-    },[id])
-
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: { course: "", numberOfClasses:"", }
-  });
+    },[form, id])
 
     // Handle form status
     const {isSubmitting} = form.formState;
@@ -57,8 +61,8 @@ export function EditCourseEntryForm() {
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
       const payload = {
-        course:data.course || course,
-        numberOfClasses:data.numberOfClasses || numberOfClasses,
+        course:data.course,
+        numberOfClasses:data.numberOfClasses,
       }
       const res = await axios.put(`${CoursesUrl}/${id}`, payload);
       console.log(res.data);
@@ -81,6 +85,7 @@ export function EditCourseEntryForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
+        {/* Course Name */}
         <FormField
           control={form.control}
           name="course"
@@ -91,12 +96,7 @@ export function EditCourseEntryForm() {
                 <Input
                   {...field}
                   required
-                  disabled
-                  value={course}
-                  onChange={(e) => {
-                    setCourse(e.target.value); 
-                    field.onChange(e); 
-                }}
+                  disabled         
                   className="bg-white"
                 />
               </FormControl>
@@ -105,6 +105,7 @@ export function EditCourseEntryForm() {
           )}
         />
 
+        {/* Number of Classes */}
         <FormField
           control={form.control}
           name="numberOfClasses"
@@ -115,11 +116,6 @@ export function EditCourseEntryForm() {
                 <Input
                   {...field}
                   required
-                  value={numberOfClasses}
-                  onChange={(e) => {
-                    setNumbeOfClasses(e.target.value); 
-                    field.onChange(e); 
-                }}
                   className="bg-white"
                 />
               </FormControl>

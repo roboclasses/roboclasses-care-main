@@ -1,8 +1,9 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "@/hooks/use-toast";
 import {
   Form,
   FormControl,
@@ -11,17 +12,18 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
+
+import SubmitButton from "../button-demo/SubmitButton";
+import { NormalClassUrl } from "@/constants";
+import MultiDateTimeEntry from "./MultiDateTimeEntry";
+
 import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
-import MultiDateTimeEntry from "./MultiDateTimeEntry";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { NormalClassUrl } from "@/constants";
 import 'react-phone-input-2/lib/style.css'
 import PhoneInput from "react-phone-input-2";
-import SubmitButton from "../button-demo/SubmitButton";
 
 // Define form schema
 const FormSchema = z.object({
@@ -39,7 +41,6 @@ export function EditNormalClassForm() {
   const { id } = useParams();
   const [dateTimeEntries, setDateTimeEntries] = useState([]);
 
-  // Initialize react-hook-form
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -55,9 +56,7 @@ export function EditNormalClassForm() {
   useEffect(() => {
     const fetchNormalClassDetails = async () => {
       try {
-        const res = await axios.get(`${NormalClassUrl}/${id}`, {
-          headers: { Authorization: Cookies.get("token") },
-        });
+        const res = await axios.get(`${NormalClassUrl}/${id}`, {headers: { Authorization: Cookies.get("token") }});
 
         const normalClassDetails = res.data; 
 
@@ -67,10 +66,10 @@ export function EditNormalClassForm() {
         setDateTimeEntries(initialDateTimeEntries)
 
         form.reset({
-          teacher: normalClassDetails.teacher || "",
-          batch: normalClassDetails.batch || "",
-          userName: normalClassDetails.userName || "",
-          destination: normalClassDetails.destination || "+971",
+          teacher: normalClassDetails.teacher,
+          batch: normalClassDetails.batch,
+          userName: normalClassDetails.userName,
+          destination: normalClassDetails.destination,
           dateTimeEntries: initialDateTimeEntries,
         });
       } catch (error) {
@@ -103,10 +102,7 @@ export function EditNormalClassForm() {
         ...data,
         ...transformedDateTimeEntries
       };
-
-      const res = await axios.put(`${NormalClassUrl}/${id}`, payload, {
-        headers: { Authorization: Cookies.get("token") },
-      });
+      const res = await axios.put(`${NormalClassUrl}/${id}`, payload, {headers: { Authorization: Cookies.get("token") }});
 
       const {message} = res.data;
       toast({ title: "Success✅", description: message, variant: "default" });

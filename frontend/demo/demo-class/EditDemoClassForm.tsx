@@ -12,22 +12,25 @@ import {
 import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import SubmitButton from "../button-demo/SubmitButton";
 import { z } from "zod";
-import axios, { AxiosError } from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
+
 import { DemoClassUrl } from "@/constants";
+import { timezone } from "@/data/dataStorage";
+
+import { useEffect } from "react";
+import { useParams } from "next/navigation";
+import axios, { AxiosError } from "axios";
+import Cookies from "js-cookie";
 import { format } from "date-fns";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import 'react-phone-input-2/lib/style.css'
 import PhoneInput from "react-phone-input-2";
-import { timezone } from "@/data/dataStorage";
-import SubmitButton from "../button-demo/SubmitButton";
 
+
+//For mapping reminder times
 const items = [
   {
     id: "24hours",
@@ -56,39 +59,6 @@ const FormSchema = z.object({
 
 export function EditDemoClassForm() {
   const {id}  = useParams();
-  const [userName, setUserName] = useState("");
-  const [destination, setDestination] = useState("");
-  const [course, setCourse] = useState("");
-  const [teacher, setTeacher] = useState("");
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
-  const [timeZone, setTimeZone] = useState("");
-  const [batchNumber, setBatchNumber] = useState("");
-  const [converted, setConverted] = useState("");
-
-
-  // Handle fetch batches
-  useEffect(() => {
-    const handleFetch = async () => {
-      try {
-        const res = await axios.get(`${DemoClassUrl}/${id}`, { headers: { Authorization: Cookies.get("token") }});
-        console.log(res.data);
-        setUserName(res.data.userName)
-        setDestination(res.data.destination)
-        setCourse(res.data.course)
-        setTeacher(res.data.teacher)
-        setDate(res.data.date ? format(new Date(res.data.date), "yyyy-MM-dd") : "");
-        setTime(res.data.time)
-        setTimeZone(res.data.timeZone)
-        setBatchNumber(res.data.batchNumber)
-        setConverted(res.data.converted)
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    handleFetch();
-  }, [id]);
-
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -106,25 +76,50 @@ export function EditDemoClassForm() {
     },
   });
 
+  // Handle fetch batches
+  useEffect(() => {
+    const handleFetch = async () => {
+      try {
+        const res = await axios.get(`${DemoClassUrl}/${id}`, { headers: { Authorization: Cookies.get("token") }});
+        console.log(res.data);
+
+        form.reset({
+          userName: res.data.userName,
+          destination: res.data.destination,
+          course: res.data.course,
+          teacher: res.data.teacher,
+          date: res.data.date ? format(new Date(res.data.date), 'yyyy-MM-dd') : '',
+          time: res.data.time,
+          timeZone: res.data.timeZone,
+          batchNumber: res.data.batchNumber,
+          converted: res.data.converted,
+        })
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    handleFetch();
+  }, [form, id]);
+
   // Handle form status
   const { isSubmitting } = form.formState;
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      const updatedData = {
-        userName: data.userName || userName,
-        destination: data.destination || destination,
-        course: data.course || course,
-        teacher: data.teacher || teacher,
-        date: data.date || date,
-        time: data.time || time,
-        timeZone: data.timeZone || timeZone,
-        batchNumber: data.batchNumber || batchNumber,
-        converted: data.converted || converted,
+      const payload = {
+        userName: data.userName,
+        destination: data.destination,
+        course: data.course,
+        teacher: data.teacher,
+        date: data.date,
+        time: data.time,
+        timeZone: data.timeZone,
+        batchNumber: data.batchNumber,
+        converted: data.converted,
         items: data.items.length > 0 ? data.items : ["1hour"], // Ensure at least one item is selected
       };
   
-      const res = await axios.put(`${DemoClassUrl}/${id}`, updatedData);
+      const res = await axios.put(`${DemoClassUrl}/${id}`, payload);
       console.log(res.data);
 
       const {message} = res.data;
@@ -146,7 +141,7 @@ export function EditDemoClassForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
-
+        {/* Student Full Name */}
         <FormField
           control={form.control}
           name="userName"
@@ -156,17 +151,13 @@ export function EditDemoClassForm() {
               <Input  
                 {...field}
                 required 
-                value={userName} 
-                onChange={(e)=>{
-                setUserName(e.target.value)
-                field.onChange(e)
-                 }} 
               />
               <FormMessage />
             </FormItem>
           )}
         />
 
+        {/* Mobile Number */}
         <FormField
           control={form.control}
           name="destination"
@@ -186,6 +177,7 @@ export function EditDemoClassForm() {
           )}
         />
 
+        {/* Course */}
         <FormField
           control={form.control}
           name="course"
@@ -196,11 +188,7 @@ export function EditDemoClassForm() {
                 <Input
                   {...field}
                   required
-                  disabled
-                  value={course} 
-                  onChange={(e)=>{
-                  setCourse(e.target.value)
-                  field.onChange(e) }} 
+                  disabled         
                 />
               </FormControl>
               <FormMessage />
@@ -208,6 +196,7 @@ export function EditDemoClassForm() {
           )}
         />
 
+        {/* Teacher Name */}
         <FormField
           control={form.control}
           name="teacher"
@@ -218,11 +207,7 @@ export function EditDemoClassForm() {
                 <Input
                   {...field}
                   required
-                  disabled
-                  value={teacher} 
-                  onChange={(e)=>{
-                  setTeacher(e.target.value)
-                  field.onChange(e) }} 
+                  disabled                 
                 />
               </FormControl>
               <FormMessage />
@@ -230,6 +215,7 @@ export function EditDemoClassForm() {
           )}
         />
 
+        {/* Date */}
         <FormField
           control={form.control}
           name="date"
@@ -241,11 +227,6 @@ export function EditDemoClassForm() {
                   required
                   type="date"
                   {...field}
-                  value={date} 
-                  onChange={(e) => {
-                    setDate(e.target.value);
-                    field.onChange(e);
-                  }}
                 />
               </FormControl>
               <FormMessage />
@@ -253,6 +234,7 @@ export function EditDemoClassForm() {
           )}
         />
 
+        {/* Time */}
         <FormField
           control={form.control}
           name="time"
@@ -264,10 +246,6 @@ export function EditDemoClassForm() {
                   required
                   type="time"
                   {...field}
-                  value={time} 
-                  onChange={(e)=>{
-                  setTime(e.target.value)
-                  field.onChange(e) }} 
                 />
               </FormControl>
               <FormMessage />
@@ -275,6 +253,7 @@ export function EditDemoClassForm() {
           )}
         />
 
+        {/* Timezone */}
          <FormField
             control={form.control}
                       name="timeZone"
@@ -303,6 +282,7 @@ export function EditDemoClassForm() {
             )}
           />
 
+        {/* Batch Number */}
         <FormField
           control={form.control}
           name="batchNumber"
@@ -312,17 +292,15 @@ export function EditDemoClassForm() {
               <Input  
                 {...field}
                 required 
-                value={batchNumber} 
-                onChange={(e)=>{
-                setBatchNumber(e.target.value)
-                field.onChange(e) }} 
               />
               <FormMessage />
             </FormItem>
           )}
 
         />
-          <FormField
+
+        {/* Convert */}
+        <FormField
           control={form.control}
               name="converted"
               render={({ field }) => (
@@ -330,8 +308,8 @@ export function EditDemoClassForm() {
                   <FormLabel className="font-semibold">Class Converted?</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={converted}
                     required
+                    defaultValue="No"
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -340,13 +318,14 @@ export function EditDemoClassForm() {
                     </FormControl>
                     <SelectContent>
                         <SelectItem value={"Yes"} >Yes</SelectItem>
-                        {/* <SelectItem value={"No"} >No</SelectItem> */}
+                        <SelectItem value={"No"} >NO</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormItem>
           )}
         />
 
+        {/* Items for sending reminder */}
         <FormField
           control={form.control}
           name="items"
