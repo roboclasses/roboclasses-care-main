@@ -80,7 +80,7 @@ export function EditStudentDetails() {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      const updatedData = {
+      const payload = {
         studentName: data.studentName,
         parentName: data.parentName,
         destination: data.destination,
@@ -89,7 +89,7 @@ export function EditStudentDetails() {
         grade: data.grade,
         courses: data.courses,
       };
-      const res = await axios.put(`${StudentRegUrl}/${id}`, updatedData);
+      const res = await axios.put(`${StudentRegUrl}/${id}`, payload);
       console.log(res.data);
 
       const {message} = res.data;

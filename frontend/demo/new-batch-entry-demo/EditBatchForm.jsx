@@ -99,16 +99,16 @@ export function EditBatchForm() {
         setDayTimeEntries(initialDayTimeEntries);
 
         form.reset({
-          batch: batchDetails.batch || "",
-          teacher: batchDetails.teacher || "",
+          batch: batchDetails.batch ,
+          teacher: batchDetails.teacher ,
           startDate: batchDetails.startDate ? format(new Date(batchDetails.startDate), "yyyy-MM-dd") : "",
           dayTimeEntries: initialDayTimeEntries,
           timeZone: batchDetails.timeZone || userTimeZone,
-          numberOfClasses: batchDetails.numberOfClasses || "",
-          studentName: batchDetails.studentName || "",
-          email: batchDetails.email || "",
-          destination: batchDetails.destination || "",
-          completed: batchDetails.completed || "",
+          numberOfClasses: batchDetails.numberOfClasses,
+          studentName: batchDetails.studentName,
+          email: batchDetails.email,
+          destination: batchDetails.destination,
+          completed: batchDetails.completed,
         });
       } catch (error) {
         console.error("Failed to fetch batch details:", error);

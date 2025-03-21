@@ -1,10 +1,12 @@
   "use client";
 
-  import { zodResolver } from "@hookform/resolvers/zod";
-  import { useForm } from "react-hook-form";
   import { z } from "zod";
+  import { useForm } from "react-hook-form";
+  import { zodResolver } from "@hookform/resolvers/zod";
+  import { toast } from "@/hooks/use-toast";
 
   import { Button } from "@/components/ui/button";
+  import { Input } from "@/components/ui/input";
   import {
     Form,
     FormControl,
@@ -13,19 +15,19 @@
     FormLabel,
     FormMessage,
   } from "@/components/ui/form";
-  import { toast } from "@/hooks/use-toast";
-  import { useEffect, useState } from "react";
-  import axios, { AxiosError } from "axios";
-  import { AttendanceUrl} from "@/constants";
-  import Cookies from "js-cookie";
-  import { Input } from "@/components/ui/input";
-  import { format } from "date-fns";
   import { Label } from "@/components/ui/label";
-  import { handleNumber } from "@/lib/utils";
-  import { useParams } from "next/navigation";
-import SubmitButton from "../button-demo/SubmitButton";
 
-  // Make all fields optional in the Zod schema
+  import SubmitButton from "../button-demo/SubmitButton";
+  import { AttendanceUrl} from "@/constants";
+  import { handleNumber } from "@/lib/utils";
+
+  import { useEffect, useState } from "react";
+  import { useParams } from "next/navigation";
+  import axios, { AxiosError } from "axios";
+  import Cookies from "js-cookie";
+  import { format } from "date-fns";
+
+
   const FormSchema = z.object({
     batchName: z.string().min(2, { message: "Batch Name must be at least 2 characters long" }).optional(),
     startDate: z.string().optional(),
@@ -77,7 +79,6 @@ import SubmitButton from "../button-demo/SubmitButton";
       handleFetch();
     }, [form, id]);
 
-
     // Handle adding a new class
     const handleAddClass = () => {
       if (numberOfClasses < 60) {
@@ -114,9 +115,7 @@ import SubmitButton from "../button-demo/SubmitButton";
           classesDone: data.classesDone
         };
 
-        const res = await axios.put(`${AttendanceUrl}/${id}`, payload, {
-          headers: { Authorization: Cookies.get("token") }
-        });
+        const res = await axios.put(`${AttendanceUrl}/${id}`, payload, { headers: { Authorization: Cookies.get("token") }});
         console.log(res.data);
 
         const {message} = res.data;
@@ -134,6 +133,8 @@ import SubmitButton from "../button-demo/SubmitButton";
     return (
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 gap-2 flex flex-col ">
+
+        {/* Batch Name */}
           <FormField
             control={form.control}
             name="batchName"
@@ -147,6 +148,8 @@ import SubmitButton from "../button-demo/SubmitButton";
               </FormItem>
             )}
           />
+
+          {/* Buttons */}
           <div className="flex justify-between">
             <div className="flex items-center gap-2">
               <Button type="button" onClick={handleAddClass} disabled={handleNumber(numberOfClasses) >= 60} style={{background : "maroon"}}>Add Classes</Button>
@@ -155,6 +158,7 @@ import SubmitButton from "../button-demo/SubmitButton";
             <SubmitButton name={isSubmitting ? 'Updating...' : 'Update'} type="submit" disabled={isSubmitting}/>
           </div>
 
+          {/* Start Date */}
           <FormField
             control={form.control}
             name="startDate"
@@ -203,6 +207,7 @@ import SubmitButton from "../button-demo/SubmitButton";
             />
           ))}
 
+          {/* Number of Classes Done */}
           <FormField
             control={form.control}
             name="classesDone"
