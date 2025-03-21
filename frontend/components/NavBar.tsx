@@ -31,11 +31,11 @@ const NavBar = () => {
             segments.map((segment, index)=>(
             <React.Fragment key={index}>
                 <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href={pathname}>
-                 {segment}
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" /> 
+                  <BreadcrumbLink href={pathname}>
+                    {segment}
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className="hidden md:block" /> 
             </React.Fragment> 
             ))
           }       

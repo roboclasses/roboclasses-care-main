@@ -38,14 +38,11 @@ export function NavUser({
 
   // Handle logout
   const handleLogout = async()=>{
-    // localStorage.removeItem('token')
-    // localStorage.removeItem('_id')
-    // localStorage.removeItem('name')
-    // localStorage.removeItem('email')
-    // localStorage.removeItem('role')
     await deleteUserSession();
     router.push('/login')
   }
+
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -82,29 +79,6 @@ export function NavUser({
                 </div>
               </div>
             </DropdownMenuLabel>
-            {/* <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator /> */}
             <DropdownMenuItem onClick={handleLogout}>
               <LogOut />
               Log out
