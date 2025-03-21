@@ -1,8 +1,8 @@
+import React from "react";
+import Image from "next/image";
+
 import { PRIVATE_WALLPAPER } from "@/constants/images";
 import { EditCourseEntryForm } from "@/demo/new-course-entry-demo/EditCourseEntryForm";
-
-import Image from "next/image";
-import React from "react";
 
 const page = () => {
   return (

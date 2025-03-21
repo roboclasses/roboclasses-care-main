@@ -1,5 +1,9 @@
 "use client";
 
+import React, { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+
 import { TableDemoClass } from "@/demo/admin-dashboard/TableDemoClass";
 import { TableBatchEntries } from "@/demo/admin-dashboard/TableBatchEntries";
 import { TableNormalClass } from "@/demo/admin-dashboard/TableNormalClass";
@@ -8,10 +12,6 @@ import { StudentsTable } from "@/demo/student-register-demo/StudentsTable";
 import { TableAttendance } from "@/demo/admin-dashboard/TableAttendance";
 
 import { imageIcons } from "@/data/dataStorage";
-
-import React, { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
 
 
 const Page = () => {
