@@ -1,8 +1,8 @@
+import React from "react";
+import Image from "next/image";
+
 import { PRIVATE_WALLPAPER } from "@/constants/images";
 import { EditUserForm } from "@/demo/manage-roles-demo/EditUserForm";
-
-import Image from "next/image";
-import React from "react";
 
 const page = () => {
   return (

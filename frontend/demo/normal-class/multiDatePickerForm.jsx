@@ -487,7 +487,7 @@ export function MultiDatePickerForm() {
           )}
         />
 
-        <SubmitButton name={isSubmitting ? 'Booking...' : 'Book'} type="submit" disabled={isSubmitting}/>
+        <SubmitButton name={isSubmitting ? 'Creating...' : 'Create'} type="submit" disabled={isSubmitting}/>
       </form>
     </Form>
   );

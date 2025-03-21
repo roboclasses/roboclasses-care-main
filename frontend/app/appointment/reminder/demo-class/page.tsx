@@ -1,8 +1,9 @@
+import React from "react";
+import Image from "next/image";
+
 import { PRIVATE_WALLPAPER } from "@/constants/images";
 import { DatePickerForm } from "@/demo/demo-class/datePickerForm";
 
-import Image from "next/image";
-import React from "react";
 
 const page = () => {
   return (
