@@ -7,7 +7,9 @@ This project consists of a frontend and backend, both of which can be run locall
 
 ## Areas of improvement
 
-- Responsiveness for all devices is pending.
+- Responsiveness for tablet devices is pending.
+- Codebase refactor and docementation are pending.
+- We have to make production grade code for this SAAS.
 
 ---
 
