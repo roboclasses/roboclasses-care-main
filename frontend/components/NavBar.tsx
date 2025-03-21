@@ -21,21 +21,21 @@ const NavBar = () => {
       <Separator orientation="vertical" className="mr-2 h-4" />
       <Breadcrumb >
         <BreadcrumbList className='lg:text-base text-xs font-sans'>
-          <BreadcrumbItem className="">
+          <BreadcrumbItem className="hidden md:block">
             <BreadcrumbLink href="/">
              {'Dashboard'}
             </BreadcrumbLink>
           </BreadcrumbItem>
-          <BreadcrumbSeparator className="" />  
+          <BreadcrumbSeparator className="hidden md:block" />  
           {
             segments.map((segment, index)=>(
             <React.Fragment key={index}>
-                <BreadcrumbItem className="">
+                <BreadcrumbItem className="hidden md:block">
                 <BreadcrumbLink href={pathname}>
                  {segment}
                 </BreadcrumbLink>
               </BreadcrumbItem>
-              <BreadcrumbSeparator className="" /> 
+              <BreadcrumbSeparator className="hidden md:block" /> 
             </React.Fragment> 
             ))
           }       
