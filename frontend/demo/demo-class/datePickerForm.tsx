@@ -1,8 +1,8 @@
 "use client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -15,17 +15,18 @@ import {
 import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-import axios, { AxiosError } from "axios";
-import 'react-phone-input-2/lib/style.css'
+import SubmitButton from "../button-demo/SubmitButton";
 import { DemoClassUrl } from "@/constants";
+import { getUserSession } from "@/lib/session";
+import { teachers, timezone, userTimeZone } from "@/data/dataStorage";
+
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getUserSession } from "@/lib/session";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { teachers, timezone, userTimeZone } from "@/data/dataStorage";
+import axios, { AxiosError } from "axios";
+import 'react-phone-input-2/lib/style.css'
 import PhoneInput from "react-phone-input-2";
-import SubmitButton from "../button-demo/SubmitButton";
 
 // for mapping checkbox value and label
 const items = [
@@ -122,6 +123,7 @@ export function DatePickerForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
+        {/* Student Full Name */}
         <FormField
           control={form.control}
           name="userName"
@@ -141,6 +143,7 @@ export function DatePickerForm() {
           )}
         />
         
+        {/* Mobile Number */}
         <FormField
           control={form.control}
           name="destination"
@@ -160,6 +163,7 @@ export function DatePickerForm() {
           )}
         />
 
+        {/* Course Name */}
         <FormField
           control={form.control}
           name="course"
@@ -179,6 +183,7 @@ export function DatePickerForm() {
           )}
         />
 
+        {/* Teacher Name */}
         <FormField
           control={form.control}
               name="teacher"
@@ -207,6 +212,7 @@ export function DatePickerForm() {
           )}
         />
         
+        {/* Date */}
         <FormField
           control={form.control}
           name="date"
@@ -226,6 +232,7 @@ export function DatePickerForm() {
           )}
         />
 
+        {/* Time */}
         <FormField
           control={form.control}
           name="time"
@@ -247,6 +254,7 @@ export function DatePickerForm() {
           )}
         />
 
+        {/* Timezone */}
         <FormField
           control={form.control}
               name="timeZone"
@@ -275,6 +283,7 @@ export function DatePickerForm() {
           )}
         />
 
+        {/* Items */}
         <FormField
           control={form.control}
           name="items"

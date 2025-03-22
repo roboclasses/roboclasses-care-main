@@ -1,8 +1,8 @@
 "use client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -13,15 +13,16 @@ import {
 } from "@/components/ui/form";
 import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+import SubmitButton from "../button-demo/SubmitButton";
+import { countries } from "@/data/dataStorage";
+import { StudentRegUrl } from "@/constants";
 
 import axios, { AxiosError } from "axios";
-import { StudentRegUrl } from "@/constants";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import PhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
-import { Label } from "@/components/ui/label";
-import { countries } from "@/data/dataStorage";
-import SubmitButton from "../button-demo/SubmitButton";
 
 
 const FormSchema = z.object({
@@ -87,6 +88,7 @@ export function RegistrationForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
+        {/* Student Full Name */}
         <FormField
           control={form.control}
           name="studentName"
@@ -106,6 +108,7 @@ export function RegistrationForm() {
           )}
         />
 
+        {/* Parent Full Name */}
         <FormField
           control={form.control}
           name="parentName"
@@ -125,6 +128,7 @@ export function RegistrationForm() {
           )}
         />
         
+        {/* Mobile Number */}
         <FormField
           control={form.control}
           name="destination"
@@ -147,6 +151,7 @@ export function RegistrationForm() {
           )}
         />
 
+        {/* Email Address */}
        <FormField
           control={form.control}
           name="email"
@@ -167,6 +172,7 @@ export function RegistrationForm() {
           )}
         />
 
+        {/* Full Location Details */}
         <div className="flex items-center gap-2">
         <Label className="font-semibold">Full Address</Label>
         <FormField
@@ -212,6 +218,7 @@ export function RegistrationForm() {
         />
         </div>
 
+        {/* Courses done Earlier */}
         <FormField
           control={form.control}
           name="courses"
@@ -231,6 +238,7 @@ export function RegistrationForm() {
           )}
         />
 
+        {/* Grade */}
         <FormField
           control={form.control}
           name="grade"

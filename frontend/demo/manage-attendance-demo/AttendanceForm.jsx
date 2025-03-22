@@ -1,10 +1,9 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { z } from "zod";
-
-import { Button } from "@/components/ui/button";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "@/hooks/use-toast";
 import {
   Form,
   FormControl,
@@ -13,7 +12,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { toast } from "@/hooks/use-toast";
 import {
   Select,
   SelectContent,
@@ -21,17 +19,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useEffect, useState } from "react";
-import axios, { AxiosError } from "axios";
-import { AttendanceUrl, NewBatchEntryUrl } from "@/constants";
-import Cookies from "js-cookie";
-import { Input } from "@/components/ui/input";
-import { format } from "date-fns";
-import { getUserSession } from "@/lib/session";
-import { usePathname } from "next/navigation";
 import { Label } from "@/components/ui/label";
-import { handleNumber } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
 import SubmitButton from "../button-demo/SubmitButton";
+import { AttendanceUrl, NewBatchEntryUrl } from "@/constants";
+import { handleNumber } from "@/lib/utils";
+import { getUserSession } from "@/lib/session";
+
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import axios, { AxiosError } from "axios";
+import Cookies from "js-cookie";
+import { format } from "date-fns";
 
 
 const FormSchema = z.object({
@@ -44,15 +45,9 @@ const FormSchema = z.object({
 export function AttendanceForm() {
   const pathname = usePathname();
   const [batches, setBatches] = useState([]);
-
   const [role, setRole] = useState("");
-
   const [name, setName] = useState("");
-  
-
   const [numberOfClasses, setNumberOfClasses] = useState(0);
-
-  // const formattedNumber = parseInt(numberOfClasses ,10)
 
 
   const form = useForm({
@@ -175,6 +170,8 @@ export function AttendanceForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-2">
+
+        {/* Batch Name */}
         <FormField
           control={form.control}
           name="batchName"
@@ -199,11 +196,14 @@ export function AttendanceForm() {
             </FormItem>
           )}
         />
+
+        {/* Buttons */}
         <div className="flex justify-between">
           <Button type="button" onClick={handleAddClass} disabled={handleNumber(numberOfClasses) >= 60 } style={{background : "maroon"}}>Add Class</Button>
           <SubmitButton name={isSubmitting ? 'Submitting...' : 'Submit'} type="submit" disabled={isSubmitting}/>
         </div>
 
+        {/* Teacher Name */}
         {role === "teacher" ? (<FormField
           control={form.control}
           name="teacher"
@@ -232,6 +232,7 @@ export function AttendanceForm() {
         /> 
       )}
 
+        {/* Start Date */}
         <FormField
           control={form.control}
           name="startDate"
@@ -246,8 +247,7 @@ export function AttendanceForm() {
             )}
         />
 
-        <Label className="font-semibold">Classes</Label>
-
+      <Label className="font-semibold">Classes</Label>
       {Array.from({length: handleNumber(numberOfClasses)}).map((_, index)=>(
         <FormField
           key={index}
