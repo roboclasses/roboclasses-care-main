@@ -1,5 +1,8 @@
 "use client";
 
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -10,13 +13,11 @@ import {
 } from "@/components/ui/form";
 import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
-import { CoursesUrl } from "@/constants";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import axios, { AxiosError } from "axios";
+import { CoursesUrl } from "@/constants";
 import SubmitButton from "../button-demo/SubmitButton";
+
+import axios, { AxiosError } from "axios";
 
 
 const FormSchema = z.object({
@@ -61,6 +62,8 @@ export function NewCourseEntryForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
+
+        {/* Course Name */}
         <FormField
           control={form.control}
           name="course"
@@ -79,6 +82,7 @@ export function NewCourseEntryForm() {
             </FormItem>
           )}
         />
+        
         <SubmitButton name={isSubmitting ? 'Creating...' : 'Create'} type="submit" disabled={isSubmitting}/>
       </form>
     </Form>

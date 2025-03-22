@@ -1,8 +1,8 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -12,22 +12,24 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "@/hooks/use-toast";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { CoursesUrl, NewBatchEntryUrl, StudentRegUrl } from "@/constants";
+import { Label } from "@/components/ui/label";
 
+
+import SubmitButton from "../button-demo/SubmitButton";
+import { getUserSession } from "@/lib/session";
+import MultiDayTimeEntry from "./MultiDayTimeEntry";
+import StudentSearch from "../normal-class/StudentSearch";
+import { CoursesUrl, NewBatchEntryUrl, StudentRegUrl } from "@/constants";
+import { teachers, timezone, userTimeZone } from "@/data/dataStorage";
+
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
-import { useEffect, useState } from "react";
-import { getUserSession } from "@/lib/session";
-import { usePathname } from "next/navigation";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import { teachers, timezone, userTimeZone } from "@/data/dataStorage";
-import MultiDayTimeEntry from "./MultiDayTimeEntry";
 import 'react-phone-input-2/lib/style.css'
 import PhoneInput from "react-phone-input-2";
-import StudentSearch from "../normal-class/StudentSearch";
-import SubmitButton from "../button-demo/SubmitButton";
 
 
 
@@ -208,9 +210,10 @@ export function NewBatchEntryForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >  
-             
+        {/* Multi Day Time Entry  */}
       <MultiDayTimeEntry onEntriesChange={handleDateTimeEntriesChange} />
 
+        {/* Start Date */}
         <FormField
           control={form.control}
           name="startDate"
@@ -227,6 +230,7 @@ export function NewBatchEntryForm() {
           )}
         />
 
+        {/* Batch Details */}
         <div className="flex gap-4 items-center">
         <Label className="font-semibold">Batch Name</Label>
         <FormField
@@ -274,6 +278,7 @@ export function NewBatchEntryForm() {
 
         </div>
 
+        {/* Number of Classes */}
         <FormField
           control={form.control}
           name="numberOfClasses"
@@ -293,6 +298,7 @@ export function NewBatchEntryForm() {
           )}
         />
 
+        {/* Student Name */}
         <FormField
           control={form.control}
           name="studentName"
@@ -305,6 +311,7 @@ export function NewBatchEntryForm() {
           )}
         />
 
+        {/* Mobile Number */}
         <FormField
           control={form.control}
           name="destination"
@@ -325,6 +332,7 @@ export function NewBatchEntryForm() {
           )}
         />
 
+        {/* Email Address */}
         <FormField
           control={form.control}
           name="email"
@@ -344,6 +352,7 @@ export function NewBatchEntryForm() {
           )}
         />
 
+        {/* Teacher Name */}
         <FormField
             control={form.control}
               name="teacher"
@@ -373,6 +382,7 @@ export function NewBatchEntryForm() {
             )}
         />
 
+        {/* Timezone */}
          <FormField
             control={form.control}
                       name="timeZone"
@@ -400,7 +410,6 @@ export function NewBatchEntryForm() {
                         </FormItem>
             )}
          />
-
 
         <SubmitButton name={isSubmitting ? 'Creating...' : 'Create'} type="submit" disabled={isSubmitting}/>
       </form>

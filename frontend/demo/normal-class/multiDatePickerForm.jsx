@@ -1,4 +1,9 @@
 "use client";
+
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import {
   Form,
@@ -11,21 +16,17 @@ import {
 } from "@/components/ui/form";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 import { NewBatchEntryUrl, NormalClassUrl, StudentRegUrl } from "@/constants";
 import StudentSearch from "./StudentSearch";
+import SubmitButton from "../button-demo/SubmitButton";
+import { weekDays } from "@/data/dataStorage";
 
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "@/hooks/use-toast";
-
+import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import PhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
-import { useEffect, useState } from "react";
-import { weekDays } from "@/data/dataStorage";
-import SubmitButton from "../button-demo/SubmitButton";
 
 
 // For mapping time value to send reminder checkbox
@@ -58,6 +59,7 @@ const FormSchema = z.object({
   numberOfClasses:z.string().optional(),
 });
 
+// Calculating date, time and day by start date
 const getNextClassDate = (startDate, daysOfWeek, times)=>{
 
   const start = new Date(startDate);
@@ -239,6 +241,7 @@ export function MultiDatePickerForm() {
         className="flex flex-col gap-4"
       >
 
+    {/* Calculated Date, Time and Weekday */}
 {form.watch("allDates")?.map((entry, index) => (
   <div key={index} className="flex gap-2 items-center">
     <FormField
@@ -302,6 +305,7 @@ export function MultiDatePickerForm() {
   </div>
 ))}
 
+      {/* Search Student Name */}
         <FormField
           control={form.control}
           name="userName"
@@ -314,6 +318,7 @@ export function MultiDatePickerForm() {
           )}
         />
 
+        {/* Mobile Number */}
         <FormField
           control={form.control}
           name="destination"
@@ -334,6 +339,7 @@ export function MultiDatePickerForm() {
           )}
         />
 
+        {/* Email Address */}
         <FormField
           control={form.control}
           name="email"
@@ -353,6 +359,7 @@ export function MultiDatePickerForm() {
           )}
         />
 
+        {/* Batch Details */}
         <FormField
           control={form.control}
               name="batch"
@@ -379,6 +386,7 @@ export function MultiDatePickerForm() {
           )}
         />
 
+        {/* Teacher Name */}
         <FormField
           control={form.control}
           name="teacher"
@@ -398,6 +406,7 @@ export function MultiDatePickerForm() {
           )}
         />
 
+        {/* Timezone */}
         <FormField
           control={form.control}
           name="timeZone"
@@ -417,6 +426,7 @@ export function MultiDatePickerForm() {
           )}
         />
 
+        {/* Number of Classes */}
         <FormField
           control={form.control}
           name="numberOfClasses"
@@ -436,6 +446,7 @@ export function MultiDatePickerForm() {
           )}
         />
 
+        {/* Items */}
         <FormField
           control={form.control}
           name="items"
