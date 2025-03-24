@@ -3,6 +3,7 @@
 import * as React from "react";
 import {
   BookIcon,
+  Calendar,
   LayoutDashboard,
   LifeBuoy,
   School,
@@ -150,6 +151,11 @@ useEffect(()=>{
         title: "User Dashboard",
         url: "/userDashboard",
         icon: Users,
+      },
+      {
+        title: "Time Off",
+        url: "/timeOff",
+        icon: Calendar,
       },
     ],
 
