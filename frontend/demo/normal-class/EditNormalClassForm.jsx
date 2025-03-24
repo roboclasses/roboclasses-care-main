@@ -19,7 +19,6 @@ import { NormalClassUrl } from "@/constants";
 import MultiDateTimeEntry from "./MultiDateTimeEntry";
 
 import axios, { AxiosError } from "axios";
-import Cookies from "js-cookie";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import 'react-phone-input-2/lib/style.css'
@@ -56,7 +55,7 @@ export function EditNormalClassForm() {
   useEffect(() => {
     const fetchNormalClassDetails = async () => {
       try {
-        const res = await axios.get(`${NormalClassUrl}/${id}`, {headers: { Authorization: Cookies.get("token") }});
+        const res = await axios.get(`${NormalClassUrl}/${id}`);
 
         const normalClassDetails = res.data; 
 
@@ -102,7 +101,7 @@ export function EditNormalClassForm() {
         ...data,
         ...transformedDateTimeEntries
       };
-      const res = await axios.put(`${NormalClassUrl}/${id}`, payload, {headers: { Authorization: Cookies.get("token") }});
+      const res = await axios.put(`${NormalClassUrl}/${id}`, payload);
 
       const {message} = res.data;
       toast({ title: "Success✅", description: message, variant: "default" });
