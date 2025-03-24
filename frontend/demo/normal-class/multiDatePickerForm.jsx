@@ -163,7 +163,7 @@ export function MultiDatePickerForm() {
   useEffect(()=>{
     const handleFetch = async()=>{
       try {
-        const res = await axios.get(`${NewBatchEntryUrl}?name=${batchName}`,{headers: { Authorization: Cookies.get("token") }})
+        const res = await axios.get(`${NewBatchEntryUrl}?name=${batchName}`)
 
         if(res.data){
           const selectedBatch = res.data.find((item)=>item.batch === batchName)
@@ -216,9 +216,7 @@ export function MultiDatePickerForm() {
       }   
       const payload = {...data,...mappedDates};
       
-      const res = await axios.post(NormalClassUrl, payload, {
-        headers: { Authorization: Cookies.get("token") },
-      });
+      const res = await axios.post(NormalClassUrl, payload);
   
       console.log(res.data);
       form.reset();
