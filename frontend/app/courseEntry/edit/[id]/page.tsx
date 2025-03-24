@@ -6,12 +6,12 @@ import { EditCourseEntryForm } from "@/demo/new-course-entry-demo/EditCourseEntr
 
 const page = () => {
   return (
-    <div className="relative">
+    <div className="relative min-h-screen">
       <Image
         src={PRIVATE_WALLPAPER}
         alt="wallpaper"
-        className="min-h-screen object-cover"
-        fill
+        layout="fill"
+        objectFit="cover"
         priority
       />
       <div className="relative z-10 flex items-center justify-center h-full backdrop-blur-sm">
