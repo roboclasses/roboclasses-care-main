@@ -6,6 +6,7 @@ import NavBar from "@/components/NavBar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Toaster } from "@/components/ui/toaster";
+import type { Viewport } from 'next'
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -23,6 +24,17 @@ export const metadata: Metadata = {
   description: "STEM Accredited robotics and coding courses",
 };
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  // themeColor: 'black',
+  // colorScheme: 'dark'
+  // Also supported but less commonly used
+  // interactiveWidget: 'resizes-visual',
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,7 +42,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head><meta name="viewport" content="width=device-width, initial-scale=1.0" /></head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
       >
