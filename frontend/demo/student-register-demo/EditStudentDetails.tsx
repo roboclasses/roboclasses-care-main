@@ -156,7 +156,7 @@ export function EditStudentDetails() {
                   country={"ae"}
                   placeholder="Parents Contact/Whatsapp number"   
                   {...field}  
-                  inputStyle={{width: "336px"}}
+                  inputStyle={{width: "320px"}}
                   inputProps={{ ref: field.ref, required: true }}
                 />
               </FormControl>

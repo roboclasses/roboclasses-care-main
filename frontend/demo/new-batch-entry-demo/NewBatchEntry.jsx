@@ -323,7 +323,7 @@ export function NewBatchEntryForm() {
                   country={"ae"}
                   {...field}  
                   disabled       
-                  inputStyle={{ width: "336px" }}
+                  inputStyle={{width: "320px"}}
                   inputProps={{ ref: field.ref, required: true }}
                 />
               </FormControl>

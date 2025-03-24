@@ -281,7 +281,7 @@ export function EditBatchForm() {
                     <PhoneInput
                       country={"ae"}
                       {...field}
-                      inputStyle={{ width: "336px" }}
+                      inputStyle={{width: "320px"}}
                       inputProps={{ ref: field.ref, required: true }}
                     />
                   </FormControl>
@@ -333,7 +333,7 @@ export function EditBatchForm() {
                       country={"ae"}
                       {...field}
                       disabled
-                      inputStyle={{ width: "440px" }}
+                      inputStyle={{width: "320px"}}
                       inputProps={{ ref: field.ref, required: true }}
                     />
                   </FormControl>
