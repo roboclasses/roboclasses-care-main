@@ -73,7 +73,7 @@ export function TableUsers() {
   return (
     <div>
     <div className="flex items-center justify-between">
-      <h1 className="text-4xl font-semibold mb-6 text-center">Manage Users</h1>
+      <h1 className="lg:text-4xl text-2xl font-semibold mb-6 text-center">Manage Users</h1>
     <Select onValueChange={(value)=>setRole(value)}>
       <SelectTrigger className="w-[180px]">
         <SelectValue placeholder="Filter Users"/>
