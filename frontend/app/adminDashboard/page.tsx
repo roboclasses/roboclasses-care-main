@@ -39,7 +39,7 @@ const Page = () => {
 
   return (
     <div className="flex flex-col justify-center items-center lg:gap-10 gap-20">
-      <div className="grid lg:grid-cols-6 grid-cols-2 gap-5 lg:w-full w-[500px] px-5 py-5 bg-muted/50">
+      <div className="grid lg:grid-cols-6 grid-cols-2 gap-5 lg:w-full w-[400px] px-5 py-5 bg-muted/50">
         {imageIcons.map((items) => (
           <Link href={"#"} key={items.id} onClick={()=>setActiveComponent(items.id)}>
             <Image
@@ -53,7 +53,7 @@ const Page = () => {
           </Link>
         ))}
       </div>
-      <div className="lg:w-full w-[500px] lg:px-20 px-5">
+      <div className="lg:w-full w-[400px] lg:px-20 px-5">
         {renderComponnets()}
       </div>
     </div>
