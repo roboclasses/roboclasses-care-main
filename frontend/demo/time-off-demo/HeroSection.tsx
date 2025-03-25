@@ -18,10 +18,9 @@ const HeroSection = () => {
             case "card":
                 return <CardViewDemo />
             default:
-                return "Card view"
+                return <CardViewDemo />
         }
     }
-
 
   return (
     <>

@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 
 import { Star } from 'lucide-react'
-import { TimeOffButton } from '../button-demo/TimeOffButton'
+import { ApplyLeaveDialog } from '../dialog-demo/ApplyLeaveDialog'
 
 
 const Header = () => {
@@ -21,10 +21,7 @@ const handleStarred = ()=>{
             {/* Starred feature */}
             {isStarred ? <Star size={20} color='brown' onClick={handleStarred} /> : <Star size={20} color='gray' onClick={handleStarred}/>}
         </div>
-        <TimeOffButton 
-            name='Request time off' 
-            type='button' 
-        />
+        <ApplyLeaveDialog name='Request time off' variant='default' className='rounded-full'/>
     </div>
   )
 }
