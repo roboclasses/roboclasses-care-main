@@ -8,14 +8,14 @@ import { cn } from "@/lib/utils";
 import CardViewDemo from "./CardViewDemo";
 
 const HeroSection = () => {
-    const [activeTab, setActivetab] = useState("card")
+    const [activeTab, setActivetab] = useState("apply")
 
     // Handle render components
     const renderComponents = ()=>{
         switch(activeTab){
-            case "table":
+            case "past":
                 return "Table view"
-            case "card":
+            case "apply":
                 return <CardViewDemo />
             default:
                 return <CardViewDemo />

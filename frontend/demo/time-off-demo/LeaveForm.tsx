@@ -128,7 +128,7 @@ export function LeaveForm() {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Add note here" {...field} className="h-12 rounded-xl shadow-none"/>
+                <Input placeholder="Add note here" {...field} className="h-16 rounded-xl shadow-none"/>
               </FormControl>
               <FormDescription>
                 This is note taking area.
