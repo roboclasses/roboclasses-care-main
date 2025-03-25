@@ -10,8 +10,8 @@ import {
   TableCell,
   Table,
 } from "@/components/ui/table";
-import { TimeOffApprovalDemo } from "./timeOffApprovalDemo";
 import { FilterTimeOffDemo } from "./FilterTimeOffDemo";
+import { TimeOffApprovalDemo } from "./TimeOffApprovalDemo";
 
 const TableViewDemo = () => {
   return (
