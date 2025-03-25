@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
@@ -17,6 +16,9 @@ import { Input } from "@/components/ui/input"
 import { toast } from "@/hooks/use-toast"
 import { timeOffTypes } from "@/data/dataStorage"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import axios, { AxiosError } from "axios"
+import { TimeOffUrl } from "@/constants"
+import SubmitButton from "../button-demo/SubmitButton"
 
 const FormSchema = z.object({
   teacherName: z.string().min(2, {message: "Tecaher Name must be at least 2 characters."}),
@@ -36,23 +38,34 @@ export function LeaveForm() {
     },
   })
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    try {
-        console.log(JSON.stringify(data));
-        toast({
-            title: "Success",
-            description: "Leave submitted successfully.",
-            variant:"default"
-          })  
-        
-    } catch (error) {
-        console.error(error);
-        toast({
-            title: "Failed",
-            description: "An unknown error has occurred.",
-            variant:"destructive"
-          })  
+    // Handle form status
+    const {isSubmitting} = form.formState;
 
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    try {
+      const formattedDate = new Date(data.date).toISOString().split("T")[0]
+      const payload = {
+        teacherName: data.teacherName,
+        timeOffType: data.timeOffType,
+        date: formattedDate,
+        notes: data.notes,
+      }
+      console.log(JSON.stringify(payload));
+      
+      const res = await axios.post(TimeOffUrl, payload)
+      console.log(res.data);
+
+      form.reset();
+
+      const {message} = res.data;
+      toast({ title: "Success✅", description: message, variant:"default" })  
+        
+    } catch (error:unknown) {
+      if(error instanceof AxiosError){
+        const {message} = error.response?.data;
+        console.error(error);
+        toast({ title: "Failed", description: message || "An unknown error has occurred.", variant:"destructive" })  
+      }
     } 
   }
 
@@ -138,7 +151,7 @@ export function LeaveForm() {
           )}
         />
 
-        <Button type="submit" className="w-full">Apply</Button>
+        <SubmitButton name={isSubmitting ? 'Applying...' : 'Apply'} type="submit" disabled={isSubmitting} />
       </form>
     </Form>
   )

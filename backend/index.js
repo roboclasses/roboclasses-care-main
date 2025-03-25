@@ -11,6 +11,7 @@ import normalClassAppointmentRoute from "./routes/normalClassAppointmentRoute.js
 import userRoutes from "./routes/userRoutes.js"
 import newCourseEntry from "./routes/newCourseEntryRoute.js"
 import studentRoutes from "./routes/studentRoute.js"
+import timeOffRoute from "./routes/timeOffRoute.js"
 
 dotenv.config();
 const app = express();
@@ -34,6 +35,8 @@ app.use('/api/v1',normalClassAppointmentRoute)
 app.use('/api/v1', newBatchEntryRoute)
 app.use('/api/v1',newCourseEntry)
 app.use('/api/v1',attendanceRoute)
+app.use('/api/v1',timeOffRoute)
+
 
 // listning on port
 const port = process.env.PORT || 5000;
