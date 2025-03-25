@@ -6,6 +6,7 @@ import { tabs } from "@/data/dataStorage";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import CardViewDemo from "./CardViewDemo";
+import TableViewDemo from "./TableViewDemo";
 
 const HeroSection = () => {
     const [activeTab, setActivetab] = useState("apply")
@@ -14,7 +15,7 @@ const HeroSection = () => {
     const renderComponents = ()=>{
         switch(activeTab){
             case "past":
-                return "Table view"
+                return <TableViewDemo />
             case "apply":
                 return <CardViewDemo />
             default:

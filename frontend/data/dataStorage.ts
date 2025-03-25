@@ -75,3 +75,23 @@ export const timeOffTypes = [
     type: "Sick Leave",
   },
 ];
+
+// Time off status
+export const timeOffStatus = [
+  {
+    id: 1,
+    status: "Requested"
+  },
+  {
+    id: 2,
+    status: "Approved"
+  },
+  {
+    id: 3,
+    status: "Taken"
+  },
+  {
+    id: 4,
+    status: "cancelled"
+  },
+]
