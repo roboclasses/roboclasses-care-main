@@ -64,4 +64,14 @@ export const tabs = [
   { id: "card", name: "Card View" },
 ];
 
-
+// Time off types
+export const timeOffTypes = [
+  {
+    id: 1,
+    type: "Normal Leave",
+  },
+  {
+    id: 2,
+    type: "Sick Leave",
+  },
+];
