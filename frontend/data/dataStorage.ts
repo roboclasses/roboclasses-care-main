@@ -59,8 +59,8 @@ export const weekDays = [
 
 // Time off views
 export const tabs = [
-  { id: "table", name: "Table View" },
-  { id: "card", name: "Card View" },
+  { id: "past", name: "Past Leaves" },
+  { id: "apply", name: "Apply Leaves" },
 ];
 
 // Time off types
