@@ -201,6 +201,11 @@ useEffect(()=>{
         url: "/courseEntry",
         icon: BookIcon,
       },
+      {
+        title: "Time Off",
+        url: "/timeOff",
+        icon: Calendar,
+      },
     ],
 
     // navMainTeacher: [
