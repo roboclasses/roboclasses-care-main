@@ -5,8 +5,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-import { StatusUpdateForm } from "./StatusUpdateForm";
-import { Edit, Filter } from "lucide-react";
+import { Filter } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -40,8 +39,8 @@ export function FilterTimeOffDemo() {
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Types</SelectLabel>
-                <SelectItem value="Taken">Taken</SelectItem>
-                <SelectItem value="Cancelled">Cancelled</SelectItem>
+                <SelectItem value="Normal Leave">Normal Leave</SelectItem>
+                <SelectItem value="Sick Leave">Sick Leave</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>

@@ -15,17 +15,18 @@ import { TimeOffApprovalDemo } from "./TimeOffApprovalDemo";
 
 const TableViewDemo = () => {
   return (
-    <Card>
+    <Card className="lg:w-full w-[400px]">
       <CardHeader className="flex flex-row items-center justify-between">
         <FilterTimeOffDemo />
       </CardHeader>
-      <CardContent>
+      <CardContent className="lg:w-full w-[400px]">
         <Table>
           <TableCaption>A list of past leaves</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead className="w-[100px]">Status</TableHead>
               <TableHead>Teacher Name</TableHead>
+              <TableHead>Time off type</TableHead>
               <TableHead>Time off date</TableHead>
               <TableHead className="text-right">Additional note</TableHead>
               <TableHead className="text-right">Manage</TableHead>
@@ -35,6 +36,7 @@ const TableViewDemo = () => {
             <TableRow>
               <TableCell className="font-medium">Requested</TableCell>
               <TableCell>Monty</TableCell>
+              <TableCell>Sick Leave</TableCell>
               <TableCell>25-03-2025</TableCell>
               <TableCell className="text-right">Urgent work</TableCell>
               <TableCell className="text-right">
