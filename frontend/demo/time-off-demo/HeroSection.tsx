@@ -12,7 +12,7 @@ const HeroSection = () => {
     const [activeTab, setActivetab] = useState("apply")
 
     // Handle render components
-    const renderComponents = ()=>{
+    const renderComponents = ()=>{      
         switch(activeTab){
             case "past":
                 return <TableViewDemo />

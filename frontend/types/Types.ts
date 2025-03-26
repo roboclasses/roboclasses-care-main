@@ -79,6 +79,15 @@ export type normalClassType = {
   numberOfClasses: string;
 };
 
+export type leaveType = {
+  _id: string;
+  teacherName: string;
+  timeOffType: string;
+  date: string;
+  notes: string;
+  status: string;
+}
+
 
 
 
