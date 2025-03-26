@@ -1,6 +1,6 @@
 'use client'
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
@@ -20,32 +20,55 @@ import { format } from "date-fns";
 import axios, { AxiosError } from "axios";
 import useSWR from "swr";
 import { TimeOffUrl } from "@/constants";
+import { getUserSession } from "@/lib/session";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 
 const TableViewDemo = () => {
   const { data, error, isLoading, isValidating } = useSWR<leaveType[]>(TimeOffUrl,fetcher);
+  const [name, setName] = useState("");
+  const [role, setRole] = useState("");
+
+  // Get user session
+  useEffect(()=>{
+    const fetchSession = async()=>{
+      const user = await getUserSession();
+      if(user){
+        setName(user.name || '')
+        setRole(user.role || '')
+      }
+    }
+    fetchSession();
+  },[])
+
+   // Filter leaves data
+   const handleFilterData = ()=>{
+    if(role === "teacher"){
+      const filteredData = data?.filter((item)=>item.teacherName === name)
+      return filteredData;
+    }
+    else if(role === "admin"){
+      return data;
+    }
+   }
 
     // Handle edge cases
-    const handleEdgeCases=()=>{
-      if (data?.length === 0) return <div>Empty list for Leaves</div>;
+    if (data?.length === 0) return <div>Empty list for Leaves</div>;
     if (error instanceof AxiosError){
       const {message} = error.response?.data;
       return <div>{message || "An unknown error has occurred."}</div>;
     } 
     if (isLoading) return <div>Loading...</div>;
     if (isValidating) return <div>Refershing data...</div>;
-    }
-    
   
+    
   return (
     <Card className="lg:w-full w-[400px]">
       <CardHeader className="flex flex-row items-center justify-between">
         <FilterTimeOffDemo />
       </CardHeader>
       <CardContent className="lg:w-full w-[400px] overflow-x-auto">
-        {handleEdgeCases()}
         <Table>
           <TableCaption>A list of past leaves</TableCaption>
           <TableHeader>
@@ -59,16 +82,16 @@ const TableViewDemo = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-           {data?.map((item:leaveType)=>(
+           {handleFilterData()?.map((item:leaveType)=>(
             <TableRow key={item._id}>
             <TableCell className="font-medium">{item.status}</TableCell>
             <TableCell>{item.teacherName}</TableCell>
             <TableCell>{item.timeOffType}</TableCell>
             <TableCell>{item.date ? format(item.date, 'MMM dd, yyyy') : ''}</TableCell>
             <TableCell className="text-right">{item.notes}</TableCell>
-            <TableCell className="text-right">
+            {role === "admin" && <TableCell className="text-right">
               <TimeOffApprovalDemo />
-            </TableCell> 
+            </TableCell> }
           </TableRow>
            ))}
           </TableBody>
