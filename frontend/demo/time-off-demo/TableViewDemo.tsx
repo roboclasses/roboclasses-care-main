@@ -23,8 +23,10 @@ import { TimeOffUrl } from "@/constants";
 import { getUserSession } from "@/lib/session";
 import { Button } from "@/components/ui/button";
 import { RefreshCcw } from "lucide-react";
+import Cookies from "js-cookie";
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+
+const fetcher = (url: string) => axios.get(url, {headers:{Authorization: Cookies.get("token")}}).then((res) => res.data);
 
 
 const TableViewDemo = () => {
@@ -105,12 +107,10 @@ const TableViewDemo = () => {
                   <TableCell>{item.teacherName}</TableCell>
                   <TableCell>{item.timeOffType}</TableCell>
                   <TableCell>{item.date ? format(new Date(item.date), "MMM dd, yyyy") : ""}</TableCell>
-                  <TableCell className="text-right">{item.notes}</TableCell>
-                  {role === "admin" && (
+                  <TableCell className="text-right">{item.notes}</TableCell>              
                     <TableCell className="text-right">
                       <TimeOffApprovalDemo timeOffId={item._id} />
-                    </TableCell>
-                  )}
+                    </TableCell>                 
                 </TableRow>
               ))}
             </TableBody>

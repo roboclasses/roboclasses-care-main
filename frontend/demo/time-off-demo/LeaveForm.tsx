@@ -19,6 +19,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import axios, { AxiosError } from "axios"
 import { TimeOffUrl } from "@/constants"
 import SubmitButton from "../button-demo/SubmitButton"
+import Cookies from "js-cookie";
+
 
 const FormSchema = z.object({
   teacherName: z.string().min(2, {message: "Tecaher Name must be at least 2 characters."}),
@@ -52,7 +54,7 @@ export function LeaveForm() {
       }
       console.log(JSON.stringify(payload));
       
-      const res = await axios.post(TimeOffUrl, payload)
+      const res = await axios.post(TimeOffUrl, payload, {headers:{Authorization: Cookies.get("token")}})
       console.log(res.data);
 
       form.reset();

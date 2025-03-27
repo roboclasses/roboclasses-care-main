@@ -37,7 +37,7 @@ router.post("/newBatchEntries", authMiddleware, roleMiddleware("teacher", "admin
 });
 
 // get batches
-router.get("/newBatchEntries", authMiddleware, roleMiddleware("teacher", "admin", "user"), async (req, res) => {
+router.get("/newBatchEntries", authMiddleware, roleMiddleware("teacher", "admin", "student"), async (req, res) => {
   try {
     const data = await NewBatchEntries.find();
     console.log(data);
@@ -54,7 +54,7 @@ router.get("/newBatchEntries", authMiddleware, roleMiddleware("teacher", "admin"
 });
 
 // get a single batch
-router.get("/newBatchEntries/:id", authMiddleware, roleMiddleware("teacher", "admin", "user"), async (req, res) => {
+router.get("/newBatchEntries/:id", authMiddleware, roleMiddleware("teacher", "admin", "student"), async (req, res) => {
   try {
     const { id } = req.params;
     const data = await NewBatchEntries.findById(id);

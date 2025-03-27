@@ -18,6 +18,8 @@ import { timeOffStatus } from "@/data/dataStorage"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import axios, { AxiosError } from "axios"
 import { TimeOffUrl } from "@/constants"
+import Cookies from "js-cookie";
+
 
 export interface timeOffIdType{
   timeOffId: string;
@@ -38,7 +40,7 @@ export function StatusUpdateForm({timeOffId}:timeOffIdType) {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      const res = await axios.put(`${TimeOffUrl}/${timeOffId}`, data)
+      const res = await axios.put(`${TimeOffUrl}/${timeOffId}`, data, {headers: {Authorization: Cookies.get("token")}})
       console.log(res.data);
   
       const {message} = res.data;
