@@ -16,12 +16,19 @@ import {
 import { toast } from "@/hooks/use-toast"
 import { timeOffStatus } from "@/data/dataStorage"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import axios, { AxiosError } from "axios"
+import { TimeOffUrl } from "@/constants"
+
+export interface timeOffIdType{
+  timeOffId: string;
+}
+
 
 const FormSchema = z.object({
   status: z.string(),
 })
 
-export function StatusUpdateForm() {
+export function StatusUpdateForm({timeOffId}:timeOffIdType) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -29,23 +36,22 @@ export function StatusUpdateForm() {
     }
   })
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-        console.log(JSON.stringify(data));
-        toast({
-            title: "Success",
-            description: "Leave submitted successfully.",
-            variant:"default"
-          })  
-        
-    } catch (error) {
-        console.error(error);
-        toast({
-            title: "Failed",
-            description: "An unknown error has occurred.",
-            variant:"destructive"
-          })  
+      const res = await axios.put(`${TimeOffUrl}/${timeOffId}`, data)
+      console.log(res.data);
 
+      window.location.reload()
+  
+      const {message} = res.data;
+      toast({ title: "Success✅", description: message, variant:"default" })  
+        
+    } catch (error:unknown) {
+      if(error instanceof AxiosError){
+        console.error(error);
+        const {message} = error.response?.data;
+        toast({ title: "Failed", description: message || "An unknown error has occurred.", variant:"destructive" })  
+      }
     } 
   }
 

@@ -1,3 +1,5 @@
+'use client'
+
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -17,8 +19,21 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
-export function FilterTimeOffDemo() {
+interface filterLeavesType{
+  onFilterLeaves: (filters:{type: string; status: string; fromDate:string})=>void;
+}
+
+export function FilterTimeOffDemo({onFilterLeaves}:filterLeavesType) {
+const [type, setType] = useState("");
+const [status, setStatus] = useState("");
+const [fromDate, setFromDate] = useState("");
+
+const handleApplyFilters = ()=>{
+  onFilterLeaves({type, status, fromDate})
+}
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -32,7 +47,7 @@ export function FilterTimeOffDemo() {
         {/* Filter by type */}
         <div>
           <Label className="font-semibold">Filter by type</Label>
-          <Select>
+          <Select onValueChange={setType}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select a type" />
             </SelectTrigger>
@@ -49,7 +64,7 @@ export function FilterTimeOffDemo() {
          {/* Filter by status */}
         <div>
           <Label className="font-semibold">Filter by status</Label>
-          <Select>
+          <Select onValueChange={setStatus}>
             <SelectTrigger className="w-full]">
               <SelectValue placeholder="Select a type" />
             </SelectTrigger>
@@ -68,10 +83,10 @@ export function FilterTimeOffDemo() {
         {/* Filter by from date */}
         <div>
           <Label className="font-semibold">From date</Label>
-          <Input type="date" />
+          <Input type="date" value={fromDate} onChange={(e)=>setFromDate(e.target.value)}/>
         </div>
 
-        <Button type="button" className="w-full" >Apply</Button>
+        <Button type="button" className="w-full" onClick={handleApplyFilters}>Apply</Button>
       </PopoverContent>
     </Popover>
   );

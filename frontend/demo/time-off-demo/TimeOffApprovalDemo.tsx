@@ -5,10 +5,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-import { StatusUpdateForm } from "./StatusUpdateForm"
+import { StatusUpdateForm, timeOffIdType } from "./StatusUpdateForm"
 import { Edit } from "lucide-react"
 
-export function TimeOffApprovalDemo() {
+export function TimeOffApprovalDemo({timeOffId}:timeOffIdType) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -17,7 +17,7 @@ export function TimeOffApprovalDemo() {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80">
-        <StatusUpdateForm />
+        <StatusUpdateForm timeOffId={timeOffId}/>
       </PopoverContent>
     </Popover>
   )
