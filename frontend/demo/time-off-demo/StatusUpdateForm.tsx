@@ -40,11 +40,11 @@ export function StatusUpdateForm({timeOffId}:timeOffIdType) {
     try {
       const res = await axios.put(`${TimeOffUrl}/${timeOffId}`, data)
       console.log(res.data);
-
-      window.location.reload()
   
       const {message} = res.data;
       toast({ title: "Success✅", description: message, variant:"default" })  
+
+      window.location.reload()
         
     } catch (error:unknown) {
       if(error instanceof AxiosError){
