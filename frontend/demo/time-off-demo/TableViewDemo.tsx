@@ -56,7 +56,7 @@ const TableViewDemo = () => {
       if (role === "teacher" && item.teacherName !== name) return false;
       if (filters.type && item.timeOffType !== filters.type) return false;
       if (filters.status && item.status !== filters.status) return false;
-      if (filters.fromDate && item.date && new Date(item.date) < new Date(filters.fromDate)) return false;
+      if (filters.fromDate && item.dateRange?.from && new Date(item.dateRange?.from) < new Date(filters.fromDate)) return false;
       return true;
     });
   }, [data, filters, role, name]);
@@ -95,7 +95,8 @@ const TableViewDemo = () => {
                 <TableHead className="w-[100px]">Status</TableHead>
                 <TableHead>Teacher Name</TableHead>
                 <TableHead>Time off type</TableHead>
-                <TableHead>Time off date</TableHead>
+                <TableHead>From</TableHead>
+                <TableHead>To</TableHead>
                 <TableHead className="text-right">Additional note</TableHead>
                 <TableHead className="text-right">Manage</TableHead>
               </TableRow>
@@ -106,7 +107,8 @@ const TableViewDemo = () => {
                   <TableCell className="font-medium">{item.status}</TableCell>
                   <TableCell>{item.teacherName}</TableCell>
                   <TableCell>{item.timeOffType}</TableCell>
-                  <TableCell>{item.date ? format(new Date(item.date), "MMM dd, yyyy") : ""}</TableCell>
+                  <TableCell>{item.dateRange?.from ? format(new Date(item.dateRange?.from), "MMM dd, yyyy") : ""}</TableCell>
+                  <TableCell>{item.dateRange?.to ? format(new Date(item.dateRange?.to), "MMM dd, yyyy") : ""}</TableCell>
                   <TableCell className="text-right">{item.notes}</TableCell>              
                     <TableCell className="text-right">
                       <TimeOffApprovalDemo timeOffId={item._id} />
