@@ -83,7 +83,7 @@ export type leaveType = {
   _id: string;
   teacherName: string;
   timeOffType: string;
-  date: string;
+  dateRange: {from: string, to:string};
   notes: string;
   status: string;
 }

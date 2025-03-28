@@ -9,8 +9,8 @@ const timeOffSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
-    date:{
-        type:Date,
+    dateRange:{
+        type:{from: Date, to: Date},
         required:true,
     },
     notes:{
@@ -19,7 +19,7 @@ const timeOffSchema = new mongoose.Schema({
     },
     status:{
         type:String,
-        // required:true,
+        required:true,
         default:"Requested"
     }
 },{timestamps: true})

@@ -21,11 +21,22 @@ import { TimeOffUrl } from "@/constants"
 import SubmitButton from "../button-demo/SubmitButton"
 import Cookies from "js-cookie";
 
+import { addDays, format } from "date-fns"
+import { CalendarIcon } from "lucide-react"
+import { DateRange } from "react-day-picker"
+import { useState } from "react"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+
 
 const FormSchema = z.object({
   teacherName: z.string().min(2, {message: "Tecaher Name must be at least 2 characters."}),
   timeOffType: z.string(),
-  date: z.string(),
+  dateRange: z.object({
+    from: z.date({ required_error: "Start date is required."}),
+    to: z.date().optional()
+  }),
   notes: z.string().min(5, {message: "Note must be atleast 5 characters."})
 })
 
@@ -35,9 +46,14 @@ export function LeaveForm() {
     defaultValues: {
       teacherName: "",
       timeOffType:"",
-      date:"",
+      dateRange: { from: new Date(), to: addDays(new Date(), 7)},
       notes:""
     },
+  })
+
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    from: new Date(),
+    to: addDays(new Date(), 7)
   })
 
     // Handle form status
@@ -45,11 +61,13 @@ export function LeaveForm() {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      const formattedDate = new Date(data.date).toISOString().split("T")[0]
+      const formattedFromDate = data.dateRange.from.toISOString().split("T")[0]
+      const formattedToDate = data.dateRange.to?.toISOString().split("T")[0] || formattedFromDate
+
       const payload = {
         teacherName: data.teacherName,
         timeOffType: data.timeOffType,
-        date: formattedDate,
+        dateRange: { from: formattedFromDate, to: formattedToDate },
         notes: data.notes,
       }
       console.log(JSON.stringify(payload));
@@ -119,17 +137,50 @@ export function LeaveForm() {
           )}
         />
 
-        {/* Date field */}
+        {/* Date Range Picker */}
         <FormField
           control={form.control}
-          name="date"
+          name="dateRange"
           render={({ field }) => (
             <FormItem>
-              <FormControl>
-                <Input type="date" placeholder="Pick time off date" {...field} className="h-12 rounded-xl shadow-none"/>
-              </FormControl>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    id="date"
+                    variant={"outline"}
+                    className="w-full justify-start text-left font-normal h-12 rounded-xl shadow-none"
+                  >
+                    <CalendarIcon className="mr-2" />
+                    {dateRange?.from ? (
+                      dateRange.to ? (
+                        <>
+                          {format(dateRange.from, "LLL dd, y")} -{" "}
+                          {format(dateRange.to, "LLL dd, y")}
+                        </>
+                      ) : (
+                        format(dateRange.from, "LLL dd, y")
+                      )
+                    ) : (
+                      <span>Pick a date range</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    initialFocus
+                    mode="range"
+                    defaultMonth={dateRange?.from}
+                    selected={dateRange}
+                    onSelect={(range) => {
+                      setDateRange(range)
+                      field.onChange(range)
+                    }}
+                    numberOfMonths={2}
+                  />
+                </PopoverContent>
+              </Popover>
               <FormDescription>
-                Currently you can choose one date.
+                Select the date range for your time off.
               </FormDescription>
               <FormMessage />
             </FormItem>
