@@ -92,6 +92,6 @@ export const timeOffStatus = [
   },
   {
     id: 4,
-    status: "cancelled"
+    status: "Cancelled"
   },
 ]
