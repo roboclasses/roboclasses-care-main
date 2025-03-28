@@ -26,7 +26,7 @@ export function ApplyLeaveDialog({name, variant, className, color}:leaveType) {
             {name}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px]" aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>Request time off </DialogTitle>
         </DialogHeader>
