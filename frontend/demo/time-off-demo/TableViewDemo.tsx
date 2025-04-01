@@ -38,6 +38,7 @@ const TableViewDemo = () => {
   const [filters, setFilters] = useState<{type: string; status: string; fromDate: string}>({type:"", status: "", fromDate: ""})
   const [searchQuery, setSearchQuery] = useState("")
 
+
   // Get user session
   useEffect(()=>{
     const fetchSession = async()=>{
@@ -82,7 +83,7 @@ const TableViewDemo = () => {
 
  
     return (
-      <Card className="lg:w-full w-full">
+      <Card className="lg:w-full w-[400px]">
         <CardHeader className="flex flex-row items-center justify-between">
           <div className="flex items-center gap-2 mr-2">
             <FilterTimeOffDemo onFilterLeaves={setFilters} />
@@ -98,9 +99,10 @@ const TableViewDemo = () => {
             <Input type="search" placeholder="Search Teacher/Status..." className="w-full border-0" value={searchQuery} onChange={(e)=>setSearchQuery(e.target.value)}/>
           </div>
         </CardHeader>
-        <CardContent className="lg:w-full w-[400px] overflow-x-auto">
-          {handleEdgeCases()}
-          <Table>
+        <CardContent className="w-full overflow-x-auto">
+          {error ?? data?.length === 0 ?? isLoading ?? isValidating ?
+          handleEdgeCases() :
+          (<Table>
             <TableCaption>A list of past leaves</TableCaption>
             <TableHeader>
               <TableRow>
@@ -134,7 +136,7 @@ const TableViewDemo = () => {
                 <TableCell className="text-right">{filteredData.length}</TableCell>
               </TableRow>
             </TableFooter>
-          </Table>
+          </Table>)}
         </CardContent>
       </Card>
     );
