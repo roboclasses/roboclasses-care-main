@@ -15,9 +15,10 @@ interface leaveType{
     variant: "link" | "secondary" | "default";
     className?: string;
     color?: string;
+    defaultValue?:string
 }
 
-export function ApplyLeaveDialog({name, variant, className, color}:leaveType) {
+export function ApplyLeaveDialog({name, variant, className, color, defaultValue}:leaveType) {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -30,7 +31,7 @@ export function ApplyLeaveDialog({name, variant, className, color}:leaveType) {
         <DialogHeader>
           <DialogTitle>Request time off </DialogTitle>
         </DialogHeader>
-       <LeaveForm />
+       <LeaveForm defaultValue={defaultValue || ''}/>
       </DialogContent>
     </Dialog>
   )
