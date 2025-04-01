@@ -8,13 +8,13 @@ const cards = [
     id: 1,
     cardHeader: "15 days of Normal leave available",
     cardContent: "You are entitled to 15 days of Normal leave this year",
-    cardDialogComponent: <ApplyLeaveDialog name="Request Normal" variant="secondary" color="limegreen"/>,
+    cardDialogComponent: <ApplyLeaveDialog name="Request Normal" variant="secondary" color="limegreen" defaultValue="Normal Leave"/>,
   },
   {
     id: 2,
     cardHeader: "5 days of Sick leave available",
     cardContent: "You are entitled to 5 days of Sick leave this year",
-    cardDialogComponent: <ApplyLeaveDialog name="Request Sick" variant="secondary" color="limegreen"/>,
+    cardDialogComponent: <ApplyLeaveDialog name="Request Sick" variant="secondary" color="limegreen" defaultValue="Sick Leave"/>,
   },
   {
     id: 3,

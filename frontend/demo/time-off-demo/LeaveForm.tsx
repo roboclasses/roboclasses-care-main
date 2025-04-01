@@ -40,12 +40,12 @@ const FormSchema = z.object({
   notes: z.string().min(5, {message: "Note must be atleast 5 characters."})
 })
 
-export function LeaveForm() {
+export function LeaveForm({defaultValue}:{defaultValue:string}) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       teacherName: "",
-      timeOffType:"",
+      // timeOffType:"",
       dateRange: { from: new Date(), to: addDays(new Date(), 7)},
       notes:""
     },
@@ -115,7 +115,7 @@ export function LeaveForm() {
           name="timeOffType"
           render={({ field }) => (
             <FormItem>
-              <Select onValueChange={field.onChange} value={field.value}>
+              <Select onValueChange={field.onChange} value={field.value} defaultValue={defaultValue}>
                 <FormControl>
                   <SelectTrigger className="h-12 rounded-xl shadow-none">
                     <SelectValue placeholder="Select time off type" />
@@ -175,7 +175,7 @@ export function LeaveForm() {
                       setDateRange(range)
                       field.onChange(range)
                     }}
-                    numberOfMonths={2}
+                    numberOfMonths={1}
                   />
                 </PopoverContent>
               </Popover>
