@@ -32,7 +32,7 @@ import { Calendar } from "@/components/ui/calendar"
 
 const FormSchema = z.object({
   teacherName: z.string().min(2, {message: "Tecaher Name must be at least 2 characters."}),
-  timeOffType: z.string(),
+  timeOffType: z.string().optional(),
   dateRange: z.object({
     from: z.date({ required_error: "Start date is required."}),
     to: z.date().optional()
@@ -45,7 +45,7 @@ export function LeaveForm({defaultValue}:{defaultValue:string}) {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       teacherName: "",
-      // timeOffType:"",
+      timeOffType: defaultValue,
       dateRange: { from: new Date(), to: addDays(new Date(), 7)},
       notes:""
     },
@@ -115,7 +115,7 @@ export function LeaveForm({defaultValue}:{defaultValue:string}) {
           name="timeOffType"
           render={({ field }) => (
             <FormItem>
-              <Select onValueChange={field.onChange} value={field.value} defaultValue={defaultValue}>
+              <Select onValueChange={field.onChange} value={field.value} >
                 <FormControl>
                   <SelectTrigger className="h-12 rounded-xl shadow-none">
                     <SelectValue placeholder="Select time off type" />
