@@ -98,7 +98,7 @@ const TableViewDemo = () => {
             <Input type="search" placeholder="Search Teacher/Status..." className="w-full border-0" value={searchQuery} onChange={(e)=>setSearchQuery(e.target.value)}/>
           </div>
         </CardHeader>
-        <CardContent className="lg:w-full w-[400px] overflow-x-auto">
+        <CardContent className="lg:w-full w-[450px] overflow-x-auto">
           {handleEdgeCases()}
           <Table>
             <TableCaption>A list of past leaves</TableCaption>
