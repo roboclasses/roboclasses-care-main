@@ -12,12 +12,16 @@ import userRoutes from "./routes/userRoutes.js"
 import newCourseEntry from "./routes/newCourseEntryRoute.js"
 import studentRoutes from "./routes/studentRoute.js"
 import timeOffRoute from "./routes/timeOffRoute.js"
+import { handleCleanupExpiredTimeOff } from "./jobs/cleanupExpiredTimeOff.js";
 
 dotenv.config();
 const app = express();
 
 // connect to db
 dbConnect();
+
+// cleanup function that runs everyday at midnight
+handleCleanupExpiredTimeOff();
 
 // middlewares
 app.use(cors());
