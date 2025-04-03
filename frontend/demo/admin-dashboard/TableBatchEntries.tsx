@@ -125,11 +125,10 @@ export function TableBatchEntries() {
 
   return (
     <div>
-      <div className="flex justify-between items-center">
-      <h1 className="text-4xl font-semibold mb-6 text-center">
+      <div className="flex justify-between items-center mb-6">
+      <h1 className="lg:text-4xl text-xl font-semibold text-center">
         Available Batches
       </h1>
-      <div>
     <Select onValueChange={(value)=>setBatchStatus(value)}>
       <SelectTrigger className="w-[180px]">
         <SelectValue placeholder="Filter Batches"/>
@@ -139,7 +138,6 @@ export function TableBatchEntries() {
         <SelectItem value="completed">Completed batches</SelectItem>
       </SelectContent>
     </Select>
-      </div>
      </div>
       <Table className="border border-black">
         <TableCaption>A list of batches</TableCaption>
