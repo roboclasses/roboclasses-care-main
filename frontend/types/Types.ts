@@ -80,6 +80,7 @@ export type normalClassType = {
 };
 
 export type leaveType = {
+  length: any;
   _id: string;
   teacherName: string;
   timeOffType: string;

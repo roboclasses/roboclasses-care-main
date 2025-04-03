@@ -10,7 +10,7 @@ import {
 
 interface cardApplyLeavesType {
   cardHeader: string;
-  cardContent: string;
+  cardContent: ReactNode;
   cardDialogComponent: ReactNode;
 }
 
@@ -26,7 +26,7 @@ const CardApplyLeaves = ({
         <Info size={20} color="gray" />
       </CardHeader>
       <CardContent>
-        <p style={{color:"GrayText", fontSize: "14px"}}>{cardContent}</p>
+        <div style={{color:"GrayText", fontSize: "14px"}}>{cardContent}</div>
       </CardContent>
       <CardFooter>{cardDialogComponent}</CardFooter>
     </Card>
