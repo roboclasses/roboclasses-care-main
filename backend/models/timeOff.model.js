@@ -12,6 +12,7 @@ const timeOffSchema = new mongoose.Schema({
     dateRange:{
         type:{from: Date, to: Date},
         required:true,
+        index: true,
     },
     notes:{
         type:String,

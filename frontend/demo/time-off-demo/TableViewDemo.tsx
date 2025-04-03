@@ -83,7 +83,7 @@ const TableViewDemo = () => {
 
  
     return (
-      <Card className="lg:w-full w-[400px]">
+      <Card className="lg:w-full w-[380px]">
         <CardHeader className="flex flex-row items-center justify-between">
           <div className="flex items-center gap-2 mr-2">
             <FilterTimeOffDemo onFilterLeaves={setFilters} />
