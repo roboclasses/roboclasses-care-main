@@ -55,7 +55,7 @@ export function StudentsTable() {
 
   return (
     <>
-    <h1 className="text-4xl font-semibold mb-6 text-center">All Students</h1>
+    <h1 className="lg:text-4xl text-xl font-semibold mb-6 text-center">All Students</h1>
     <Table className="border border-black">
       <TableCaption>A list of Students</TableCaption>
       <TableHeader>

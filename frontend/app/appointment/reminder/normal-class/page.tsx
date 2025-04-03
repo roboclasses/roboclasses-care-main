@@ -17,7 +17,7 @@ const page = () => {
         />
         <div className="z-10 flex items-center justify-center h-full backdrop-blur-sm">
           <div className="w-[380px] bg-background/95 p-8 m-4 rounded-xl shadow-lg">
-            <p className="lg:text-4xl text-xl font-bold mb-6 text-center">Create Normal Class</p>
+            <p className="lg:text-4xl text-xl mb-6 text-center">Create Normal Class</p>
             <MultiDatePickerForm />
           </div>
         </div>
