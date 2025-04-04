@@ -7,6 +7,7 @@ import { TimeOffUrl } from "@/constants";
 import useSWR from "swr";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { HolidayDialog } from "../dialog-demo/HolidayDialog";
 
 const fetcher = (url: string) => axios.get(url, {headers: { Authorization: Cookies.get("token") }}).then((res) => res.data);
 
@@ -26,7 +27,7 @@ const LEAVE_POLICY = {
   half: {
     total: 30,
     name: "Half Day Leave",
-    description: "For early leave",
+    description: "Reason for Leave: Early leave",
   },
   holidays: {
     total: 3,
@@ -51,14 +52,27 @@ const calculateLeaveDays = (
       if (leave.dateRange?.from && leave.dateRange?.to) {
         const from = new Date(leave.dateRange?.from);
         const to = new Date(leave.dateRange?.to);
-        const days =
-          Math.ceil((to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24)) +
-          1;
+        if(leave.timeOffType === "Normal Leave"){
+
+        }
+        const days = Math.ceil((to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24)) + 1;
         return total + days;
       }
       return total;
     }, 0);
 };
+
+// Calculated adjusted normal leave
+const adjustedNormalLeave = (
+  normalLeaveUsed: number,
+  halfLeaveUsed: number
+)=>{
+  const halfDayDeduction = Number(halfLeaveUsed) * 0.5;
+   
+  const remaining =  LEAVE_POLICY.normal.total - Number(normalLeaveUsed) - halfDayDeduction;
+  return parseFloat(remaining.toFixed(2))
+
+}
 
 const CardViewDemo = () => {
   const { data: leaves = [] } = useSWR<leaveType[]>(TimeOffUrl, fetcher);
@@ -92,7 +106,7 @@ const CardViewDemo = () => {
     [leaves, user]
   );
 
-  const usedHalfDayLeaves = useMemo(
+  const usedHalfLeavesDays = useMemo(
     () =>
       user.role === "teacher"
         ? calculateLeaveDays(leaves, LEAVE_POLICY.half.name, user.name)
@@ -100,11 +114,19 @@ const CardViewDemo = () => {
     [leaves, user]
   );
 
+  const usedAdjustedNormalLeaveDays = useMemo(()=>
+    user.role === "teacher"
+    ? adjustedNormalLeave(usedNormalLeaveDays, usedHalfLeavesDays )
+    : LEAVE_POLICY.normal.total,
+    [usedHalfLeavesDays, usedNormalLeaveDays, user]
+  
+  )
+
   // For mapping the cards
   const cards = useMemo(() => [
     {
       id: 1,
-      header: `${LEAVE_POLICY.normal.total - usedNormalLeaveDays} of ${
+      header: `${usedAdjustedNormalLeaveDays} of ${
         LEAVE_POLICY.normal.total
       } days remaining`,
       content: (
@@ -117,7 +139,7 @@ const CardViewDemo = () => {
       ),
       dialog: (
         <ApplyLeaveDialog
-          name="Request"
+          name="Request Normal"
           variant="secondary"
           defaultValue={LEAVE_POLICY.normal.name}
         />
@@ -138,7 +160,7 @@ const CardViewDemo = () => {
       ),
       dialog: (
         <ApplyLeaveDialog
-          name="Request"
+          name="Request Sick"
           variant="secondary"
           defaultValue={LEAVE_POLICY.sick.name}
         />
@@ -146,9 +168,9 @@ const CardViewDemo = () => {
     },
     {
       id: 3,
-      header: `${LEAVE_POLICY.half.total - usedHalfDayLeaves} of ${
+      header: `${LEAVE_POLICY.half.total - usedHalfLeavesDays} of ${
         LEAVE_POLICY.half.total
-      } days remaining`,
+      } half day leave remaining`,
       content: (
         <div>
           <p>{LEAVE_POLICY.half.description}</p>
@@ -159,7 +181,7 @@ const CardViewDemo = () => {
       ),
       dialog: (
         <ApplyLeaveDialog
-          name="Request"
+          name="Request Half"
           variant="secondary"
           defaultValue={LEAVE_POLICY.half.name}
         />
@@ -178,7 +200,17 @@ const CardViewDemo = () => {
       ),
       dialog: null,
     },
-  ], [usedHalfDayLeaves, usedNormalLeaveDays, usedSickLeaveDays]);
+    {
+      id: 5,
+      header: "Quick Settings",
+      content: (
+        <div>
+          <p>{"Reason: Enter or edit holidays"}</p>      
+        </div>
+      ),
+      dialog: (<HolidayDialog />),
+    },
+  ], [usedAdjustedNormalLeaveDays, usedHalfLeavesDays, usedSickLeaveDays]);
 
   return (
     <div className="grid lg:grid-cols-3 grid-cols-1 space-y-4">
