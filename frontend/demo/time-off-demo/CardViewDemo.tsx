@@ -24,7 +24,7 @@ const LEAVE_POLICY = {
     description: "For medical absences with doctor's note",
   },
   half: {
-    total: 6,
+    total: 30,
     name: "Half Day Leave",
     description: "For early leave",
   },
