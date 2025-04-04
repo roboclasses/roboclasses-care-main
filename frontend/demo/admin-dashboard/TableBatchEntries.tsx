@@ -18,13 +18,15 @@ import { getUserSession } from "@/lib/session";
 import { batchType } from "@/types/Types";
 import { NewBatchEntryUrl } from "@/constants";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import useSWR from "swr";
 import Link from "next/link";
 import { format } from "date-fns";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 const fetcher = (url: string) => axios.get(url, { headers: { Authorization: Cookies.get("token") } }).then((res) => res.data);
 
@@ -33,6 +35,7 @@ export function TableBatchEntries() {
   const [name, setName] = useState("");
 
   const [batchStatus, setBatchStatus] = useState("active")
+  const [searchQuery, setSearchQuery] = useState("");
 
   const { data, isLoading, isValidating, error, mutate } = useSWR<batchType[]>(NewBatchEntryUrl, fetcher);
 
@@ -52,27 +55,33 @@ export function TableBatchEntries() {
     handleFetch();
   }, []);
 
-    // For Filter batches
-    const filteredBatches = ()=>{
+  // Filter batches
+    const filteredBatches = useMemo(()=>{
       if(!data) return [];
 
-      if(batchStatus === "active"){
-        if(role === "teacher"){
-          return data.filter((item)=> item.completed === "No" && item.teacher === name)
-        }
-        else if(role === "admin"){
-          return data.filter((item)=>item.completed === "No")
-        }
+      return data.filter((item)=>{
+          if(batchStatus === "completed" && item.completed !== "Yes" )
+            return false;
+
+          if(batchStatus === "active" && item.completed === "yes")
+            return false;
+
+          if(searchQuery && !item.teacher.toLowerCase().includes(searchQuery.toLowerCase()))
+            return false;
+
+          if(role === "teacher"){
+            if(batchStatus === "active" && item.teacher !== name){
+              return false;
+            }
+
+            if(batchStatus === "completed" && item.teacher !== name)
+              return false;
+          }
+
+        return true;
       }
-      else if(batchStatus === "completed"){
-        if(role === "teacher"){
-          return data.filter((item)=>item.completed === "Yes" && item.teacher === name)
-        }
-        else if(role === "admin"){
-          return data.filter((Item)=>Item.completed === "Yes")
-        }
-      }
-    }
+      )
+    },[batchStatus, data, name, role, searchQuery])
 
   // Handle delete a batch
   const handleDelete = async (id: string) => {
@@ -125,19 +134,25 @@ export function TableBatchEntries() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-      <h1 className="lg:text-4xl text-xl font-semibold text-center">
+      <div className="flex flex-col">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="lg:text-4xl text-xl font-semibold text-center">
         Available Batches
-      </h1>
-    <Select onValueChange={(value)=>setBatchStatus(value)}>
-      <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Filter Batches"/>
-      </SelectTrigger>
-      <SelectContent defaultValue={"active"}>
-        <SelectItem value="active">Active Batches</SelectItem>
-        <SelectItem value="completed">Completed batches</SelectItem>
-      </SelectContent>
-    </Select>
+          </h1>
+          <Select onValueChange={(value)=>setBatchStatus(value)}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Filter Batches"/>
+            </SelectTrigger>
+            <SelectContent defaultValue={"active"}>
+              <SelectItem value="active">Active Batches</SelectItem>
+              <SelectItem value="completed">Completed batches</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex lg:w-full w-[300px] max-w-sm items-center border border-gray-300 rounded-lg px-2 py-1">
+          <Search className="h-4 w-4 mr-2.5" />
+          <Input type="search" placeholder="Search Teacher..." className="w-full border-0" value={searchQuery} onChange={(e)=>setSearchQuery(e.target.value)}/>
+        </div>
      </div>
       <Table className="border border-black">
         <TableCaption>A list of batches</TableCaption>
@@ -158,7 +173,7 @@ export function TableBatchEntries() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredBatches()?.map((batch: batchType) => (
+          {filteredBatches.map((batch: batchType) => (
             <TableRow key={batch._id}>
               <TableCell className="font-medium">{batch.teacher}</TableCell>
               <TableCell>{batch.batch}</TableCell>
@@ -199,7 +214,7 @@ export function TableBatchEntries() {
         <TableFooter>
           <TableRow>
             <TableCell colSpan={10}>Total Rows</TableCell>
-            <TableCell className="text-right">{filteredBatches()?.length}</TableCell>
+            <TableCell className="text-right">{filteredBatches.length}</TableCell>
           </TableRow>
         </TableFooter>
       </Table>

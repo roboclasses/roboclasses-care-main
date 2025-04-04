@@ -168,9 +168,7 @@ const CardViewDemo = () => {
     },
     {
       id: 3,
-      header: `${LEAVE_POLICY.half.total - usedHalfLeavesDays} of ${
-        LEAVE_POLICY.half.total
-      } half day leave remaining`,
+      header: "Half Day",
       content: (
         <div>
           <p>{LEAVE_POLICY.half.description}</p>
@@ -210,7 +208,7 @@ const CardViewDemo = () => {
       ),
       dialog: (<HolidayDialog />),
     },
-  ], [usedAdjustedNormalLeaveDays, usedHalfLeavesDays, usedSickLeaveDays]);
+  ], [usedAdjustedNormalLeaveDays, usedSickLeaveDays]);
 
   return (
     <div className="grid lg:grid-cols-3 grid-cols-1 space-y-4">
