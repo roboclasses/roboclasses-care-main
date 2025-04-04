@@ -56,6 +56,7 @@ const handleApplyFilters = ()=>{
                 <SelectLabel>Types</SelectLabel>
                 <SelectItem value="Normal Leave">Normal Leave</SelectItem>
                 <SelectItem value="Sick Leave">Sick Leave</SelectItem>
+                <SelectItem value="Half Day Leave">Half Day Leave</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>

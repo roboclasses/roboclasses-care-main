@@ -73,6 +73,10 @@ export const timeOffTypes = [
     id: 2,
     type: "Sick Leave",
   },
+  {
+    id: 3,
+    type: "Half Day Leave",
+  },
 ];
 
 // Time off status
