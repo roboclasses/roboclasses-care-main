@@ -23,6 +23,11 @@ const LEAVE_POLICY = {
     name: "Sick Leave",
     description: "For medical absences with doctor's note",
   },
+  half: {
+    total: 6,
+    name: "Half Day Leave",
+    description: "For early leave",
+  },
   holidays: {
     total: 3,
     name: "National Holidays",
@@ -87,6 +92,14 @@ const CardViewDemo = () => {
     [leaves, user]
   );
 
+  const usedHalfDayLeaves = useMemo(
+    () =>
+      user.role === "teacher"
+        ? calculateLeaveDays(leaves, LEAVE_POLICY.half.name, user.name)
+        : 0,
+    [leaves, user]
+  );
+
   // For mapping the cards
   const cards = useMemo(() => [
     {
@@ -133,6 +146,27 @@ const CardViewDemo = () => {
     },
     {
       id: 3,
+      header: `${LEAVE_POLICY.half.total - usedHalfDayLeaves} of ${
+        LEAVE_POLICY.half.total
+      } days remaining`,
+      content: (
+        <div>
+          <p>{LEAVE_POLICY.half.description}</p>
+          <p className="text-sm text-gray-500 mt-1">
+            Policy renews on January 1, {currentYear + 1}
+          </p>
+        </div>
+      ),
+      dialog: (
+        <ApplyLeaveDialog
+          name="Request"
+          variant="secondary"
+          defaultValue={LEAVE_POLICY.half.name}
+        />
+      ),
+    },
+    {
+      id: 4,
       header: LEAVE_POLICY.holidays.name,
       content: (
         <div>
@@ -144,7 +178,7 @@ const CardViewDemo = () => {
       ),
       dialog: null,
     },
-  ], [usedNormalLeaveDays, usedSickLeaveDays]);
+  ], [usedHalfDayLeaves, usedNormalLeaveDays, usedSickLeaveDays]);
 
   return (
     <div className="grid lg:grid-cols-3 grid-cols-1 space-y-4">
