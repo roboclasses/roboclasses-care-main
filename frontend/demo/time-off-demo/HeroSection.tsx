@@ -1,10 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { tabs } from "@/data/dataStorage";
 import { cn } from "@/lib/utils";
+
+import { tabs } from "@/data/dataStorage";
+
 import CardViewDemo from "./CardViewDemo";
 import TableViewDemo from "./TableViewDemo";
+
 
 const HeroSection = () => {
   const [activeTab, setActivetab] = useState("apply");

@@ -1,6 +1,3 @@
-'use client'
-
-import React, { useEffect, useMemo, useState } from "react";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
@@ -13,22 +10,24 @@ import {
   Table,
   TableFooter,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
 import { FilterTimeOffDemo } from "./FilterTimeOffDemo";
 import { TimeOffApprovalDemo } from "./TimeOffApprovalDemo";
+import { TimeOffUrl } from "@/constants";
+import { getUserSession } from "@/lib/session";
 import { leaveType } from "@/types/Types";
+import { RefreshCcw, Search } from "lucide-react";
+
+import React, { useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import axios, { AxiosError } from "axios";
 import useSWR from "swr";
-import { TimeOffUrl } from "@/constants";
-import { getUserSession } from "@/lib/session";
-import { Button } from "@/components/ui/button";
-import { RefreshCcw, Search } from "lucide-react";
 import Cookies from "js-cookie";
-import { Input } from "@/components/ui/input";
 
 
 const fetcher = (url: string) => axios.get(url, {headers:{Authorization: Cookies.get("token")}}).then((res) => res.data);
-
 
 const TableViewDemo = () => {
   const { data, error, isLoading, isValidating } = useSWR<leaveType[]>(TimeOffUrl,fetcher);

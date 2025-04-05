@@ -1,14 +1,13 @@
 'use client'
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-
-import { Filter } from "lucide-react";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -18,8 +17,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+
+import { Filter } from "lucide-react";
 import { useState } from "react";
+
 
 interface filterLeavesType{
   onFilterLeaves: (filters:{type: string; status: string; fromDate:string})=>void;

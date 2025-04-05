@@ -1,6 +1,7 @@
+import React from 'react'
+
 import Header from '@/demo/time-off-demo/Header'
 import HeroSection from '@/demo/time-off-demo/HeroSection'
-import React from 'react'
 
 const page = () => {
   return (

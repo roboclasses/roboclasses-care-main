@@ -18,7 +18,7 @@ const handleStarred = ()=>{
     <div className='flex items-center justify-between'>
         <div className='flex items-center gap-4'>
             <h1 className='font-semibold lg:text-4xl text-xl'>Time Off</h1>
-            {/* Starred feature */}
+            {/* Starred feature only ui */}
             {isStarred ? <Star size={20} color='brown' onClick={handleStarred} /> : <Star size={20} color='gray' onClick={handleStarred}/>}
         </div>
         <ApplyLeaveDialog name='Request time off' variant='default' className='rounded-full'/>

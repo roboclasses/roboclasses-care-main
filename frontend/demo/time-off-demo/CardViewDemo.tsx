@@ -1,13 +1,16 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { ApplyLeaveDialog } from "../dialog-demo/ApplyLeaveDialog";
-import CardApplyLeaves from "./CardApplyLeaves";
+
 import { getUserSession } from "@/lib/session";
 import { leaveType } from "@/types/Types";
 import { TimeOffUrl } from "@/constants";
+
+import CardApplyLeaves from "./CardApplyLeaves";
+import { HolidayDialog } from "../dialog-demo/HolidayDialog";
+import { ApplyLeaveDialog } from "../dialog-demo/ApplyLeaveDialog";
+
+import React, { useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { HolidayDialog } from "../dialog-demo/HolidayDialog";
 
 const fetcher = (url: string) => axios.get(url, {headers: { Authorization: Cookies.get("token") }}).then((res) => res.data);
 
@@ -67,6 +70,7 @@ const adjustedNormalLeave = (
   normalLeaveUsed: number,
   halfLeaveUsed: number
 )=>{
+  
   const halfDayDeduction = Number(halfLeaveUsed) * 0.5;
    
   const remaining =  LEAVE_POLICY.normal.total - Number(normalLeaveUsed) - halfDayDeduction;
