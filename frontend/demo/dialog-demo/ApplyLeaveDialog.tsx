@@ -6,8 +6,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Calendar } from "lucide-react"
 import { LeaveForm } from "../time-off-demo/LeaveForm"
+
+import { Calendar } from "lucide-react"
+
 
 // Leave type
 interface leaveType{
