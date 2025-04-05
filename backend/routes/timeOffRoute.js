@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post("/timeOff",authMiddleware, roleMiddleware("teacher"), createTimeOffController)
 router.get("/timeOff",authMiddleware, roleMiddleware("teacher", "admin"), getTimeOffController)
-router.put("/timeOff/:id",authMiddleware, roleMiddleware("admin"), updateTimeOffController)
+router.put("/timeOff/:id",authMiddleware, roleMiddleware("admin", "teacher"), updateTimeOffController)
 
 
 export default router;

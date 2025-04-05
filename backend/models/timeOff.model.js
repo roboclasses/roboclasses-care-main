@@ -22,7 +22,7 @@ const timeOffSchema = new mongoose.Schema({
         type:String,
         required:true,
         default:"Requested"
-    }
+    },
 },{timestamps: true})
 
 
