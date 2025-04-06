@@ -11,72 +11,11 @@ import React, { useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { adjustedNormalLeave, calculateLeaveDays, currentYear } from "@/lib/utils";
+import { LEAVE_POLICY } from "@/data/dataStorage";
 
 const fetcher = (url: string) => axios.get(url, {headers: { Authorization: Cookies.get("token") }}).then((res) => res.data);
 
-const currentYear = new Date().getFullYear();
-
-const LEAVE_POLICY = {
-  normal: {
-    total: 15,
-    name: "Normal Leave",
-    description: "Annual personal leave allowence",
-  },
-  sick: {
-    total: 5,
-    name: "Sick Leave",
-    description: "For medical absences with doctor's note",
-  },
-  half: {
-    total: 30,
-    name: "Half Day Leave",
-    description: "Reason for Leave: Early leave",
-  },
-  holidays: {
-    total: 3,
-    name: "National Holidays",
-    description: "UAE public holidays",
-  },
-};
-
-const calculateLeaveDays = (
-  leaves: leaveType[],
-  type: string,
-  userName: string
-) => {
-  return leaves
-    .filter(
-      (leave) =>
-        leave.teacherName === userName &&
-        leave.timeOffType === type &&
-        leave.status === "Taken"
-    )
-    .reduce((total, leave) => {
-      if (leave.dateRange?.from && leave.dateRange?.to) {
-        const from = new Date(leave.dateRange?.from);
-        const to = new Date(leave.dateRange?.to);
-        if(leave.timeOffType === "Normal Leave"){
-
-        }
-        const days = Math.ceil((to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24)) + 1;
-        return total + days;
-      }
-      return total;
-    }, 0);
-};
-
-// Calculated adjusted normal leave
-const adjustedNormalLeave = (
-  normalLeaveUsed: number,
-  halfLeaveUsed: number
-)=>{
-  
-  const halfDayDeduction = Number(halfLeaveUsed) * 0.5;
-   
-  const remaining =  LEAVE_POLICY.normal.total - Number(normalLeaveUsed) - halfDayDeduction;
-  return parseFloat(remaining.toFixed(2))
-
-}
 
 const CardViewDemo = () => {
   const { data: leaves = [] } = useSWR<leaveType[]>(TimeOffUrl, fetcher);

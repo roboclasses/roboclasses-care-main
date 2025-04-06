@@ -98,3 +98,27 @@ export const timeOffStatus = [
     status: "Cancelled"
   },
 ]
+
+// Leave Policy
+export const LEAVE_POLICY = {
+  normal: {
+    total: 15,
+    name: "Normal Leave",
+    description: "Annual personal leave allowence",
+  },
+  sick: {
+    total: 5,
+    name: "Sick Leave",
+    description: "For medical absences with doctor's note",
+  },
+  half: {
+    total: 30,
+    name: "Half Day Leave",
+    description: "Reason for Leave: Early leave",
+  },
+  holidays: {
+    total: 3,
+    name: "National Holidays",
+    description: "UAE public holidays",
+  },
+};
