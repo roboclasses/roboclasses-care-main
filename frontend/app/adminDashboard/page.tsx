@@ -12,6 +12,7 @@ import { StudentsTable } from "@/demo/student-register-demo/StudentsTable";
 import { TableAttendance } from "@/demo/admin-dashboard/TableAttendance";
 
 import { imageIcons } from "@/data/dataStorage";
+import { cn } from "@/lib/utils";
 
 
 const Page = () => {
@@ -47,8 +48,8 @@ const Page = () => {
               height={400}
               width={450}
               alt={items.alt}
-              className={`rounded-xl shadow-sm hover:shadow-2xl transition-all duration-100 delay-75  
-              ${activeComponent === items.id ? "filter grayscale blur-sm transition-all duration-150 delay-75 hover:shadow-none" : ""}`}
+              className={cn("rounded-xl shadow-sm hover:shadow-2xl transition-all duration-100 delay-75" , 
+              activeComponent === items.id ? "filter grayscale blur-sm transition-all duration-150 delay-75 hover:shadow-none" : "")}
             />
           </Link>
         ))}
