@@ -2,8 +2,7 @@
 
 import React, { useState } from 'react'
 
-import { Star } from 'lucide-react'
-import { ApplyLeaveDialog } from '../dialog-demo/ApplyLeaveDialog'
+import { FaStar } from "react-icons/fa";import { ApplyLeaveDialog } from '../dialog-demo/ApplyLeaveDialog'
 
 
 const Header = () => {
@@ -19,7 +18,7 @@ const handleStarred = ()=>{
         <div className='flex items-center gap-4'>
             <h1 className='font-semibold lg:text-4xl text-xl'>Time Off</h1>
             {/* Starred feature only ui */}
-            {isStarred ? <Star size={20} color='brown' onClick={handleStarred} /> : <Star size={20} color='gray' onClick={handleStarred}/>}
+            {isStarred ? <FaStar size={20} color='gold' onClick={handleStarred} /> : <FaStar size={20} color='gray' onClick={handleStarred}/>}
         </div>
         <ApplyLeaveDialog name='Request time off' variant='default' className='rounded-full'/>
     </div>

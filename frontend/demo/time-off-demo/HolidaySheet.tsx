@@ -113,7 +113,7 @@ export function HolidaySheet() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="ghost">
+        <Button variant="outline" className="rounded-full shadow-none">
           <IoSettingsSharp />
         </Button>
       </SheetTrigger>
