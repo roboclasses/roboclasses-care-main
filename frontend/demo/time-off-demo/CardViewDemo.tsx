@@ -14,13 +14,11 @@ import useSWR from "swr";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { MdHolidayVillage } from "react-icons/md";
-import { FcLeave } from "react-icons/fc";
 import { FaHandHoldingMedical } from "react-icons/fa6";
 import { FaHourglassHalf } from "react-icons/fa";
-
+import { FaCalendar } from "react-icons/fa";
 
 const fetcher = (url: string) => axios.get(url, {headers: { Authorization: Cookies.get("token") }}).then((res) => res.data);
-
 
 
 const CardViewDemo = () => {
@@ -78,7 +76,7 @@ const CardViewDemo = () => {
       header: `${usedAdjustedNormalLeaveDays} of ${
         LEAVE_POLICY.normal.total
       } days remaining`,
-      icon: (<FcLeave size={30}/>),
+      icon: (<FaCalendar size={30} color="pink"/>),
       content: (
         <div>
           <p>{LEAVE_POLICY.normal.description}</p>
