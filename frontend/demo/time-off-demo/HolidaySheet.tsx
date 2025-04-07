@@ -28,13 +28,28 @@ import SubmitButton from "../button-demo/SubmitButton";
 import { HolidayUrl } from "@/constants";
 
 import axios, { AxiosError } from "axios";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import useSWR from "swr";
+import { Label } from "@/components/ui/label";
+
+const fetcher = (url:string) => axios.get(url).then((res) => res.data)
+
+interface holidayDataT{
+  _id: string;
+  holiday: string;
+  duration:string;
+}
 
 const formSchema = z.object({
   holiday: z.string().min(3, { message: "Holiday must be 3 characters" }),
-  duration: z.string().min(1, { message: "Duration of holiday must be 1" }),
+  duration: z.string().max(2, {message: "Duration must contain at most 2 character(s)"}),
 });
 
+
+
 export function HolidaySheet() {
+  const {data, mutate} = useSWR<holidayDataT[]>(HolidayUrl, fetcher)
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,6 +65,12 @@ export function HolidaySheet() {
     try {
       const res = await axios.post(HolidayUrl, data)
       console.log(res.data);
+
+      //Reset the form fields
+      form.reset();
+
+      // Instantly update the list 
+      mutate()
 
       const {message} = res.data;
       toast({title: "Success✅", description: message, variant: "default"})
@@ -115,6 +136,26 @@ export function HolidaySheet() {
               />
             </form>
           </Form>
+        </div>
+        <div>
+          <Label className="text-xl font-semibold">Holiday List</Label>
+          <Table>
+            <TableCaption>A list of attendances</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Holiday Name</TableHead>
+                <TableHead>Duration</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {data?.map((item:holidayDataT)=>(
+                <TableRow key={item._id}>
+                <TableCell>{item.holiday}</TableCell>
+                <TableCell>{parseInt(item.duration,10)}</TableCell>
+              </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
       </SheetContent>
     </Sheet>

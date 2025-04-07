@@ -17,17 +17,17 @@
 
 
 // Production
-export const DemoClassUrl = "https://api-roboclasses-care.up.railway.app/api/v1/appointments/demoClass";
-export const NormalClassUrl = "https://api-roboclasses-care.up.railway.app/api/v1/appointments/normalClass";
-export const NewBatchEntryUrl = "https://api-roboclasses-care.up.railway.app/api/v1/newBatchEntries";
-export const AttendanceUrl = "https://api-roboclasses-care.up.railway.app/api/v1/attendances";
-export const SignupUrl = "https://api-roboclasses-care.up.railway.app/api/v1/auth/signup";
-export const LoginUrl = "https://api-roboclasses-care.up.railway.app/api/v1/auth/login";
-export const CoursesUrl = "https://api-roboclasses-care.up.railway.app/api/v1/courses";
-export const StudentRegUrl = "https://api-roboclasses-care.up.railway.app/api/v1/students";
-export const UsersUrl = "https://api-roboclasses-care.up.railway.app/api/v1/users";
-export const TimeOffUrl = "https://api-roboclasses-care.up.railway.app/api/v1/timeOff";
-export const HolidayUrl = "https://api-roboclasses-care.up.railway.app/api/v1/holiday";
+// export const DemoClassUrl = "https://api-roboclasses-care.up.railway.app/api/v1/appointments/demoClass";
+// export const NormalClassUrl = "https://api-roboclasses-care.up.railway.app/api/v1/appointments/normalClass";
+// export const NewBatchEntryUrl = "https://api-roboclasses-care.up.railway.app/api/v1/newBatchEntries";
+// export const AttendanceUrl = "https://api-roboclasses-care.up.railway.app/api/v1/attendances";
+// export const SignupUrl = "https://api-roboclasses-care.up.railway.app/api/v1/auth/signup";
+// export const LoginUrl = "https://api-roboclasses-care.up.railway.app/api/v1/auth/login";
+// export const CoursesUrl = "https://api-roboclasses-care.up.railway.app/api/v1/courses";
+// export const StudentRegUrl = "https://api-roboclasses-care.up.railway.app/api/v1/students";
+// export const UsersUrl = "https://api-roboclasses-care.up.railway.app/api/v1/users";
+// export const TimeOffUrl = "https://api-roboclasses-care.up.railway.app/api/v1/timeOff";
+// export const HolidayUrl = "https://api-roboclasses-care.up.railway.app/api/v1/holiday";
 
 
 
