@@ -2,19 +2,25 @@
 import { getUserSession } from "@/lib/session";
 import { leaveType } from "@/types/Types";
 import { TimeOffUrl } from "@/constants";
+import { adjustedNormalLeave, calculateLeaveDays, currentYear } from "@/lib/utils";
+import { LEAVE_POLICY } from "@/data/dataStorage";
 
 import CardApplyLeaves from "./CardApplyLeaves";
-import { HolidayDialog } from "../dialog-demo/HolidayDialog";
 import { ApplyLeaveDialog } from "../dialog-demo/ApplyLeaveDialog";
+import { HolidaySheet } from "./HolidaySheet";
 
 import React, { useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { adjustedNormalLeave, calculateLeaveDays, currentYear } from "@/lib/utils";
-import { LEAVE_POLICY } from "@/data/dataStorage";
+import { MdHolidayVillage } from "react-icons/md";
+import { FcLeave } from "react-icons/fc";
+import { FaHandHoldingMedical } from "react-icons/fa6";
+import { FaHourglassHalf } from "react-icons/fa";
+
 
 const fetcher = (url: string) => axios.get(url, {headers: { Authorization: Cookies.get("token") }}).then((res) => res.data);
+
 
 
 const CardViewDemo = () => {
@@ -72,6 +78,7 @@ const CardViewDemo = () => {
       header: `${usedAdjustedNormalLeaveDays} of ${
         LEAVE_POLICY.normal.total
       } days remaining`,
+      icon: (<FcLeave size={30}/>),
       content: (
         <div>
           <p>{LEAVE_POLICY.normal.description}</p>
@@ -93,6 +100,7 @@ const CardViewDemo = () => {
       header: `${LEAVE_POLICY.sick.total - usedSickLeaveDays} of ${
         LEAVE_POLICY.sick.total
       } days remaining`,
+      icon: (<FaHandHoldingMedical size={30} color="pink"/>),
       content: (
         <div>
           <p>{LEAVE_POLICY.sick.description}</p>
@@ -112,6 +120,7 @@ const CardViewDemo = () => {
     {
       id: 3,
       header: "Half Day",
+      icon: (<FaHourglassHalf size={30} color="pink"/>),
       content: (
         <div>
           <p>{LEAVE_POLICY.half.description}</p>
@@ -131,6 +140,7 @@ const CardViewDemo = () => {
     {
       id: 4,
       header: LEAVE_POLICY.holidays.name,
+      icon: (<MdHolidayVillage size={30} color="pink"/>),
       content: (
         <div>
           <p>{LEAVE_POLICY.holidays.description}</p>
@@ -144,12 +154,13 @@ const CardViewDemo = () => {
     {
       id: 5,
       header: "Quick Settings",
+      icon: (<HolidaySheet />),
       content: (
         <div>
           <p>{"Reason: Enter or edit holidays"}</p>      
         </div>
       ),
-      dialog: (<HolidayDialog />),
+      dialog: null,
     },
   ], [usedAdjustedNormalLeaveDays, usedSickLeaveDays]);
 
@@ -159,6 +170,7 @@ const CardViewDemo = () => {
         <CardApplyLeaves
           key={item.id}
           cardHeader={item.header}
+          icon={item.icon}
           cardContent={item.content}
           cardDialogComponent={item.dialog}
         />
