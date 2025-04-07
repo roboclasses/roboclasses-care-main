@@ -9,6 +9,8 @@
 // export const StudentRegUrl = "http://localhost:8003/api/v1/students";
 // export const UsersUrl = "http://localhost:8003/api/v1/users";
 // export const TimeOffUrl = "http://localhost:8003/api/v1/timeOff";
+// export const HolidayUrl = "http://localhost:8003/api/v1/holiday";
+
 
 
 
@@ -25,5 +27,7 @@ export const CoursesUrl = "https://api-roboclasses-care.up.railway.app/api/v1/co
 export const StudentRegUrl = "https://api-roboclasses-care.up.railway.app/api/v1/students";
 export const UsersUrl = "https://api-roboclasses-care.up.railway.app/api/v1/users";
 export const TimeOffUrl = "https://api-roboclasses-care.up.railway.app/api/v1/timeOff";
+export const HolidayUrl = "https://api-roboclasses-care.up.railway.app/api/v1/holiday";
+
 
 
