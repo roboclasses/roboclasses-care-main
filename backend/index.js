@@ -4,14 +4,15 @@ import dotenv from "dotenv";
 import helmet from "helmet";
 
 import { dbConnect } from "./config/db.js";
-import demoClassAppointmentRoute from "./routes/demoClassAppointmentRoute.js"
-import newBatchEntryRoute from "./routes/newBatchEntryRoute.js"
-import attendanceRoute from "./routes/attendanceRoute.js"
-import normalClassAppointmentRoute from "./routes/normalClassAppointmentRoute.js"
+import demoClassAppointmentRoutes from "./routes/demoClassAppointmentRoute.js"
+import newBatchEntryRoutes from "./routes/newBatchEntryRoute.js"
+import attendanceRoutes from "./routes/attendanceRoute.js"
+import normalClassAppointmentRoutes from "./routes/normalClassAppointmentRoute.js"
 import userRoutes from "./routes/userRoutes.js"
 import newCourseEntry from "./routes/newCourseEntryRoute.js"
 import studentRoutes from "./routes/studentRoute.js"
-import timeOffRoute from "./routes/timeOffRoute.js"
+import timeOffRoutes from "./routes/timeOffRoute.js"
+import holidayRoutes from "./routes/holidayRoutes.js"
 import { handleCleanupExpiredTimeOff } from "./jobs/cleanupExpiredTimeOff.js";
 
 dotenv.config();
@@ -34,12 +35,14 @@ app.use(helmet());
 // routes
 app.use('/api/v1',userRoutes)
 app.use('/api/v1',studentRoutes)
-app.use('/api/v1',demoClassAppointmentRoute)
-app.use('/api/v1',normalClassAppointmentRoute)
-app.use('/api/v1', newBatchEntryRoute)
+app.use('/api/v1',demoClassAppointmentRoutes)
+app.use('/api/v1',normalClassAppointmentRoutes)
+app.use('/api/v1', newBatchEntryRoutes)
 app.use('/api/v1',newCourseEntry)
-app.use('/api/v1',attendanceRoute)
-app.use('/api/v1',timeOffRoute)
+app.use('/api/v1',attendanceRoutes)
+app.use('/api/v1',timeOffRoutes)
+app.use('/api/v1',holidayRoutes)
+
 
 
 // listning on port
