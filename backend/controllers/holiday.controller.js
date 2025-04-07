@@ -2,8 +2,8 @@ import { Holiday } from "../models/holiday.model.js";
 
 export const createHolidayController = async(req, res)=>{
     try {
-        const {holiday, duration} = req.body;
-        const data = await Holiday.create({holiday, duration})
+        const {holiday, dateRange} = req.body;
+        const data = await Holiday.create({holiday, dateRange})
 
         console.log(data);
         return res.status(201).json({success:true, message:"Holiday created successfully."})

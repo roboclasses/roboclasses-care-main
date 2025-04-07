@@ -2,7 +2,11 @@ import mongoose from "mongoose";
 
 const holidaySchema = new mongoose.Schema({
     holiday:{type:String, required:true, unique:true, index:true},
-    duration:{type:String, require:true}
+    dateRange:{
+        type:{from: Date, to: Date},
+        required:true,
+        index: true,
+    },
 },{timestamps: true})
 
 

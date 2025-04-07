@@ -1,6 +1,12 @@
 
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { toast } from "@/hooks/use-toast";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import {
   Form,
   FormControl,
@@ -17,70 +23,90 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { IoSettingsSharp } from "react-icons/io5";
-
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { toast } from "@/hooks/use-toast";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 
 import SubmitButton from "../button-demo/SubmitButton";
 import { HolidayUrl } from "@/constants";
 
-import axios, { AxiosError } from "axios";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import useSWR from "swr";
-import { Label } from "@/components/ui/label";
+import { useState } from "react";
+import axios, { AxiosError } from "axios";
+import { addDays, format } from "date-fns";
+import { DateRange } from "react-day-picker";
+import { CalendarIcon } from "lucide-react";
+import { IoSettingsSharp } from "react-icons/io5";
 
-const fetcher = (url:string) => axios.get(url).then((res) => res.data)
 
-interface holidayDataT{
+const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+
+interface holidayDataT {
   _id: string;
   holiday: string;
-  duration:string;
+  dateRange: { from: ""; to: "" };
 }
 
 const formSchema = z.object({
   holiday: z.string().min(3, { message: "Holiday must be 3 characters" }),
-  duration: z.string().max(2, {message: "Duration must contain at most 2 character(s)"}),
+  dateRange: z.object({
+    from: z.date({ required_error: "This field is required" }),
+    to: z.date().optional(),
+  }),
 });
 
-
-
 export function HolidaySheet() {
-  const {data, mutate} = useSWR<holidayDataT[]>(HolidayUrl, fetcher)
+  const { data, mutate } = useSWR<holidayDataT[]>(HolidayUrl, fetcher);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       holiday: "",
-      duration: "",
+      dateRange: { from: new Date(), to: addDays(new Date(), 7) },
     },
   });
 
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    from: new Date(),
+    to: addDays(new Date(), 7),
+  });
+
+  // Handle form submit status
   const { isSubmitting } = form.formState;
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
     console.log(data);
     try {
-      const res = await axios.post(HolidayUrl, data)
+      const res = await axios.post(HolidayUrl, data);
       console.log(res.data);
 
       //Reset the form fields
       form.reset();
 
-      // Instantly update the list 
-      mutate()
+      // Instantly update the list
+      mutate();
 
-      const {message} = res.data;
-      toast({title: "Success✅", description: message, variant: "default"})
+      const { message } = res.data;
+      toast({ title: "Success✅", description: message, variant: "default" });
 
-    } catch (error:unknown) {
-      if(error instanceof AxiosError){
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
         console.error(error);
-        const {message} = error.response?.data;
-        toast({title: "Failed", description: message, variant: "destructive"})
-      } 
+        const { message } = error.response?.data;
+        toast({ title: "Failed", description: message, variant: "destructive" });
+      }
     }
   }
 
@@ -101,6 +127,7 @@ export function HolidaySheet() {
         <div className="grid grid-cols-1">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 ">
+
               {/* Holiday name */}
               <FormField
                 control={form.control}
@@ -108,7 +135,11 @@ export function HolidaySheet() {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Input placeholder="Enter holiday name" {...field} />
+                      <Input
+                        placeholder="Enter holiday name"
+                        {...field}
+                        className="h-12 rounded-xl"
+                      />
                     </FormControl>
                     <FormDescription>This is holiday name.</FormDescription>
                     <FormMessage />
@@ -116,24 +147,58 @@ export function HolidaySheet() {
                 )}
               />
 
-              {/* Holiday duration */}
+              {/* Date Range Picker */}
               <FormField
                 control={form.control}
-                name="duration"
+                name="dateRange"
                 render={({ field }) => (
                   <FormItem>
-                    <FormControl>
-                      <Input placeholder="Enter holiday duration" {...field} />
-                    </FormControl>
-                    <FormDescription>This is holiday duration.</FormDescription>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          id="date"
+                          variant={"outline"}
+                          className="w-full justify-start text-left font-normal h-12 rounded-xl shadow-none"
+                        >
+                          <CalendarIcon className="mr-2" />
+                          {dateRange?.from ? (
+                            dateRange.to ? (
+                              <>
+                                {format(dateRange.from, "LLL dd, y")} -{" "}
+                                {format(dateRange.to, "LLL dd, y")}
+                              </>
+                            ) : (
+                              format(dateRange.from, "LLL dd, y")
+                            )
+                          ) : (
+                            <span>Pick a date range</span>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          initialFocus
+                          mode="range"
+                          defaultMonth={dateRange?.from}
+                          selected={dateRange}
+                          onSelect={(range) => {
+                            setDateRange(range);
+                            field.onChange(range);
+                          }}
+                          numberOfMonths={1}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormDescription>
+                      Select the date range for your time off.
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <SubmitButton
-                name={isSubmitting ? "Saving" : "Save"}
-                type="submit"
-              />
+
+              <SubmitButton name={isSubmitting ? "Saving" : "Save"} type="submit" />
+
             </form>
           </Form>
         </div>
@@ -144,15 +209,21 @@ export function HolidaySheet() {
             <TableHeader>
               <TableRow>
                 <TableHead>Holiday Name</TableHead>
-                <TableHead>Duration</TableHead>
+                <TableHead>Form</TableHead>
+                <TableHead>To</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data?.map((item:holidayDataT)=>(
+              {data?.map((item: holidayDataT) => (
                 <TableRow key={item._id}>
-                <TableCell>{item.holiday}</TableCell>
-                <TableCell>{parseInt(item.duration,10)}</TableCell>
-              </TableRow>
+                  <TableCell>{item.holiday}</TableCell>
+                  <TableCell>
+                    {item.dateRange?.from ? format(item.dateRange?.from, "MMM dd, yyyy") : ""}
+                  </TableCell>
+                  <TableCell>
+                    {item.dateRange?.to ? format(item.dateRange?.to, "MMM dd, yyyy") : ""}
+                  </TableCell>
+                </TableRow>
               ))}
             </TableBody>
           </Table>
