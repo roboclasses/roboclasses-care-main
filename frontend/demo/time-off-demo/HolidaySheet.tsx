@@ -203,7 +203,7 @@ export function HolidaySheet() {
           </Form>
         </div>
         <div>
-          <Label className="text-xl font-semibold">Holiday List</Label>
+          <Label className="text-xl font-semibold font-serif">Holiday List</Label>
           <Table>
             <TableCaption>A list of holidays</TableCaption>
             <TableHeader>

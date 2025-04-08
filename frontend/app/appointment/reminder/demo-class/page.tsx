@@ -17,7 +17,7 @@ const page = () => {
         />
          <div className="z-10 flex items-center justify-center h-full backdrop-blur-sm">
              <div className="w-[380px] bg-background/95 p-8 m-4 rounded-xl shadow-lg">
-                 <p className="lg:text-4xl text-xl mb-6 text-center">Book Appointment for Demo Class</p>
+                 <p className="lg:text-4xl text-xl mb-6 text-center font-serif">Book Appointment for Demo Class</p>
                  <DatePickerForm />
               </div>
         </div>
