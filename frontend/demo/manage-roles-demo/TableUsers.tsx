@@ -72,17 +72,17 @@ export function TableUsers() {
 
   return (
     <div>
-    <div className="flex items-center justify-between">
-      <h1 className="lg:text-4xl text-2xl font-semibold mb-6 text-center">Manage Users</h1>
-    <Select onValueChange={(value)=>setRole(value)}>
-      <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Filter Users"/>
-      </SelectTrigger>
-      <SelectContent defaultValue={"teacher"}>
-        <SelectItem value="admin">View Admins</SelectItem>
-        <SelectItem value="teacher">View Teachers</SelectItem>
-      </SelectContent>
-    </Select>
+    <div className="flex items-center justify-between mb-6">
+      <h1 className="lg:text-4xl text-2xl font-semibold text-center">Manage Users</h1>
+      <Select onValueChange={(value)=>setRole(value)}>
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder="Filter Users"/>
+        </SelectTrigger>
+        <SelectContent defaultValue={"teacher"}>
+          <SelectItem value="admin">View Admins</SelectItem>
+          <SelectItem value="teacher">View Teachers</SelectItem>
+        </SelectContent>
+      </Select>
     </div>
 
     <Table className="border border-black">
