@@ -205,7 +205,7 @@ export function HolidaySheet() {
         <div>
           <Label className="text-xl font-semibold">Holiday List</Label>
           <Table>
-            <TableCaption>A list of attendances</TableCaption>
+            <TableCaption>A list of holidays</TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead>Holiday Name</TableHead>
