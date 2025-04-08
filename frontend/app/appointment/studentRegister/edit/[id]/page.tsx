@@ -15,7 +15,7 @@ const page = () => {
       />
       <div className="z-10 flex items-center justify-center min-h-screen backdrop-blur-sm">
         <div className="w-[380px] bg-background/95 p-8 m-4 rounded-xl shadow-lg">
-          <p className="lg:text-4xl text-xl mb-6 text-center">
+          <p className="lg:text-4xl text-xl mb-6 text-center font-serif">
             Edit Student Details
           </p>
           <EditStudentDetails />
