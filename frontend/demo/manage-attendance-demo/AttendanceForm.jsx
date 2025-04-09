@@ -199,8 +199,18 @@ export function AttendanceForm() {
 
         {/* Buttons */}
         <div className="flex justify-between">
-          <Button type="button" onClick={handleAddClass} disabled={handleNumber(numberOfClasses) >= 60 } style={{background : "maroon"}}>Add Class</Button>
-          <SubmitButton name={isSubmitting ? 'Submitting...' : 'Submit'} type="submit" disabled={isSubmitting}/>
+          <Button 
+            type="button" 
+            onClick={handleAddClass} 
+            disabled={handleNumber(numberOfClasses) >= 60 } 
+            style={{background: "green"}}> Add Class
+          </Button>
+
+          <SubmitButton 
+            name={isSubmitting ? 'Submitting...' : 'Submit'} 
+            type="submit" 
+            disabled={isSubmitting}
+          />
         </div>
 
         {/* Teacher Name */}
