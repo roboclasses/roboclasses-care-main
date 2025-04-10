@@ -19,8 +19,9 @@ import { DemoClassUrl } from "@/constants";
 import { toast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getUserSession } from "@/lib/session";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -28,7 +29,8 @@ export function TableDemoClass() {
   const [role, setRole] = useState("");
   const [name, setName] = useState("");
   const { data, error, isLoading, isValidating, mutate } = useSWR<appointmentTypes[]>(DemoClassUrl,fetcher);
-
+  const [demoClasses, setDemoClasses] = useState("upcoming");
+  
   // Fetch logged-in teacher session
   useEffect(()=>{
     const handleFetch = async()=>{
@@ -46,14 +48,28 @@ export function TableDemoClass() {
   },[])
 
   // Handle role and name based rows filering 
-  function handleRoleBasedMapping(){
-    if(role === 'teacher'){
-      const filteredData = data?.filter((items)=>items.teacher === name)
-      return filteredData;
-    }
-    else if(role === "admin")
-      return data;
-  }
+  const filteredData = useMemo(()=>{
+    if(!data) return [];
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // For accurate comparison
+
+    return data.filter((item)=>{
+      const itemDate = new Date(item.date);
+
+      if(demoClasses === "upcoming" && itemDate < today)
+        return false;
+
+      if(demoClasses === "old" && itemDate >= today)
+        return false;
+
+      if(role === "teacher" && item.teacher !== name)
+        return false;
+
+      return true;
+
+    })
+  },[data, demoClasses, name, role])
 
   // Handle delete appointment
   const handleDelete = async (appointmentId: string) => {
@@ -86,7 +102,21 @@ export function TableDemoClass() {
 
   return (
     <div>
-    <h1 className="lg:text-4xl text-xl font-semibold mb-6 text-center">Demo-Class Appointments</h1>
+       <div className="flex justify-between items-center mb-6">
+          <h1 className="lg:text-4xl text-xl font-semibold text-center">
+          Demo-Class Appointments
+          </h1>
+          <Select onValueChange={(value)=>setDemoClasses(value)}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Filter Demo Classes"/>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="old">Demo class appointments old</SelectItem>
+              <SelectItem value="upcoming">Demo class appointments upcoming</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
     <Table className="border border-black">
       <TableCaption>A list of booked appointments for Demo Class</TableCaption>
       <TableHeader>
@@ -105,7 +135,7 @@ export function TableDemoClass() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {handleRoleBasedMapping()?.map((appointment: appointmentTypes) => (
+        {filteredData?.map((appointment: appointmentTypes) => (
           <TableRow key={appointment._id}>
             <TableCell className="font-medium">{appointment.userName}</TableCell>
             <TableCell className="font-medium">{appointment.destination}</TableCell>
