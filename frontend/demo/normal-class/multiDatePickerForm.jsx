@@ -163,7 +163,7 @@ export function MultiDatePickerForm() {
   useEffect(()=>{
     const handleFetch = async()=>{
       try {
-        const res = await axios.get(`${NewBatchEntryUrl}?name=${batchName}`)
+        const res = await axios.get(`${NewBatchEntryUrl}?name=${batchName}`, {headers: {Authorization: Cookies.get("token")}})
 
         if(res.data){
           const selectedBatch = res.data.find((item)=>item.batch === batchName)
