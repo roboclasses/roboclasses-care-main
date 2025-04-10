@@ -19,6 +19,7 @@ import { TimeOffUrl } from "@/constants"
 import { timeOffStatus } from "@/data/dataStorage"
 import axios, { AxiosError } from "axios"
 import Cookies from "js-cookie";
+import useSWR from "swr"
 
 
 export interface timeOffIdType{
@@ -30,6 +31,8 @@ const FormSchema = z.object({
 })
 
 export function StatusUpdateForm({timeOffId}:timeOffIdType) {
+  const {mutate} = useSWR(TimeOffUrl)
+  
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -45,7 +48,8 @@ export function StatusUpdateForm({timeOffId}:timeOffIdType) {
       const {message} = res.data;
       toast({ title: "Success✅", description: message, variant:"default" })  
 
-      window.location.reload()
+      // For revalidating updated list
+      mutate();
         
     } catch (error:unknown) {
       if(error instanceof AxiosError){
