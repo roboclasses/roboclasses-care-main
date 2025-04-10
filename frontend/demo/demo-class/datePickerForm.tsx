@@ -49,7 +49,8 @@ const FormSchema = z.object({
   teacher: z.string().min(3, { message: "Teacher name must be atleast 3 characters long"}),
   time: z.string(),
   timeZone: z.string(),
-  items: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select atleast one item"}),
+  // items: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select atleast one item"}),
+  items: z.array(z.string()).default([])
 });
 
 export function DatePickerForm() {

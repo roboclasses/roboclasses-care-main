@@ -51,10 +51,10 @@ const FormSchema = z.object({
     date: z.string().optional(),
     time: z.string().optional(),
     timeZone: z.string().optional(),
-    items: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one item."}),
     batchNumber: z.string().optional(),
     converted: z.string().optional(),
-
+    // items: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one item."}),
+    items: z.array(z.string()).default([])
   });
 
 export function EditDemoClassForm() {
