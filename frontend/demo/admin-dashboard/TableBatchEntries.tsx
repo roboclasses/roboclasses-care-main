@@ -63,7 +63,7 @@ export function TableBatchEntries() {
           if(batchStatus === "completed" && item.completed !== "Yes" )
             return false;
 
-          if(batchStatus === "active" && item.completed === "yes")
+          if(batchStatus === "active" && item.completed === "Yes")
             return false;
 
           if(searchQuery && !item.teacher.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -143,7 +143,7 @@ export function TableBatchEntries() {
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Filter Batches"/>
             </SelectTrigger>
-            <SelectContent defaultValue={"active"}>
+            <SelectContent>
               <SelectItem value="active">Active Batches</SelectItem>
               <SelectItem value="completed">Completed batches</SelectItem>
             </SelectContent>
