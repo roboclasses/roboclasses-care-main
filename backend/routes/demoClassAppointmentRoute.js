@@ -81,14 +81,10 @@ router.get("/appointments/demoClass/:id", async (req, res) => {
 router.put("/appointments/demoClass/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { date, userName, destination, time, items, course, teacher, timeZone, converted, batchNumber} =
-      req.body;
-    const data = await Appointment.findByIdAndUpdate(
-      id,
-      { date, userName, destination, time, items, course, teacher, timeZone, converted, batchNumber},
-      { new: true }
-    );
+    const  appointmentDetails = req.body;
+    const data = await Appointment.findByIdAndUpdate(id, appointmentDetails, { new: true });
     console.log(data);
+    await scheduleReminders(appointmentDetails)
 
     return res.status(200).json({
       success: true,
