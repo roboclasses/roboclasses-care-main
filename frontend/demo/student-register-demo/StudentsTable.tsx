@@ -18,6 +18,8 @@ import { StudentRegUrl } from "@/constants";
 import { toast } from "@/hooks/use-toast";
 import { EditButton } from "../button-demo/EditButton";
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
+import { useEffect, useState } from "react";
+import { getUserSession } from "@/lib/session";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -25,6 +27,20 @@ export function StudentsTable() {
 
   // Handle fetch students form db
   const { data, error, isLoading, isValidating, mutate } = useSWR<studentType[]>(StudentRegUrl,fetcher);
+  const [role, setRole] = useState("")
+
+  // Get user session
+  useEffect(()=>{
+    const handleFetch = async()=>{
+      const session = await getUserSession();
+      if(!session.role){
+        throw new Error('User session not found.');
+      }
+      setRole(session.role)  
+    }
+    handleFetch();
+
+  },[])
 
   // Handle delete Student
   const handleDelete = async (studentId: string) => {
@@ -65,8 +81,8 @@ export function StudentsTable() {
         <TableHead className="w-[100px]">Student ID</TableHead>
           <TableHead className="w-[100px]">Student Name</TableHead>
           <TableHead className="w-[100px]">Parent Name</TableHead>
-          <TableHead className="w-[100px]">Contact Details</TableHead>
-          <TableHead>Email Address</TableHead>
+          <TableHead className="w-[100px]">{role==="admin" && "Contact Details"}</TableHead>
+          <TableHead>{role==="admin" && "Email Address"}</TableHead>
           <TableHead>Location Details</TableHead>
           <TableHead>Grade</TableHead>
           <TableHead>Courses Done</TableHead>
@@ -80,9 +96,9 @@ export function StudentsTable() {
             <TableCell className="font-medium">{Student.studentId}</TableCell>
             <TableCell className="font-medium">{Student.studentName}</TableCell>
             <TableCell className="font-medium">{Student.parentName}</TableCell>
-            <TableCell className="font-medium">{Student.destination}</TableCell>
+            <TableCell className="font-medium">{role==="admin" && Student.destination}</TableCell>
 
-            <TableCell>{Student.email}</TableCell>
+            <TableCell>{role==="admin" && Student.email}</TableCell>
             <TableCell className="text-right">{Student.address}</TableCell>
             <TableCell className="text-right">{Student.grade}</TableCell>
             <TableCell className="text-right">{Student.courses}</TableCell>

@@ -84,7 +84,7 @@ router.put("/appointments/demoClass/:id", async (req, res) => {
     const  appointmentDetails = req.body;
     const data = await Appointment.findByIdAndUpdate(id, appointmentDetails, { new: true });
     console.log(data);
-    await scheduleReminders(appointmentDetails)
+    // await scheduleReminders(appointmentDetails)
 
     return res.status(200).json({
       success: true,
