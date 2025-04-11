@@ -20,7 +20,7 @@ export const createCourseController = async(req, res)=>{
     }
 }
 
-export const getCoursesController = async(req, res)=>{
+export const getCoursesController = async(_req, res)=>{
     try {
         const data = await Course.find();
         console.log(data);

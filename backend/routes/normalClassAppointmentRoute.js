@@ -73,15 +73,6 @@ router.put("/appointments/normalClass/:id", async (req, res) => {
     const { id } = req.params;
     const { teacher, userName, studId, destination, email, batch, time, date, items, weekDay, timeZone, numberOfClasses } = req.body;
 
-    // const student = await Student.findOne({email})
-
-    // Check if the student exists
-    // if (!student) {
-    //   return res.status(404).json({
-    //     success: false,
-    //     message: "Student not found with the provided email.",
-    //   });
-    // }
 
     const data = await NormalClass.findByIdAndUpdate(
       id,
