@@ -86,9 +86,7 @@ export function EditBatchForm() {
   useEffect(() => {
     const fetchBatchDetails = async () => {
       try {
-        const res = await axios.get(`${NewBatchEntryUrl}/${id}`, {
-          headers: { Authorization: Cookies.get("token") },
-        });
+        const res = await axios.get(`${NewBatchEntryUrl}/${id}`, {headers: { Authorization: Cookies.get("token") }});
 
         const batchDetails = res.data;
         setEmail(batchDetails.email);

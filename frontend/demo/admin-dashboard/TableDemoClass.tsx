@@ -21,6 +21,7 @@ import { format } from "date-fns";
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 import { useEffect, useMemo, useState } from "react";
 import { getUserSession } from "@/lib/session";
+import Cookies from "js-cookie";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
@@ -74,7 +75,7 @@ export function TableDemoClass() {
   // Handle delete appointment
   const handleDelete = async (appointmentId: string) => {
     try {
-      const res = await axios.delete(`${DemoClassUrl}/${appointmentId}`);
+      const res = await axios.delete(`${DemoClassUrl}/${appointmentId}`, {headers: { Authorization: Cookies.get("token") }});
       console.log(res.data);
 
       mutate((data) => data?.filter((appointment) => appointment._id !== appointmentId));

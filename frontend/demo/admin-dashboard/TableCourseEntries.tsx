@@ -17,6 +17,7 @@ import { CoursesUrl } from "@/constants";
 import useSWR from "swr";
 import axios, { AxiosError } from "axios";
 import Link from "next/link";
+import Cookies from "js-cookie";
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 
 
@@ -28,7 +29,7 @@ export function TableCourseEntries() {
   // Handle delete a course
   const handleDelete = async(id:string)=>{
     try {
-      const res = await axios.delete(`${CoursesUrl}/${id}`)
+      const res = await axios.delete(`${CoursesUrl}/${id}`, {headers: { Authorization: Cookies.get("token") }})
       console.log(res.data);
 
       mutate((data)=>data?.filter((course)=>course._id !== id))

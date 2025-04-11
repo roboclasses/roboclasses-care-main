@@ -20,6 +20,8 @@ import { EditButton } from "../button-demo/EditButton";
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 import { useEffect, useState } from "react";
 import { getUserSession } from "@/lib/session";
+import Cookies from "js-cookie";
+
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -43,7 +45,7 @@ export function StudentsTable() {
   // Handle delete Student
   const handleDelete = async (studentId: string) => {
     try {
-      const res = await axios.delete(`${StudentRegUrl}/${studentId}`);
+      const res = await axios.delete(`${StudentRegUrl}/${studentId}`, {headers: { Authorization: Cookies.get("token") }});
       console.log(res.data);
 
       mutate((data) => data?.filter((Student) => Student._id !== studentId));
@@ -84,7 +86,7 @@ export function StudentsTable() {
           <TableHead>Location Details</TableHead>
           <TableHead>Grade</TableHead>
           <TableHead>Courses Done</TableHead>
-          <TableHead>Edit</TableHead>
+          {role==='admin' && <TableHead>Edit</TableHead>}
           <TableHead>Delete</TableHead>
         </TableRow>
       </TableHeader>
@@ -95,16 +97,15 @@ export function StudentsTable() {
             <TableCell className="font-medium">{Student.studentName}</TableCell>
             <TableCell className="font-medium">{Student.parentName}</TableCell>
             <TableCell className="font-medium">{role==="admin" && Student.destination}</TableCell>
-
             <TableCell>{role==="admin" && Student.email}</TableCell>
             <TableCell className="text-right">{Student.address}</TableCell>
             <TableCell className="text-right">{Student.grade}</TableCell>
             <TableCell className="text-right">{Student.courses}</TableCell>
-            <TableCell className="text-right">
+            {role==='admin' && <TableCell className="text-right">
               <Link href={`/appointment/studentRegister/edit/${Student._id}`}>
                 <EditButton name="Edit" type="button" />
               </Link>
-            </TableCell>
+            </TableCell>}
 
             <TableCell className="text-right">
               <DeleteAlertDemo onCancel={()=>console.log("Delete action canceled")} onDelete={()=>handleDelete(Student._id)}/>
