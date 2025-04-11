@@ -1,5 +1,7 @@
 import express from "express";
 import { Attendance } from "../models/attendance.model.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
+import { roleMiddleware } from "../middlewares/role.middleware.js";
 const router = express.Router();
 
 // for attendance module
@@ -80,7 +82,7 @@ router.put('/attendances/:id',async(req,res)=>{
 })
 
 // update attendance
-router.delete('/attendances/:id',async(req,res)=>{
+router.delete('/attendances/:id', authMiddleware, roleMiddleware('admin'),async(req,res)=>{
   try {
     const {id} = req.params;
     const data = await Attendance.findByIdAndDelete(id)

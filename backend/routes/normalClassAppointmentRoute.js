@@ -1,6 +1,8 @@
 import express from "express";
 import { Student } from "../models/student.model.js";
 import { NormalClass } from "../models/normalClass.model.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
+import { roleMiddleware } from "../middlewares/role.middleware.js";
 // import scheduleReminders from "../jobs/scheduler.js";
 
 
@@ -95,7 +97,7 @@ router.put("/appointments/normalClass/:id", async (req, res) => {
 });
 
 // delete an appointment
-router.delete("/appointments/normalClass/:id", async (req, res) => {
+router.delete("/appointments/normalClass/:id", authMiddleware, roleMiddleware('admin'), async (req, res) => {
   try {
     const { id } = req.params;
     const data = await NormalClass.findByIdAndDelete(id);

@@ -93,7 +93,7 @@ router.put("/newBatchEntries/:id", authMiddleware, roleMiddleware("teacher", "ad
 });
 
 // delete a batch
-router.delete("/newBatchEntries/:id", authMiddleware, roleMiddleware("teacher", "admin"), async (req, res) => {
+router.delete("/newBatchEntries/:id", authMiddleware, roleMiddleware("admin"), async (req, res) => {
   try {
     const { id } = req.params;
     const data = await NewBatchEntries.findByIdAndDelete(id);
