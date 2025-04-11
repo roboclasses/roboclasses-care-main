@@ -113,8 +113,8 @@ export function TableDemoClass() {
               <SelectValue placeholder="Filter Demo Classes"/>
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="old">Demo class appointments old</SelectItem>
-              <SelectItem value="upcoming">Demo class appointments upcoming</SelectItem>
+              <SelectItem value="upcoming">Upcoming</SelectItem>
+              <SelectItem value="old">Old</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -164,7 +164,7 @@ export function TableDemoClass() {
       <TableFooter>
         <TableRow>
           <TableCell colSpan={10}>Total Rows</TableCell>
-          <TableCell className="text-right">{data?.length}</TableCell>
+          <TableCell className="text-right">{filteredData?.length}</TableCell>
         </TableRow>
       </TableFooter>
     </Table>
