@@ -20,6 +20,8 @@ import { AttendanceUrl } from "@/constants"
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo"
 import { format } from "date-fns"
 import { getUserSession } from "@/lib/session"
+import Cookies from "js-cookie";
+
 
 
 const fetcher = (url) => axios.get(url).then((res) => res.data)
@@ -60,7 +62,7 @@ const handleTeacher = ()=>{
   // Handle delete attendance
   const handleDelete = async (id) => {
     try {
-      const res = await axios.delete(`${AttendanceUrl}/${id}`)
+      const res = await axios.delete(`${AttendanceUrl}/${id}`, {headers:{ Authorization: Cookies.get("token") }})
       console.log(res.data)
 
       mutate((data) => data.filter((attendance) => attendance._id !== id))

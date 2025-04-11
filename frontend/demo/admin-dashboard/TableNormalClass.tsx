@@ -21,6 +21,8 @@ import {format} from "date-fns"
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 import { useEffect, useState } from "react";
 import { getUserSession } from "@/lib/session";
+import Cookies from "js-cookie";
+
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -62,7 +64,7 @@ handleFetch();
   // handle delete appointment for normal class
   const handleDelete = async (id: string) => {
     try {
-      const res = await axios.delete(`${NormalClassUrl}/${id}`);
+      const res = await axios.delete(`${NormalClassUrl}/${id}`, {headers: { Authorization: Cookies.get("token") }});
       console.log(res.data);
 
       mutate((data) => data?.filter((item) => item._id !== id));

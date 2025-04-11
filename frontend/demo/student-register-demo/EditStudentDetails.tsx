@@ -89,7 +89,7 @@ export function EditStudentDetails() {
         grade: data.grade,
         courses: data.courses,
       };
-      const res = await axios.put(`${StudentRegUrl}/${id}`, payload);
+      const res = await axios.put(`${StudentRegUrl}/${id}`, payload, {headers: { Authorization: Cookies.get("token") }});
       console.log(res.data);
 
       const {message} = res.data;
