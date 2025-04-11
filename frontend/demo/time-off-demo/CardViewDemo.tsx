@@ -15,7 +15,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { MdHolidayVillage } from "react-icons/md";
 import { FaHandHoldingMedical } from "react-icons/fa6";
-import { FaHourglassHalf } from "react-icons/fa";
+// import { FaHourglassHalf } from "react-icons/fa";
 import { FaCalendar } from "react-icons/fa";
 
 const fetcher = (url: string) => axios.get(url, {headers: { Authorization: Cookies.get("token") }}).then((res) => res.data);
@@ -115,28 +115,28 @@ const CardViewDemo = () => {
         />
       ),
     },
+    // {
+    //   id: 3,
+    //   header: "Half Day",
+    //   icon: (<FaHourglassHalf size={30} color="pink"/>),
+    //   content: (
+    //     <div>
+    //       <p>{LEAVE_POLICY.half.description}</p>
+    //       <p className="text-sm text-gray-500 mt-1">
+    //         Policy renews on January 1, {currentYear + 1}
+    //       </p>
+    //     </div>
+    //   ),
+    //   dialog: (
+    //     <ApplyLeaveDialog
+    //       name="Request Half"
+    //       variant="secondary"
+    //       defaultValue={LEAVE_POLICY.half.name}
+    //     />
+    //   ),
+    // },
     {
       id: 3,
-      header: "Half Day",
-      icon: (<FaHourglassHalf size={30} color="pink"/>),
-      content: (
-        <div>
-          <p>{LEAVE_POLICY.half.description}</p>
-          <p className="text-sm text-gray-500 mt-1">
-            Policy renews on January 1, {currentYear + 1}
-          </p>
-        </div>
-      ),
-      dialog: (
-        <ApplyLeaveDialog
-          name="Request Half"
-          variant="secondary"
-          defaultValue={LEAVE_POLICY.half.name}
-        />
-      ),
-    },
-    {
-      id: 4,
       header: LEAVE_POLICY.holidays.name,
       icon: (<MdHolidayVillage size={30} color="pink"/>),
       content: (
@@ -150,7 +150,7 @@ const CardViewDemo = () => {
       dialog: null,
     },
     {
-      id: 5,
+      id: 4,
       header: "Quick Settings",
       icon: (<HolidaySheet />),
       content: (
