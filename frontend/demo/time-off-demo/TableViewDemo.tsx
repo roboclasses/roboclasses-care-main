@@ -59,9 +59,7 @@ const TableViewDemo = () => {
       if (filters.type && item.timeOffType !== filters.type) return false;
       if (filters.status && item.status !== filters.status) return false;
       if (filters.fromDate && item.dateRange?.from && new Date(item.dateRange?.from) < new Date(filters.fromDate)) return false;
-      if(searchQuery && !item.teacherName.toLocaleLowerCase().includes(searchQuery.toLocaleLowerCase())
-      && !item.status.toLocaleLowerCase().includes(searchQuery.toLocaleLowerCase())
-      ) return false
+      if(searchQuery && !item.teacherName.toLocaleLowerCase().includes(searchQuery.toLocaleLowerCase())) return false
       return true;
     });
   }, [data, filters, role, name, searchQuery]);
@@ -95,7 +93,7 @@ const TableViewDemo = () => {
           </div>
           <div className="flex lg:w-full w-[300px] max-w-sm items-center border border-gray-300 rounded-lg px-2 py-1">
             <Search className="h-4 w-4 mr-2.5" />
-            <Input type="search" placeholder="Search Teacher/Status..." className="w-full border-0" value={searchQuery} onChange={(e)=>setSearchQuery(e.target.value)}/>
+            <Input type="search" placeholder="Search Teacher..." className="w-full border-0" value={searchQuery} onChange={(e)=>setSearchQuery(e.target.value)}/>
           </div>
         </CardHeader>
         <CardContent className="w-full overflow-x-auto">
