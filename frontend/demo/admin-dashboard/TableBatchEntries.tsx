@@ -149,10 +149,10 @@ export function TableBatchEntries() {
             </SelectContent>
           </Select>
         </div>
-        <div className="flex lg:w-full w-[300px] max-w-sm items-center border border-gray-300 rounded-lg px-2 py-1">
+        {role === 'admin' && <div className="flex lg:w-full w-[300px] max-w-sm items-center border border-gray-300 rounded-lg px-2 py-1">
           <Search className="h-4 w-4 mr-2.5" />
           <Input type="search" placeholder="Search Teacher..." className="w-full border-0" value={searchQuery} onChange={(e)=>setSearchQuery(e.target.value)}/>
-        </div>
+        </div>}
      </div>
       <Table className="border border-black">
         <TableCaption>A list of batches</TableCaption>
