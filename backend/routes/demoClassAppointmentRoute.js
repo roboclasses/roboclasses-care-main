@@ -10,10 +10,10 @@ router.post("/appointments/demoClass", async (req, res) => {
   try {
     const { date, userName, destination, course, teacher, time, items,timeZone, converted, batchNumber} = req.body;
 
-    const demoClass = await Appointment.findOne({userName, destination});
-    if(demoClass){
-      return res.status(409).json({success:false, message:"User already applied for demo class."})
-    }
+    // const demoClass = await Appointment.findOne({userName, destination});
+    // if(demoClass){
+    //   return res.status(409).json({success:false, message:"User already applied for demo class."})
+    // }
 
     const newAppointment = {
       date,
@@ -27,7 +27,7 @@ router.post("/appointments/demoClass", async (req, res) => {
       converted,
       batchNumber,
     };
-console.log(newAppointment);
+    console.log(newAppointment);
 
     const createAppointments = await Appointment.create(newAppointment)
     console.log(createAppointments);
