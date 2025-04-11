@@ -1,5 +1,7 @@
 import express from "express";
 import { Appointment } from "../models/demoClass.model.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
+import { roleMiddleware } from "../middlewares/role.middleware.js";
 
 import scheduleReminders from "../jobs/scheduler.js"
 
@@ -100,7 +102,7 @@ router.put("/appointments/demoClass/:id", async (req, res) => {
 });
 
 // delete appointment
-router.delete("/appointments/demoClass/:id", async (req, res) => {
+router.delete("/appointments/demoClass/:id", authMiddleware, roleMiddleware('admin'), async (req, res) => {
   try {
     const { id } = req.params;
     const data = await Appointment.findByIdAndDelete(id);

@@ -1,5 +1,7 @@
 import express from "express";
 import { Student } from "../models/student.model.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
+import { roleMiddleware } from "../middlewares/role.middleware.js";
 
 const router = express.Router();
 
@@ -48,7 +50,7 @@ router.get("/students/:id", async(req,res)=>{
 })
 
 // Update student
-router.put("/students/:id", async(req,res)=>{
+router.put("/students/:id", authMiddleware, roleMiddleware('admin'), async(req,res)=>{
     try {
         const {id} = req.params;
         const studentDetails = req.body;
@@ -63,7 +65,7 @@ router.put("/students/:id", async(req,res)=>{
 })
 
 // Delete student
-router.delete("/students/:id", async(req,res)=>{
+router.delete("/students/:id", authMiddleware, roleMiddleware('admin'), async(req,res)=>{
     try {
         const {id} = req.params;
         const data = await Student.findByIdAndDelete(id)
