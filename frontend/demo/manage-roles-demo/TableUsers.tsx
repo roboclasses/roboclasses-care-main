@@ -73,7 +73,7 @@ export function TableUsers() {
   return (
     <div>
     <div className="flex items-center justify-between mb-6">
-      <h1 className="lg:text-4xl text-2xl font-semibold text-center">Manage Users</h1>
+      <h1 className="lg:text-4xl text-2xl font-semibold text-center">Manage Teachers</h1>
       <Select onValueChange={(value)=>setRole(value)}>
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Filter Users"/>
@@ -92,6 +92,9 @@ export function TableUsers() {
           <TableHead className="w-[100px]">User Full Name</TableHead>
           <TableHead className="w-[100px]">Email Address</TableHead>
           <TableHead>Role</TableHead>
+          <TableHead>Working Hours</TableHead>
+          <TableHead>Working Days</TableHead>
+          <TableHead>Role</TableHead>
           <TableHead>Edit</TableHead>
           <TableHead>Delete</TableHead>
         </TableRow>
@@ -102,6 +105,8 @@ export function TableUsers() {
             <TableCell className="font-medium">{users.name}</TableCell>
             <TableCell className="font-medium">{users.email}</TableCell>
             <TableCell className="font-medium">{users.role}</TableCell>
+            <TableCell className="font-medium">{users.workingHours}</TableCell>
+            <TableCell className="font-medium">{users.workingDays}</TableCell>
             <TableCell className="text-right">
               <Link href={`/userDashboard/edit/${users._id}`}>
               <EditButton name="Edit" type="button" />

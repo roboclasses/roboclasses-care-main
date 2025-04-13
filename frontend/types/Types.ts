@@ -47,6 +47,8 @@ export type usersType={
   email:string;
   password:string;
   role:string;
+  workingHours:string;
+  workingDays:string
 }
 
 export type studentType = {
@@ -80,7 +82,7 @@ export type normalClassType = {
 };
 
 export type leaveType = {
-  length: any;
+  length: unknown;
   _id: string;
   teacherName: string;
   timeOffType: string;
