@@ -148,8 +148,8 @@ useEffect(()=>{
         icon: BookIcon,
       },
       {
-        title: "User Dashboard",
-        url: "/userDashboard",
+        title: "Manage Roles",
+        url: "/manageRoles",
         icon: Users,
       },
       {
