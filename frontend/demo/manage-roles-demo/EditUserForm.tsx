@@ -27,7 +27,8 @@ const FormSchema = z.object({
   name: z.string().optional(),
   email: z.string().optional(),
   role: z.string().optional(),
-
+  workingHours: z.string().optional(),
+  workingDays: z.string().optional(),
 });
 
 export function EditUserForm() {
@@ -35,7 +36,7 @@ export function EditUserForm() {
 
     const form = useForm<z.infer<typeof FormSchema>>({
       resolver: zodResolver(FormSchema),
-      defaultValues: { name: "", email:"", role:"" }
+      defaultValues: { name: "", email:"", role:"", workingHours:"", workingDays:"" }
     });
 
     // Handle fetch users
@@ -48,6 +49,9 @@ export function EditUserForm() {
                 form.reset({
                   name: res.data.name,
                   email: res.data.email,
+                  role: res.data.role,
+                  workingHours: res.data.workingHours,
+                  workingDays: res.data.workingDays,
                 })
 
             } catch (error) {
@@ -68,6 +72,8 @@ export function EditUserForm() {
         name:data.name,
         email:data.email,
         role:data.role,
+        workingHours: data.workingHours,
+        workingDays: data.workingDays,
       }
       const res = await axios.put(`${UsersUrl}/${id}`, payload);
       console.log(res.data);
@@ -155,6 +161,45 @@ export function EditUserForm() {
             </FormItem>
             )}
         />
+
+        {/* Update Working Hours */}
+        <FormField
+          control={form.control}
+          name="workingHours"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="font-semibold">Hours Work</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  required
+                  className="bg-white"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+         {/* Update Working Days */}
+         <FormField
+          control={form.control}
+          name="workingDays"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="font-semibold">Days Work</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  required
+                  className="bg-white"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         
         <SubmitButton name={isSubmitting ? 'Updating...' : 'Update'} type="submit" disabled={isSubmitting}/>
       </form>
