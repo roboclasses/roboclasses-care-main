@@ -90,7 +90,7 @@ export const updateUserController = async(req, res)=>{
         const data = await User.findByIdAndUpdate(id, userDetails, {new: true})
         console.log(data);
 
-        return res.status(200).json({success:true, message: "User credentials successfully updated."})
+        return res.status(200).json({success:true, message: "User data successfully updated."})
           
     } catch (error) {
         console.error(error);

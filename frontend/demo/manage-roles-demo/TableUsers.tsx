@@ -19,7 +19,7 @@ import axios, { AxiosError } from "axios";
 import Link from "next/link";
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { UsersUrl } from "@/constants";
 
 
@@ -30,14 +30,16 @@ export function TableUsers() {
   const { data, isLoading, isValidating, error, mutate } = useSWR<usersType[]>(UsersUrl,fetcher);
 
   // Handle filter data
-  const filterdData = ()=>{
-    if(role === 'teacher'){
-      return data?.filter((items)=>items.role === 'teacher')
-    }
-    else if(role === 'admin'){
-      return data?.filter((items)=>items.role === 'admin')
-    }
-  }
+  const filteredData = useMemo(()=>{
+    if(!data) return [];
+
+     return data.filter((item)=>{
+      if(role === 'teacher' && item.role !== 'teacher') return false
+      if(role === 'admin' && item.role !== 'admin') return false;
+      return true;
+    })
+
+  },[data, role])
 
   // Handle delete a course
   const handleDelete = async(id:string)=>{
@@ -76,7 +78,7 @@ export function TableUsers() {
       <h1 className="lg:text-4xl text-2xl font-semibold text-center">Manage Teachers</h1>
       <Select onValueChange={(value)=>setRole(value)}>
         <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Filter Users"/>
+          <SelectValue placeholder="Filter Roles"/>
         </SelectTrigger>
         <SelectContent defaultValue={"teacher"}>
           <SelectItem value="admin">View Admins</SelectItem>
@@ -100,7 +102,7 @@ export function TableUsers() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {filterdData()?.map((users: usersType) => (
+        {filteredData?.map((users: usersType) => (
           <TableRow key={users._id}>
             <TableCell className="font-medium">{users.name}</TableCell>
             <TableCell className="font-medium">{users.email}</TableCell>
@@ -108,7 +110,7 @@ export function TableUsers() {
             <TableCell className="font-medium">{users.workingHours}</TableCell>
             <TableCell className="font-medium">{users.workingDays}</TableCell>
             <TableCell className="text-right">
-              <Link href={`/userDashboard/edit/${users._id}`}>
+              <Link href={`/manageRoles/edit/${users._id}`}>
               <EditButton name="Edit" type="button" />
               </Link>
             </TableCell>
@@ -121,7 +123,7 @@ export function TableUsers() {
       <TableFooter>
         <TableRow>
           <TableCell colSpan={5}>Total Rows</TableCell>
-          <TableCell className="text-right">{filterdData()?.length}</TableCell>
+          <TableCell className="text-right">{filteredData?.length}</TableCell>
         </TableRow>
       </TableFooter>
     </Table>
