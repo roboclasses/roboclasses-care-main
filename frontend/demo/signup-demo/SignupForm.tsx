@@ -64,11 +64,23 @@ export function SignupForm() {
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      const { message } = error.response.data;
+     let errorMessage = 'An error occurred during signup'
+
+      // Different type of error handling
+     if(typeof error.response?.data === 'string'){
+      errorMessage = error.response.data
+     }
+     else if(error.response?.data?.message){
+      errorMessage = error.response?.data.message
+     }
+     else if(error.message){
+      errorMessage = error.message
+     }
+
       console.log(error);
       toast({
         title: "Failed",
-        description: message || "Unable to signup",
+        description: errorMessage,
         variant: "destructive",
       });
     }
