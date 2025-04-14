@@ -19,7 +19,7 @@ import useSWR from "swr";
 import Link from "next/link";
 import {format} from "date-fns"
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getUserSession } from "@/lib/session";
 import Cookies from "js-cookie";
 
@@ -29,37 +29,37 @@ const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 
 export function TableNormalClass() {
-const [role, setRole] = useState("");
-const [name, setName] = useState("");
+  const [user, setUser] = useState({role:"", name:""})
 
   const { data, isLoading, isValidating, error, mutate } = useSWR<normalClassType[]>(NormalClassUrl, fetcher);
 
   // Fetch logged-in teacher session
- useEffect(()=>{
+  useEffect(()=>{
     const handleFetch = async()=>{
       try {
-        const user = await getUserSession();
-        if(user){
-          setRole(user.role || '')
-          setName(user.name || '')
+        const session = await getUserSession();
+        if(!session.role || !session.name){
+          throw new Error('No role and name found.')
         }
+        setUser({role:session.role, name:session.name})
       } catch (error) {
         console.error(error);
       }
     }
-handleFetch();
+    handleFetch();  
   },[])
 
   // Handle role and name based rows filering 
-  function handleRoleBasedMapping(){
-    if(role === "teacher"){
-      const filteredData = data?.filter((items)=>items.teacher === name)
-      return filteredData;
-    }
-    else if(role === "admin"){
-      return data;
-    }
-  }
+  const filteredData = useMemo(()=>{
+    if(!data) return [];
+
+    return data.filter((item)=>{
+      if(user.role === 'teacher' && item.teacher !== user.name) return false;
+      if(user.role === 'admin' && item.teacher === user.name) return false;
+      return true
+    })
+
+  },[data, user,])
   
   // handle delete appointment for normal class
   const handleDelete = async (id: string) => {
@@ -118,20 +118,20 @@ handleFetch();
           <TableHead>Batch Name</TableHead>
           <TableHead>Number of Classes</TableHead>
           <TableHead>Student Name</TableHead>
-          <TableHead>Contact Details</TableHead>
+          <TableHead>{user.role === 'admin' && "Contact Details"}</TableHead>
           <TableHead className="text-center">Time</TableHead>
           <TableHead>Edit</TableHead>
           <TableHead>Delete</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {handleRoleBasedMapping()?.map((appointment: normalClassType) => (
+        {filteredData.map((appointment: normalClassType) => (
           <TableRow key={appointment._id}>
             <TableCell>{appointment.teacher}</TableCell>
             <TableCell>{appointment.batch}</TableCell>
             <TableCell>{appointment.numberOfClasses}</TableCell>
             <TableCell>{appointment.userName}</TableCell>
-            <TableCell>{appointment.destination}</TableCell>
+            <TableCell>{user.role === 'admin' && appointment.destination}</TableCell>
             <TableCell className="text-center"> {handleTime(appointment.time, appointment.date)} </TableCell>
             <TableCell>
               <Link href={`/appointment/reminder/normal-class/edit/${appointment._id}`}>
@@ -147,7 +147,7 @@ handleFetch();
       <TableFooter>
         <TableRow>
           <TableCell colSpan={7}>Total Rows</TableCell>
-          <TableCell className="text-right">{data?.length}</TableCell>
+          <TableCell className="text-right">{filteredData.length}</TableCell>
         </TableRow>
       </TableFooter>
     </Table>

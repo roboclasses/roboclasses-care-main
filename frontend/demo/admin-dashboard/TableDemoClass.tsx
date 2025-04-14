@@ -27,8 +27,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 export function TableDemoClass() {
-  const [role, setRole] = useState("");
-  const [name, setName] = useState("");
+  const [user, setUser] = useState({role:"", name:""})
   const { data, error, isLoading, isValidating, mutate } = useSWR<appointmentTypes[]>(DemoClassUrl,fetcher);
   const [demoClasses, setDemoClasses] = useState("upcoming");
   
@@ -36,11 +35,11 @@ export function TableDemoClass() {
   useEffect(()=>{
     const handleFetch = async()=>{
       try {
-        const user = await getUserSession();
-        if(user){
-          setRole(user.role || '')
-          setName(user.name || '')
+        const session = await getUserSession();
+        if(!session.role || !session.name){
+          throw new Error('No role and name found.')
         }
+        setUser({role:session.role, name:session.name})
       } catch (error) {
         console.error(error);
       }
@@ -64,13 +63,13 @@ export function TableDemoClass() {
       if(demoClasses === "old" && itemDate >= today)
         return false;
 
-      if(role === "teacher" && item.teacher !== name)
+      if(user.role === "teacher" && item.teacher !== user.name)
         return false;
 
       return true;
 
     })
-  },[data, demoClasses, name, role])
+  },[data, demoClasses, user])
 
   // Handle delete appointment
   const handleDelete = async (appointmentId: string) => {
@@ -123,7 +122,7 @@ export function TableDemoClass() {
       <TableHeader>
         <TableRow>
           <TableHead className="w-[100px]">Student Name</TableHead>
-          <TableHead className="w-[100px]">Contact Details</TableHead>
+          <TableHead className="w-[100px]">{user.role==="admin" && "Contact Details"}</TableHead>
           <TableHead className="w-[100px]">Course Name</TableHead>
           <TableHead className="w-[100px]">Teacher Name</TableHead>
           <TableHead>Date</TableHead>
@@ -139,7 +138,7 @@ export function TableDemoClass() {
         {filteredData?.map((appointment: appointmentTypes) => (
           <TableRow key={appointment._id}>
             <TableCell className="font-medium">{appointment.userName}</TableCell>
-            <TableCell className="font-medium">{appointment.destination}</TableCell>
+            <TableCell className="font-medium">{user.role==="admin" && appointment.destination}</TableCell>
             <TableCell className="font-medium">{appointment.course}</TableCell>
             <TableCell className="font-medium">{appointment.teacher}</TableCell>
             <TableCell className="text-right">{appointment.date ? format(appointment.date, "MMM dd, yyyy") : ""}</TableCell>
