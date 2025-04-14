@@ -44,7 +44,7 @@ export function TableBatchEntries() {
       try {
         const session = await getUserSession();
         if(!session.role || !session.name){
-          throw new Error('No role and name found.')
+          throw new Error('No user session is found.')
         }
         setUser({role:session.role, name:session.name})
       } catch (error) {
