@@ -31,8 +31,7 @@ import { Input } from "@/components/ui/input";
 const fetcher = (url: string) => axios.get(url, { headers: { Authorization: Cookies.get("token") } }).then((res) => res.data);
 
 export function TableBatchEntries() {
-  const [role, setRole] = useState("");
-  const [name, setName] = useState("");
+  const [user, setUser] = useState({role:"", name:""})
 
   const [batchStatus, setBatchStatus] = useState("active")
   const [searchQuery, setSearchQuery] = useState("");
@@ -40,20 +39,20 @@ export function TableBatchEntries() {
   const { data, isLoading, isValidating, error, mutate } = useSWR<batchType[]>(NewBatchEntryUrl, fetcher);
 
   // Fetch logged-in teacher session
-  useEffect(() => {
-    const handleFetch = async () => {
+  useEffect(()=>{
+    const handleFetch = async()=>{
       try {
-        const user = await getUserSession();
-        if (user) {
-          setRole(user.role || "");
-          setName(user.name || "");
+        const session = await getUserSession();
+        if(!session.role || !session.name){
+          throw new Error('No role and name found.')
         }
+        setUser({role:session.role, name:session.name})
       } catch (error) {
         console.error(error);
       }
-    };
-    handleFetch();
-  }, []);
+    }
+    handleFetch();  
+  },[])
 
   // Filter batches
     const filteredBatches = useMemo(()=>{
@@ -69,19 +68,19 @@ export function TableBatchEntries() {
           if(searchQuery && !item.teacher.toLowerCase().includes(searchQuery.toLowerCase()))
             return false;
 
-          if(role === "teacher"){
-            if(batchStatus === "active" && item.teacher !== name){
+          if(user.role === "teacher"){
+            if(batchStatus === "active" && item.teacher !== user.name){
               return false;
             }
 
-            if(batchStatus === "completed" && item.teacher !== name)
+            if(batchStatus === "completed" && item.teacher !== user.name)
               return false;
           }
 
         return true;
       }
       )
-    },[batchStatus, data, name, role, searchQuery])
+    },[batchStatus, data, user, searchQuery])
 
   // Handle delete a batch
   const handleDelete = async (id: string) => {
@@ -149,7 +148,7 @@ export function TableBatchEntries() {
             </SelectContent>
           </Select>
         </div>
-        {role === 'admin' && <div className="flex lg:w-full w-[300px] max-w-sm items-center border border-gray-300 rounded-lg px-2 py-1">
+        {user.role === 'admin' && <div className="flex lg:w-full w-[300px] max-w-sm items-center border border-gray-300 rounded-lg px-2 py-1">
           <Search className="h-4 w-4 mr-2.5" />
           <Input type="search" placeholder="Search Teacher..." className="w-full border-0" value={searchQuery} onChange={(e)=>setSearchQuery(e.target.value)}/>
         </div>}
@@ -161,8 +160,8 @@ export function TableBatchEntries() {
             <TableHead className="w-[100px]">Teacher Name</TableHead>
             <TableHead>Batch Name</TableHead>
             <TableHead>Student Name</TableHead>
-            <TableHead>Contact Details</TableHead>
-            <TableHead>Email Address</TableHead>
+            <TableHead>{user.role === 'admin' && "Contact Details"}</TableHead>
+            <TableHead>{user.role === 'admin' && "Email Address"}</TableHead>
             <TableHead>Start Date</TableHead>
             <TableHead>Times</TableHead>
             <TableHead>Timezone</TableHead>
@@ -178,8 +177,8 @@ export function TableBatchEntries() {
               <TableCell className="font-medium">{batch.teacher}</TableCell>
               <TableCell>{batch.batch}</TableCell>
               <TableCell>{batch.studentName}</TableCell>
-              <TableCell>{batch.destination}</TableCell>
-              <TableCell>{batch.email}</TableCell>
+              <TableCell>{user.role === 'admin' && batch.destination}</TableCell>
+              <TableCell>{user.role === 'admin' && batch.email}</TableCell>
               <TableCell>
                 {batch.startDate ? format(batch.startDate, "MMM dd, yyyy") : ""}
               </TableCell>
