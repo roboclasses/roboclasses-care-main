@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   TableCaption,
@@ -9,42 +11,29 @@ import {
   Table,
   TableFooter,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
 import { FilterTimeOffDemo } from "./FilterTimeOffDemo";
 import { TimeOffApprovalDemo } from "./TimeOffApprovalDemo";
 import { TimeOffUrl } from "@/constants";
 import { getUserSession } from "@/lib/session";
 import { leaveType } from "@/types/Types";
-import { RefreshCcw, Search } from "lucide-react";
+import { adjustedNormalLeave, calculateLeaveDays } from "@/lib/utils";
+import { LEAVE_POLICY } from "@/data/dataStorage";
 
 import React, { useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import axios, { AxiosError } from "axios";
 import useSWR from "swr";
 import Cookies from "js-cookie";
-import { adjustedNormalLeave, calculateLeaveDays } from "@/lib/utils";
-import { LEAVE_POLICY } from "@/data/dataStorage";
+import { RefreshCcw, Search } from "lucide-react";
 
-const fetcher = (url: string) =>
-  axios
-    .get(url, { headers: { Authorization: Cookies.get("token") } })
-    .then((res) => res.data);
+
+const fetcher = (url: string) => axios.get(url, {headers: { Authorization: Cookies.get("token") }}).then((res) => res.data);
 
 const TableViewDemo = () => {
-  const {
-    data: leaves = [],
-    error,
-    isLoading,
-    isValidating,
-  } = useSWR<leaveType[]>(TimeOffUrl, fetcher);
+  const { data: leaves = [], error, isLoading, isValidating} = useSWR<leaveType[]>(TimeOffUrl, fetcher);
 
-  const [filters, setFilters] = useState<{
-    type: string;
-    status: string;
-    fromDate: string;
-  }>({ type: "", status: "", fromDate: "" });
+  const [filters, setFilters] = useState<{ type: string; status: string; fromDate: string }>({ type: "", status: "", fromDate: "" });
   const [searchQuery, setSearchQuery] = useState("");
 
   const [user, setUser] = useState({ role: "", name: "" });
@@ -54,7 +43,7 @@ const TableViewDemo = () => {
     const handleFetch = async () => {
       const user = await getUserSession();
       if (!user.role || !user.name) {
-        throw new Error("No user session found.");
+        throw new Error("No user session is found.");
       }
       setUser({ role: user.role, name: user.name });
     };
@@ -64,10 +53,9 @@ const TableViewDemo = () => {
   // Get the teacher name from search query or current user
   const targetTeacher = useMemo(() => {
     if (searchQuery && user.role === "admin") {
+
       // Find the first matching teacher name from leaves
-      const matchedLeave = leaves.find((leave) =>
-        leave.teacherName.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+      const matchedLeave = leaves.find((leave) => leave.teacherName.toLowerCase().includes(searchQuery.toLowerCase()));
       return matchedLeave?.teacherName || "";
     }
     return user.name;
@@ -111,23 +99,11 @@ const TableViewDemo = () => {
     if (!leaves) return [];
 
     return leaves.filter((item) => {
-      if (user.role === "teacher" && item.teacherName !== user.name)
-        return false;
+      if (user.role === "teacher" && item.teacherName !== user.name) return false;
       if (filters.type && item.timeOffType !== filters.type) return false;
       if (filters.status && item.status !== filters.status) return false;
-      if (
-        filters.fromDate &&
-        item.dateRange?.from &&
-        new Date(item.dateRange?.from) < new Date(filters.fromDate)
-      )
-        return false;
-      if (
-        searchQuery &&
-        !item.teacherName
-          .toLocaleLowerCase()
-          .includes(searchQuery.toLocaleLowerCase())
-      )
-        return false;
+      if (filters.fromDate && item.dateRange?.from && new Date(item.dateRange?.from) < new Date(filters.fromDate)) return false;
+      if (searchQuery && !item.teacherName.toLocaleLowerCase().includes(searchQuery.toLocaleLowerCase())) return false;
       return true;
     });
   }, [leaves, filters, user, searchQuery]);
@@ -197,14 +173,10 @@ const TableViewDemo = () => {
                   <TableCell>{item.teacherName}</TableCell>
                   <TableCell>{item.timeOffType}</TableCell>
                   <TableCell>
-                    {item.dateRange?.from
-                      ? format(new Date(item.dateRange?.from), "MMM dd, yyyy")
-                      : ""}
+                    {item.dateRange?.from ? format(new Date(item.dateRange?.from), "MMM dd, yyyy") : ""}
                   </TableCell>
                   <TableCell>
-                    {item.dateRange?.to
-                      ? format(new Date(item.dateRange?.to), "MMM dd, yyyy")
-                      : ""}
+                    {item.dateRange?.to ? format(new Date(item.dateRange?.to), "MMM dd, yyyy") : ""}
                   </TableCell>
                   <TableCell className="text-right">{item.notes}</TableCell>
                   <TableCell className="text-right">
@@ -214,24 +186,20 @@ const TableViewDemo = () => {
               ))}
             </TableBody>
             <TableFooter>
-              {user.role === "teacher" ||
-              (user.role === "admin" && searchQuery) ? (
+              {user.role === "teacher" || (user.role === "admin" && searchQuery) ? (
                 <TableRow>
                   <TableCell colSpan={5} className="text-right">
                     {`Normal leave remaining: ${usedAdjustedNormalLeaveDays}`}
                   </TableCell>
+
                   <TableCell colSpan={2} className="text-right">
-                    {`Sick leave remaining: ${
-                      LEAVE_POLICY.sick.total - usedSickLeaveDays
-                    }`}
+                    {`Sick leave remaining: ${ LEAVE_POLICY.sick.total - usedSickLeaveDays }`}
                   </TableCell>
                 </TableRow>
               ) : (
                 <TableRow>
                   <TableCell colSpan={6}>Total Rows</TableCell>
-                  <TableCell className="text-right">
-                    {filteredData.length}
-                  </TableCell>
+                  <TableCell className="text-right"> {filteredData.length} </TableCell>
                 </TableRow>
               )}
             </TableFooter>
