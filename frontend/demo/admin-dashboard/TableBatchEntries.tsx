@@ -136,15 +136,15 @@ export function TableBatchEntries() {
       <div className="flex flex-col">
         <div className="flex justify-between items-center mb-6">
           <h1 className="lg:text-4xl text-xl font-semibold text-center">
-        Available Batches
+        {batchStatus==='active' ? "Active Batches" : "Completed Batches"}
           </h1>
           <Select onValueChange={(value)=>setBatchStatus(value)}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Filter Batches"/>
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="active">Active Batches</SelectItem>
-              <SelectItem value="completed">Completed batches</SelectItem>
+              <SelectItem value="active">Active</SelectItem>
+              <SelectItem value="completed">Completed</SelectItem>
             </SelectContent>
           </Select>
         </div>
