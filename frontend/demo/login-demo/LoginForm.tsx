@@ -57,11 +57,20 @@ export function LoginForm() {
       
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        const { message } = error.response?.data;
+        let errorMessage = "An error occurred during login";
+
+         // Handle different response formats
+      if (typeof error.response?.data === 'string') {
+        errorMessage = error.response.data;
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
         console.log(error);
         toast({
           title: "Failed",
-          description: message,
+          description: errorMessage,
           variant: "destructive",
         });
       }
