@@ -1,13 +1,13 @@
 
-import { getUserSession } from "@/lib/session";
 import { leaveType } from "@/types/Types";
 import { TimeOffUrl } from "@/constants";
-import { adjustedNormalLeave, calculateLeaveDays, currentYear } from "@/lib/utils";
 import { LEAVE_POLICY } from "@/data/dataStorage";
+import { getUserSession } from "@/lib/session";
+import { adjustedNormalLeave, calculateLeaveDays, currentYear } from "@/lib/utils";
 
 import CardApplyLeaves from "./CardApplyLeaves";
-import { ApplyLeaveDialog } from "../dialog-demo/ApplyLeaveDialog";
 import { HolidaySheet } from "./HolidaySheet";
+import { ApplyLeaveDialog } from "../dialog-demo/ApplyLeaveDialog";
 
 import React, { useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
@@ -15,7 +15,6 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { MdHolidayVillage } from "react-icons/md";
 import { FaHandHoldingMedical } from "react-icons/fa6";
-// import { FaHourglassHalf } from "react-icons/fa";
 import { FaCalendar } from "react-icons/fa";
 
 const fetcher = (url: string) => axios.get(url, {headers: { Authorization: Cookies.get("token") }}).then((res) => res.data);
@@ -29,9 +28,10 @@ const CardViewDemo = () => {
   useEffect(() => {
     const handleFetch = async () => {
       const user = await getUserSession();
-      if (user) {
-        setUser({ role: user.role || "", name: user.name || "" });
+      if (!user.role || !user.name) {
+        throw new Error('No user session is found')
       }
+      setUser({ role: user.role || "", name: user.name || "" });
     };
     handleFetch();
   }, []);
