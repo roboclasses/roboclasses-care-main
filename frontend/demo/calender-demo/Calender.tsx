@@ -88,14 +88,14 @@ const Calender = () => {
 
   return (
     <>
-      <div className="grid lg:grid-cols-2 grid-cols-1 w-full px-5 justify-start items-start gap-2">
+      <div className="grid lg:grid-cols-2 grid-cols-1 w-full px-5 justify-start items-start gap-5">
         <div className="w-full">
-          <div className="py-10 text-2xl font-extrabold px-7">
+          <div className="py-2 lg:text-4xl text-xl font-extrabold text-center">
             Calender Events
           </div>
           <ul className="space-y-4">
             {currentEvents.length === 0 && (
-              <div className="italic text-center text-gray-400">
+              <div className="italic text-center text-sm" style={{color:"gray"}}>
                 No Events Present
               </div>
             )}
