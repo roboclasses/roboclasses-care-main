@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import {
+  AlignEndVerticalIcon,
   BookIcon,
   Calendar,
   LayoutDashboard,
@@ -157,6 +158,11 @@ useEffect(()=>{
         url: "/timeOff",
         icon: Calendar,
       },
+      {
+        title: "Teachers Availability",
+        url: "/teachersAvailability",
+        icon: AlignEndVerticalIcon,
+      },
     ],
 
     navMainTeacher: [
@@ -205,6 +211,11 @@ useEffect(()=>{
         title: "Time Off",
         url: "/timeOff",
         icon: Calendar,
+      },
+      {
+        title: "Teachers Availability",
+        url: "/teachersAvailability",
+        icon: AlignEndVerticalIcon,
       },
     ],
 
