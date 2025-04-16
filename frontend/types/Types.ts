@@ -99,7 +99,8 @@ export type eventsType = {
   end: Date;
   allDay: boolean;
   extendedProps:{
-    createdBy: string
+    createdBy: string;
+    eventType: string;
   }
 
 }
