@@ -25,6 +25,7 @@ import { EventUrl } from "@/constants";
 import { toast } from "@/hooks/use-toast";
 import useSWR from "swr";
 import { eventsType } from "@/types/Types";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -34,6 +35,7 @@ const Calender = () => {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [newEventTitle, setNewEventTitle] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<DateSelectArg | null>(null);
+  const [eventType, setEventType] = useState("");
 
   const [user, setUser] = useState({ role: "", name: "" });
 
@@ -117,6 +119,7 @@ const Calender = () => {
           allDay: selectedDate?.allDay,
           extendedProps: {
             createdBy: user.name,
+            eventType: eventType === 'demo' ? "demoClass" : eventType === 'normal' ? "normalClass" : '',
           },
         };
 
@@ -279,14 +282,22 @@ const Calender = () => {
           <DialogHeader>
             <DialogTitle>Add new event details</DialogTitle>
           </DialogHeader>
-          <form className="flex items-center gap-2" onSubmit={handleAddEvent}>
+          <form className="flex flex-col items-center gap-2" onSubmit={handleAddEvent}>
+          <Select onValueChange={(value)=>setEventType(value)}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select Events"/>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="demo">Demo Class</SelectItem>
+              <SelectItem value="normal">Normal Class</SelectItem>
+            </SelectContent>
+          </Select>
             <Input
               type="text"
-              placeholder="Event Title"
+              placeholder="Batch Name"
               value={newEventTitle}
               onChange={(e) => setNewEventTitle(e.target.value)}
               required
-              className="border border-gray-200 p-3 rounded-md text-lg"
             />
             <Button type="submit">Add</Button>
           </form>
