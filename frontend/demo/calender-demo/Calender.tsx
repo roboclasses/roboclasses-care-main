@@ -30,7 +30,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const Calender = () => {
-  const { data, mutate } = useSWR<eventsType[]>(EventUrl, fetcher);
+  const { data, error, isLoading, isValidating, mutate } = useSWR<eventsType[]>(EventUrl, fetcher);
 
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [newEventTitle, setNewEventTitle] = useState<string>("");
@@ -150,13 +150,16 @@ const Calender = () => {
   };
 
   // Handle edge cases
-  //  if (data?.length === 0) return <div>Empty list for Events</div>;
-  //  if (error instanceof AxiosError){
-  //    const {message} = error.response?.data
-  //    return <div>{message || 'An unknown error has occurred.'}</div>;
-  //  }
-  //  if (isLoading) return <div>Loading...</div>;
-  //  if (isValidating) return <div>Refershing data...</div>;
+  function handleEdgeCases(){
+    if (data?.length === 0) return <div>Empty list for Events</div>;
+    if (error instanceof AxiosError){
+      const {message} = error.response?.data
+      return <div>{message || 'An unknown error has occurred.'}</div>;
+    }
+    if (isLoading) return <div>Loading...</div>;
+    if (isValidating) return <div>Refershing data...</div>;
+  }
+
 
   return (
     <>
@@ -166,14 +169,7 @@ const Calender = () => {
             Calender Events
           </div>
           <ul className="space-y-4">
-            {filteredData.length === 0 && (
-              <div
-                className="italic text-center text-sm"
-                style={{ color: "gray" }}
-              >
-                No Events Present
-              </div>
-            )}
+            {handleEdgeCases()}
             {filteredData.length > 0 &&
               filteredData.map((event: eventsType) => (
                 <li
