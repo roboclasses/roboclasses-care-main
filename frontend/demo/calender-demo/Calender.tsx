@@ -4,8 +4,6 @@ import React, { useState, useEffect, useMemo } from "react";
 import {
   formatDate,
   DateSelectArg,
-  EventClickArg,
-  // EventApi,
 } from "@fullcalendar/core";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -26,6 +24,7 @@ import { toast } from "@/hooks/use-toast";
 import useSWR from "swr";
 import { eventsType } from "@/types/Types";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -78,29 +77,25 @@ const Calender = () => {
   };
 
   // handle delete event
-  const handleEventClick = async (selected: EventClickArg) => {
-    if (
-      window.confirm(
-        `Are you sure you want to delete the event "${selected.event.title}"?`
-      )
-    ) {
-      selected.event.remove();
-      // try {
-      //   const res = await axios.delete(`${EventUrl}/${eventId}`)
-      //   console.log(res.data);
+  const handleDeleteEvent = async (eventId: string) => {
+      try {
+        const res = await axios.delete(`${EventUrl}/${eventId}`)
+        console.log(res.data);
 
-      //   const {message} = res.data;
-      //   toast({title: "Success✅", description: message, variant: "default"});
+        mutate();
 
-      // } catch (error:unknown) {
-      //   if(error instanceof AxiosError){
-      //     console.error(error);
+        const {message} = res.data;
+        toast({title: "Success✅", description: message, variant: "default"});
 
-      //     const {message} = error.response?.data;
-      //     toast({ title: "Failed", description: message, variant:"destructive" })
-      //   }
-      // }
-    }
+      } catch (error:unknown) {
+        if(error instanceof AxiosError){
+          console.error(error);
+
+          const {message} = error.response?.data;
+          toast({ title: "Failed", description: message, variant:"destructive" })
+        }
+      }
+
   };
 
   // handle add events
@@ -119,7 +114,7 @@ const Calender = () => {
           allDay: selectedDate?.allDay,
           extendedProps: {
             createdBy: user.name,
-            eventType: eventType === 'demo' ? "demoClass" : eventType === 'normal' ? "normalClass" : '',
+            eventType: eventType === 'demo' ? "Demo Class" : eventType === 'normal' ? "Normal Class" : '',
           },
         };
 
@@ -129,6 +124,7 @@ const Calender = () => {
         const { message } = res.data;
 
         calendarApi.addEvent(newEvent);
+        
         // Instantly update the latest event list
         mutate();
         HandleCloseDialog();
@@ -173,18 +169,20 @@ const Calender = () => {
             {filteredData.length > 0 &&
               filteredData.map((event: eventsType) => (
                 <li
-                  className="border border-gray-200 shadow-none px-4 py-2 rounded-md text-blue-800"
+                  className="border border-gray-200 shadow-none px-4 py-2 rounded-md text-blue-800 flex flex-col items-center justify-center gap-2"
                   key={event.id}
                 >
-                  <p>{event.extendedProps?.createdBy}</p>
-                  <p>{event.title}</p>
+                  <p>Teacher: {event.extendedProps?.createdBy}</p>
+                  <p>Event Type: {event.extendedProps?.eventType}</p>
+                  <p>Event Title: {event.title}</p>
                   <label className="text-slate-950">
-                    {formatDate(event.start!, {
+                    Full Date: {formatDate(event.start!, {
                       year: "numeric",
                       month: "short",
                       day: "numeric",
                     })}
                   </label>
+                  <DeleteAlertDemo onDelete={() => handleDeleteEvent(event._id)} onCancel={() => console.log('Delete event cancelled.')}/>
                 </li>
               ))}
           </ul>
@@ -204,7 +202,6 @@ const Calender = () => {
             selectMirror={true}
             dayMaxEvents={true}
             select={handleDateClick}
-            eventClick={handleEventClick}
             events={filteredData}
             views={{
               dayGridMonth: {
