@@ -3,9 +3,9 @@ import mongoose from "mongoose";
 const eventSchema = new mongoose.Schema({
     id:{type: String, required: true, unique: true},
     title:{type: String, required: true},
-    start:{type: String, required: true},
-    end:{type: String, required: true},
-    allDay:{type: String, required: true},
+    start:{type: Date, required: true},
+    end:{type: Date, required: true},
+    allDay:{type: Boolean, required: true},
     extendedProps:{type: {createdBy: String}, required: true},
 })
 

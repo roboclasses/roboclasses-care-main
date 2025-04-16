@@ -91,6 +91,17 @@ export type leaveType = {
   status: string;
 }
 
+export type eventsType = {
+  _id:string;
+  id: string;
+  title: string;
+  start: Date;
+  end: Date;
+  allDay: boolean;
+  extendedProps:{
+    createdBy: string
+  }
 
+}
 
 

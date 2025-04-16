@@ -5,7 +5,7 @@ import {
   formatDate,
   DateSelectArg,
   EventClickArg,
-  EventApi,
+  // EventApi,
 } from "@fullcalendar/core";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -24,19 +24,16 @@ import axios, { AxiosError } from "axios";
 import { EventUrl } from "@/constants";
 import { toast } from "@/hooks/use-toast";
 import useSWR from "swr";
+import { eventsType } from "@/types/Types";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const Calender = () => {
-  // const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
-  const { data = [], mutate } = useSWR<any[]>(EventUrl, fetcher);
+  const { data, mutate } = useSWR<eventsType[]>(EventUrl, fetcher);
 
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [newEventTitle, setNewEventTitle] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<DateSelectArg | null>(null);
-
-  // console.log("current events are"+JSON.stringify(currentEvents));
-  // console.log("new event title is"+newEventTitle);
 
   const [user, setUser] = useState({ role: "", name: "" });
 
@@ -52,25 +49,7 @@ const Calender = () => {
     handleFetch();
   }, []);
 
-  // Get events from localstorage
-  // useEffect(() => {
-  //   if (typeof window !== "undefined") {
-  //     const savedEvents = localStorage.getItem("events");
-  //     if (savedEvents) {
-  //       setCurrentEvents(JSON.parse(savedEvents));
-  //     }
-  //   }
-  // }, []);
-
-  // set events in localstorage
-  // useEffect(() => {
-  //   if (typeof window !== "undefined") {
-  //     localStorage.setItem("events", JSON.stringify(currentEvents));
-  //   }
-  // }, [currentEvents]);
-
-  // Handle filter event data
-  
+  // Handle filter events
   const filteredData = useMemo(() => {
     if (!data) return [];
 
@@ -193,7 +172,7 @@ const Calender = () => {
               </div>
             )}
             {filteredData.length > 0 &&
-              filteredData.map((event: EventApi) => (
+              filteredData.map((event: eventsType) => (
                 <li
                   className="border border-gray-200 shadow-none px-4 py-2 rounded-md text-blue-800"
                   key={event.id}
@@ -227,12 +206,6 @@ const Calender = () => {
             dayMaxEvents={true}
             select={handleDateClick}
             eventClick={handleEventClick}
-            // eventsSet={(events) => setCurrentEvents(events)}
-            // initialEvents={
-            //   typeof window !== "undefined"
-            //     ? JSON.parse(localStorage.getItem("events") || "[]")
-            //     : []
-            // }
             events={filteredData}
             views={{
               dayGridMonth: {
