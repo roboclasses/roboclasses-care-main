@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   formatDate,
   DateSelectArg,
@@ -19,29 +19,70 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { getUserSession } from "@/lib/session";
+import axios, { AxiosError } from "axios";
+import { EventUrl } from "@/constants";
+import { toast } from "@/hooks/use-toast";
+import useSWR from "swr";
+
+const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const Calender = () => {
-  const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
+  // const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
+  const { data = [], mutate } = useSWR<any[]>(EventUrl, fetcher);
+
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [newEventTitle, setNewEventTitle] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<DateSelectArg | null>(null);
 
-  // Get events from localstorage
+  // console.log("current events are"+JSON.stringify(currentEvents));
+  // console.log("new event title is"+newEventTitle);
+
+  const [user, setUser] = useState({ role: "", name: "" });
+
+  // Handle fetching user session
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedEvents = localStorage.getItem("events");
-      if (savedEvents) {
-        setCurrentEvents(JSON.parse(savedEvents));
+    const handleFetch = async () => {
+      const session = await getUserSession();
+      if (!session.role || !session.name) {
+        throw new Error("No user session is found.");
       }
-    }
+      setUser({ role: session.role, name: session.name });
+    };
+    handleFetch();
   }, []);
 
+  // Get events from localstorage
+  // useEffect(() => {
+  //   if (typeof window !== "undefined") {
+  //     const savedEvents = localStorage.getItem("events");
+  //     if (savedEvents) {
+  //       setCurrentEvents(JSON.parse(savedEvents));
+  //     }
+  //   }
+  // }, []);
+
   // set events in localstorage
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("events", JSON.stringify(currentEvents));
-    }
-  }, [currentEvents]);
+  // useEffect(() => {
+  //   if (typeof window !== "undefined") {
+  //     localStorage.setItem("events", JSON.stringify(currentEvents));
+  //   }
+  // }, [currentEvents]);
+
+  // Handle filter event data
+  
+  const filteredData = useMemo(() => {
+    if (!data) return [];
+
+    return data.filter((event) => {
+      if (
+        user.role === "teacher" &&
+        event.extendedProps?.createdBy !== user.name
+      )
+        return false;
+      return true;
+    });
+  }, [data, user]);
 
   // handle open the event dialog
   const handleDateClick = (selected: DateSelectArg) => {
@@ -56,35 +97,84 @@ const Calender = () => {
   };
 
   // handle delete event
-  const handleEventClick = (selected: EventClickArg) => {
+  const handleEventClick = async (selected: EventClickArg) => {
     if (
       window.confirm(
         `Are you sure you want to delete the event "${selected.event.title}"?`
       )
     ) {
       selected.event.remove();
+      // try {
+      //   const res = await axios.delete(`${EventUrl}/${eventId}`)
+      //   console.log(res.data);
+
+      //   const {message} = res.data;
+      //   toast({title: "Success✅", description: message, variant: "default"});
+
+      // } catch (error:unknown) {
+      //   if(error instanceof AxiosError){
+      //     console.error(error);
+
+      //     const {message} = error.response?.data;
+      //     toast({ title: "Failed", description: message, variant:"destructive" })
+      //   }
+      // }
     }
   };
 
   // handle add events
-  const handleAddEvent = (e: React.FormEvent) => {
+  const handleAddEvent = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (newEventTitle && selectedDate) {
-      const calendarApi = selectedDate.view.calendar;
-      calendarApi.unselect();
+    try {
+      if (newEventTitle && selectedDate) {
+        const calendarApi = selectedDate.view.calendar;
+        calendarApi.unselect();
 
-      const newEvent = {
-        id: `${selectedDate?.start.toISOString()}-${newEventTitle}`,
-        title: newEventTitle,
-        start: selectedDate?.start,
-        end: selectedDate?.end,
-        allDay: selectedDate?.allDay,
-      };
+        const newEvent = {
+          id: `${selectedDate?.start.toISOString()}-${newEventTitle}`,
+          title: newEventTitle,
+          start: selectedDate?.start,
+          end: selectedDate?.end,
+          allDay: selectedDate?.allDay,
+          extendedProps: {
+            createdBy: user.name,
+          },
+        };
 
-      calendarApi.addEvent(newEvent);
-      HandleCloseDialog();
+        const res = await axios.post(EventUrl, newEvent);
+        console.log(res.data);
+
+        const { message } = res.data;
+
+        calendarApi.addEvent(newEvent);
+        // Instantly update the latest event list
+        mutate();
+        HandleCloseDialog();
+
+        toast({ title: "Success✅", description: message, variant: "default" });
+      }
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        console.error(error);
+
+        const { message } = error.response?.data;
+        toast({
+          title: "Failed",
+          description: message,
+          variant: "destructive",
+        });
+      }
     }
   };
+
+  // Handle edge cases
+  //  if (data?.length === 0) return <div>Empty list for Events</div>;
+  //  if (error instanceof AxiosError){
+  //    const {message} = error.response?.data
+  //    return <div>{message || 'An unknown error has occurred.'}</div>;
+  //  }
+  //  if (isLoading) return <div>Loading...</div>;
+  //  if (isValidating) return <div>Refershing data...</div>;
 
   return (
     <>
@@ -94,17 +184,21 @@ const Calender = () => {
             Calender Events
           </div>
           <ul className="space-y-4">
-            {currentEvents.length === 0 && (
-              <div className="italic text-center text-sm" style={{color:"gray"}}>
+            {filteredData.length === 0 && (
+              <div
+                className="italic text-center text-sm"
+                style={{ color: "gray" }}
+              >
                 No Events Present
               </div>
             )}
-            {currentEvents.length > 0 &&
-              currentEvents.map((event: EventApi) => (
+            {filteredData.length > 0 &&
+              filteredData.map((event: EventApi) => (
                 <li
                   className="border border-gray-200 shadow-none px-4 py-2 rounded-md text-blue-800"
                   key={event.id}
                 >
+                  <p>{event.extendedProps?.createdBy}</p>
                   <p>{event.title}</p>
                   <label className="text-slate-950">
                     {formatDate(event.start!, {
@@ -133,12 +227,13 @@ const Calender = () => {
             dayMaxEvents={true}
             select={handleDateClick}
             eventClick={handleEventClick}
-            eventsSet={(events) => setCurrentEvents(events)}
-            initialEvents={
-              typeof window !== "undefined"
-                ? JSON.parse(localStorage.getItem("events") || "[]")
-                : []
-            }
+            // eventsSet={(events) => setCurrentEvents(events)}
+            // initialEvents={
+            //   typeof window !== "undefined"
+            //     ? JSON.parse(localStorage.getItem("events") || "[]")
+            //     : []
+            // }
+            events={filteredData}
             views={{
               dayGridMonth: {
                 titleFormat: { year: "numeric", month: "short" },
@@ -204,7 +299,6 @@ const Calender = () => {
             }
           }
         `}</style>
-        
       </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

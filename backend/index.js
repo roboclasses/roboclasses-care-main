@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import helmet from "helmet";
 
 import { dbConnect } from "./config/db.js";
+
 import demoClassAppointmentRoutes from "./routes/demoClassAppointmentRoute.js"
 import newBatchEntryRoutes from "./routes/newBatchEntryRoute.js"
 import attendanceRoutes from "./routes/attendanceRoute.js"
@@ -13,6 +14,8 @@ import newCourseEntry from "./routes/newCourseEntryRoute.js"
 import studentRoutes from "./routes/studentRoute.js"
 import timeOffRoutes from "./routes/timeOffRoute.js"
 import holidayRoutes from "./routes/holidayRoutes.js"
+import eventRoutes from "./routes/eventRoutes.js"
+
 import { handleCleanupExpiredTimeOff } from "./jobs/cleanupExpiredTimeOff.js";
 
 dotenv.config();
@@ -42,6 +45,8 @@ app.use('/api/v1',newCourseEntry)
 app.use('/api/v1',attendanceRoutes)
 app.use('/api/v1',timeOffRoutes)
 app.use('/api/v1',holidayRoutes)
+app.use('/api/v1',eventRoutes)
+
 
 
 
