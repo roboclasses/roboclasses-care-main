@@ -158,7 +158,56 @@ const Calender = () => {
 
   return (
     <>
-      <div className="grid lg:grid-cols-2 grid-cols-1 w-full px-5 justify-start items-start gap-5">
+      <div className="grid lg:grid-cols-1 grid-cols-1 w-full px-5 justify-start items-start gap-5">
+
+        <div className="w-full mt-4">
+          <FullCalendar
+            height={"85vh"}
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+            headerToolbar={{
+              left: "prev,next toady",
+              center: "title",
+              right: "dayGridMonth, timeGridWeek, timeGridDay",
+            }}
+            initialView="timeGridWeek"
+            editable={true}
+            selectable={true}
+            selectMirror={true}
+            dayMaxEvents={true}
+            select={handleDateClick}
+            events={filteredData}
+            eventClassNames={(arg) => {
+              const type = arg.event.extendedProps?.eventType;
+              console.log("event type is"+type);
+              
+              if(type === 'Demo Class'){
+                return ["demo-event"]
+              }
+              return []
+            }}
+            views={{
+              dayGridMonth: {
+                titleFormat: { year: "numeric", month: "short" },
+              },
+              timeGridWeek: {
+                titleFormat: {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                },
+                dayHeaderFormat: { weekday: "short", day: "numeric" },
+              },
+              timeGridDay: {
+                titleFormat: {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                },
+              },
+            }}
+          />
+        </div>
+
         <div className="w-full">
           <div className="py-2 mb-6 lg:text-4xl text-xl font-extrabold text-center">
             Calender Events
@@ -194,45 +243,6 @@ const Calender = () => {
                 ))}
             </ul>
           </ScrollArea>
-        </div>
-
-        <div className="w-full mt-4">
-          <FullCalendar
-            height={"85vh"}
-            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-            headerToolbar={{
-              left: "prev,next toady",
-              center: "title",
-              right: "dayGridMonth, timeGridWeek, timeGridDay",
-            }}
-            initialView="timeGridWeek"
-            editable={true}
-            selectable={true}
-            selectMirror={true}
-            dayMaxEvents={true}
-            select={handleDateClick}
-            events={filteredData}
-            views={{
-              dayGridMonth: {
-                titleFormat: { year: "numeric", month: "short" },
-              },
-              timeGridWeek: {
-                titleFormat: {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                },
-                dayHeaderFormat: { weekday: "short", day: "numeric" },
-              },
-              timeGridDay: {
-                titleFormat: {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                },
-              },
-            }}
-          />
         </div>
 
         {/* CSS-in-JS style  */}
@@ -274,6 +284,12 @@ const Calender = () => {
 
             .fc-col-header-cell-cushion {
               font-size: 0.7rem;
+            }
+            
+            .demo-event {
+              background-color: #ef4444 !important; /* Tailwind red-500 */
+              border-color: #ef4444 !important;
+              color: white !important;
             }
           }
         `}</style>
