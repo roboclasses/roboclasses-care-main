@@ -224,12 +224,11 @@ const Calender = () => {
                     flex flex-col items-center justify-center gap-2"
                     key={event.id}
                   >
-                    <p>Teacher: {event.extendedProps?.createdBy}</p>
+                    <p>Organizer: {event.extendedProps?.createdBy}</p>
                     <p>Event Type: {event.extendedProps?.eventType}</p>
                     <p>Event Title: {event.title}</p>
                     <label className="text-slate-950">
-                      Full Date:{" "}
-                      {formatDate(event.start!, {
+                      Full Date: {formatDate(event.start!, {
                         year: "numeric",
                         month: "short",
                         day: "numeric",
