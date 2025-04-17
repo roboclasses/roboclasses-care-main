@@ -88,8 +88,8 @@ export function SignupForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="lg:w-full lg:px-20">
-        <div className="grid items-center gap-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full px-5">
+        <div className="grid items-center gap-5">
 
           {/* Full Name */}
           <div className="flex flex-col gap-2">
@@ -108,7 +108,7 @@ export function SignupForm() {
                       autoComplete="name"
                       type="text"
                       placeholder="James Bond"
-                      className="lg:h-12 "
+                      className="h-12 rounded-xl shadow-none"
                     />
                   </FormControl>
                   <FormMessage/>
@@ -131,7 +131,7 @@ export function SignupForm() {
                     required
                   >
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="h-12 rounded-xl shadow-none">
                         <SelectValue placeholder="Select your role" id="roles"/>
                       </SelectTrigger>
                     </FormControl>
@@ -164,7 +164,7 @@ export function SignupForm() {
                       autoComplete="email"
                       type="email"
                       placeholder="bond@gmail.com"
-                      className="lg:h-12 "
+                      className="h-12 rounded-xl shadow-none"
                     />
                   </FormControl>
                   <FormMessage/>
@@ -190,7 +190,7 @@ export function SignupForm() {
                       autoComplete="password"
                       type="password"
                       placeholder="Enter a strong password"
-                      className="lg:h-12 "
+                      className="h-12 rounded-xl shadow-none"
                     />
                   </FormControl>
                   <FormMessage/>

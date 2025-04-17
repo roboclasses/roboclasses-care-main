@@ -79,8 +79,8 @@ export function LoginForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="lg:w-full lg:px-20">
-        <div className="grid items-center gap-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full px-5">
+        <div className="grid items-center gap-5">
 
           {/* Email Address */}
           <div className="flex flex-col gap-2">
@@ -99,7 +99,7 @@ export function LoginForm() {
                       autoComplete="email"
                       type="email"
                       placeholder="Enter your email address"
-                      className="lg:h-12 "
+                      className="h-12 rounded-xl shadow-none"
                     />
                   </FormControl>
                   <FormMessage />
@@ -126,7 +126,7 @@ export function LoginForm() {
                         autoComplete="password"
                         type={showPassword ? "text" : "password"}
                         placeholder="Confirm your password"
-                        className="lg:h-12 pr-10 "
+                        className="h-12 rounded-xl shadow-none pr-10"
                       />
                       <Button
                         type="button"
