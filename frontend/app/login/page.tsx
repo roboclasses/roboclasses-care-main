@@ -16,12 +16,14 @@ const page = () => {
         className="lg:min-h-screen h-10 lg:object-cover lg:visible invisible"
       />
       <div className="flex flex-col items-center justify-center gap-5">
-        <Image src={LOGO_IMG} height={200} width={200} alt="robo-class-logo" className="lg:h-[200px] lg:w-[200px] h-[120px] w-[120px]"/>
-        <p className="lg:text-4xl text-lg font-bold">Login to your Account</p>
+        <Image src={LOGO_IMG} height={200} width={200} alt="robo-class-logo" />
+
+        {/* <p className="lg:text-4xl text-lg font-bold">Login to your Account</p> */}
         <LoginForm />
+
         <div className="flex gap-2 items-center font-bold lg:text-sm text-xs">
           <p>Dont have an Account?</p>
-          <Link href="/signup" className="text-lime-600">
+          <Link href="/signup" className="text-lime-600 focus:underline transition-colors duration-150 delay-75">
             Signup
           </Link>
         </div>
