@@ -315,7 +315,7 @@ const Calender = () => {
             </Select>
             <Input
               type="text"
-              placeholder="Batch Name"
+              placeholder="Monty - Java B10"
               value={newEventTitle}
               onChange={(e) => setNewEventTitle(e.target.value)}
               required
