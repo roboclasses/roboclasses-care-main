@@ -136,7 +136,7 @@ export function LoginForm() {
                         onClick={togglePasswordVisibility}
                         aria-label={ showPassword ? "Hide password" : "Show password" }
                       >
-                        {showPassword ? (<EyeOff className="h-4 w-4 text-muted-foreground" />) : (<Eye className="h-4 w-4 text-muted-foreground" />)}
+                        {showPassword ? (<Eye className="h-4 w-4 text-muted-foreground" />) : (<EyeOff className="h-4 w-4 text-muted-foreground" />)}
                       </Button>
                     </div>
                   </FormControl>
