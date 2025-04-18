@@ -33,6 +33,7 @@ import { EventUrl } from "@/constants";
 import React, { useState, useEffect, useMemo } from "react";
 import axios, { AxiosError } from "axios";
 import useSWR from "swr";
+import { Label } from "@/components/ui/label";
 
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
@@ -297,12 +298,16 @@ const Calender = () => {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add new event details</DialogTitle>
+            <DialogTitle className="lg:text-lg text-base">Add new event details</DialogTitle>
           </DialogHeader>
           <form
-            className="flex flex-col items-center gap-2"
+            className="w-full px-5 space-y-4"
             onSubmit={handleAddEvent}
           >
+            {/* Event type dropdown */}
+            <div className="flex flex-col gap-2">
+            <Label>Event Type</Label>
+
             <Select onValueChange={(value) => setEventType(value)}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select Events" />
@@ -312,6 +317,12 @@ const Calender = () => {
                 <SelectItem value="normal">Normal Class</SelectItem>
               </SelectContent>
             </Select>
+            </div>
+            
+            {/* Event title text input field */}
+            <div className="flex flex-col gap-2">
+            <Label>Event Title</Label>
+
             <Input
               type="text"
               placeholder="Monty - Java B10"
@@ -319,6 +330,8 @@ const Calender = () => {
               onChange={(e) => setNewEventTitle(e.target.value)}
               required
             />
+            </div>
+            
             <Button type="submit">Add</Button>
           </form>
         </DialogContent>
