@@ -29,7 +29,6 @@ import { useEffect, useState } from "react";
 import { NewBatchEntryUrl, StudentRegUrl } from "@/constants";
 import 'react-phone-input-2/lib/style.css'
 import PhoneInput from "react-phone-input-2";
-import StudentSearch from "../normal-class/StudentSearch";
 import { timezone, userTimeZone } from "@/data/dataStorage";
 import SubmitButton from "../button-demo/SubmitButton";
 
@@ -56,14 +55,6 @@ const FormSchema = z.object({
 export function EditBatchForm() {
   const { id } = useParams();
   const [dayTimeEntries, setDayTimeEntries] = useState([]);
-  const [selectedStudent, setSelectedStudent] = useState(null);
-  const [email, setEmail] = useState("");
-
-  // Handle select student
-  const handleStudentSelect = (student) => {
-    setSelectedStudent(student);
-    form.setValue("studentName", student.studentName);
-  };
 
   // Initialize react-hook-form
   const form = useForm({
@@ -89,8 +80,6 @@ export function EditBatchForm() {
         const res = await axios.get(`${NewBatchEntryUrl}/${id}`, {headers: { Authorization: Cookies.get("token") }});
 
         const batchDetails = res.data;
-        setEmail(batchDetails.email);
-
         const initialDayTimeEntries = batchDetails.dayTimeEntries || [];
 
         // Initialize dayTimeEntries state
@@ -242,125 +231,74 @@ export function EditBatchForm() {
             <FormItem>
               <FormLabel className="font-semibold">Edit Number of Classes</FormLabel>
               <FormControl>
-                <Input {...field} className="bg-white" required />
+                <Input {...field} className="bg-white" required disabled/>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        {email?.trim() ? (
-          <>
-            <FormField
-              control={form.control}
-              name="studentName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="font-semibold">Student Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      required
-                      className="bg-white"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        {/* Student Name */}
+        <FormField
+          control={form.control}
+          name="studentName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="font-semibold">Student Name</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  required
+                  disabled
+                  className="bg-white"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <FormField
-              control={form.control}
-              name="destination"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="font-semibold">Contact Details</FormLabel>
-                  <FormControl>
-                    <PhoneInput
-                      country={"ae"}
-                      {...field}
-                      inputStyle={{width: "320px"}}
-                      inputProps={{ ref: field.ref, required: true }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        {/* Contact Details */}
+        <FormField
+          control={form.control}
+          name="destination"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="font-semibold">Contact Details</FormLabel>
+              <FormControl>
+                <PhoneInput
+                  country={"ae"}
+                  {...field}
+                  inputStyle={{width: "320px"}}
+                  inputProps={{ ref: field.ref, required: true }}
+                   disabled
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="font-semibold">Email Address</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      required
-                      className="bg-white"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </>
-        ) : (
-          <>
-            <FormField
-              control={form.control}
-              name="studentName"
-              render={() => (
-                <FormItem>
-                  <FormLabel className="font-semibold">Student Name</FormLabel>
-                  <StudentSearch onSelect={handleStudentSelect} selectedStudent={selectedStudent} />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="destination"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="font-semibold">Contact Details</FormLabel>
-                  <FormControl>
-                    <PhoneInput
-                      country={"ae"}
-                      {...field}
-                      disabled
-                      inputStyle={{width: "320px"}}
-                      inputProps={{ ref: field.ref, required: true }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="font-semibold">Email Address</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      required
-                      disabled
-                      className="bg-white"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </>
-        )}
-
+        {/* Email Address */}
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+             <FormLabel className="font-semibold">Email Address</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  required
+                  disabled
+                   className="bg-white"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
         {/* Teacher Name */}
         <FormField
           control={form.control}
