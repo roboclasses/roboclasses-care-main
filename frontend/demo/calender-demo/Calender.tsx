@@ -196,7 +196,7 @@ const Calender = () => {
                   month: "short",
                   day: "numeric",
                 },
-                dayHeaderFormat: { weekday: "short", day: "numeric" },
+                dayHeaderFormat: { weekday: "short" },
               },
               timeGridDay: {
                 titleFormat: {
