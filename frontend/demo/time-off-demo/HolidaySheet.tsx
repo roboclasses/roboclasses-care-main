@@ -138,10 +138,10 @@ export function HolidaySheet() {
                       <Input
                         placeholder="Enter holiday name"
                         {...field}
-                        className="h-12 rounded-xl"
+                        className="h-12 rounded-xl shadow-none"
                       />
                     </FormControl>
-                    <FormDescription>This is holiday name.</FormDescription>
+                    <FormDescription>This is holiday name</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -190,7 +190,7 @@ export function HolidaySheet() {
                       </PopoverContent>
                     </Popover>
                     <FormDescription>
-                      Select the date range for your time off.
+                      Select the date range for your time off
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
