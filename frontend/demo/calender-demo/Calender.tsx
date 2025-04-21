@@ -1,191 +1,182 @@
 "use client";
 
-import { formatDate, DateSelectArg } from "@fullcalendar/core";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin from "@fullcalendar/interaction";
-
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
-import { toast } from "@/hooks/use-toast";
-
-import { getUserSession } from "@/lib/session";
-import { eventsType } from "@/types/Types";
-import { EventUrl } from "@/constants";
-
-import React, { useState, useEffect, useMemo } from "react";
-import axios, { AxiosError } from "axios";
+import React, { useMemo } from "react";
+import axios from "axios";
 import useSWR from "swr";
-import { Label } from "@/components/ui/label";
+import { appointmentTypes, batchType } from "@/types/Types";
+import { DemoClassUrl, NewBatchEntryUrl } from "@/constants";
+import Cookies from "js-cookie";
 
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+
+const fetcher = (url: string) => axios.get(url, {headers:{Authorization: Cookies.get("token")}}).then((res) => res.data);
 
 const Calender = () => {
-  const { data, error, isLoading, isValidating, mutate } = useSWR<eventsType[]>( EventUrl, fetcher );
+  const { data: batchData, error: batchError } = useSWR<batchType[]>(NewBatchEntryUrl, fetcher);
+  const { data: demoClassData, error: demoError } = useSWR<appointmentTypes[]>(DemoClassUrl, fetcher);
 
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-  const [newEventTitle, setNewEventTitle] = useState<string>("");
-  const [selectedDate, setSelectedDate] = useState<DateSelectArg | null>(null);
-  const [eventType, setEventType] = useState("");
-  const [user, setUser] = useState({ role: "", name: "" });
+  // Process batchData into calendar events
+  const batchEvents = useMemo(() => {
+    if (!batchData) return [];
 
-  // Handle fetching user session
-  useEffect(() => {
-    const handleFetch = async () => {
-      const session = await getUserSession();
-      if (!session.role || !session.name) {
-        throw new Error("No user session is found.");
-      }
-      setUser({ role: session.role, name: session.name });
-    };
-    handleFetch();
-  }, []);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-  // Handle filter events
-  const filteredData = useMemo(() => {
-    if (!data) return [];
+    return batchData
+      .filter((batch) => {
+        const startDate = new Date(batch.startDate);
+        if (isNaN(startDate.getTime())) return false; // Invalid date
+        startDate.setHours(0, 0, 0, 0);
+        return (
+          startDate >= today &&
+          batch.teacher === "Monty" &&
+          Array.isArray(batch.day) &&
+          Array.isArray(batch.time)
+        );
+      })
+      .flatMap((batch) => {
+        const events: { id: string; title: string; start: Date; end: Date; allDay: boolean; extendedProps: { type: string; }; }[] = [];
+        const startDate = new Date(batch.startDate);
+        if (isNaN(startDate.getTime())) return events; // Invalid start date
 
-    return data.filter((event) => {
-      if ( user.role === "teacher" && event.extendedProps?.createdBy !== user.name ) return false;
-      return true;
-    });
-  }, [data, user]);
+        const endDate = new Date(startDate);
+        endDate.setFullYear(endDate.getFullYear() + 1); // Assume batch runs for a year
 
-  // handle open the event dialog
-  const handleDateClick = (selected: DateSelectArg) => {
-    setSelectedDate(selected);
-    setIsDialogOpen(true);
-  };
+        const daysOfWeek = [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ];
 
-  // handle close the event dialog
-  const HandleCloseDialog = () => {
-    setIsDialogOpen(false);
-    setNewEventTitle("");
-  };
+        // Normalize batch.days to lowercase for comparison
+        const batchDays = batch.day
+          .filter((day) => typeof day === "string")
+          .map((day) => day.toLowerCase());
 
-  // handle delete event
-  const handleDeleteEvent = async (eventId: string) => {
-    try {
-      const res = await axios.delete(`${EventUrl}/${eventId}`);
-      console.log(res.data);
+        for (
+          let date = new Date(startDate);
+          date <= endDate;
+          date.setDate(date.getDate() + 1)
+        ) {
+          const dayName = daysOfWeek[date.getDay()].toLowerCase();
+          if (batchDays.includes(dayName)) {
+            // Process each time in batch.time
+            batch.time
+              .filter((time) => typeof time === "string")
+              .forEach((time) => {
+                const timeMatch = time.match(/^(\d{1,2}):(\d{2})$/);
+                if (!timeMatch) return; // Invalid time format
 
-      // Instantly updated with latest event list
-      mutate();
+                const [hours, minutes] = timeMatch.slice(1).map(Number);
+                if (isNaN(hours) || isNaN(minutes) || hours > 23 || minutes > 59) {
+                  return; // Invalid hours or minutes
+                }
 
-      const { message } = res.data;
-      toast({ title: "Success✅", description: message, variant: "default" });
+                const eventStart = new Date(date);
+                eventStart.setHours(hours, minutes, 0, 0);
 
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        console.error(error);
+                const eventEnd = new Date(eventStart);
+                eventEnd.setHours(eventEnd.getHours() + 1);
 
-        const { message } = error.response?.data;
-        toast({ title: "Failed", description: message, variant: "destructive" });
-      }
-    }
-  };
+                events.push({
+                  id: `${batch._id}-${eventStart.toISOString()}-${time}`,
+                  title: batch.batch,
+                  start: eventStart,
+                  end: eventEnd,
+                  allDay: false,
+                  extendedProps: {
+                    type: "batch",
+                  },
+                });
+              });
+          }
+        }
+        return events;
+      });
+  }, [batchData]);
 
-  // handle add events
-  const handleAddEvent = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      if (newEventTitle && selectedDate) {
-        const calendarApi = selectedDate.view.calendar;
-        calendarApi.unselect();
+  // Process demoClassData into calendar events
+  const demoEvents = useMemo(() => {
+    if (!demoClassData) return [];
 
-        const newEvent = {
-          id: `${selectedDate?.start.toISOString()}-${newEventTitle}`,
-          title: newEventTitle,
-          start: selectedDate?.start,
-          end: selectedDate?.end,
-          allDay: selectedDate?.allDay,
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return demoClassData
+      .filter((demo) => {
+        const demoDate = new Date(demo.date);
+        if (isNaN(demoDate.getTime())) return false; // Invalid date
+        demoDate.setHours(0, 0, 0, 0);
+        return demoDate >= today && typeof demo.time === "string";
+      })
+      .map((demo) => {
+        const demoDate = new Date(demo.date);
+        if (isNaN(demoDate.getTime())) return null; // Invalid date
+
+        // Validate time format (HH:mm)
+        const timeMatch = demo.time.match(/^(\d{1,2}):(\d{2})$/);
+        if (!timeMatch) return null; // Invalid time format
+
+        const [hours, minutes] = timeMatch.slice(1).map(Number);
+        if (isNaN(hours) || isNaN(minutes) || hours > 23 || minutes > 59) {
+          return null; // Invalid hours or minutes
+        }
+
+        demoDate.setHours(hours, minutes, 0, 0);
+
+        const eventEnd = new Date(demoDate);
+        eventEnd.setHours(eventEnd.getHours() + 1);
+
+        return {
+          id: demo._id,
+          title: "Demo Class",
+          start: demoDate,
+          end: eventEnd,
+          allDay: false,
           extendedProps: {
-            createdBy: user.name,
-            eventType: eventType === "demo" ? "Demo Class": eventType === "normal" ? "Normal Class" : "",
+            type: "demo",
           },
+          classNames:  demo ? ["demo-event"] : [],
         };
+      })
+      .filter((event): event is NonNullable<typeof event> => event !== null);
+  }, [demoClassData]);
 
-        const res = await axios.post(EventUrl, newEvent);
-        console.log(res.data);
-
-        const { message } = res.data;
-
-        calendarApi.addEvent(newEvent);
-        HandleCloseDialog();
-
-        // Instantly update the latest event list
-         mutate();
-
-        toast({ title: "Success✅", description: message, variant: "default" });
-      }
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        console.error(error);
-
-        const { message } = error.response?.data;
-        toast({ title: "Failed", description: message, variant: "destructive" });
-      }
-    }
-  };
+  // Combine all events
+  const allEvents = useMemo(() => [...batchEvents, ...demoEvents], [batchEvents, demoEvents]);
 
   // Handle edge cases
-  function handleEdgeCases() {
-    if (data?.length === 0) return <div>Empty list for Events</div>;
-    if (error instanceof AxiosError) {
-      const { message } = error.response?.data;
-      return <div>{message || "An unknown error has occurred."}</div>;
-    }
-    if (isLoading) return <div>Loading...</div>;
-    if (isValidating) return <div>Refershing data...</div>;
-  }
+  const handleEdgeCases = () => {
+    if (batchError || demoError) return <div>An error occurred while fetching data.</div>;
+    if (!batchData || !demoClassData) return <div>Loading...</div>;
+    if (allEvents.length === 0) return <div>No events to display.</div>;
+    return null;
+  };
 
   return (
-    <>
-      <div className="grid lg:grid-cols-1 grid-cols-1 w-full px-5 justify-start items-start gap-5">
-
-        <div className="w-full mt-4">
+    <div className="grid lg:grid-cols-1 grid-cols-1 w-full px-5 justify-start items-start gap-5">
+      <div className="w-full mt-4">
+        {handleEdgeCases() || (
           <FullCalendar
             height={"85vh"}
-            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+            plugins={[dayGridPlugin, timeGridPlugin]}
             headerToolbar={{
-              left: "prev,next toady",
+              left: "prev,next today",
               center: "title",
-              right: "dayGridMonth, timeGridWeek, timeGridDay",
+              right: "dayGridMonth,timeGridWeek,timeGridDay",
             }}
             initialView="timeGridWeek"
-            editable={true}
-            selectable={true}
-            selectMirror={true}
+            editable={false}
+            selectable={false}
             dayMaxEvents={true}
-            select={handleDateClick}
-            events={filteredData}
-            eventClassNames={(arg) => {
-              const type = arg.event.extendedProps?.eventType;
-              console.log("event type is"+type);
-              
-              if(type === 'Demo Class'){
-                return ["demo-event"]
-              }
-              return []
-            }}
+            events={allEvents}
             views={{
               dayGridMonth: {
                 titleFormat: { year: "numeric", month: "short" },
@@ -207,136 +198,56 @@ const Calender = () => {
               },
             }}
           />
-        </div>
-
-        <div className="w-full">
-          <div className="py-2 mb-6 lg:text-4xl text-xl font-extrabold text-center">
-            Calender Events
-          </div>
-
-          <ScrollArea className="h-[300px] w-auto rounded-md border">
-            <ul className="space-y-4 p-10">
-              {handleEdgeCases()}
-
-              {filteredData.length > 0 &&
-                filteredData.map((event: eventsType) => (
-                  <li
-                    className="border border-gray-200 shadow-none px-4 py-2 rounded-md text-blue-800 
-                    flex flex-col items-center justify-center gap-2"
-                    key={event.id}
-                  >
-                    <p>Organizer: {event.extendedProps?.createdBy}</p>
-                    <p>Event Type: {event.extendedProps?.eventType}</p>
-                    <p>Event Title: {event.title}</p>
-                    <label className="text-slate-950">
-                      Full Date: {formatDate(event.start!, {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })}
-                    </label>
-                    <DeleteAlertDemo
-                      onDelete={() => handleDeleteEvent(event._id)}
-                      onCancel={() => console.log("Delete event cancelled.")}
-                    />
-                  </li>
-                ))}
-            </ul>
-          </ScrollArea>
-        </div>
-
-        {/* CSS-in-JS style  */}
-        <style jsx global>{`
-          /* Responsive styles for FullCalendar */
-          @media (max-width: 768px) {
-            .fc-header-toolbar {
-              flex-direction: column;
-              gap: 0.5rem;
-            }
-
-            .fc-toolbar-chunk {
-              display: flex;
-              justify-content: center;
-              width: 100%;
-              margin-bottom: 0.5rem;
-            }
-
-            .fc .fc-button {
-              padding: 0.25rem 0.5rem;
-              font-size: 0.8rem;
-            }
-
-            .fc-timegrid-axis {
-              font-size: 0.7rem;
-            }
-
-            .fc-timegrid-slot-label {
-              font-size: 0.7rem;
-            }
-
-            .fc-daygrid-day-number {
-              font-size: 0.8rem;
-            }
-
-            .fc-event-title {
-              font-size: 0.7rem;
-            }
-
-            .fc-col-header-cell-cushion {
-              font-size: 0.7rem;
-            }
-            
-            .demo-event {
-              background-color: #ef4444 !important; /* Tailwind red-500 */
-              border-color: #ef4444 !important;
-              color: white !important;
-            }
-          }
-        `}</style>
+        )}
       </div>
 
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle className="lg:text-lg text-base">Add new event details</DialogTitle>
-          </DialogHeader>
-          <form
-            className="w-full px-5 space-y-4"
-            onSubmit={handleAddEvent}
-          >
-            {/* Event type dropdown */}
-            <div className="flex flex-col gap-2">
-            <Label>Event Type</Label>
+      <style jsx global>{`
+        @media (max-width: 768px) {
+          .fc-header-toolbar {
+            flex-direction: column;
+            gap: 0.5rem;
+          }
 
-            <Select onValueChange={(value) => setEventType(value)}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select Events" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="demo">Demo Class</SelectItem>
-                <SelectItem value="normal">Normal Class</SelectItem>
-              </SelectContent>
-            </Select>
-            </div>
-            
-            {/* Event title text input field */}
-            <div className="flex flex-col gap-2">
-            <Label>Event Title</Label>
+          .fc-toolbar-chunk {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 0.5rem;
+          }
 
-            <Input
-              type="text"
-              placeholder="Monty - Java B10"
-              value={newEventTitle}
-              onChange={(e) => setNewEventTitle(e.target.value)}
-              required
-            />
-            </div>
-            
-            <Button type="submit">Add</Button>
-          </form>
-        </DialogContent>
-      </Dialog>
-    </>
+          .fc .fc-button {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+          }
+
+          .fc-timegrid-axis {
+            font-size: 0.7rem;
+          }
+
+          .fc-timegrid-slot-label {
+            font-size: 0.7rem;
+          }
+
+          .fc-daygrid-day-number {
+            font-size: 0.8rem;
+          }
+
+          .fc-event-title {
+            font-size: 0.7rem;
+          }
+
+          .fc-col-header-cell-cushion {
+            font-size: 0.7rem;
+          }
+
+          .demo-event {
+            background-color: #ef4444 !important; /* Tailwind red-500 */
+            border-color: #ef4444 !important;
+            color: white !important;
+          }
+        }
+      `}</style>
+    </div>
   );
 };
 
