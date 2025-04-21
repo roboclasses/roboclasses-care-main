@@ -3,12 +3,15 @@
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import useSWR from "swr";
 import { appointmentTypes, batchType } from "@/types/Types";
 import { DemoClassUrl, NewBatchEntryUrl } from "@/constants";
 import Cookies from "js-cookie";
+import { getUserSession } from "@/lib/session";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { teachers } from "@/data/dataStorage";
 
 
 
@@ -17,6 +20,27 @@ const fetcher = (url: string) => axios.get(url, {headers:{Authorization: Cookies
 const Calender = () => {
   const { data: batchData, error: batchError } = useSWR<batchType[]>(NewBatchEntryUrl, fetcher);
   const { data: demoClassData, error: demoError } = useSWR<appointmentTypes[]>(DemoClassUrl, fetcher);
+
+  const [user, setUser] = useState({role:"", name:""})
+  const [teacher, setTeacher] = useState("Monty")
+
+// Handle fetch user session
+useEffect(()=>{
+  const handleFetch = async()=>{
+    try {
+      const session = await getUserSession();
+      if(!session.role || !session.name){
+        throw new Error('No user session is found.')
+      }
+      setUser({role: session.role, name: session.name})
+      
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  handleFetch();
+},[])  
 
 // Process batchData into calendar events
 const batchEvents = useMemo(() => {
@@ -28,7 +52,7 @@ const batchEvents = useMemo(() => {
       if (isNaN(startDate.getTime())) return false; // Invalid date
       startDate.setHours(0, 0, 0, 0);
       return (
-        batch.teacher === "Kiruthika PK" &&
+        (batch.teacher === teacher) &&
         Array.isArray(batch.day) &&
         Array.isArray(batch.time) &&
         batch.day.length === batch.time.length &&
@@ -109,7 +133,7 @@ const batchEvents = useMemo(() => {
 
       return events;
     });
-}, [batchData]);
+}, [batchData, teacher]);
 
   // Process demoClassData into calendar events
   const demoEvents = useMemo(() => {
@@ -123,7 +147,10 @@ const batchEvents = useMemo(() => {
         const demoDate = new Date(demo.date);
         if (isNaN(demoDate.getTime())) return false; // Invalid date
         demoDate.setHours(0, 0, 0, 0);
-        return (demoDate >= today && typeof demo.time === "string" && demo.teacher === "Kiruthika PK");
+        return (demoDate >= today && 
+                typeof demo.time === "string" && 
+                demo.teacher === teacher
+                );
       })
       .map((demo) => {
         const demoDate = new Date(demo.date);
@@ -156,7 +183,7 @@ const batchEvents = useMemo(() => {
         };
       })
       .filter((event): event is NonNullable<typeof event> => event !== null);
-  }, [demoClassData]);
+  }, [demoClassData, teacher]);
 
   // Combine all events
   const allEvents = useMemo(() => [...batchEvents, ...demoEvents], [batchEvents, demoEvents]);
@@ -171,6 +198,18 @@ const batchEvents = useMemo(() => {
 
   return (
     <div className="grid lg:grid-cols-1 grid-cols-1 w-full px-5 justify-start items-start gap-5">
+      <div className="flex flex-row justify-center mt-2">
+      {user.role === "admin" && (<Select onValueChange={(value)=>setTeacher(value)}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Filter Teachers"/>
+            </SelectTrigger>
+            <SelectContent>
+             {teachers.map((teacher)=>(
+              <SelectItem value={teacher.name} key={teacher.id}>{teacher.name}</SelectItem>
+             ))}
+            </SelectContent>
+          </Select>)}
+      </div>
       <div className="w-full mt-4">
         {handleEdgeCases() || (
           <FullCalendar
