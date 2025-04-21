@@ -199,7 +199,7 @@ const batchEvents = useMemo(() => {
   return (
     <div className="grid lg:grid-cols-1 grid-cols-1 w-full px-5 justify-start items-start gap-5">
       <div className="flex flex-row justify-center mt-2">
-      {user.role === "admin" && (<Select onValueChange={(value)=>setTeacher(value)}>
+      {user.role === "admin" && (<Select value={teacher} onValueChange={(value)=>setTeacher(value)}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Filter Teachers"/>
             </SelectTrigger>
