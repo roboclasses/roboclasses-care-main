@@ -21,10 +21,10 @@ const Calender = () => {
   // Process batchData into calendar events
   const batchEvents = useMemo(() => {
     if (!batchData) return [];
-
+  
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-
+  
     return batchData
       .filter((batch) => {
         const startDate = new Date(batch.startDate);
@@ -34,17 +34,25 @@ const Calender = () => {
           startDate >= today &&
           batch.teacher === "Monty" &&
           Array.isArray(batch.day) &&
-          Array.isArray(batch.time)
+          Array.isArray(batch.time) &&
+          batch.day.length === batch.time.length // Ensure day and time arrays are aligned
         );
       })
       .flatMap((batch) => {
-        const events: { id: string; title: string; start: Date; end: Date; allDay: boolean; extendedProps: { type: string; }; }[] = [];
+        const events: {
+          id: string;
+          title: string;
+          start: Date;
+          end: Date;
+          allDay: boolean;
+          extendedProps: { type: string };
+        }[] = [];
         const startDate = new Date(batch.startDate);
         if (isNaN(startDate.getTime())) return events; // Invalid start date
-
+  
         const endDate = new Date(startDate);
         endDate.setFullYear(endDate.getFullYear() + 1); // Assume batch runs for a year
-
+  
         const daysOfWeek = [
           "Sunday",
           "Monday",
@@ -54,50 +62,54 @@ const Calender = () => {
           "Friday",
           "Saturday",
         ];
-
-        // Normalize batch.days to lowercase for comparison
-        const batchDays = batch.day
-          .filter((day) => typeof day === "string")
-          .map((day) => day.toLowerCase());
-
-        for (
-          let date = new Date(startDate);
-          date <= endDate;
-          date.setDate(date.getDate() + 1)
-        ) {
-          const dayName = daysOfWeek[date.getDay()].toLowerCase();
-          if (batchDays.includes(dayName)) {
-            // Process each time in batch.time
-            batch.time
-              .filter((time) => typeof time === "string")
-              .forEach((time) => {
-                const timeMatch = time.match(/^(\d{1,2}):(\d{2})$/);
-                if (!timeMatch) return; // Invalid time format
-
-                const [hours, minutes] = timeMatch.slice(1).map(Number);
-                if (isNaN(hours) || isNaN(minutes) || hours > 23 || minutes > 59) {
-                  return; // Invalid hours or minutes
-                }
-
-                const eventStart = new Date(date);
-                eventStart.setHours(hours, minutes, 0, 0);
-
-                const eventEnd = new Date(eventStart);
-                eventEnd.setHours(eventEnd.getHours() + 1);
-
-                events.push({
-                  id: `${batch._id}-${eventStart.toISOString()}-${time}`,
-                  title: batch.batch,
-                  start: eventStart,
-                  end: eventEnd,
-                  allDay: false,
-                  extendedProps: {
-                    type: "batch",
-                  },
-                });
-              });
+  
+        // Iterate over day-time pairs
+        batch.day.forEach((day, index) => {
+          const dayStr = typeof day === "string" ? day.toLowerCase() : "";
+          const time = batch.time[index];
+          if (!dayStr || typeof time !== "string") return; // Skip invalid day or time
+  
+          const timeMatch = time.match(/^(\d{1,2}):(\d{2})$/);
+          if (!timeMatch) return; // Invalid time format
+  
+          const [hours, minutes] = timeMatch.slice(1).map(Number);
+          if (isNaN(hours) || isNaN(minutes) || hours > 23 || minutes > 59) {
+            return; // Invalid hours or minutes
           }
-        }
+  
+          // Find the day index for the given day name
+          const dayIndex = daysOfWeek.findIndex(
+            (d) => d.toLowerCase() === dayStr
+          );
+          if (dayIndex === -1) return; // Invalid day name
+  
+          // Iterate from startDate to endDate
+          for (
+            let date = new Date(startDate);
+            date <= endDate;
+            date.setDate(date.getDate() + 1)
+          ) {
+            if (date.getDay() === dayIndex) {
+              const eventStart = new Date(date);
+              eventStart.setHours(hours, minutes, 0, 0);
+  
+              const eventEnd = new Date(eventStart);
+              eventEnd.setHours(eventEnd.getHours() + 1);
+  
+              events.push({
+                id: `${batch._id}-${eventStart.toISOString()}-${time}`,
+                title: batch.batch,
+                start: eventStart,
+                end: eventEnd,
+                allDay: false,
+                extendedProps: {
+                  type: "batch",
+                },
+              });
+            }
+          }
+        });
+  
         return events;
       });
   }, [batchData]);
