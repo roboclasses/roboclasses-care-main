@@ -6,6 +6,7 @@ import { z } from "zod";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -27,10 +28,21 @@ import { useParams } from "next/navigation";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { NewBatchEntryUrl, StudentRegUrl } from "@/constants";
-import 'react-phone-input-2/lib/style.css'
+import "react-phone-input-2/lib/style.css";
 import PhoneInput from "react-phone-input-2";
 import { timezone, userTimeZone } from "@/data/dataStorage";
 import SubmitButton from "../button-demo/SubmitButton";
+import { Switch } from "@/components/ui/switch";
+
+// Generate random colors
+const generateRandomColorCode = () => {
+  const letters = "0123456789ABCDEF";
+  let color = "#";
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+};
 
 // Define form schema
 const FormSchema = z.object({
@@ -43,13 +55,16 @@ const FormSchema = z.object({
         day: z.string(),
         time: z.string(),
       })
-    ).optional(),
+    )
+    .optional(),
   timeZone: z.string().optional(),
   numberOfClasses: z.string().optional(),
   studentName: z.string().optional(),
   destination: z.string().optional(),
   email: z.string().optional(),
   completed: z.string(),
+  colorCode: z.string().optional(),
+  isColorCoding: z.boolean().optional(),
 });
 
 export function EditBatchForm() {
@@ -70,6 +85,8 @@ export function EditBatchForm() {
       destination: "+971",
       email: "",
       completed: "",
+      isColorCoding: false,
+      colorCode: "#0055A4",
     },
   });
 
@@ -77,7 +94,9 @@ export function EditBatchForm() {
   useEffect(() => {
     const fetchBatchDetails = async () => {
       try {
-        const res = await axios.get(`${NewBatchEntryUrl}/${id}`, {headers: { Authorization: Cookies.get("token") }});
+        const res = await axios.get(`${NewBatchEntryUrl}/${id}`, {
+          headers: { Authorization: Cookies.get("token") },
+        });
 
         const batchDetails = res.data;
         const initialDayTimeEntries = batchDetails.dayTimeEntries || [];
@@ -86,9 +105,11 @@ export function EditBatchForm() {
         setDayTimeEntries(initialDayTimeEntries);
 
         form.reset({
-          batch: batchDetails.batch ,
-          teacher: batchDetails.teacher ,
-          startDate: batchDetails.startDate ? format(new Date(batchDetails.startDate), "yyyy-MM-dd") : "",
+          batch: batchDetails.batch,
+          teacher: batchDetails.teacher,
+          startDate: batchDetails.startDate
+            ? format(new Date(batchDetails.startDate), "yyyy-MM-dd")
+            : "",
           dayTimeEntries: initialDayTimeEntries,
           timeZone: batchDetails.timeZone || userTimeZone,
           numberOfClasses: batchDetails.numberOfClasses,
@@ -96,6 +117,8 @@ export function EditBatchForm() {
           email: batchDetails.email,
           destination: batchDetails.destination,
           completed: batchDetails.completed,
+          isColorCoding: batchDetails.isColorCoding || false,
+          colorCode: batchDetails.colorCode || "#0055A4",
         });
       } catch (error) {
         console.error("Failed to fetch batch details:", error);
@@ -119,34 +142,46 @@ export function EditBatchForm() {
       try {
         const res = await axios.get(`${StudentRegUrl}?name=${studentName}`);
         if (res.data) {
-          const selectedStudent = res.data.find((item) => item.studentName === studentName);
+          const selectedStudent = res.data.find(
+            (item) => item.studentName === studentName
+          );
           if (selectedStudent) {
-            form.setValue("destination", selectedStudent.destination || '');
-            form.setValue("email", selectedStudent.email || '');
+            form.setValue("destination", selectedStudent.destination || "");
+            form.setValue("email", selectedStudent.email || "");
           }
         }
       } catch (error) {
         console.error(error);
-        form.setValue("email", '');
-        form.setValue("destination", '');
+        form.setValue("email", "");
+        form.setValue("destination", "");
       }
     };
     handleFetch();
   }, [form, studentName]);
 
   // Handle form status
-  const {isSubmitting} = form.formState;
+  const { isSubmitting } = form.formState;
 
   // Submit handler
   async function onSubmit(data) {
     try {
       const currentDayTimeEntries = form.getValues("dayTimeEntries") || [];
-      
-      const transformedDateTimeEntries = dayTimeEntries.length > 0
-        ? {day: dayTimeEntries.map((item)=>item.day), time: dayTimeEntries.map((item)=>item.time)}// Use new entries directly
-        : currentDayTimeEntries; // Use existing entries
+
+      const transformedDateTimeEntries =
+        dayTimeEntries.length > 0
+          ? {
+              day: dayTimeEntries.map((item) => item.day),
+              time: dayTimeEntries.map((item) => item.time),
+            } // Use new entries directly
+          : currentDayTimeEntries; // Use existing entries
 
       const startDate = new Date(data.startDate).toISOString().split("T")[0];
+
+      // Generate new color code if isColorCoding is true
+      const colorCode =
+        data.isColorCoding === true
+          ? generateRandomColorCode()
+          : data.colorCode || "#0055A4";
 
       const payload = {
         batch: data.batch,
@@ -158,22 +193,29 @@ export function EditBatchForm() {
         destination: data.destination,
         email: data.email,
         completed: data.completed,
+        isColorCoding: data.isColorCoding,
+        colorCode,
         ...transformedDateTimeEntries, // Ensure this is included
-      };      
+      };
 
-      const res = await axios.put(`${NewBatchEntryUrl}/${id}`, payload, { headers: { Authorization: Cookies.get("token") }});
+      const res = await axios.put(`${NewBatchEntryUrl}/${id}`, payload, {
+        headers: { Authorization: Cookies.get("token") },
+      });
       console.log(res.data);
-      
+
       form.reset();
 
-      const {message} = res.data;
+      const { message } = res.data;
       toast({ title: "Success✅", description: message, variant: "default" });
-
     } catch (error) {
-      if(error instanceof AxiosError){
+      if (error instanceof AxiosError) {
         console.error(error);
-        const {message} = error.response.data;
-        toast({ title: "Error", description: message || "An unknown error has occurred.", variant: "destructive" });
+        const { message } = error.response.data;
+        toast({
+          title: "Error",
+          description: message || "An unknown error has occurred.",
+          variant: "destructive",
+        });
       }
     }
   }
@@ -192,9 +234,7 @@ export function EditBatchForm() {
           name="startDate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">
-                Edit Start Date
-              </FormLabel>
+              <FormLabel className="font-semibold">Edit Start Date</FormLabel>
               <FormControl>
                 <Input type="date" {...field} className="bg-white" required />
               </FormControl>
@@ -211,12 +251,7 @@ export function EditBatchForm() {
             <FormItem>
               <FormLabel className="font-semibold">Batch Name</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  className="bg-white"
-                  required
-                  disabled
-                />
+                <Input {...field} className="bg-white" required disabled />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -229,9 +264,11 @@ export function EditBatchForm() {
           name="numberOfClasses"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Edit Number of Classes</FormLabel>
+              <FormLabel className="font-semibold">
+                Edit Number of Classes
+              </FormLabel>
               <FormControl>
-                <Input {...field} className="bg-white" required disabled/>
+                <Input {...field} className="bg-white" required disabled />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -246,12 +283,7 @@ export function EditBatchForm() {
             <FormItem>
               <FormLabel className="font-semibold">Student Name</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  required
-                  disabled
-                  className="bg-white"
-                />
+                <Input {...field} required disabled className="bg-white" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -269,9 +301,9 @@ export function EditBatchForm() {
                 <PhoneInput
                   country={"ae"}
                   {...field}
-                  inputStyle={{width: "320px"}}
+                  inputStyle={{ width: "320px" }}
                   inputProps={{ ref: field.ref, required: true }}
-                   disabled
+                  disabled
                 />
               </FormControl>
               <FormMessage />
@@ -285,20 +317,15 @@ export function EditBatchForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-             <FormLabel className="font-semibold">Email Address</FormLabel>
+              <FormLabel className="font-semibold">Email Address</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  required
-                  disabled
-                   className="bg-white"
-                />
+                <Input {...field} required disabled className="bg-white" />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        
+
         {/* Teacher Name */}
         <FormField
           control={form.control}
@@ -367,7 +394,54 @@ export function EditBatchForm() {
           )}
         />
 
-        <SubmitButton name={isSubmitting ? 'Updating...' : 'Update'} type="submit" disabled={isSubmitting}/>
+        {/* Color code */}
+        {form.watch("isColorCoding") && (
+          <FormField
+            control={form.control}
+            name="colorCode"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="font-semibold">Color Code</FormLabel>
+                <FormControl>
+                  <div className="flex items-center gap-2">
+                    <Input {...field} className="bg-white" disabled />
+                    <div
+                      style={{ backgroundColor: field.value }}
+                      className="w-8 h-8 rounded-full border"
+                    ></div>
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+
+        {/* Switch color coding */}
+        <FormField
+          control={form.control}
+          name="isColorCoding"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+              <div className="space-y-0.5">
+                <FormLabel>Color Coding</FormLabel>
+                <FormDescription>Activate color coding.</FormDescription>
+              </div>
+              <FormControl>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+        <SubmitButton
+          name={isSubmitting ? "Updating..." : "Update"}
+          type="submit"
+          disabled={isSubmitting}
+        />
       </form>
     </Form>
   );
