@@ -225,6 +225,8 @@ const batchEvents = useMemo(() => {
             selectable={false}
             dayMaxEvents={true}
             events={allEvents}
+            slotMinTime="08:00:00" // Start time at 8 AM
+            slotMaxTime="23:00:00" // End time at 10 PM
             views={{
               dayGridMonth: {
                 titleFormat: { year: "numeric", month: "short" },
