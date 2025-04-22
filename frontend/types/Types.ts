@@ -33,6 +33,7 @@ export type batchType = {
   destination:string;
   email:string;
   completed:string;
+  colorCode: string;
 };
 
 export type courseType={
