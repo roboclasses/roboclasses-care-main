@@ -425,7 +425,7 @@ export function EditBatchForm() {
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
               <div className="space-y-0.5">
                 <FormLabel>Color Coding</FormLabel>
-                <FormDescription>Activate color coding.</FormDescription>
+                <FormDescription>This field is for applying unique color code.</FormDescription>
               </div>
               <FormControl>
                 <Switch
