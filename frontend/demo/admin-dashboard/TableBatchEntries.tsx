@@ -157,6 +157,7 @@ export function TableBatchEntries() {
         <TableCaption>A list of batches</TableCaption>
         <TableHeader>
           <TableRow>
+          <TableHead>Color Code</TableHead>
             <TableHead className="w-[100px]">Teacher Name</TableHead>
             <TableHead>Batch Name</TableHead>
             <TableHead>Student Name</TableHead>
@@ -166,7 +167,6 @@ export function TableBatchEntries() {
             <TableHead>Times</TableHead>
             <TableHead>Timezone</TableHead>
             <TableHead>Number of Classes</TableHead>
-            <TableHead>Color Code</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Edit</TableHead>
             <TableHead>Delete</TableHead>
@@ -175,6 +175,9 @@ export function TableBatchEntries() {
         <TableBody>
           {filteredBatches.map((batch: batchType) => (
             <TableRow key={batch._id}>
+              <TableCell className="text-right">
+                <div className="rounded-full w-8 h-8 border-2 border-accent" style={{backgroundColor: batch.colorCode}}></div>
+              </TableCell>
               <TableCell className="font-medium">{batch.teacher}</TableCell>
               <TableCell>{batch.batch}</TableCell>
               <TableCell>{batch.studentName}</TableCell>
@@ -188,9 +191,6 @@ export function TableBatchEntries() {
               </TableCell>
               <TableCell className="text-right">{batch.timeZone}</TableCell>
               <TableCell className="text-right">{batch.numberOfClasses}</TableCell>
-              <TableCell className="text-right">
-                <div className="rounded-full w-8 h-8 border-2 border-accent" style={{backgroundColor: batch.colorCode}}></div>
-                </TableCell>
               <TableCell className="text-right">
                 {batch.completed === "Yes"
                   ? "Completed"
