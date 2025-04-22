@@ -46,7 +46,17 @@ const newBatchEntrySchema = new mongoose.Schema({
         type:String,
         required:true,
         default:"No"
+    },
+    colorCode:{
+        type:String,
+        required:true,
+        default:"#0055A4"
+    },
+   isColorCoding:{
+        type:Boolean,
+        default: false,
     }
+
 },{timestamps:true})
 
 export const NewBatchEntries = mongoose.models.NewBatchEntries ?? mongoose.model('NewBatchEntries',newBatchEntrySchema)
