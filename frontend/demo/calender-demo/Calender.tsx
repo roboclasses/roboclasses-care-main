@@ -1,17 +1,20 @@
 "use client";
 
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+import { appointmentTypes, batchType } from "@/types/Types";
+import { DemoClassUrl, NewBatchEntryUrl } from "@/constants";
+import { getUserSession } from "@/lib/session";
+import { teachers } from "@/data/dataStorage";
+
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
+
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import useSWR from "swr";
-import { appointmentTypes, batchType } from "@/types/Types";
-import { DemoClassUrl, NewBatchEntryUrl } from "@/constants";
 import Cookies from "js-cookie";
-import { getUserSession } from "@/lib/session";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { teachers } from "@/data/dataStorage";
 
 
 
