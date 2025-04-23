@@ -15,6 +15,25 @@ import { teachers } from "@/data/dataStorage";
 
 
 
+// Augment FullCalendar's EventInput type
+import { EventInput } from '@fullcalendar/core';
+
+// Define a custom event type that includes backgroundColor and borderColor
+interface CustomEvent extends EventInput {
+  id: string;
+  title: string;
+  start: Date;
+  end: Date;
+  allDay: boolean;
+  extendedProps: {
+    type: string;
+  };
+  classNames?: string[];
+  backgroundColor?: string;
+  borderColor?: string;
+}
+
+
 const fetcher = (url: string) => axios.get(url, {headers:{Authorization: Cookies.get("token")}}).then((res) => res.data);
 
 const Calender = () => {
@@ -60,14 +79,7 @@ const batchEvents = useMemo(() => {
       );
     })
     .flatMap((batch) => {
-      const events: {
-        id: string;
-        title: string;
-        start: Date;
-        end: Date;
-        allDay: boolean;
-        extendedProps: { type: string };
-      }[] = [];
+      const events: CustomEvent[] = [];
       const startDate = new Date(batch.startDate);
       if (isNaN(startDate.getTime())) return events; // Invalid start date
 
@@ -126,6 +138,9 @@ const batchEvents = useMemo(() => {
               extendedProps: {
                 type: "batch",
               },
+              classNames: ["batch-event"],
+              backgroundColor: batch.colorCode || "#3b82f6",
+              borderColor: batch.colorCode || "#3b82f6",
             });
           }
         }
@@ -295,6 +310,9 @@ const batchEvents = useMemo(() => {
             border-color: #ef4444 !important;
             color: white !important;
           }
+            .batch-event{
+            color: white !important;
+            }
         }
       `}</style>
     </div>
