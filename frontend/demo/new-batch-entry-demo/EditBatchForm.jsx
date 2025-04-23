@@ -12,10 +12,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { toast } from "@/hooks/use-toast";
-import { Input } from "@/components/ui/input";
-import axios, { AxiosError } from "axios";
-import Cookies from "js-cookie";
 import {
   Select,
   SelectContent,
@@ -23,16 +19,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "@/hooks/use-toast";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+
+import SubmitButton from "../button-demo/SubmitButton";
 import MultiDayTimeEntry from "./MultiDayTimeEntry";
-import { useParams } from "next/navigation";
+import { NewBatchEntryUrl, StudentRegUrl } from "@/constants";
+import { timezone, userTimeZone } from "@/data/dataStorage";
+
+import Cookies from "js-cookie";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
-import { NewBatchEntryUrl, StudentRegUrl } from "@/constants";
+import axios, { AxiosError } from "axios";
+import { useParams } from "next/navigation";
+
 import "react-phone-input-2/lib/style.css";
 import PhoneInput from "react-phone-input-2";
-import { timezone, userTimeZone } from "@/data/dataStorage";
-import SubmitButton from "../button-demo/SubmitButton";
-import { Switch } from "@/components/ui/switch";
+
+
 
 // Generate random colors
 const generateRandomColorCode = () => {
@@ -131,7 +136,7 @@ export function EditBatchForm() {
   // Handle multiple date and time add, remove and update
   const handleDateTimeEntriesChange = (entries) => {
     setDayTimeEntries(entries);
-    form.setValue("dayTimeEntries", entries); // Update form value
+    form.setValue("dayTimeEntries", entries); 
   };
 
   const studentName = form.watch("studentName");
@@ -169,19 +174,13 @@ export function EditBatchForm() {
 
       const transformedDateTimeEntries =
         dayTimeEntries.length > 0
-          ? {
-              day: dayTimeEntries.map((item) => item.day),
-              time: dayTimeEntries.map((item) => item.time),
-            } // Use new entries directly
-          : currentDayTimeEntries; // Use existing entries
+          ? {day: dayTimeEntries.map((item) => item.day), time: dayTimeEntries.map((item) => item.time)} 
+          : currentDayTimeEntries; 
 
       const startDate = new Date(data.startDate).toISOString().split("T")[0];
 
       // Generate new color code if isColorCoding is true
-      const colorCode =
-        data.isColorCoding === true
-          ? generateRandomColorCode()
-          : data.colorCode || "#0055A4";
+      const colorCode = data.isColorCoding === true ? generateRandomColorCode() : data.colorCode || "#0055A4";
 
       const payload = {
         batch: data.batch,
@@ -195,12 +194,10 @@ export function EditBatchForm() {
         completed: data.completed,
         isColorCoding: data.isColorCoding,
         colorCode,
-        ...transformedDateTimeEntries, // Ensure this is included
+        ...transformedDateTimeEntries, 
       };
 
-      const res = await axios.put(`${NewBatchEntryUrl}/${id}`, payload, {
-        headers: { Authorization: Cookies.get("token") },
-      });
+      const res = await axios.put(`${NewBatchEntryUrl}/${id}`, payload, { headers: { Authorization: Cookies.get("token") }});
       console.log(res.data);
 
       form.reset();
@@ -211,11 +208,7 @@ export function EditBatchForm() {
       if (error instanceof AxiosError) {
         console.error(error);
         const { message } = error.response.data;
-        toast({
-          title: "Error",
-          description: message || "An unknown error has occurred.",
-          variant: "destructive",
-        });
+        toast({ title: "Error", description: message || "An unknown error has occurred.", variant: "destructive" });
       }
     }
   }
@@ -437,11 +430,7 @@ export function EditBatchForm() {
           )}
         />
 
-        <SubmitButton
-          name={isSubmitting ? "Updating..." : "Update"}
-          type="submit"
-          disabled={isSubmitting}
-        />
+        <SubmitButton name={isSubmitting ? "Updating..." : "Update"} type="submit" disabled={isSubmitting} />
       </form>
     </Form>
   );
