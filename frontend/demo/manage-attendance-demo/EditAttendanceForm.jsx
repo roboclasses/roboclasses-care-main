@@ -32,14 +32,12 @@
     batchName: z.string().min(2, { message: "Batch Name must be at least 2 characters long" }).optional(),
     startDate: z.string().optional(),
     classes: z.array(z.string()).optional(),
-    leave: z.array(z.string()).optional(),
     classesDone: z.string().optional(),
   });
 
   export function EditAttendanceForm() {
     const {id} = useParams();
     const [numberOfClasses, setNumberOfClasses] = useState(0);
-    const [numberOfLeaves, setNumberOfLeaves] = useState(0);
 
     const form = useForm({
       resolver: zodResolver(FormSchema),
@@ -47,7 +45,6 @@
         batchName: "",
         startDate: "",
         classes: [],
-        leave: [],
         classesDone: "",
       },
     });
@@ -56,9 +53,7 @@
     useEffect(() => {
       const handleFetch = async () => {
         try {
-          const res = await axios.get(`${AttendanceUrl}/${id}`, {
-            headers: { Authorization: Cookies.get("token") }
-          });
+          const res = await axios.get(`${AttendanceUrl}/${id}`, { headers: { Authorization: Cookies.get("token") }});
           const attendanceData = res.data;
 
           // Pre-populate the form with fetched data
@@ -66,12 +61,10 @@
             batchName: attendanceData.batchName,
             startDate: attendanceData.startDate ? format(new Date(attendanceData.startDate), 'yyyy-MM-dd') : '',
             classes: attendanceData.classes.map((cls) => format(new Date(cls), 'yyyy-MM-dd')),
-            leave: attendanceData.leave.map((cls) => format(new Date(cls), 'yyyy-MM-dd')),
             classesDone: attendanceData.classesDone,
           });
 
           setNumberOfClasses(attendanceData.classes.length);
-          setNumberOfLeaves(attendanceData.leave.length)
         } catch (error) {
           console.error(error);
         }
@@ -88,14 +81,6 @@
       }
     };
 
-    // Handle adding a new leave
-    const handleAddLeave = ()=>{
-      if(numberOfLeaves < 5){
-        setNumberOfLeaves((prev)=>prev+1)
-        const currentLeaves = [...form.getValues("leave")];
-        form.setValue("leave", [...currentLeaves, ""])
-      }
-    }
 
     // Handle form status
     const {isSubmitting} = form.formState;
@@ -104,14 +89,12 @@
     async function onSubmit(data) {
       try {
         const startDate = data.startDate ? new Date(data.startDate).toISOString().split('T')[0] : '';
-        const leaveDate = data.leave ? data.leave.map((item)=>new Date(item).toISOString().split('T')[0]) : '';
         const classes = data.classes ? data.classes.map((item) => new Date(item).toISOString().split('T')[0]) : '';
 
         const payload = {
           batchName: data.batchName,
           startDate: startDate,
           classes: classes,
-          leave: leaveDate,
           classesDone: data.classesDone
         };
 
@@ -153,7 +136,6 @@
           <div className="flex justify-between">
             <div className="flex items-center gap-2">
               <Button type="button" onClick={handleAddClass} disabled={handleNumber(numberOfClasses) >= 60} style={{background : "maroon"}}>Add Classes</Button>
-              <Button type="button" onClick={handleAddLeave} disabled={numberOfLeaves >= 5} style={{background : "gray"}}>Add Leaves</Button>
             </div>
             <SubmitButton name={isSubmitting ? 'Updating...' : 'Update'} type="submit" disabled={isSubmitting}/>
           </div>
@@ -173,23 +155,7 @@
             )}
           />
 
-          <Label className="font-semibold">Apply Leave</Label>
-          {Array.from({length: numberOfLeaves}).map((_, index)=>(
-            <FormField
-            key={index}
-            control={form.control}
-            name={`leave.${index}`}
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input {...field} type="date" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          ))}
-
+          {/* Classes */}
           <Label className="font-semibold">Classes</Label>
           {Array.from({ length: handleNumber(numberOfClasses) }).map((_, index) => (
             <FormField

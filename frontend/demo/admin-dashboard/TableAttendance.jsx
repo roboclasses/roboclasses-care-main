@@ -95,9 +95,10 @@ const handleTeacher = ()=>{
           <TableHead className="w-[100px]">Batch Name</TableHead>
           <TableHead className="w-[100px]">Teacher Name</TableHead>
           <TableHead>Start Date</TableHead>
-          <TableHead>Leaves</TableHead>
           <TableHead>Classes</TableHead>
           <TableHead>Number of Classes Done</TableHead>
+          <TableHead>Edit</TableHead>
+          <TableHead>Delete</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -106,7 +107,6 @@ const handleTeacher = ()=>{
             <TableCell>{items.batchName}</TableCell>
             <TableCell>{items.teacher}</TableCell>
             <TableCell>{items.startDate ? format(items.startDate, "MMM dd, yyyy") : ""}</TableCell>
-            <TableCell>{items.leave ? items.leave.map((item)=>format(item, "MMM dd, yyyy")).join(", ") : ""}</TableCell>
             <TableCell>{items.classes ? items.classes.map((date)=> format(date, "MMM dd, yyyy")).join(", ") : ""}</TableCell>
             <TableCell>{items.classes.length}</TableCell>
             <TableCell className="text-right">
