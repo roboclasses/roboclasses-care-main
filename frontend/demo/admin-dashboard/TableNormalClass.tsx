@@ -1,4 +1,5 @@
 'use client'
+
 import {
   Table,
   TableBody,
@@ -9,23 +10,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { EditButton } from "../button-demo/EditButton";
-import { NormalClassUrl } from "@/constants";
 import { toast } from "@/hooks/use-toast";
+import { EditButton } from "../button-demo/EditButton";
+import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
+
+import { getUserSession } from "@/lib/session";
+import { NormalClassUrl } from "@/constants";
 import { normalClassType } from "@/types/Types";
 
+import { useEffect, useMemo, useState } from "react";
 import axios, { AxiosError } from "axios";
 import useSWR from "swr";
 import Link from "next/link";
 import {format} from "date-fns"
-import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
-import { useEffect, useMemo, useState } from "react";
-import { getUserSession } from "@/lib/session";
 import Cookies from "js-cookie";
 
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
-
 
 export function TableNormalClass() {
   const [user, setUser] = useState({role:"", name:""})
@@ -146,7 +147,7 @@ export function TableNormalClass() {
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={7}>Total Rows</TableCell>
+          <TableCell colSpan={8}>Total Rows</TableCell>
           <TableCell className="text-right">{filteredData.length}</TableCell>
         </TableRow>
       </TableFooter>

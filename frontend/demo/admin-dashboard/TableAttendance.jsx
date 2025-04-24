@@ -1,4 +1,5 @@
 'use client'
+
 import {
   Table,
   TableBody,
@@ -9,19 +10,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { toast } from "@/hooks/use-toast"
+import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo"
 import { EditButton } from "../button-demo/EditButton"
+
+import { getUserSession } from "@/lib/session"
+import { AttendanceUrl } from "@/constants"
 
 import useSWR from "swr"
 import axios, { AxiosError } from "axios"
 import React, { useEffect, useState } from "react"
 import Link from "next/link"
-import { toast } from "@/hooks/use-toast"
-import { AttendanceUrl } from "@/constants"
-import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo"
 import { format } from "date-fns"
-import { getUserSession } from "@/lib/session"
 import Cookies from "js-cookie";
-
 
 
 const fetcher = (url) => axios.get(url).then((res) => res.data)
@@ -116,6 +117,7 @@ const handleTeacher = ()=>{
                 <EditButton name="Edit" type="button" />
               </Link>
             </TableCell>
+
             <TableCell className="text-right">
               <DeleteAlertDemo
                 onCancel={() => console.log("Delete action canceled")}
@@ -127,7 +129,7 @@ const handleTeacher = ()=>{
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={10}>Total Rows</TableCell>
+          <TableCell colSpan={7}>Total Rows</TableCell>
           <TableCell className="text-right">{data?.length}</TableCell>
         </TableRow>
       </TableFooter>
