@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Table,
   TableBody,
@@ -9,17 +10,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-import useSWR from "swr";
-import axios, { AxiosError } from "axios";
-import Link from "next/link";
-import { studentType } from "@/types/Types";
-import { StudentRegUrl } from "@/constants";
 import { toast } from "@/hooks/use-toast";
 import { EditButton } from "../button-demo/EditButton";
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
-import { useEffect, useState } from "react";
+
+import { studentType } from "@/types/Types";
+import { StudentRegUrl } from "@/constants";
 import { getUserSession } from "@/lib/session";
+
+import useSWR from "swr";
+import { useEffect, useState } from "react";
+import axios, { AxiosError } from "axios";
+import Link from "next/link";
 import Cookies from "js-cookie";
 
 
@@ -87,7 +89,7 @@ export function StudentsTable() {
           <TableHead>Grade</TableHead>
           <TableHead>Courses Done</TableHead>
           {role==='admin' && <TableHead>Edit</TableHead>}
-          <TableHead>Delete</TableHead>
+          {role==='admin' && <TableHead>Delete</TableHead>}
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -101,21 +103,27 @@ export function StudentsTable() {
             <TableCell className="text-right">{Student.address}</TableCell>
             <TableCell className="text-right">{Student.grade}</TableCell>
             <TableCell className="text-right">{Student.courses}</TableCell>
-            {role==='admin' && <TableCell className="text-right">
+
+            {role === 'admin' && 
+            (<TableCell className="text-right">
               <Link href={`/appointment/studentRegister/edit/${Student._id}`}>
                 <EditButton name="Edit" type="button" />
               </Link>
-            </TableCell>}
+            </TableCell>)}
 
-            <TableCell className="text-right">
-              <DeleteAlertDemo onCancel={()=>console.log("Delete action canceled")} onDelete={()=>handleDelete(Student._id)}/>
-            </TableCell>
+            {role === 'admin' && 
+            (<TableCell className="text-right">
+              <DeleteAlertDemo 
+                onCancel={()=>console.log("Delete action canceled")} 
+                onDelete={()=>handleDelete(Student._id)}
+              />
+            </TableCell>)}
           </TableRow>
         ))}
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={9}>Total Rows</TableCell>
+          <TableCell colSpan={10}>Total Rows</TableCell>
           <TableCell className="text-right">{data?.length}</TableCell>
         </TableRow>
       </TableFooter>

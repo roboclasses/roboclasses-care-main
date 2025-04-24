@@ -10,6 +10,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { EditButton } from "../button-demo/EditButton";
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 
@@ -23,10 +25,9 @@ import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import useSWR from "swr";
 import Link from "next/link";
-import { format } from "date-fns";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { format } from "date-fns";
+
 
 const fetcher = (url: string) => axios.get(url, { headers: { Authorization: Cookies.get("token") } }).then((res) => res.data);
 
@@ -191,6 +192,7 @@ export function TableBatchEntries() {
               </TableCell>
               <TableCell className="text-right">{batch.timeZone}</TableCell>
               <TableCell className="text-right">{batch.numberOfClasses}</TableCell>
+
               <TableCell className="text-right">
                 {batch.completed === "Yes"
                   ? "Completed"
@@ -198,11 +200,13 @@ export function TableBatchEntries() {
                   ? "Active"
                   : ""}
               </TableCell>
+
               <TableCell className="text-right">
                 <Link href={`/newBatchEntry/edit/${batch._id}`}>
                   <EditButton name="Edit" type="button" />
                 </Link>
               </TableCell>
+              
               <TableCell className="text-right">
                 <DeleteAlertDemo
                   onCancel={() => console.log("Delete action canceled")}
