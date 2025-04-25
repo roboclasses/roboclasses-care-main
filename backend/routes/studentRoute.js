@@ -1,84 +1,20 @@
 import express from "express";
-import { Student } from "../models/student.model.js";
+
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import { roleMiddleware } from "../middlewares/role.middleware.js";
+import { createStudentController, deleteStudentController, getStudentByIdController, getStudentsController, updateStudentController } from "../controllers/student.controller.js";
 
 const router = express.Router();
 
-// Create student
-router.post("/students", async(req,res)=>{
-    try {
-        const {studentName, parentName, destination, email, address, grade, courses} = req.body
-  
-        const data = await Student.create({studentName, parentName, destination, email, address, grade, courses});
-        console.log(data);
+router.post("/students", createStudentController)
 
-        return res.status(201).json({success:true, message:"Student registration successfull"})
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({success:false, message:"Internal server error."}) 
-    }
-})
+router.get("/students", getStudentsController)
 
-// Get students
-router.get("/students", async(req,res)=>{
-    try {
-        const data = await Student.find();
-        console.log(data);
+router.get("/students/:id", getStudentByIdController)
 
-        return res.status(200).json(data)
- 
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({success:false, message:"Internal server error."})    
-    }
-})
+router.put("/students/:id", authMiddleware, roleMiddleware('admin'), updateStudentController)
 
-// Get student
-router.get("/students/:id", async(req,res)=>{
-    try {
-        const {id} = req.params;
-        const data = await Student.findById(id)
-        console.log(data);
-
-        return res.status(200).json(data)
-   
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({success:false, message:"Internal server error."})    
-    }
-})
-
-// Update student
-router.put("/students/:id", authMiddleware, roleMiddleware('admin'), async(req,res)=>{
-    try {
-        const {id} = req.params;
-        const studentDetails = req.body;
-        const data = await Student.findByIdAndUpdate(id, studentDetails, {new: true});
-        console.log(data);
-
-        return res.status(201).json({success:true, message:"Student details updated successfully."})
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({success:false, message:"Internal server error."}) 
-    }
-})
-
-// Delete student
-router.delete("/students/:id", authMiddleware, roleMiddleware('admin'), async(req,res)=>{
-    try {
-        const {id} = req.params;
-        const data = await Student.findByIdAndDelete(id)
-        console.log(data);
-
-        return res.status(200).json({success:true, message:"Student data deleted successfully."})
-   
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({success:false, message:"Internal server error."})    
-    }
-})
-
+router.delete("/students/:id", authMiddleware, roleMiddleware('admin'), deleteStudentController)
 
 
 export default router;
