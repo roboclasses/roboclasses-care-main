@@ -32,7 +32,6 @@
     batchName: z.string().min(2, { message: "Batch Name must be at least 2 characters long" }).optional(),
     startDate: z.string().optional(),
     classes: z.array(z.string()).optional(),
-    classesDone: z.string().optional(),
   });
 
   export function EditAttendanceForm() {
@@ -45,7 +44,6 @@
         batchName: "",
         startDate: "",
         classes: [],
-        classesDone: "",
       },
     });
 
@@ -61,7 +59,6 @@
             batchName: attendanceData.batchName,
             startDate: attendanceData.startDate ? format(new Date(attendanceData.startDate), 'yyyy-MM-dd') : '',
             classes: attendanceData.classes.map((cls) => format(new Date(cls), 'yyyy-MM-dd')),
-            classesDone: attendanceData.classesDone,
           });
 
           setNumberOfClasses(attendanceData.classes.length);
@@ -95,7 +92,6 @@
           batchName: data.batchName,
           startDate: startDate,
           classes: classes,
-          classesDone: data.classesDone
         };
 
         const res = await axios.put(`${AttendanceUrl}/${id}`, payload, { headers: { Authorization: Cookies.get("token") }});
@@ -173,20 +169,6 @@
             />
           ))}
 
-          {/* Number of Classes Done */}
-          <FormField
-            control={form.control}
-            name="classesDone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="font-semibold">Number of Classes Done</FormLabel>
-                <FormControl>
-                  <Input {...field}/>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
         </form>
       </Form>
     );
