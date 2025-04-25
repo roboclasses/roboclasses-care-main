@@ -74,7 +74,11 @@ const batchEvents = useMemo(() => {
       if (isNaN(startDate.getTime())) return false; // Invalid date
       startDate.setHours(0, 0, 0, 0);
       return (
-        (batch.teacher === teacher) &&
+        (user.role === 'admin' ? 
+          (batch.teacher === teacher) : 
+            user.role === 'teacher' ? 
+              (batch.teacher === user.name) : 
+                false) &&
         Array.isArray(batch.day) &&
         Array.isArray(batch.time) &&
         batch.day.length === batch.time.length &&
@@ -151,7 +155,7 @@ const batchEvents = useMemo(() => {
 
       return events;
     });
-}, [batchData, teacher]);
+}, [batchData, teacher, user]);
 
   // Process demoClassData into calendar events
   const demoEvents = useMemo(() => {
@@ -167,7 +171,11 @@ const batchEvents = useMemo(() => {
         demoDate.setHours(0, 0, 0, 0);
         return (demoDate >= today && 
                 typeof demo.time === "string" && 
-                demo.teacher === teacher
+                (user.role === 'admin' ? 
+                  (demo.teacher === teacher) : 
+                    user.role === 'teacher' ? 
+                      (demo.teacher === user.name) : 
+                        false)
                 );
       })
       .map((demo) => {
@@ -201,7 +209,7 @@ const batchEvents = useMemo(() => {
         };
       })
       .filter((event): event is NonNullable<typeof event> => event !== null);
-  }, [demoClassData, teacher]);
+  }, [demoClassData, teacher, user]);
 
   // Combine all events
   const allEvents = useMemo(() => [...batchEvents, ...demoEvents], [batchEvents, demoEvents]);
