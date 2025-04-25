@@ -50,7 +50,6 @@ const newBatchEntrySchema = new mongoose.Schema({
     colorCode:{
         type:String,
         required:true,
-        unique: true,
         default:"#0055A4"
     },
    isColorCoding:{
