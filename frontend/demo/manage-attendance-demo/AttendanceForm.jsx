@@ -214,20 +214,7 @@ export function AttendanceForm() {
         </div>
 
         {/* Teacher Name */}
-        {role === "teacher" ? (<FormField
-          control={form.control}
-          name="teacher"
-          render={({ field }) => (
-          <FormItem>
-            <FormLabel>Teacher Name</FormLabel>
-            <FormControl>
-              <Input {...field} disabled required/>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-            )}
-        />) : 
-        ( <FormField
+          <FormField
           control={form.control}
           name="teacher"
           render={({ field }) => (
@@ -240,7 +227,6 @@ export function AttendanceForm() {
           </FormItem>
             )}
         /> 
-      )}
 
         {/* Start Date */}
         <FormField
