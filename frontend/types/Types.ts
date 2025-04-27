@@ -103,7 +103,14 @@ export type eventsType = {
     createdBy: string;
     eventType: string;
   }
+}
 
+export type attendanceType = {
+  _id:string;
+  batchName:string;
+  teacher:string;
+  startDate:Date;
+  classes: [Date];
 }
 
 

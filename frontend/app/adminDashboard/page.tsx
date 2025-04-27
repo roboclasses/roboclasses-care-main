@@ -9,10 +9,10 @@ import { TableBatchEntries } from "@/demo/admin-dashboard/TableBatchEntries";
 import { TableNormalClass } from "@/demo/admin-dashboard/TableNormalClass";
 import { TableCourseEntries } from "@/demo/admin-dashboard/TableCourseEntries";
 import { StudentsTable } from "@/demo/student-register-demo/StudentsTable";
-import { TableAttendance } from "@/demo/admin-dashboard/TableAttendance";
 
 import { imageIcons } from "@/data/dataStorage";
 import { cn } from "@/lib/utils";
+import { TableAttendance } from "@/demo/admin-dashboard/TableAttendance";
 
 
 const Page = () => {
