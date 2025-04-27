@@ -15,31 +15,33 @@ import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo"
 import { EditButton } from "../button-demo/EditButton"
 
 import { getUserSession } from "@/lib/session"
-import { AttendanceUrl } from "@/constants"
+import { AttendanceUrl, CoursesUrl } from "@/constants"
 
 import useSWR from "swr"
 import axios, { AxiosError } from "axios"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import { format } from "date-fns"
 import Cookies from "js-cookie";
+import { attendanceType, courseType } from "@/types/Types"
 
 
-const fetcher = (url) => axios.get(url).then((res) => res.data)
+const fetcher = (url:string) => axios.get(url).then((res) => res.data)
 
 export function TableAttendance() {
-  const [role, setRole] = useState("");
-  const [name, setName] = useState("");
-  const { data, isLoading, isValidating, error, mutate } = useSWR(AttendanceUrl, fetcher)
+  const [user, setUser] = useState({role:"", name:""})
+  const { data, isLoading, isValidating, error, mutate } = useSWR<attendanceType[]>(AttendanceUrl, fetcher)
+  const { data:coursesData, isLoading: coursesLoading } = useSWR<courseType[]>(CoursesUrl, fetcher)
 
   // Fetch user session
   useEffect(()=>{
     const handleFetch = async()=>{
       try {
-        const user = await getUserSession();
-        setRole(user.role);
-        setName(user.name);
-        
+        const session = await getUserSession();
+        if(!session.role || !session.name){
+          throw new Error('No user session is found.')
+        }
+        setUser({role: session.role, name: session.name})
       } catch (error) {
         console.error(error);  
       }
@@ -48,39 +50,47 @@ export function TableAttendance() {
   },[])
 
   // Filter data by their login session's role properties
-const handleTeacher = ()=>{
-  if(role === "teacher"){
-    const filteredAttendance = data.filter((item)=>item.teacher === name)
-    return filteredAttendance;
-  }
-  else if(role === "admin"){
-    return data;
-  }
-}
+// Filter data by their login session's role properties
+const filteredData = useMemo(() => {
+  if (!data || !coursesData) return [];
+
+  return data.filter((item) => {
+    // 1. First filter by user role
+    if (user.role === 'teacher' && item.teacher !== user.name) return false;
+    if (user.role === 'admin' && item.teacher === user.name) return false;
+    if(coursesData[0].numberOfClasses){
+      const classLength = item.classes.length;
+      coursesData.forEach((item)=>{
+        if(Number(item.numberOfClasses) >= classLength) return false;
+      })
+    }
+    return true;
+  });
+}, [data, user, coursesData]);
 
   // Handle delete attendance
-  const handleDelete = async (id) => {
+  const handleDelete = async (id:string) => {
     try {
       const res = await axios.delete(`${AttendanceUrl}/${id}`, {headers:{ Authorization: Cookies.get("token") }})
       console.log(res.data)
 
-      mutate((data) => data.filter((attendance) => attendance._id !== id))
+      mutate((data) => data?.filter((attendance) => attendance._id !== id))
 
       const { message } = res.data
       toast({ title: "Success✅", description: message, variant: "default" })
-    } catch (error) {
+    } catch (error:unknown) {
       if(error instanceof AxiosError){
         console.log(error)
-        const {message} = error.response.data;
+        const {message} = error.response?.data;
         toast({ title: "Failed", description: message || "An unknown error has occurred.", variant: "destructive" })
       }
     }
   }
 
   // Handle edge cases
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading || coursesLoading) return <div>Loading...</div>
   if (error instanceof AxiosError){
-    const {message} = error.response.data;
+    const {message} = error.response?.data;
     return <div>{message || "An unknown error has occurred."}</div>
   } 
   if (isValidating) return <div>Refreshing...</div>
@@ -103,7 +113,7 @@ const handleTeacher = ()=>{
         </TableRow>
       </TableHeader>
       <TableBody>
-         {handleTeacher()?.map((items)=>(
+         {filteredData.map((items:attendanceType)=>(
           <TableRow key={items._id}>
             <TableCell>{items.batchName}</TableCell>
             <TableCell>{items.teacher}</TableCell>
@@ -115,7 +125,6 @@ const handleTeacher = ()=>{
                 <EditButton name="Edit" type="button" />
               </Link>
             </TableCell>
-
             <TableCell className="text-right">
               <DeleteAlertDemo
                 onCancel={() => console.log("Delete action canceled")}
@@ -123,12 +132,12 @@ const handleTeacher = ()=>{
               />
             </TableCell>
           </TableRow>
-         )) }
+         ))}
       </TableBody>
       <TableFooter>
         <TableRow>
           <TableCell colSpan={7}>Total Rows</TableCell>
-          <TableCell className="text-right">{data?.length}</TableCell>
+          <TableCell className="text-right">{filteredData.length}</TableCell>
         </TableRow>
       </TableFooter>
     </Table>
