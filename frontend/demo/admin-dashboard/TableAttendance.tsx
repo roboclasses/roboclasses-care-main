@@ -107,6 +107,7 @@ const filteredData = useMemo(() => {
           <TableHead className="w-[100px]">Teacher Name</TableHead>
           <TableHead>Start Date</TableHead>
           <TableHead>Classes</TableHead>
+          <TableHead>Curriculum Taught</TableHead>
           <TableHead>Number of Classes Done</TableHead>
           <TableHead>Edit</TableHead>
           <TableHead>Delete</TableHead>
@@ -119,6 +120,7 @@ const filteredData = useMemo(() => {
             <TableCell>{items.teacher}</TableCell>
             <TableCell>{items.startDate ? format(items.startDate, "MMM dd, yyyy") : ""}</TableCell>
             <TableCell>{items.classes ? items.classes.map((date)=> format(date, "MMM dd, yyyy")).join(", ") : ""}</TableCell>
+            <TableCell>{items.curriculumTaught ? items.curriculumTaught.map((item)=> item).join(", ") : ""}</TableCell>
             <TableCell>{items.classes.length}</TableCell>
             <TableCell className="text-right">
               <Link href={`/manageAttendance/edit/${items._id}`}>

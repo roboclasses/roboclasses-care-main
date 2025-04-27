@@ -32,6 +32,7 @@
     batchName: z.string().min(2, { message: "Batch Name must be at least 2 characters long" }).optional(),
     startDate: z.string().optional(),
     classes: z.array(z.string()).optional(),
+    curriculumTaught: z.array(z.string().optional()),
   });
 
   export function EditAttendanceForm() {
@@ -44,6 +45,7 @@
         batchName: "",
         startDate: "",
         classes: [],
+        curriculumTaught:[],
       },
     });
 
@@ -59,6 +61,7 @@
             batchName: attendanceData.batchName,
             startDate: attendanceData.startDate ? format(new Date(attendanceData.startDate), 'yyyy-MM-dd') : '',
             classes: attendanceData.classes.map((cls) => format(new Date(cls), 'yyyy-MM-dd')),
+            curriculumTaught: attendanceData.curriculumTaught.map((c) => c),
           });
 
           setNumberOfClasses(attendanceData.classes.length);
@@ -87,11 +90,14 @@
       try {
         const startDate = data.startDate ? new Date(data.startDate).toISOString().split('T')[0] : '';
         const classes = data.classes ? data.classes.map((item) => new Date(item).toISOString().split('T')[0]) : '';
+        const curriculumTaught = data.curriculumTaught ? data.curriculumTaught.map((item) => item) : '';
+
 
         const payload = {
           batchName: data.batchName,
           startDate: startDate,
           classes: classes,
+          curriculumTaught: curriculumTaught,
         };
 
         const res = await axios.put(`${AttendanceUrl}/${id}`, payload, { headers: { Authorization: Cookies.get("token") }});
@@ -152,10 +158,10 @@
           />
 
           {/* Classes */}
-          <Label className="font-semibold">Classes</Label>
+          <Label className="font-semibold">Classes - Curriculum Taught</Label>
           {Array.from({ length: handleNumber(numberOfClasses) }).map((_, index) => (
+            <div className="flex flex-row items-center gap-2" key={index}>
             <FormField
-              key={index}
               control={form.control}
               name={`classes.${index}`}
               render={({ field }) => (
@@ -166,7 +172,21 @@
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> 
+            
+            <FormField
+              control={form.control}
+              name={`curriculumTaught.${index}`}
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input {...field} type="text" placeholder="curriculum taught"/>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            /> 
+            </div> 
           ))}
 
         </form>

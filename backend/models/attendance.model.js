@@ -17,6 +17,11 @@ const attendanceSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
+    curriculumTaught:{
+        type:[String],
+        required:true,
+        default:[""],
+    },
 
 })
 

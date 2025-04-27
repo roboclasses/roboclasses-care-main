@@ -111,6 +111,7 @@ export type attendanceType = {
   teacher:string;
   startDate:Date;
   classes: [Date];
+  curriculumTaught: [string],
 }
 
 
