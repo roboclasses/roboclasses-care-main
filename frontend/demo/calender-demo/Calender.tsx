@@ -278,54 +278,76 @@ const batchEvents = useMemo(() => {
       </div>
 
       <style jsx global>{`
-        @media (max-width: 768px) {
-          .fc-header-toolbar {
-            flex-direction: column;
-            gap: 0.5rem;
-          }
+  @media (max-width: 768px) {
+    .fc-header-toolbar {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
 
-          .fc-toolbar-chunk {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-            margin-bottom: 0.5rem;
-          }
+    .fc-toolbar-chunk {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
 
-          .fc .fc-button {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.8rem;
-          }
+    .fc .fc-button {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.8rem;
+    }
 
-          .fc-timegrid-axis {
-            font-size: 0.7rem;
-          }
+    .fc-timegrid-axis {
+      font-size: 0.7rem;
+    }
 
-          .fc-timegrid-slot-label {
-            font-size: 0.7rem;
-          }
+    .fc-timegrid-slot-label {
+      font-size: 0.7rem;
+    }
 
-          .fc-daygrid-day-number {
-            font-size: 0.8rem;
-          }
+    .fc-daygrid-day-number {
+      font-size: 0.8rem;
+    }
 
-          .fc-event-title {
-            font-size: 0.7rem;
-          }
+    .fc-event-title {
+      font-size: 0.7rem;
+    }
 
-          .fc-col-header-cell-cushion {
-            font-size: 0.7rem;
-          }
+    .fc-col-header-cell-cushion {
+      font-size: 0.7rem;
+    }
 
-          .demo-event {
-            background-color: #ef4444 !important; /* Tailwind red-500 */
-            border-color: #ef4444 !important;
-            color: white !important;
-          }
-            .batch-event{
-            color: white !important;
-            }
-        }
-      `}</style>
+    .fc .demo-event {
+      background-color: #ef4444 !important; /* Tailwind red-500 */
+      border-color: #ef4444 !important;
+      color: white !important;
+    }
+
+    .fc .batch-event {
+      color: white !important;
+    }
+  }
+
+  /* Apply custom gradient to FullCalendar breadcrumb buttons */
+  .fc .fc-button {
+    background: linear-gradient(100deg, rgb(65, 177, 199) 26%, rgb(144, 178, 51) 100%) !important;
+    border: none !important;
+    color: white !important; /* Ensure text is readable */
+    transition: opacity 0.2s ease; /* Optional: Smooth hover effect */
+  }
+
+  .fc .fc-button:hover {
+    opacity: 0.9; /* Optional: Slightly dim on hover */
+  }
+
+  .fc .fc-button.fc-button-active {
+    background: linear-gradient(100deg, rgb(55, 167, 189) 26%, rgb(134, 168, 41) 100%) !important; /* Slightly darker gradient for active state */
+  }
+
+  .fc .fc-button:disabled {
+    opacity: 0.5 !important; /* Dim disabled buttons */
+    background: linear-gradient(100deg, rgb(65, 177, 199) 26%, rgb(144, 178, 51) 100%) !important; /* Maintain gradient */
+  }
+`}</style>
     </div>
   );
 };
