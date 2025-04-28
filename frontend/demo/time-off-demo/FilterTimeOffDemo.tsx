@@ -75,7 +75,6 @@ const handleApplyFilters = ()=>{
                 <SelectLabel>Status</SelectLabel>
                 <SelectItem value="Requested">Requested</SelectItem>
                 <SelectItem value="Approved">Approved</SelectItem>
-                <SelectItem value="Taken">Taken</SelectItem>
                 <SelectItem value="Cancelled">Cancelled</SelectItem>
               </SelectGroup>
             </SelectContent>
