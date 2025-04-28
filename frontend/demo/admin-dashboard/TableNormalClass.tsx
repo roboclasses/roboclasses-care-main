@@ -108,7 +108,7 @@ export function TableNormalClass() {
 
   return (
     <div>
-    <h1 className="lg:text-4xl text-xl font-semibold mb-6 text-center">Normal-Class Appointments</h1>
+    <h1 className="lg:text-4xl text-xl font-semibold mb-6 text-center">Normal Classes</h1>
     <Table className="border border-black">
       <TableCaption>
         A list of booked appointments for Normal Class
