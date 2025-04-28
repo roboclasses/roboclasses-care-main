@@ -163,7 +163,7 @@ const TableViewDemo = () => {
                 <TableHead>From</TableHead>
                 <TableHead>To</TableHead>
                 <TableHead className="text-right">Additional note</TableHead>
-                <TableHead className="text-right">Manage</TableHead>
+                {user.role === 'admin' && <TableHead className="text-right">Manage</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -179,9 +179,9 @@ const TableViewDemo = () => {
                     {item.dateRange?.to ? format(new Date(item.dateRange?.to), "MMM dd, yyyy") : ""}
                   </TableCell>
                   <TableCell className="text-right">{item.notes}</TableCell>
-                  <TableCell className="text-right">
+                  {user.role === 'admin' && <TableCell className="text-right">
                     <TimeOffApprovalDemo timeOffId={item._id} />
-                  </TableCell>
+                  </TableCell>}
                 </TableRow>
               ))}
             </TableBody>
