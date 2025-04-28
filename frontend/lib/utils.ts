@@ -31,7 +31,7 @@ export const calculateLeaveDays = (
       (leave) =>
         leave.teacherName === userName &&
         leave.timeOffType === type &&
-        leave.status === "Taken"
+        leave.status === "Approved"
     )
     .reduce((total, leave) => {
       if (leave.dateRange?.from && leave.dateRange?.to) {

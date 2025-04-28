@@ -91,10 +91,6 @@ export const timeOffStatus = [
   },
   {
     id: 3,
-    status: "Taken"
-  },
-  {
-    id: 4,
     status: "Cancelled"
   },
 ]
