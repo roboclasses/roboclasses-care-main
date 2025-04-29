@@ -76,13 +76,13 @@ export function TableUsers() {
     <div>
     <div className="flex items-center justify-between mb-6">
       <h1 className="lg:text-4xl text-2xl font-semibold text-center">{role==='teacher' ? "Manage Teachers" : 'Manage Admins'}</h1>
-      <Select onValueChange={(value)=>setRole(value)}>
+      <Select onValueChange={(value)=>setRole(value)} defaultValue="teacher">
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Filter Roles"/>
         </SelectTrigger>
         <SelectContent defaultValue={"teacher"}>
-          <SelectItem value="admin">View Admins</SelectItem>
           <SelectItem value="teacher">View Teachers</SelectItem>
+          <SelectItem value="admin">View Admins</SelectItem>
         </SelectContent>
       </Select>
     </div>
