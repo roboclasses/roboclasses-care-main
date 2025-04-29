@@ -58,17 +58,17 @@ const filteredData = useMemo(() => {
     if (user.role === 'admin' && item.teacher === user.name) return false;
     
     // Apply class length filtering only if numberOfClasses exists
-    if (coursesData[0].numberOfClasses) {
-      const classLength = item.classes.length;
+    // if (coursesData[0].numberOfClasses) {
+    //   const classLength = item.classes.length;
 
-      const hasTooManyClasses = coursesData.some(course => {
-        return classLength >= Number(course.numberOfClasses);
-      });
+    //   const hasTooManyClasses = coursesData.some(course => {
+    //     return classLength >= Number(course.numberOfClasses);
+    //   });
 
-      if (hasTooManyClasses) {
-        return false;
-      }
-    }
+    //   if (hasTooManyClasses) {
+    //     return false;
+    //   }
+    // }
 
   return true;
   });
