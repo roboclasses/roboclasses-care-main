@@ -49,22 +49,29 @@ export function TableAttendance() {
     handleFetch();
   },[])
 
-  // Filter data by their login session's role properties
-// Filter data by their login session's role properties
+// Filter data 
 const filteredData = useMemo(() => {
   if (!data || !coursesData) return [];
 
   return data.filter((item) => {
-    // 1. First filter by user role
     if (user.role === 'teacher' && item.teacher !== user.name) return false;
     if (user.role === 'admin' && item.teacher === user.name) return false;
-    if(coursesData[0].numberOfClasses){
+    
+    // Apply class length filtering only if numberOfClasses exists
+    if (coursesData[0].numberOfClasses) {
       const classLength = item.classes.length;
-      coursesData.forEach((item)=>{
-        if(Number(item.numberOfClasses) >= classLength) return false;
-      })
+
+      const hasTooManyClasses = coursesData.some(course => {
+        return classLength >= Number(course.numberOfClasses);
+      });
+
+      if (hasTooManyClasses) {
+        console.log(`Filtered out: class length = ${classLength}`);
+        return false;
+      }
     }
-    return true;
+
+  return true;
   });
 }, [data, user, coursesData]);
 
