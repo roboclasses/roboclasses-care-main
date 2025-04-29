@@ -66,7 +66,6 @@ const filteredData = useMemo(() => {
       });
 
       if (hasTooManyClasses) {
-        console.log(`Filtered out: class length = ${classLength}`);
         return false;
       }
     }
