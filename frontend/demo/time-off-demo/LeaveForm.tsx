@@ -1,8 +1,7 @@
 "use client";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
@@ -30,6 +29,7 @@ import { Calendar } from "@/components/ui/calendar";
 
 import { TimeOffUrl } from "@/constants";
 import { teachers, timeOffTypes } from "@/data/dataStorage";
+import { getUserSession } from "@/lib/session";
 import SubmitButton from "../button-demo/SubmitButton";
 import { CalendarIcon } from "lucide-react";
 
@@ -38,12 +38,9 @@ import { DateRange } from "react-day-picker";
 import { addDays, format } from "date-fns";
 import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
-import { getUserSession } from "@/lib/session";
 
 const FormSchema = z.object({
-  teacherName: z
-    .string()
-    .min(2, { message: "Tecaher Name must be at least 2 characters." }),
+  teacherName: z.string().min(2, { message: "Tecaher Name must be at least 2 characters." }),
   timeOffType: z.string().optional(),
   dateRange: z.object({
     from: z.date({ required_error: "Start date is required." }),
@@ -53,13 +50,6 @@ const FormSchema = z.object({
 });
 
 export function LeaveForm({ defaultValue }: { defaultValue: string }) {
-  const [user, setUser] = useState({ role: "", name: "" });
-
-  const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    from: new Date(),
-    to: addDays(new Date(), 7),
-  });
-
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -70,23 +60,45 @@ export function LeaveForm({ defaultValue }: { defaultValue: string }) {
     },
   });
 
-  //Handle fetch user session
-  useEffect(() => {
-    const handleFetch = async () => {
+  const [user, setUser] = useState({ role: "", name: "" });
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    from: new Date(),
+    to: addDays(new Date(), 7),
+  });
+
+/**
+ * Fetches the user session and updates the form based on the user's role.
+ * For teachers, pre-populates the form's teacherName field with their name.
+ * For admins, a dropdown of teacher names is displayed (implemented elsewhere).
+ * @throws {Error} If no valid user session or role is found.
+ * @remarks
+ * - Uses `getUserSession` to retrieve session data.
+ * - Assumes `form` is a valid Formik or React Hook Form instance.
+ * - Runs on component mount and when `form`, `user.role`, or `user.name` change.
+ * @example
+ * // Teacher role: form.teacherName is set to "John Doe".
+ * // Admin role: Dropdown is shown (logic not in this snippet).
+ */
+useEffect(() => {
+  const fetchUserSession = async () => {
+    try {
       const session = await getUserSession();
       if (!session.role || !session.name) {
         throw new Error("No user session is found.");
       }
       setUser({ role: session.role, name: session.name });
 
-      if (user.role === "teacher") {
-        form.reset({
-          teacherName: user.name,
-        });
+      if (session.role === "teacher") {
+        form.setValue("teacherName", session.name); // Update only teacherName
       }
-    };
-    handleFetch();
-  }, [form, user.role, user.name]);
+      // Note: Admin dropdown logic is handled in a separate component.
+    } catch (error) {
+      console.error("Failed to fetch user session:", error);
+      // TODO: Handle error (e.g., redirect to login or show error message).
+    }
+  };
+  fetchUserSession();
+}, [form, user.role, user.name]);
 
   // Handle form status
   const { isSubmitting } = form.formState;
@@ -105,9 +117,7 @@ export function LeaveForm({ defaultValue }: { defaultValue: string }) {
       };
       console.log(JSON.stringify(payload));
 
-      const res = await axios.post(TimeOffUrl, payload, {
-        headers: { Authorization: Cookies.get("token") },
-      });
+      const res = await axios.post(TimeOffUrl, payload, { headers: { Authorization: Cookies.get("token") }});
       console.log(res.data);
 
       form.reset();
@@ -118,11 +128,7 @@ export function LeaveForm({ defaultValue }: { defaultValue: string }) {
       if (error instanceof AxiosError) {
         const { message } = error.response?.data;
         console.error(error);
-        toast({
-          title: "Failed",
-          description: message || "An unknown error has occurred.",
-          variant: "destructive",
-        });
+        toast({ title: "Failed", description: message || "An unknown error has occurred.", variant: "destructive" });
       }
     }
   }
@@ -130,6 +136,7 @@ export function LeaveForm({ defaultValue }: { defaultValue: string }) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-4">
+
         {/* Teacher Full Name */}
         <FormField
           control={form.control}
@@ -265,11 +272,7 @@ export function LeaveForm({ defaultValue }: { defaultValue: string }) {
           )}
         />
 
-        <SubmitButton
-          name={isSubmitting ? "Applying..." : "Apply"}
-          type="submit"
-          disabled={isSubmitting}
-        />
+        <SubmitButton name={isSubmitting ? "Applying..." : "Apply"} type="submit" disabled={isSubmitting} />
       </form>
     </Form>
   );
