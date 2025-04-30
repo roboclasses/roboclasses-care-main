@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { toast } from "@/hooks/use-toast"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/hooks/use-toast";
 import {
   Form,
   FormControl,
@@ -13,81 +13,118 @@ import {
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Calendar } from "@/components/ui/calendar"
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 
-import { TimeOffUrl } from "@/constants"
-import { timeOffTypes } from "@/data/dataStorage"
-import SubmitButton from "../button-demo/SubmitButton"
-import { CalendarIcon } from "lucide-react"
+import { TimeOffUrl } from "@/constants";
+import { teachers, timeOffTypes } from "@/data/dataStorage";
+import SubmitButton from "../button-demo/SubmitButton";
+import { CalendarIcon } from "lucide-react";
 
-import { useState } from "react"
-import { DateRange } from "react-day-picker"
-import { addDays, format } from "date-fns"
-import axios, { AxiosError } from "axios"
+import { useEffect, useState } from "react";
+import { DateRange } from "react-day-picker";
+import { addDays, format } from "date-fns";
+import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
-
-
+import { getUserSession } from "@/lib/session";
 
 const FormSchema = z.object({
-  teacherName: z.string().min(2, {message: "Tecaher Name must be at least 2 characters."}),
+  teacherName: z
+    .string()
+    .min(2, { message: "Tecaher Name must be at least 2 characters." }),
   timeOffType: z.string().optional(),
   dateRange: z.object({
-    from: z.date({ required_error: "Start date is required."}),
-    to: z.date().optional()
+    from: z.date({ required_error: "Start date is required." }),
+    to: z.date().optional(),
   }),
-  notes: z.string().min(5, {message: "Note must be atleast 5 characters."})
-})
+  notes: z.string().min(5, { message: "Note must be atleast 5 characters." }),
+});
 
-export function LeaveForm({defaultValue}:{defaultValue:string}) {
+export function LeaveForm({ defaultValue }: { defaultValue: string }) {
+  const [user, setUser] = useState({ role: "", name: "" });
+
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    from: new Date(),
+    to: addDays(new Date(), 7),
+  });
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       teacherName: "",
       timeOffType: defaultValue,
-      dateRange: { from: new Date(), to: addDays(new Date(), 7)},
-      notes:""
+      dateRange: { from: new Date(), to: addDays(new Date(), 7) },
+      notes: "",
     },
-  })
+  });
 
-  const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    from: new Date(),
-    to: addDays(new Date(), 7)
-  })
+  //Handle fetch user session
+  useEffect(() => {
+    const handleFetch = async () => {
+      const session = await getUserSession();
+      if (!session.role || !session.name) {
+        throw new Error("No user session is found.");
+      }
+      setUser({ role: session.role, name: session.name });
 
-    // Handle form status
-    const {isSubmitting} = form.formState;
+      if (user.role === "teacher") {
+        form.reset({
+          teacherName: user.name,
+        });
+      }
+    };
+    handleFetch();
+  }, [form, user.role, user.name]);
+
+  // Handle form status
+  const { isSubmitting } = form.formState;
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      const formattedFromDate = data.dateRange.from.toISOString().split("T")[0]
-      const formattedToDate = data.dateRange.to?.toISOString().split("T")[0] || formattedFromDate
+      const formattedFromDate = data.dateRange.from.toISOString().split("T")[0];
+      const formattedToDate =
+        data.dateRange.to?.toISOString().split("T")[0] || formattedFromDate;
 
       const payload = {
         teacherName: data.teacherName,
         timeOffType: data.timeOffType,
         dateRange: { from: formattedFromDate, to: formattedToDate },
         notes: data.notes,
-      }
+      };
       console.log(JSON.stringify(payload));
-      
-      const res = await axios.post(TimeOffUrl, payload, {headers:{Authorization: Cookies.get("token")}})
+
+      const res = await axios.post(TimeOffUrl, payload, {
+        headers: { Authorization: Cookies.get("token") },
+      });
       console.log(res.data);
 
       form.reset();
 
-      const {message} = res.data;
-      toast({ title: "Success✅", description: message, variant:"default" })  
-        
-    } catch (error:unknown) {
-      if(error instanceof AxiosError){
-        const {message} = error.response?.data;
+      const { message } = res.data;
+      toast({ title: "Success✅", description: message, variant: "default" });
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        const { message } = error.response?.data;
         console.error(error);
-        toast({ title: "Failed", description: message || "An unknown error has occurred.", variant:"destructive" })  
+        toast({
+          title: "Failed",
+          description: message || "An unknown error has occurred.",
+          variant: "destructive",
+        });
       }
-    } 
+    }
   }
 
   return (
@@ -100,7 +137,28 @@ export function LeaveForm({defaultValue}:{defaultValue:string}) {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Enter your full name" {...field} className="h-12 rounded-xl shadow-none"/>
+                {user.role === "admin" ? (
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger className="h-12 rounded-xl shadow-none">
+                      <SelectValue placeholder="Select a Teacher" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {teachers.map((item) => (
+                        <SelectItem value={item.name} key={item.id}>
+                          {item.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : user.role === "teacher" ? (
+                  <Input
+                    placeholder="Enter your full name"
+                    {...field}
+                    className="h-12 rounded-xl shadow-none"
+                  />
+                ) : (
+                  false
+                )}
               </FormControl>
               <FormDescription>
                 This is your public display name.
@@ -116,15 +174,15 @@ export function LeaveForm({defaultValue}:{defaultValue:string}) {
           name="timeOffType"
           render={({ field }) => (
             <FormItem>
-              <Select onValueChange={field.onChange} value={field.value} >
+              <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger className="h-12 rounded-xl shadow-none">
                     <SelectValue placeholder="Select time off type" />
                   </SelectTrigger>
                 </FormControl>
                 <FormDescription>
-                This is time off type drop-down.
-              </FormDescription>
+                  This is time off type drop-down.
+                </FormDescription>
                 <SelectContent>
                   {timeOffTypes.map((item) => (
                     <SelectItem value={item.type} key={item.id}>
@@ -173,8 +231,8 @@ export function LeaveForm({defaultValue}:{defaultValue:string}) {
                     defaultMonth={dateRange?.from}
                     selected={dateRange}
                     onSelect={(range) => {
-                      setDateRange(range)
-                      field.onChange(range)
+                      setDateRange(range);
+                      field.onChange(range);
                     }}
                     numberOfMonths={1}
                   />
@@ -195,18 +253,24 @@ export function LeaveForm({defaultValue}:{defaultValue:string}) {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Add note here" {...field} className="h-16 rounded-xl shadow-none"/>
+                <Input
+                  placeholder="Add note here"
+                  {...field}
+                  className="h-16 rounded-xl shadow-none"
+                />
               </FormControl>
-              <FormDescription>
-                This is note taking area.
-              </FormDescription>
+              <FormDescription>This is note taking area.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <SubmitButton name={isSubmitting ? 'Applying...' : 'Apply'} type="submit" disabled={isSubmitting} />
+        <SubmitButton
+          name={isSubmitting ? "Applying..." : "Apply"}
+          type="submit"
+          disabled={isSubmitting}
+        />
       </form>
     </Form>
-  )
+  );
 }
