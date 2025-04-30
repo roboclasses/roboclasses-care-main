@@ -113,7 +113,7 @@ const filteredData = useMemo(() => {
           <TableHead className="w-[100px]">Teacher Name</TableHead>
           <TableHead>Start Date</TableHead>
           <TableHead>Classes</TableHead>
-          <TableHead>Curriculum Taught</TableHead>
+          <TableHead>Topics Covered</TableHead>
           <TableHead>Number of Classes Done</TableHead>
           <TableHead>Edit</TableHead>
           <TableHead>Delete</TableHead>
