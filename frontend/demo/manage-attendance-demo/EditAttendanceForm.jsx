@@ -26,6 +26,7 @@
   import axios, { AxiosError } from "axios";
   import Cookies from "js-cookie";
   import { format } from "date-fns";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 
   const FormSchema = z.object({
@@ -33,6 +34,7 @@
     startDate: z.string().optional(),
     classes: z.array(z.string()).optional(),
     curriculumTaught: z.array(z.string().optional()),
+    completed: z.string(),
   });
 
   export function EditAttendanceForm() {
@@ -45,7 +47,8 @@
         batchName: "",
         startDate: "",
         classes: [],
-        curriculumTaught:[],
+        curriculumTaught:[""],
+        completed:"",
       },
     });
 
@@ -62,6 +65,7 @@
             startDate: attendanceData.startDate ? format(new Date(attendanceData.startDate), 'yyyy-MM-dd') : '',
             classes: attendanceData.classes.map((cls) => format(new Date(cls), 'yyyy-MM-dd')),
             curriculumTaught: attendanceData.curriculumTaught.map((c) => c),
+            completed: attendanceData.completed,
           });
 
           setNumberOfClasses(attendanceData.classes.length);
@@ -98,6 +102,7 @@
           startDate: startDate,
           classes: classes,
           curriculumTaught: curriculumTaught,
+          completed: data.completed,
         };
 
         const res = await axios.put(`${AttendanceUrl}/${id}`, payload, { headers: { Authorization: Cookies.get("token") }});
@@ -188,6 +193,33 @@
             /> 
             </div> 
           ))}
+
+          {/* All classes are covered? */}
+                  <FormField
+                    control={form.control}
+                    name="completed"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="font-semibold">Attendance Completed?</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          required
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select (Yes/No)" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value={"Yes"}>Yes</SelectItem>
+                            <SelectItem value={"No"}>No</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
         </form>
       </Form>

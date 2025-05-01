@@ -22,6 +22,11 @@ const attendanceSchema = new mongoose.Schema({
         required:true,
         default:[""],
     },
+    completed:{
+        type:String,
+        required:true,
+        default:"No"
+    },
 
 })
 
