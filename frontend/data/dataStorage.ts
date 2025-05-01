@@ -9,22 +9,23 @@ import {
 
 // For mapping teachers in drop-down
 export const teachers = [
-  { id: 0, name: "Kritika Maheswari" },
-  { id: 1, name: "Monty" },
-  { id: 2, name: "Kiruthika PK" },
-  { id: 3, name: "Pal Gudka" },
+  { id: 1, name: "All" },
+  { id: 2, name: "Kritika Maheswari" },
+  { id: 3, name: "Monty" },
+  { id: 4, name: "Kiruthika PK" },
+  { id: 5, name: "Pal Gudka" },
 ];
 
 // For detect system timezone
 export const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 export const timezone = [
-  { id: 0, name: "Asia/Kolkata", country: "India" },
-  { id: 1, name: "America/New_York", country: "USA" },
-  { id: 2, name: "Asia/Riyadh", country: "Saudi Arab" },
-  { id: 3, name: "America/Toronto", country: "Canada" },
-  { id: 4, name: "Asia/Dubai", country: "UAE" },
-  { id: 5, name: userTimeZone, country: "Your Timezone" },
+  { id: 1, name: "Asia/Kolkata", country: "India" },
+  { id: 2, name: "America/New_York", country: "USA" },
+  { id: 3, name: "Asia/Riyadh", country: "Saudi Arab" },
+  { id: 4, name: "America/Toronto", country: "Canada" },
+  { id: 5, name: "Asia/Dubai", country: "UAE" },
+  { id: 6, name: userTimeZone, country: "Your Timezone" },
 ];
 
 // For mapping image-icons
