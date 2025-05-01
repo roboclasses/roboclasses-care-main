@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   TableCaption,
@@ -18,23 +17,42 @@ import { TimeOffUrl } from "@/constants";
 import { getUserSession } from "@/lib/session";
 import { leaveType } from "@/types/Types";
 import { adjustedNormalLeave, calculateLeaveDays } from "@/lib/utils";
-import { LEAVE_POLICY } from "@/data/dataStorage";
+import { LEAVE_POLICY, teachers } from "@/data/dataStorage";
 
 import React, { useEffect, useMemo, useState } from "react";
 import { differenceInCalendarDays, format } from "date-fns";
 import axios, { AxiosError } from "axios";
 import useSWR from "swr";
 import Cookies from "js-cookie";
-import { RefreshCcw, Search } from "lucide-react";
+import { RefreshCcw } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-
-const fetcher = (url: string) => axios.get(url, {headers: { Authorization: Cookies.get("token") }}).then((res) => res.data);
+const fetcher = (url: string) =>
+  axios
+    .get(url, { headers: { Authorization: Cookies.get("token") } })
+    .then((res) => res.data);
 
 const TableViewDemo = () => {
-  const { data: leaves = [], error, isLoading, isValidating} = useSWR<leaveType[]>(TimeOffUrl, fetcher);
+  const {
+    data: leaves = [],
+    error,
+    isLoading,
+    isValidating,
+  } = useSWR<leaveType[]>(TimeOffUrl, fetcher);
 
-  const [filters, setFilters] = useState<{ type: string; status: string; fromDate: string }>({ type: "", status: "", fromDate: "" });
-  const [searchQuery, setSearchQuery] = useState("");
+  const [filters, setFilters] = useState<{
+    type: string;
+    status: string;
+    fromDate: string;
+  }>({ type: "", status: "", fromDate: "" });
+
+  const [employee, setEmployee] = useState("All");
 
   const [user, setUser] = useState({ role: "", name: "" });
 
@@ -52,14 +70,13 @@ const TableViewDemo = () => {
 
   // Get the teacher name from search query or current user
   const targetTeacher = useMemo(() => {
-    if (searchQuery && user.role === "admin") {
-
+    if (employee && user.role === "admin") {
       // Find the first matching teacher name from leaves
-      const matchedLeave = leaves.find((leave) => leave.teacherName.toLowerCase().includes(searchQuery.toLowerCase()));
+      const matchedLeave = leaves.find((leave) => leave.teacherName === employee )      
       return matchedLeave?.teacherName || "";
     }
     return user.name;
-  }, [searchQuery, user, leaves]);
+  }, [employee, user, leaves]);
 
   // Calculate used leave days for both types
   const usedNormalLeaveDays = useMemo(
@@ -99,14 +116,21 @@ const TableViewDemo = () => {
     if (!leaves) return [];
 
     return leaves.filter((item) => {
-      if (user.role === "teacher" && item.teacherName !== user.name) return false;
+      if (user.role === "teacher" && item.teacherName !== user.name)
+        return false;
       if (filters.type && item.timeOffType !== filters.type) return false;
       if (filters.status && item.status !== filters.status) return false;
-      if (filters.fromDate && item.dateRange?.from && new Date(item.dateRange?.from) < new Date(filters.fromDate)) return false;
-      if (searchQuery && !item.teacherName.toLocaleLowerCase().includes(searchQuery.toLocaleLowerCase())) return false;
+      if (
+        filters.fromDate &&
+        item.dateRange?.from &&
+        new Date(item.dateRange?.from) < new Date(filters.fromDate)
+      )
+        return false;
+      if(user.role === 'admin' && employee === 'All' && item.teacherName !== employee) return true;
+      if ( user.role === 'admin' && item.teacherName !== employee) return false;
       return true;
     });
-  }, [leaves, filters, user, searchQuery]);
+  }, [leaves, user, filters, employee]);
 
   // Reset applied filters
   const resetFilters = () => setFilters({ type: "", status: "", fromDate: "" });
@@ -138,16 +162,22 @@ const TableViewDemo = () => {
             </Button>
           )}
         </div>
-        <div className="flex lg:w-full w-[300px] max-w-sm items-center border border-gray-300 rounded-lg px-2 py-1">
-          <Search className="h-4 w-4 mr-2.5" />
-          <Input
-            type="search"
-            placeholder="Search Teacher..."
-            className="w-full border-0"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
+
+        {user.role === 'admin' && (
+        <Select onValueChange={(value) => setEmployee(value)} >
+          <SelectTrigger>
+            <SelectValue placeholder="Filter Employees" />
+          </SelectTrigger>
+          <SelectContent>
+            {teachers.map((item) => (
+              <SelectItem value={item.name} key={item.id}>
+                {item.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      )}
+
       </CardHeader>
       <CardContent className="w-full overflow-x-auto">
         {error ?? leaves?.length === 0 ?? isLoading ?? isValidating ? (
@@ -164,7 +194,9 @@ const TableViewDemo = () => {
                 <TableHead>To</TableHead>
                 <TableHead>Total Days</TableHead>
                 <TableHead className="text-right">Additional note</TableHead>
-                {user.role === 'admin' && <TableHead className="text-right">Manage</TableHead>}
+                {user.role === "admin" && (
+                  <TableHead className="text-right">Manage</TableHead>
+                )}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -174,38 +206,52 @@ const TableViewDemo = () => {
                   <TableCell>{item.teacherName}</TableCell>
                   <TableCell>{item.timeOffType}</TableCell>
                   <TableCell>
-                    {item.dateRange?.from ? format(new Date(item.dateRange?.from), "MMM dd, yyyy") : ""}
+                    {item.dateRange?.from
+                      ? format(new Date(item.dateRange?.from), "MMM dd, yyyy")
+                      : ""}
                   </TableCell>
                   <TableCell>
-                    {item.dateRange?.to ? format(new Date(item.dateRange?.to), "MMM dd, yyyy") : ""}
+                    {item.dateRange?.to
+                      ? format(new Date(item.dateRange?.to), "MMM dd, yyyy")
+                      : ""}
                   </TableCell>
                   <TableCell>
-                    { (item.dateRange?.from && item.dateRange?.to) ? 
-                      (differenceInCalendarDays(new Date(item.dateRange?.to), new Date(item.dateRange?.from)) + 1) : 
-                        '-' }
+                    {item.dateRange?.from && item.dateRange?.to
+                      ? differenceInCalendarDays(
+                          new Date(item.dateRange?.to),
+                          new Date(item.dateRange?.from)
+                        ) + 1
+                      : "-"}
                   </TableCell>
                   <TableCell className="text-right">{item.notes}</TableCell>
-                  {user.role === 'admin' && <TableCell className="text-right">
-                    <TimeOffApprovalDemo timeOffId={item._id} />
-                  </TableCell>}
+                  {user.role === "admin" && (
+                    <TableCell className="text-right">
+                      <TimeOffApprovalDemo timeOffId={item._id} />
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
             </TableBody>
             <TableFooter>
-              {user.role === "teacher" || (user.role === "admin" && searchQuery) ? (
+              {user.role === "teacher" ||
+              (user.role === "admin" && employee !== 'All') ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-right">
+                  <TableCell colSpan={3} className="text-right">
                     {`Normal leave remaining: ${usedAdjustedNormalLeaveDays}`}
                   </TableCell>
 
-                  <TableCell colSpan={2} className="text-right">
-                    {`Sick leave remaining: ${ LEAVE_POLICY.sick.total - usedSickLeaveDays }`}
+                  <TableCell colSpan={3} className="text-right">
+                    {`Sick leave remaining: ${
+                      LEAVE_POLICY.sick.total - usedSickLeaveDays
+                    }`}
                   </TableCell>
                 </TableRow>
               ) : (
                 <TableRow>
                   <TableCell colSpan={8}>Total Rows</TableCell>
-                  <TableCell className="text-right"> {filteredData.length} </TableCell>
+                  <TableCell className="text-right">
+                    {filteredData.length}
+                  </TableCell>
                 </TableRow>
               )}
             </TableFooter>
