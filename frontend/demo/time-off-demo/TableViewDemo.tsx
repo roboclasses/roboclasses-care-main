@@ -21,7 +21,7 @@ import { adjustedNormalLeave, calculateLeaveDays } from "@/lib/utils";
 import { LEAVE_POLICY } from "@/data/dataStorage";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { format } from "date-fns";
+import { differenceInCalendarDays, format } from "date-fns";
 import axios, { AxiosError } from "axios";
 import useSWR from "swr";
 import Cookies from "js-cookie";
@@ -162,6 +162,7 @@ const TableViewDemo = () => {
                 <TableHead>Time off type</TableHead>
                 <TableHead>From</TableHead>
                 <TableHead>To</TableHead>
+                <TableHead>Total Days</TableHead>
                 <TableHead className="text-right">Additional note</TableHead>
                 {user.role === 'admin' && <TableHead className="text-right">Manage</TableHead>}
               </TableRow>
@@ -177,6 +178,11 @@ const TableViewDemo = () => {
                   </TableCell>
                   <TableCell>
                     {item.dateRange?.to ? format(new Date(item.dateRange?.to), "MMM dd, yyyy") : ""}
+                  </TableCell>
+                  <TableCell>
+                    { (item.dateRange?.from && item.dateRange?.to) ? 
+                      (differenceInCalendarDays(new Date(item.dateRange?.to), new Date(item.dateRange?.from)) + 1) : 
+                        '-' }
                   </TableCell>
                   <TableCell className="text-right">{item.notes}</TableCell>
                   {user.role === 'admin' && <TableCell className="text-right">
@@ -198,7 +204,7 @@ const TableViewDemo = () => {
                 </TableRow>
               ) : (
                 <TableRow>
-                  <TableCell colSpan={6}>Total Rows</TableCell>
+                  <TableCell colSpan={8}>Total Rows</TableCell>
                   <TableCell className="text-right"> {filteredData.length} </TableCell>
                 </TableRow>
               )}
