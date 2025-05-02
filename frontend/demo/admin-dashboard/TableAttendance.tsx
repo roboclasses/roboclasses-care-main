@@ -24,6 +24,7 @@ import Link from "next/link"
 import { format } from "date-fns"
 import Cookies from "js-cookie";
 import { attendanceType, courseType } from "@/types/Types"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 
 const fetcher = (url:string) => axios.get(url).then((res) => res.data)
@@ -32,6 +33,7 @@ export function TableAttendance() {
   const [user, setUser] = useState({role:"", name:""})
   const { data, isLoading, isValidating, error, mutate } = useSWR<attendanceType[]>(AttendanceUrl, fetcher)
   const { data:coursesData, isLoading: coursesLoading } = useSWR<courseType[]>(CoursesUrl, fetcher)
+  const [attendanceStatus, setAttendanceStatus] = useState("active");
 
   // Fetch user session
   useEffect(()=>{
@@ -56,6 +58,8 @@ const filteredData = useMemo(() => {
   return data.filter((item) => {
     if (user.role === 'teacher' && item.teacher !== user.name) return false;
     if (user.role === 'admin' && item.teacher === user.name) return false;
+    if(attendanceStatus === 'active' && item.completed === 'Yes') return false;
+    if(attendanceStatus === 'completed' && item.completed === 'No') return false;
     
     // Apply class length filtering only if numberOfClasses exists
     // if (coursesData[0].numberOfClasses) {
@@ -72,7 +76,7 @@ const filteredData = useMemo(() => {
 
   return true;
   });
-}, [data, user, coursesData]);
+}, [data, coursesData, user, attendanceStatus]);
 
   // Handle delete attendance
   const handleDelete = async (id:string) => {
@@ -104,7 +108,20 @@ const filteredData = useMemo(() => {
 
   return (
     <div>
-     <h1 className="lg:text-4xl text-xl font-semibold mb-6 text-center">Manage Attendances</h1>
+     <div className="flex justify-between items-center mb-6">
+          <h1 className="lg:text-4xl text-xl font-semibold text-center">
+        {attendanceStatus==='active' ? "Active Attendances" : "Completed Attendances"}
+          </h1>
+          <Select onValueChange={(value)=>setAttendanceStatus(value)} defaultValue="active">
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Filter Attendances"/>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="active">Active</SelectItem>
+              <SelectItem value="completed">Completed</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
     <Table className="border border-black">
       <TableCaption>A list of attendances</TableCaption>
       <TableHeader>
@@ -115,6 +132,7 @@ const filteredData = useMemo(() => {
           <TableHead>Classes</TableHead>
           <TableHead>Topics Covered</TableHead>
           <TableHead>Number of Classes Done</TableHead>
+          <TableHead>Status</TableHead>
           <TableHead>Edit</TableHead>
           <TableHead>Delete</TableHead>
         </TableRow>
@@ -128,6 +146,7 @@ const filteredData = useMemo(() => {
             <TableCell>{items.classes ? items.classes.map((date)=> format(date, "MMM dd, yyyy")).join(", ") : ""}</TableCell>
             <TableCell>{items.curriculumTaught ? items.curriculumTaught.map((item)=> item).join(", ") : ""}</TableCell>
             <TableCell>{items.classes.length}</TableCell>
+            <TableCell>{items.completed === 'Yes' ? 'Completed' : 'Active'}</TableCell>
             <TableCell className="text-right">
               <Link href={`/manageAttendance/edit/${items._id}`}>
                 <EditButton name="Edit" type="button" />
