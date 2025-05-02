@@ -60,24 +60,11 @@ export function TableBatchEntries() {
       if(!data) return [];
 
       return data.filter((item)=>{
-          if(batchStatus === "completed" && item.completed !== "Yes" )
-            return false;
-
-          if(batchStatus === "active" && item.completed === "Yes")
-            return false;
-
-          if(searchQuery && !item.teacher.toLowerCase().includes(searchQuery.toLowerCase()))
-            return false;
-
-          if(user.role === "teacher"){
-            if(batchStatus === "active" && item.teacher !== user.name){
-              return false;
-            }
-
-            if(batchStatus === "completed" && item.teacher !== user.name)
-              return false;
-          }
-
+          if(user.role === "teacher" && item.teacher !== user.name) return false;
+          if(user.role === "admin" && item.teacher === user.name) return false;
+          if(batchStatus === "active" && item.completed === "Yes") return false;
+          if(batchStatus === "completed" && item.completed === "No" ) return false;
+          if(searchQuery && !item.teacher.toLowerCase().includes(searchQuery.toLowerCase())) return false;
         return true;
       }
       )
@@ -139,7 +126,7 @@ export function TableBatchEntries() {
           <h1 className="lg:text-4xl text-xl font-semibold text-center">
         {batchStatus==='active' ? "Active Batches" : "Completed Batches"}
           </h1>
-          <Select onValueChange={(value)=>setBatchStatus(value)}>
+          <Select onValueChange={(value)=>setBatchStatus(value)} defaultValue="active">
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Filter Batches"/>
             </SelectTrigger>
