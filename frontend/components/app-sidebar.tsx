@@ -4,6 +4,7 @@ import * as React from "react";
 import {
   AlignEndVerticalIcon,
   BookIcon,
+  BookOpenIcon,
   Calendar,
   LayoutDashboard,
   LifeBuoy,
@@ -163,6 +164,11 @@ useEffect(()=>{
         url: "/teachersAvailability",
         icon: AlignEndVerticalIcon,
       },
+      {
+        title: "Assessment Generator",
+        url: "/assessmentGenerator",
+        icon: BookOpenIcon,
+      },
     ],
 
     navMainTeacher: [
@@ -216,6 +222,11 @@ useEffect(()=>{
         title: "Teachers Availability",
         url: "/teachersAvailability",
         icon: AlignEndVerticalIcon,
+      },
+      {
+        title: "Assessment Generator",
+        url: "/assessmentGenerator",
+        icon: BookOpenIcon,
       },
     ],
 
