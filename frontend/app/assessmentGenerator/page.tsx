@@ -15,8 +15,8 @@ const page = () => {
         style={{objectFit:"cover"}}
         priority
       />
-      <div className="md:px-0 px-5 md:max-w-7xl max-w-2xl z-10 flex items-center justify-center backdrop-blur-sm">
-        <div className="md:mt-5 mt-10 mb-2 bg-background/95 p-8 rounded-xl">
+      <div className="z-10 flex items-center justify-center backdrop-blur-sm">
+        <div className="lg:mt-5 mt-10 bg-background/95 p-8 m-4 rounded-xl shadow-lg">
         <div className="mb-8 flex flex-col items-center">
           <h1 className="md:text-4xl text-2xl mb-4 text-center font-serif">
             Kid-Friendly Assessment Generator
