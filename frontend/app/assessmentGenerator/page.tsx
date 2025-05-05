@@ -17,11 +17,11 @@ const page = () => {
       />
       <div className="md:px-0 px-5 md:max-w-7xl max-w-2xl z-10 flex items-center justify-center backdrop-blur-sm">
         <div className="md:mt-5 mt-10 mb-2 bg-background/95 p-8 rounded-xl">
-        <div className="mb-8">
+        <div className="mb-8 flex flex-col items-center">
           <h1 className="md:text-4xl text-2xl mb-4 text-center font-serif">
             Kid-Friendly Assessment Generator
           </h1>
-          <Label className="text-gray-500 md:text-lg text-xs text-balance">
+          <Label className="text-gray-500 md:text-lg text-xs text-center">
             Create customized educational assessments for children in seconds using AI
           </Label>
         </div>
