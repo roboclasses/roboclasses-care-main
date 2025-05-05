@@ -30,7 +30,6 @@ import { toast } from "@/hooks/use-toast";
 import { AssessmentResult } from "./assessment-result";
 import { useState } from "react";
 
-// import axios, { AxiosError } from "axios";
 
 const FormSchema = z.object({
   subject: z
@@ -38,10 +37,7 @@ const FormSchema = z.object({
     .min(2, { message: "Subject must be at least 2 characters." }),
   ageGroup: z.string({ required_error: "Please select an age group." }),
   difficultyLevel: z.number().min(1).max(5),
-  // numberOfQuestions: z.string().transform((val) => Number.parseInt(val, 10)),
-  numberOfQuestions: z.string({
-    required_error: "Please select number of question.",
-  }),
+  numberOfQuestions: z.string({ required_error: "Please select an age group." }),
   additionalInstructions: z.string().optional(),
   useAI: z.boolean().default(true),
 });
@@ -56,7 +52,7 @@ export function AssessmentGeneratorForm() {
     defaultValues: {
       subject: "",
       difficultyLevel: 3,
-      numberOfQuestions: "10",
+      numberOfQuestions: "15",
       additionalInstructions: "",
       useAI: true,
     },
@@ -109,7 +105,6 @@ export function AssessmentGeneratorForm() {
           variant: "destructive",
         });
       }
-      // setError(error instanceof Error ? error.message : "An unexpected error occurred")
     }
   }
 
@@ -227,10 +222,8 @@ export function AssessmentGeneratorForm() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="5">5 questions</SelectItem>
-                      <SelectItem value="10">10 questions</SelectItem>
                       <SelectItem value="15">15 questions</SelectItem>
-                      <SelectItem value="20">20 questions</SelectItem>
+                      <SelectItem value="30">30 questions</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />

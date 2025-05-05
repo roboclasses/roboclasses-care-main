@@ -104,9 +104,17 @@ export async function POST(req: Request) {
       useAI = true,
     } = await req.json()
 
-     // Use environment variable for API key
-     const openaiProvider = createOpenAI({ apiKey: process.env.OPENAI_API_KEY });
-     const model = openaiProvider("gpt-3.5-turbo");
+     // Logic for switching between models when number of question changes
+    const modelMap:Record<string, string> = {
+      '30':'gpt-4o',
+      '15': 'gpt-3.5-turbo'
+    }
+
+    const selectedModel = modelMap[numberOfQuestions] 
+
+    const openaiProvider = createOpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const model = openaiProvider(selectedModel)
+
 
     // If useAI is false, use the fallback generator
     if (!useAI) {
@@ -152,11 +160,10 @@ export async function POST(req: Request) {
     try {
       // Generate the assessment using OpenAI
       const { text } = await generateText({
-        // model: openai("gpt-3.5-turbo"), // Using 3.5-turbo instead of gpt-4o to reduce token usage
         model,
         prompt,
         temperature: 0.7,
-        maxTokens: 2000,
+        maxTokens: 4000,
       })
 
       return Response.json({
