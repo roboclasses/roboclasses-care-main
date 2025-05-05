@@ -1,10 +1,13 @@
 'use server'
+
 import { type NextRequest, NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
-    const protectedRoutePrefixes = ["/", "/adminDashboard", "/appointment", "/newBatchEntry", "/manageAttendance", "/courseEntry", "/manageRoles"];
-    const studentRoutePrefixes = ["/newBatchEntry", "/adminDashboard", "/manageAttendance", "/courseEntry", "/manageRoles",  "/appointment/reminder/normal-class", "/appointment/reminder/demo-class"] ;
+    //Routes which are not accessible
+    const protectedRoutePrefixes = ["/", "/adminDashboard", "/appointment", "/assessmentGenerator", "/courseEntry", "/manageAttendance", "/manageRoles", "/newBatchEntry", "/teachersAvailability", "/timeOff"];
+    const studentRoutePrefixes = ["/adminDashboard", "/appointment/reminder/normal-class", "/appointment/reminder/demo-class", "/assessmentGenerator", "/courseEntry", "/manageAttendance", "/manageRoles", "/newBatchEntry", "/teachersAvailability", "/timeOff"] ;
     // const teacherRoutePrefixes = ["/courseEntry", "/newBatchEntry", "/appointment/studentRegister"]
+
     const publicRoutes = ["/login", "/signup"];
     const currentPath = req.nextUrl.pathname;
 
@@ -13,6 +16,7 @@ export function middleware(req: NextRequest) {
         return NextResponse.next();
     }
 
+    //Checking the routes prefixes
     const isProtectedRoute = protectedRoutePrefixes.some(prefix => currentPath.startsWith(prefix));
     const isStudentRoute = studentRoutePrefixes.some(prefix => currentPath.startsWith(prefix));
     // const isTeacherRoute  = teacherRoutePrefixes.some(prefix => currentPath.startsWith(prefix));
@@ -25,6 +29,7 @@ export function middleware(req: NextRequest) {
         if (!isAuth) {
             return NextResponse.redirect(new URL("/login", req.nextUrl));
         }
+        
         // Student views
         if (isStudentRoute && !(role === "admin" || role === "teacher")) {
             return NextResponse.redirect(new URL("/", req.nextUrl));
