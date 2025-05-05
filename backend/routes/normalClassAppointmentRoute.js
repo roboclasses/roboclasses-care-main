@@ -1,119 +1,27 @@
 import express from "express";
-import { Student } from "../models/student.model.js";
-import { NormalClass } from "../models/normalClass.model.js";
+
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import { roleMiddleware } from "../middlewares/role.middleware.js";
+import {
+  createNormalClassController,
+  deleteNormalClassController,
+  getNormalClassController,
+  getNormalClassControllerById,
+  updateNormalClassController,
+} from "../controllers/normalClass.controller.js";
 // import scheduleReminders from "../jobs/scheduler.js";
 
 
 const router = express.Router();
 
-// route handlers for Normal Class appointments
-// Create appointments
-router.post("/appointments/normalClass", async (req, res) => {
-  try {
-    const { teacher, userName, destination, email, batch, time, date, items, weekDay, timeZone, numberOfClasses } = req.body;
+router.post("/appointments/normalClass", createNormalClassController);
 
-    console.log({ teacher, userName, destination, email, batch, time, date, items, weekDay, timeZone, numberOfClasses });
-    
-    const student = await Student.findOne({email})
+router.get("/appointments/normalClass", getNormalClassController);
 
-    const normalClassModel = new NormalClass({teacher, userName, studId:student._id, destination, email, batch, time, date, items, weekDay, timeZone, numberOfClasses})
+router.get("/appointments/normalClass/:id", getNormalClassControllerById);
 
-    const data = await normalClassModel.save();
-    
-    scheduleReminders(newAppointment)
+router.put("/appointments/normalClass/:id", updateNormalClassController);
 
-    console.log(data);
-    return res.status(201).json({
-      success: true,
-      message: "Appointment created successfully.", data
-    });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: "Internal server error!",
-    });
-  }
-});
-
-//get appointments
-router.get("/appointments/normalClass", async (req, res) => {
-  try {
-    const data = await NormalClass.find();
-    console.log(data);
-    return res.status(200).json(data);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: "Internal server error!",
-    });
-  }
-});
-
-//get a single appointment
-router.get("/appointments/normalClass/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const data = await NormalClass.findById(id);
-    console.log(data);
-    return res.status(200).json(data);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: "Internal server error!",
-    });
-  }
-});
-
-// update an appointment
-router.put("/appointments/normalClass/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { teacher, userName, studId, destination, email, batch, time, date, items, weekDay, timeZone, numberOfClasses } = req.body;
-
-
-    const data = await NormalClass.findByIdAndUpdate(
-      id,
-      { teacher, userName, studId, destination, email, batch, time, date, items, weekDay, timeZone, numberOfClasses },
-      { new: true }
-    );
-    console.log(data);
-
-    return res.status(200).json({
-      success: true,
-      message: "Appointment successfully updated", data
-    });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: "Internal server error!",
-    });
-  }
-});
-
-// delete an appointment
-router.delete("/appointments/normalClass/:id", authMiddleware, roleMiddleware('admin'), async (req, res) => {
-  try {
-    const { id } = req.params;
-    const data = await NormalClass.findByIdAndDelete(id);
-    console.log(data);
-
-    return res.status(200).json({
-      success: true,
-      message: "Appointment successfully deleted.", data
-    });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: "Internal server error!",
-    });
-  }
-});
+router.delete("/appointments/normalClass/:id", authMiddleware, roleMiddleware("admin"), deleteNormalClassController );
 
 export default router;
