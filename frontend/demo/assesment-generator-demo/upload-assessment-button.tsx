@@ -59,14 +59,12 @@ const FormSchema = z.object({
   assessmentLevel: z.string({
     required_error: "Please select assesment level",
   }),
-  assessment: z
-    .instanceof(File, {
-      message: "Please upload a CSV file",
-    })
-    .refine(
-      (file) => file.type === "text/csv" || file.name.endsWith(".csv"),
-      "File must be a CSV"
-    ),
+  assessment: z.any().refine((file) => {
+    if (typeof window === "undefined") return true; // Skip check on server
+    return file instanceof File && file.name.endsWith(".csv");
+  }, {
+    message: "Please upload a valid CSV file",
+  }),
 });
 
 // Schema for validating parsed CSV data
@@ -228,7 +226,7 @@ export function UploadAssessmentButton() {
                               <input
                                 id="dropzone-file"
                                 type="file"
-                                // accept=".csv"
+                                accept=".csv"
                                 onChange={(e) => {
                                   const file = e.target.files?.[0];
                                   if (file) {
