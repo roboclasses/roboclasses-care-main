@@ -82,7 +82,7 @@ const fetcher = (url: string) =>
 export function UploadAssessmentButton() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-    defaultValues: { batch: "", assessmentLevel: "" },
+    // defaultValues: { batch: "", assessmentLevel: "" },
   });
   const { data: batchDetails = [] } = useSWR<batchType[]>(
     NewBatchEntryUrl,
@@ -149,7 +149,7 @@ export function UploadAssessmentButton() {
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Edit timezone" />
+                          <SelectValue placeholder="Select batch" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -228,7 +228,7 @@ export function UploadAssessmentButton() {
                               <input
                                 id="dropzone-file"
                                 type="file"
-                                accept=".csv"
+                                // accept=".csv"
                                 onChange={(e) => {
                                   const file = e.target.files?.[0];
                                   if (file) {
