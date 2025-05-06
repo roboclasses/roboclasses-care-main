@@ -5,15 +5,17 @@ import { Button } from "@/components/ui/button"
 import { Download, Printer, RotateCcw, Info, Sparkles } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
+import { UploadAssessmentButton } from "./upload-assessment-button"
 
 interface AssessmentResultProps {
   assessment: string
   onReset: () => void
   notice?: string | null
   isAiGenerated?: boolean
+  assessmentTitle?: string
 }
 
-export function AssessmentResult({ assessment, onReset, notice, isAiGenerated }: AssessmentResultProps) {
+export function AssessmentResult({ assessment, onReset, notice, isAiGenerated, assessmentTitle }: AssessmentResultProps) {
   const [isPrinting, setIsPrinting] = useState(false)
 
   const handlePrint = () => {
@@ -25,10 +27,12 @@ export function AssessmentResult({ assessment, onReset, notice, isAiGenerated }:
   }
 
   const handleDownload = () => {
+    console.log("Assessment Type: ",);
+    
     const element = document.createElement("a")
     const file = new Blob([assessment], { type: "text/csv" })
     element.href = URL.createObjectURL(file)
-    element.download = "kid-assessment.csv"
+    element.download = `kid-assessment - ${assessmentTitle}.csv`
     document.body.appendChild(element)
     element.click()
     document.body.removeChild(element)
@@ -60,6 +64,7 @@ export function AssessmentResult({ assessment, onReset, notice, isAiGenerated }:
             <Download className="h-4 w-4 mr-2" />
             Download
           </Button>
+          <UploadAssessmentButton />
           <Button variant="outline" size="sm" onClick={handlePrint} disabled={isPrinting}>
             <Printer className="h-4 w-4 mr-2" />
             Print
