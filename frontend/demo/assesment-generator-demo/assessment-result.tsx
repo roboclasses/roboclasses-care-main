@@ -26,9 +26,9 @@ export function AssessmentResult({ assessment, onReset, notice, isAiGenerated }:
 
   const handleDownload = () => {
     const element = document.createElement("a")
-    const file = new Blob([assessment], { type: "text/plain" })
+    const file = new Blob([assessment], { type: "text/csv" })
     element.href = URL.createObjectURL(file)
-    element.download = "kid-assessment.txt"
+    element.download = "kid-assessment.csv"
     document.body.appendChild(element)
     element.click()
     document.body.removeChild(element)
@@ -78,7 +78,7 @@ export function AssessmentResult({ assessment, onReset, notice, isAiGenerated }:
         </Alert>
       )}
 
-      <div className="bg-gray-50 p-6 rounded-md border border-gray-200 print:border-none print:p-0">
+      <div className="bg-muted/50 p-6 rounded-md border border-gray-200 print:border-none print:p-0">
         <div className="print-content" dangerouslySetInnerHTML={{ __html: formatAssessment(assessment) }} />
       </div>
 
