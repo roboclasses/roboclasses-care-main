@@ -46,7 +46,7 @@ export function AssessmentGeneratorForm() {
   const [assessment, setAssessment] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [isAiGenerated, setIsAiGenerated] = useState(false);
-  const [assessmentTitle, setAssessmentTitle] = useState("");
+  const [assessmentFileName, setAssessmentFileName] = useState("");
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -89,10 +89,8 @@ export function AssessmentGeneratorForm() {
       });
 
       setAssessment(result.assessment);
-      console.log("Assesment after form submission: ",result.assessment);
-      console.log("Assesment Title after form submission: ",`${data?.subject} - Level ${data?.difficultyLevel} - Number of Question ${data?.numberOfQuestions} - Age Group ${data?.ageGroup}`);
       
-      setAssessmentTitle(`${data?.subject} - Level ${data?.difficultyLevel} - Number of Question ${data?.numberOfQuestions} - Age Group ${data?.ageGroup}`)
+      setAssessmentFileName(`${data?.subject} - Level ${data?.difficultyLevel} - Number of Question ${data?.numberOfQuestions} - Age Group ${data?.ageGroup}`)
 
       if (result.notice) {
         setNotice(result.notice);
@@ -295,7 +293,7 @@ export function AssessmentGeneratorForm() {
       ) : (
         <AssessmentResult
           assessment={assessment}
-          assessmentTitle={assessmentTitle}
+          assessmentFileName={assessmentFileName}
           onReset={() => setAssessment(null)}
           notice={notice}
           isAiGenerated={isAiGenerated}
