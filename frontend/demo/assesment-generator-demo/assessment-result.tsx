@@ -12,10 +12,10 @@ interface AssessmentResultProps {
   onReset: () => void
   notice?: string | null
   isAiGenerated?: boolean
-  assessmentTitle?: string
+  assessmentFileName?: string
 }
 
-export function AssessmentResult({ assessment, onReset, notice, isAiGenerated, assessmentTitle }: AssessmentResultProps) {
+export function AssessmentResult({ assessment, onReset, notice, isAiGenerated, assessmentFileName }: AssessmentResultProps) {
   const [isPrinting, setIsPrinting] = useState(false)
 
   const handlePrint = () => {
@@ -27,12 +27,11 @@ export function AssessmentResult({ assessment, onReset, notice, isAiGenerated, a
   }
 
   const handleDownload = () => {
-    console.log("Assessment Type: ",);
     
     const element = document.createElement("a")
     const file = new Blob([assessment], { type: "text/csv" })
     element.href = URL.createObjectURL(file)
-    element.download = `kid-assessment - ${assessmentTitle}.csv`
+    element.download = `kid-assessment - ${assessmentFileName}.csv`
     document.body.appendChild(element)
     element.click()
     document.body.removeChild(element)
