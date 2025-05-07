@@ -10,7 +10,6 @@ import {
 import {
   Form,
   FormControl,
-  //   FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -23,7 +22,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "@/hooks/use-toast";
 import axios, { AxiosError } from "axios";
-import { NewBatchEntryUrl } from "@/constants";
+import { AssessmentUrl, NewBatchEntryUrl } from "@/constants";
 import Cookies from "js-cookie";
 import { batchType } from "@/types/Types";
 import useSWR from "swr";
@@ -43,23 +42,13 @@ import {
 } from "@/components/ui/card";
 import { useState } from "react";
 
-// const QuestionSchema = z.object({
-//   question: z.string(),
-//   option: z.object({
-//     a: z.string(),
-//     b: z.string(),
-//     c: z.string(),
-//     d: z.string(),
-//   }),
-//   answer: z.enum(["A", "B", "C", "D"]).transform((val) => val.toUpperCase()),
-// });
 
 const FormSchema = z.object({
   batch: z.string({ required_error: "Please select a batch" }),
   assessmentLevel: z.string({
     required_error: "Please select assesment level",
   }),
-  assessment: z.any().refine((file) => {
+  questions: z.any().refine((file) => {
     if (typeof window === "undefined") return true; // Skip check on server
     return file instanceof File && file.name.endsWith(".csv");
   }, {
@@ -67,10 +56,6 @@ const FormSchema = z.object({
   }),
 });
 
-// Schema for validating parsed CSV data
-// const ParsedAssessmentSchema = z.array(QuestionSchema).nonempty({
-//     message: "CSV must contain at least one valid question",
-//   });
 
 const fetcher = (url: string) =>
   axios
@@ -92,15 +77,22 @@ export function UploadAssessmentButton() {
   const { isSubmitting } = form.formState;
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
+    console.log("data is: ", data);
     try {
-      //   const res = await axios.post(CoursesUrl, data);
-      console.log("Submitted data: ", data);
+      const formData = new FormData();
+      formData.append('batch', data.batch)
+      formData.append('assessmentLevel', data.assessmentLevel)
+      formData.append('questions', data.questions)
+
+      const res = await axios.post(AssessmentUrl, formData, { headers:{"Content-Type":"multipart/form-data"}});
+      console.log(res.data);
+      
       form.reset();
 
-      //   const { message } = res.data;
+      const { message } = res.data;
       toast({
         title: "Success✅",
-        description: "Form submitted successfully.",
+        description: message,
         variant: "default",
       });
     } catch (error: unknown) {
@@ -216,7 +208,7 @@ export function UploadAssessmentButton() {
                       </div>
                       <FormField
                         control={form.control}
-                        name="assessment"
+                        name="questions"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel className="font-semibold">

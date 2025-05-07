@@ -15,6 +15,7 @@ import studentRoutes from "./routes/studentRoute.js"
 import timeOffRoutes from "./routes/timeOffRoute.js"
 import holidayRoutes from "./routes/holidayRoutes.js"
 import eventRoutes from "./routes/eventRoutes.js"
+import assessmentRoutes from "./routes/assessmentRoute.js"
 
 import { handleCleanupExpiredTimeOff } from "./jobs/cleanupExpiredTimeOff.js";
 
@@ -46,8 +47,7 @@ app.use('/api/v1',attendanceRoutes)
 app.use('/api/v1',timeOffRoutes)
 app.use('/api/v1',holidayRoutes)
 app.use('/api/v1',eventRoutes)
-
-
+app.use('/api/v1',assessmentRoutes)
 
 
 // listning on port
