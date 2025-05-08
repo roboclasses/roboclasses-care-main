@@ -225,8 +225,9 @@ export function AssessmentGeneratorForm() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
+                      <SelectItem value="10">10 questions</SelectItem>
                       <SelectItem value="15">15 questions</SelectItem>
-                      <SelectItem value="30">30 questions</SelectItem>
+                      <SelectItem value="20">20 questions</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />

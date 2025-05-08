@@ -27,29 +27,25 @@ const createAssessmentController = async(req, res)=>{
           console.log("rows: ", row.question +" answer: ",row.answer);
           
           if (row.question && row.answer) {
-            const assessment = {
-              batch,
-              assessmentLevel,
-              questions: [
-                {
-                  question: row.question,
-                  option: {
-                    a: row.A,
-                    b: row.B,
-                    c: row.C,
-                    d: row.D,
-                  },
-                  answer: row.answer,
-                },
-              ],
-            };
-            assessments.push(assessment);
+
+            const question = {
+              question: row.question,
+              option: {
+                a: row.A,
+                b: row.B,
+                c: row.C,
+                d: row.D,
+              },
+              answer: row.answer,
+
+            }
+            assessments.push(question);
           }
         })
         .on('end', async () => {
           try {
-            const data = await Assessment.insertMany(assessments);
-            // console.log(data);
+            const newAssessment = new Assessment({batch, assessmentLevel, questions:assessments})
+            await newAssessment.save()
             
             fs.unlinkSync(filePath);
             res.status(201).json({ success: true, message: 'Assessment Created successfully.' });
