@@ -27,16 +27,71 @@ export function AssessmentResult({ assessment, onReset, notice, isAiGenerated, a
   }
 
   const handleDownload = () => {
-    
-    const element = document.createElement("a")
-    const file = new Blob([assessment], { type: "text/csv" })
-    element.href = URL.createObjectURL(file)
-    element.download = `kid-assessment - ${assessmentFileName}.csv`
-    document.body.appendChild(element)
-    element.click()
-    document.body.removeChild(element)
-  }
-
+    const rows = [['question', 'A', 'B', 'C', 'D', 'answer']];
+  
+    // Extract Questions and Answer Key sections
+    const questionsSection = assessment.split('## Questions:')[1]?.split('# Answer Key:')[0]?.trim();
+    const answerKeySection = assessment.split('# Answer Key:')[1]?.trim();
+  
+    if (!questionsSection || !answerKeySection) {
+      console.error("Invalid assessment format");
+      return;
+    }
+  
+    // Parse individual questions
+    const questionBlocks = questionsSection.split(/\n(?=\d+\.\s)/).filter(Boolean); // matches "1. ", "2. " etc.
+  
+    // Parse answers: { '1': 'C', '2': 'A', ... }
+    const answerLines = answerKeySection.split('\n').filter(Boolean);
+    const answerMap: Record<string, string> = {};
+    answerLines.forEach(line => {
+      const match = line.match(/^(\d+)\.\s*([A-D])/);
+      if (match) {
+        answerMap[match[1]] = match[2];
+      }
+    });
+  
+    questionBlocks.forEach((block, index) => {
+      const lines = block.trim().split('\n').map(line => line.trim());
+      const questionText = lines[0].replace(/^\d+\.\s*/, ''); // Remove "1. "
+  
+      const options: Record<'A' | 'B' | 'C' | 'D', string> = { A: '', B: '', C: '', D: '' };
+      lines.slice(1).forEach(line => {
+        const optMatch = line.match(/^([A-D])\)\s*(.*)/);
+        if (optMatch) {
+          options[optMatch[1] as 'A' | 'B' | 'C' | 'D'] = optMatch[2];
+        }
+      });
+  
+      const answer = answerMap[(index + 1).toString()] ?? '';
+  
+      // Add to rows
+      rows.push([
+        questionText,
+        options.A,
+        options.B,
+        options.C,
+        options.D,
+        answer,
+      ]);
+    });
+  
+    // Convert to CSV
+    const csvContent = rows.map(row =>
+      row.map(cell => `"${cell.replace(/"/g, '""')}"`).join(',')
+    ).join('\n');
+  
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `kid-assessment - ${assessmentFileName || 'questions'}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+  
+  
   // Format markdown-style content for better display
   const formatAssessment = (text: string) => {
     return text
@@ -45,6 +100,9 @@ export function AssessmentResult({ assessment, onReset, notice, isAiGenerated, a
       .replace(/\n\n/g, "<br /><br />")
       .replace(/\n/g, "<br />")
   }
+
+  console.log("assesment: ", assessment);
+  
 
   return (
     <div className="space-y-4 ">
