@@ -52,6 +52,24 @@ export type usersType={
   workingDays:string
 }
 
+type QuestionType={
+  question: string
+  option:{
+    a: string
+    b: string
+    c: string
+    d: string
+  },
+  answer: 'A' | 'B' | 'C' | 'D'
+}
+
+export type AssessmentType={
+  _id: string
+  batch: string
+  assessmentLevel: string
+  questions: QuestionType[]
+}
+
 export type studentType = {
   _id: string;
   studentId:string;

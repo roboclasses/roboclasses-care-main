@@ -6,6 +6,7 @@ import {
   BookIcon,
   BookOpenIcon,
   Calendar,
+  FormInputIcon,
   LayoutDashboard,
   LifeBuoy,
   School,
@@ -168,6 +169,11 @@ useEffect(()=>{
         title: "Assessment Generator",
         url: "/assessmentGenerator",
         icon: BookOpenIcon,
+      },
+      {
+        title: "Assessment Viewer",
+        url: "/assessmentViewer",
+        icon: FormInputIcon,
       },
     ],
 

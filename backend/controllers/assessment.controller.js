@@ -65,4 +65,33 @@ const createAssessmentController = async(req, res)=>{
     }
 }
 
-export {upload, createAssessmentController};
+const getAssessmentController = async(_req, res)=>{
+  try {
+    const data = await Assessment.find();
+    console.log(data);
+
+    res.status(200).json(data)
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({success: false, message: "Internal server error."})
+  }
+}
+
+const getAssessmentByIdController = async(req, res)=>{
+  try {
+    const {id} = req.params;
+
+    const data = await Assessment.findById(id)
+    console.log(data);
+
+    res.status(200).json(data)
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({success: false, message: "Internal server error."})
+    
+  }
+}
+
+export {upload, createAssessmentController, getAssessmentController, getAssessmentByIdController};
