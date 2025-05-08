@@ -136,7 +136,7 @@ export function UploadAssessmentButton() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="font-semibold">Batch Name</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value} >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select batch" />

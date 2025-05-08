@@ -106,8 +106,9 @@ export async function POST(req: Request) {
 
      // Logic for switching between models when number of question changes
     const modelMap:Record<string, string> = {
-      '30':'gpt-4o',
-      '15': 'gpt-3.5-turbo'
+      '10':'gpt-3.5-turbo',
+      '15': 'gpt-3.5-turbo',
+      '20': 'gpt-4o-mini',
     }
 
     const selectedModel = modelMap[numberOfQuestions] 
@@ -139,23 +140,29 @@ export async function POST(req: Request) {
 
     // Create a prompt for the AI
     const prompt = `
-      Create an educational assessment for children with the following parameters:
-      
-      Subject: ${subject}
-      Age Group: ${ageGroup} years old
-      Difficulty Level: ${difficultyLevel} out of 5
-      Number of Questions: ${numberOfQuestions}
-      Additional Instructions: ${additionalInstructions || "None"}
-      
-      Please format the assessment with:
-      1. A kid-friendly title (use a # heading)
-      2. Clear, age-appropriate instructions (use a ## heading)
-      3. Numbered questions (use a ## heading for Questions section)
-      4. A mix of question types appropriate for the subject (multiple choice, fill-in-the-blank, short answer, etc.)
-      5. An answer key at the end (use a # heading for Answer Key)
-      
-      Make sure the content is educational, engaging, and appropriate for the specified age group.
-    `
+    Create an educational assessment for children with the following parameters:
+    
+    Subject: ${subject}
+    Age Group: ${ageGroup} years old
+    Difficulty Level: ${difficultyLevel} out of 5
+    Number of Questions: ${numberOfQuestions}
+    Additional Instructions: ${additionalInstructions || "None"}
+    
+    Please format the assessment with:
+    # [A kid-friendly title goes here]
+    
+    ## Instructions:
+    Write clear, age-appropriate instructions here.
+    
+    ## Questions:
+    Include exactly ${numberOfQuestions} multiple-choice questions.
+    - Each question must have four answer options labeled A), B), C), and D)
+    - Make the content engaging and suitable for ${ageGroup}-year-olds
+    
+    # Answer Key:
+    Provide the correct answers in a numbered list format (e.g., 1. A, 2. C, ...).
+    `;
+    
 
     try {
       // Generate the assessment using OpenAI
