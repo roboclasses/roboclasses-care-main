@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+
 const assessmentSchema = new mongoose.Schema({
     batch: {type:String, required: true},
     assessmentLevel: {type:String, required: true},
@@ -12,7 +13,7 @@ const assessmentSchema = new mongoose.Schema({
             d:{type:String, required:true},
         },
         answer:{type:String, enum:['A','B','C','D'], required: true}
-    }]
+    }],
 }, {timestamps: true})
 
 
