@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -20,11 +21,15 @@ import axios, { AxiosError } from "axios"
 import { AnswerUrl, AssessmentUrl } from "@/constants"
 import { useParams } from "next/navigation"
 import { QuestionType } from "@/types/Types"
+import { Input } from "@/components/ui/input"
+import { getUserSession } from "@/lib/session"
 
 
 const FormSchema = z.object({
 //   answer: z.enum(["A", "B", "C", "D"], { required_error: "You need to select a option." }),
-answer: z.record(z.string(), z.enum(["A", "B", "C", "D"], { required_error: "You need to select a option." }))
+answer: z.record(z.string(), z.enum(["A", "B", "C", "D"], { required_error: "You need to select a option." })),
+candidate: z.string().optional(),
+
 })
 
 export function AssessmentSubmissionForm() {
@@ -34,8 +39,27 @@ export function AssessmentSubmissionForm() {
   })
 
   const {id} = useParams();
-//   const [numberOfQuestion, setNumberOfQuestion] = useState(0)
   const [data, setData] = useState<QuestionType[]>([])
+  const [user, setUser] = useState({role:"", name:""})
+
+  // Fetching logged-in user's credentials
+  useEffect(()=>{
+    try {
+      const handleFetch = async()=>{
+        const session = await getUserSession();
+        if(!session.role || !session.name){
+          throw new Error('No user session is found.')
+        }
+        setUser({role: session.role, name: session.name})
+      }
+
+      handleFetch();
+      
+    } catch (error) {
+      console.error(error);
+    }
+
+  },[])
 
   // Fetching assessment quetions and options
   useEffect(()=>{
@@ -46,15 +70,16 @@ export function AssessmentSubmissionForm() {
 
             const assessmentData = res.data;
             setData(assessmentData.questions)
-            // setNumberOfQuestion(assessmentData.questions.length)
-
+            if(user.role==='student'){
+              form.reset({candidate:user.name})
+            }
         } catch (error) {
             console.error(error);
         }
     }
 
     handleFetch();
-  },[id])
+  },[form, id, user])
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log(data);
@@ -80,6 +105,30 @@ export function AssessmentSubmissionForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        
+        {/* Candidate Name */}
+        <FormField
+          control={form.control}
+          name="candidate"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Candidate Name</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  required
+                  disabled
+                  className="bg-muted-foreground h-12 shadow-none rounded-xl"
+                />
+              </FormControl>
+              <FormDescription>
+              This field is for who give the assessment.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
        {data.map((item, index)=>(
         <div key={index}>
         <FormField
