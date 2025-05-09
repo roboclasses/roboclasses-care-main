@@ -52,7 +52,8 @@ export type usersType={
   workingDays:string
 }
 
-type QuestionType={
+export type QuestionType={
+  _id:string
   question: string
   option:{
     a: string
