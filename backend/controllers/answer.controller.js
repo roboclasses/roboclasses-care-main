@@ -2,9 +2,9 @@ import { Answer } from "../models/answer.model.js";
 
 export const createAnswerController = async(req, res)=>{
     try {
-        const {answer} = req.body;
+        const {answer, candidate} = req.body;
 
-        const data = await Answer.create({answer})
+        const data = await Answer.create({answer, candidate})
         console.log(data);
 
         res.status(201).json({success: true, message: "Answer set created successfully."})
