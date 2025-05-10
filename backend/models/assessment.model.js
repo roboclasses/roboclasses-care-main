@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import {nanoid} from "nanoid"
 
 
 const assessmentSchema = new mongoose.Schema({
@@ -12,7 +13,8 @@ const assessmentSchema = new mongoose.Schema({
             c:{type:String, required:true},
             d:{type:String, required:true},
         },
-        answer:{type:String, enum:['A','B','C','D'], required: true}
+        answer:{type:String, enum:['A','B','C','D'], required: true},
+        questionId:{type: String, index:true, required:true, unique:true, default:()=>nanoid(5)}
     }],
 }, {timestamps: true})
 

@@ -54,6 +54,7 @@ export type usersType={
 
 export type QuestionType={
   _id:string
+  questionId: string
   question: string
   option:{
     a: string
@@ -62,6 +63,12 @@ export type QuestionType={
     d: string
   },
   answer: 'A' | 'B' | 'C' | 'D'
+}
+
+export type AnswerType={
+  _id: string
+  candidate: string
+  answer: Record<string, "A" | "B" | "C" | "D">
 }
 
 export type AssessmentType={
