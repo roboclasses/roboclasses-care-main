@@ -70,9 +70,9 @@ export function AssessmentSubmissionForm() {
 
             const assessmentData = res.data;
             setData(assessmentData.questions)
-            if(user.role==='student'){
+            // if(user.role==='student'){
               form.reset({candidate:user.name})
-            }
+            // }
         } catch (error) {
             console.error(error);
         }
@@ -133,7 +133,7 @@ export function AssessmentSubmissionForm() {
         <div key={index}>
         <FormField
         control={form.control}
-        name={`answer.${item._id}`}
+        name={`answer.${item.questionId}`}
         render={({ field }) => (
           <FormItem className="space-y-2">
             <FormLabel className=" font-semibold">{index+1}. {item.question}</FormLabel>
