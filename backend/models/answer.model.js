@@ -1,21 +1,18 @@
 import mongoose from "mongoose";
 
-const answerSchema = new mongoose.Schema(
-  {
-    answer: { 
-        type: Map, 
-        of:{
-            type: String,
-            enum: ["A", "B", "C", "D"]
-        },
-        required: true },
-    candidate:{
-      type: String, 
-      required: true
-    }
+const answerSchema = new mongoose.Schema({
+  assessmentId:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref:"Assessment",
+    required: true,
+    
   },
-  { timestamps: true }
-);
+  answer:{
+    type: [String],
+    enum: ["A", "B", "C", "D"],
+    required: true,
+  }
+})
 
 export const Answer =
   mongoose.models.Answer ?? mongoose.model("Answer", answerSchema);

@@ -27,15 +27,14 @@ import { getUserSession } from "@/lib/session"
 
 const FormSchema = z.object({
 //   answer: z.enum(["A", "B", "C", "D"], { required_error: "You need to select a option." }),
-answer: z.record(z.string(), z.enum(["A", "B", "C", "D"], { required_error: "You need to select a option." })),
+answer: z.array( z.enum(["A", "B", "C", "D"], { required_error: "You need to select a option." })),
 candidate: z.string().optional(),
-
 })
 
 export function AssessmentSubmissionForm() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-    defaultValues: {answer: {}}
+    defaultValues: {answer: []}
   })
 
   const {id} = useParams();
@@ -83,9 +82,15 @@ export function AssessmentSubmissionForm() {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log(data);
+
+    const payload = {
+      answer: data.answer,
+      candidate: data.candidate,
+      assessmentId: id,
+    }
     
     try {
-      const res = await axios.post(AnswerUrl, data);
+      const res = await axios.post(AnswerUrl, payload);
       console.log(res.data);
       form.reset();
       
@@ -133,7 +138,7 @@ export function AssessmentSubmissionForm() {
         <div key={index}>
         <FormField
         control={form.control}
-        name={`answer.${item.questionId}`}
+        name={`answer.${index}`}
         render={({ field }) => (
           <FormItem className="space-y-2">
             <FormLabel className=" font-semibold">{index+1}. {item.question}</FormLabel>
