@@ -23,6 +23,10 @@ const answerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+    submissionTime:{
+    type: Date,
+    required: true,
+  },
 },{timestamps: true})
 
 export const Answer =

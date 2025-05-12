@@ -71,6 +71,7 @@ export type AnswerType={
   answer: string[]
   batch: string
   assessmentLevel: string
+  submissionTime: Date
 }
 
 export type AssessmentType={
