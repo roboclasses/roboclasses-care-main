@@ -122,7 +122,7 @@ export function TableStudentWiseAnswer() {
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={3}>Total Rows</TableCell>
+          <TableCell colSpan={5}>Total Rows</TableCell>
           <TableCell className="text-right">{answerData.length}</TableCell>
         </TableRow>
       </TableFooter>
