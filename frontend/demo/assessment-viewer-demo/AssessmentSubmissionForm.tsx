@@ -146,7 +146,7 @@ export function AssessmentSubmissionForm() {
                 />
               </FormControl>
               <FormDescription>
-              This field is for the candidate who will give the assessment.
+              This field is for the candidate who will give the assessment
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -171,7 +171,7 @@ export function AssessmentSubmissionForm() {
                 />
               </FormControl>
               <FormDescription>
-              This field is for the particular batch where the candidate studying.
+              This field is for the particular batch where the candidate studying
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -196,7 +196,7 @@ export function AssessmentSubmissionForm() {
                 />
               </FormControl>
               <FormDescription>
-              This field is for difficulty level of the assessment.
+              This field is for difficulty level of the assessment
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -218,7 +218,7 @@ export function AssessmentSubmissionForm() {
               <RadioGroup
                 onValueChange={field.onChange}
                 defaultValue={field.value}
-                className="flex flex-col space-y-1"
+                className="flex flex-col space-y-1 text-gray-500"
               >
                 <FormItem className="flex items-center space-x-2 space-y-0">
                   <FormControl>

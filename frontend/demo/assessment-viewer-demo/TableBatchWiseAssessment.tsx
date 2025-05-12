@@ -149,7 +149,7 @@ export function TableBatchWiseAssessment() {
         </TableBody>
         <TableFooter>
           <TableRow>
-            <TableCell colSpan={3}>Total Rows</TableCell>
+            <TableCell colSpan={4}>Total Rows</TableCell>
             <TableCell className="text-right">
               {assessmentData.length}
             </TableCell>
