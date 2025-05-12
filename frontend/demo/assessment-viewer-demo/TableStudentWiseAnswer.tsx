@@ -27,9 +27,7 @@ const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 export function TableStudentWiseAnswer() {
 //   const [role, setRole] = useState('teacher')
-  const { data: answerData= [], isLoading, isValidating, error } = useSWR<AnswerType[]>(AnswerUrl,fetcher);
-  console.log("Answer data", answerData);
-  
+  const { data: answerData= [], isLoading, isValidating, error } = useSWR<AnswerType[]>(AnswerUrl,fetcher);  
 
   // Handle filter data
 //   const filteredData = useMemo(()=>{
@@ -101,7 +99,12 @@ export function TableStudentWiseAnswer() {
         {answerData?.map((ans: AnswerType) => (
           <TableRow key={ans._id}>
             <TableCell className="font-medium">{ans.candidate}</TableCell>
-            <TableCell className="font-medium">{}</TableCell>
+            <TableCell className="font-medium">{ans.answer.map((item, index)=>(
+              <div key={index} className="flex flex-row items-center gap-1">
+                <p>{index+1}.</p>
+                <p>{item}</p>
+              </div>
+            ))}</TableCell>
             {/* <TableCell className="text-right">
               <Link href={`/assessmentViewer/edit/${assessment._id}`}>
               <Button type="button">View</Button>

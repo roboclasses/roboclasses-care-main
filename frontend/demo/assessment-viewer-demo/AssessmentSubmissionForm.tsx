@@ -70,7 +70,7 @@ export function AssessmentSubmissionForm() {
             const assessmentData = res.data;
             setData(assessmentData.questions)
             // if(user.role==='student'){
-              form.reset({candidate:user.name})
+              form.reset({candidate:user.name, answer: new Array(assessmentData.questions.length).fill(""),})
             // }
         } catch (error) {
             console.error(error);

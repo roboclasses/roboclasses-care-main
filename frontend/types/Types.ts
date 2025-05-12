@@ -68,7 +68,7 @@ export type QuestionType={
 export type AnswerType={
   _id: string
   candidate: string
-  answer: Record<string, "A" | "B" | "C" | "D">
+  answer: string[]
 }
 
 export type AssessmentType={
