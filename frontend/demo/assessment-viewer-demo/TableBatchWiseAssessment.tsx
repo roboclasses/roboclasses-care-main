@@ -97,7 +97,7 @@ export function TableBatchWiseAssessment() {
             <TableHead className="w-[100px]">Batch Name</TableHead>
             <TableHead className="w-[100px]">Assessment Level</TableHead>
             <TableHead>Assessment Form</TableHead>
-            <TableHead>Assessment Links</TableHead>
+            <TableHead>Assessment Link</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

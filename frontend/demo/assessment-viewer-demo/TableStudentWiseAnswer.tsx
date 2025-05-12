@@ -88,17 +88,21 @@ export function TableStudentWiseAnswer() {
     </div> */}
 
     <Table className="border border-black">
-      <TableCaption>A list of Batch wise Assessment</TableCaption>
+      <TableCaption>A list of answers given by students</TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead className="w-[100px]">Candidate Name</TableHead>
-          <TableHead>Answers</TableHead>
+          <TableHead className="w-[100px]">Subject</TableHead>
+          <TableHead className="w-[100px]">Level</TableHead>
+          <TableHead>Answer</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {answerData?.map((ans: AnswerType) => (
           <TableRow key={ans._id}>
             <TableCell className="font-medium">{ans.candidate}</TableCell>
+            <TableCell className="font-medium">{ans.batch}</TableCell>
+            <TableCell className="font-medium">{ans.assessmentLevel}</TableCell>
             <TableCell className="font-medium">{ans.answer.map((item, index)=>(
               <div key={index} className="flex flex-row items-center gap-1">
                 <p>{index+1}.</p>

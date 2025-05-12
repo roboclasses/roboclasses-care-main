@@ -69,6 +69,8 @@ export type AnswerType={
   _id: string
   candidate: string
   answer: string[]
+  batch: string
+  assessmentLevel: string
 }
 
 export type AssessmentType={

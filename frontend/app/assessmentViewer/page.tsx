@@ -8,7 +8,7 @@ const page = () => {
       <Label className="font-bold text-4xl">Batch wise Questions</Label>
       <TableBatchWiseAssessment />
 
-      <Label className="font-bold text-4xl">Answer Sheets</Label>
+      <Label className="font-bold text-4xl">Student Answer Sheets</Label>
       <TableStudentWiseAnswer />
     </div>
   );
