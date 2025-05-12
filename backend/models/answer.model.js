@@ -5,7 +5,6 @@ const answerSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref:"Assessment",
     required: true,
-    
   },
   answer:{
     type: [String],
@@ -13,6 +12,14 @@ const answerSchema = new mongoose.Schema({
     required: true,
   },
   candidate:{
+    type: String,
+    required: true,
+  },
+  batch:{
+    type: String,
+    required: true,
+  },
+  assessmentLevel:{
     type: String,
     required: true,
   },
