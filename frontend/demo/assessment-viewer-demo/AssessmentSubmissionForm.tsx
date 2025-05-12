@@ -23,12 +23,14 @@ import { useParams } from "next/navigation"
 import { QuestionType } from "@/types/Types"
 import { Input } from "@/components/ui/input"
 import { getUserSession } from "@/lib/session"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 
 
 const FormSchema = z.object({
-//   answer: z.enum(["A", "B", "C", "D"], { required_error: "You need to select a option." }),
 answer: z.array( z.enum(["A", "B", "C", "D"], { required_error: "You need to select a option." })),
 candidate: z.string().optional(),
+batch: z.string().optional(),
+assessmentLevel: z.string().optional(),
 })
 
 export function AssessmentSubmissionForm() {
@@ -60,6 +62,8 @@ export function AssessmentSubmissionForm() {
 
   },[])
 
+
+
   // Fetching assessment quetions and options
   useEffect(()=>{
     const handleFetch = async()=>{
@@ -70,7 +74,12 @@ export function AssessmentSubmissionForm() {
             const assessmentData = res.data;
             setData(assessmentData.questions)
             // if(user.role==='student'){
-              form.reset({candidate:user.name, answer: new Array(assessmentData.questions.length).fill(""),})
+              form.reset({
+                candidate:user.name, 
+                answer: new Array(assessmentData.questions.length).fill(""), 
+                batch: assessmentData.batch, 
+                assessmentLevel: assessmentData.assessmentLevel
+              })
             // }
         } catch (error) {
             console.error(error);
@@ -87,6 +96,8 @@ export function AssessmentSubmissionForm() {
       answer: data.answer,
       candidate: data.candidate,
       assessmentId: id,
+      batch: data.batch,
+      assessmentLevel: data.assessmentLevel,
     }
     
     try {
@@ -110,7 +121,10 @@ export function AssessmentSubmissionForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        
+    <Accordion type="single" collapsible className="w-full">
+      <AccordionItem value="item-1">
+        <AccordionTrigger>View candidate details</AccordionTrigger>
+        <AccordionContent>
         {/* Candidate Name */}
         <FormField
           control={form.control}
@@ -127,12 +141,65 @@ export function AssessmentSubmissionForm() {
                 />
               </FormControl>
               <FormDescription>
-              This field is for who give the assessment.
+              This field is for the candidate who will give the assessment.
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+        </AccordionContent>
+
+        <AccordionContent>
+        {/* Batch name */}
+        <FormField
+          control={form.control}
+          name="batch"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Assessment Subject Name</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  required
+                  disabled
+                  className="bg-muted-foreground h-12 shadow-none rounded-xl"
+                />
+              </FormControl>
+              <FormDescription>
+              This field is for the particular batch where the candidate studying.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        </AccordionContent>
+        
+        <AccordionContent>
+        {/* Difficulty level */}
+        <FormField
+          control={form.control}
+          name="assessmentLevel"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Assessment Level</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  required
+                  disabled
+                  className="bg-muted-foreground h-12 shadow-none rounded-xl"
+                />
+              </FormControl>
+              <FormDescription>
+              This field is for difficulty level of the assessment.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
 
        {data.map((item, index)=>(
         <div key={index}>
