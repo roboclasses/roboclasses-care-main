@@ -12,7 +12,7 @@ export const TimeOffUrl = "http://localhost:8003/api/v1/timeOff";
 export const HolidayUrl = "http://localhost:8003/api/v1/holiday";
 export const EventUrl = "http://localhost:8003/api/v1/events";
 export const AssessmentUrl = "http://localhost:8003/api/v1/assessment";
-export const AnswerUrl = "http://localhost:8003/api/v1/assessment/answer";
+export const AnswerUrl = "http://localhost:8003/api/v1/answer";
 
 
 
@@ -31,7 +31,7 @@ export const AnswerUrl = "http://localhost:8003/api/v1/assessment/answer";
 // export const HolidayUrl = "https://api-roboclasses-care.up.railway.app/api/v1/holiday";
 // export const EventUrl = "https://api-roboclasses-care.up.railway.app/api/v1/events";
 // export const AssessmentUrl = "https://api-roboclasses-care.up.railway.app/api/v1/assessment";
-// export const AnswerUrl = "https://api-roboclasses-care.up.railway.app/api/v1/assessment/answer";
+// export const AnswerUrl = "https://api-roboclasses-care.up.railway.app/api/v1/answer";
 
 
 

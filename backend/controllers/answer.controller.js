@@ -14,3 +14,16 @@ export const createAnswerController = async(req, res)=>{
         res.status(500).json({success: false, message: "Internal server error."})
     }
 }
+
+export const getAnswerController = async(_req, res)=>{
+    try {
+        const data = await Answer.find();
+        console.log(data);
+
+        res.status(200).json(data)
+        
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({success: false, message: "Internal server error."})
+    }
+}

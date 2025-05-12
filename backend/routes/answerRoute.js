@@ -1,8 +1,9 @@
 import express from "express";
-import { createAnswerController } from "../controllers/answer.controller.js";
+import { createAnswerController, getAnswerController } from "../controllers/answer.controller.js";
 
 const router = express.Router();
 
-router.post('/assessment/answer', createAnswerController)
+router.post('/answer', createAnswerController)
+router.get('/answer', getAnswerController)
 
 export default router;

@@ -3,6 +3,7 @@ import multer from "multer";
 import csv from 'csv-parser';
 
 import { Assessment } from "../models/assessment.model.js";
+import mongoose from "mongoose";
 
 
 // Configure multer for file upload
@@ -81,6 +82,10 @@ const getAssessmentController = async(_req, res)=>{
 const getAssessmentByIdController = async(req, res)=>{
   try {
     const {id} = req.params;
+
+    if (!mongoose.isValidObjectId(id)) {
+      return res.status(400).json({ success: false, message: "Invalid assessment ID" });
+    }
 
     const data = await Assessment.findById(id)
     console.log(data);
