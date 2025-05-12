@@ -20,6 +20,7 @@ import axios, { AxiosError } from "axios";
 // import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 // import { useMemo, useState } from "react";
 import { AnswerUrl } from "@/constants";
+import { format } from "date-fns";
 // import { Button } from "@/components/ui/button";
 
 
@@ -94,6 +95,7 @@ export function TableStudentWiseAnswer() {
           <TableHead className="w-[100px]">Candidate Name</TableHead>
           <TableHead className="w-[100px]">Subject</TableHead>
           <TableHead className="w-[100px]">Level</TableHead>
+          <TableHead className="w-[100px]">Submission Time</TableHead>
           <TableHead>Answer</TableHead>
         </TableRow>
       </TableHeader>
@@ -103,6 +105,7 @@ export function TableStudentWiseAnswer() {
             <TableCell className="font-medium">{ans.candidate}</TableCell>
             <TableCell className="font-medium">{ans.batch}</TableCell>
             <TableCell className="font-medium">{ans.assessmentLevel}</TableCell>
+            <TableCell className="font-medium">{ans.submissionTime ? format(new Date(ans.submissionTime), 'PPpp') : ''}</TableCell>
             <TableCell className="font-medium">{ans.answer.map((item, index)=>(
               <div key={index} className="flex flex-row items-center gap-1">
                 <p>{index+1}.</p>

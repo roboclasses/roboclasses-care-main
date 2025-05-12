@@ -92,12 +92,17 @@ export function AssessmentSubmissionForm() {
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log(data);
 
+    // Assessment submission time
+    const submissionTime = new Date().toISOString();
+    console.log("Assessment submission time: ", submissionTime);
+    
     const payload = {
       answer: data.answer,
       candidate: data.candidate,
       assessmentId: id,
       batch: data.batch,
       assessmentLevel: data.assessmentLevel,
+      submissionTime: submissionTime,
     }
     
     try {
