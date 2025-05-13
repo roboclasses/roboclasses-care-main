@@ -1,49 +1,78 @@
-'use server'
+"use server";
 
 import { type NextRequest, NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
-    //Routes which are not accessible
-    const protectedRoutePrefixes = ["/", "/adminDashboard", "/appointment", "/assessmentGenerator", "/courseEntry", "/manageAttendance", "/manageRoles", "/newBatchEntry", "/teachersAvailability", "/timeOff"];
-    const studentRoutePrefixes = ["/adminDashboard", "/appointment/reminder/normal-class", "/appointment/reminder/demo-class", "/assessmentGenerator", "/courseEntry", "/manageAttendance", "/manageRoles", "/newBatchEntry", "/teachersAvailability", "/timeOff"] ;
-    // const teacherRoutePrefixes = ["/courseEntry", "/newBatchEntry", "/appointment/studentRegister"]
+  //Routes which are not accessible
+  const protectedRoutePrefixes = [
+    "/",
+    "/adminDashboard",
+    "/appointment",
+    "/assessmentGenerator",
+    "/courseEntry",
+    "/manageAttendance",
+    "/manageRoles",
+    "/newBatchEntry",
+    "/teachersAvailability",
+    "/timeOff",
+  ];
+  const studentRoutePrefixes = [
+    "/adminDashboard",
+    "/appointment/reminder/normal-class",
+    "/appointment/reminder/demo-class",
+    "/assessmentGenerator",
+    "/courseEntry",
+    "/manageAttendance",
+    "/manageRoles",
+    "/newBatchEntry",
+    "/teachersAvailability",
+    "/timeOff",
+  ];
 
-    const publicRoutes = ["/login", "/signup"];
-    const currentPath = req.nextUrl.pathname;
+  const publicRoutes = ["/login", "/signup"];
+  const openRoutePrefixes = ["/assessmentViewer"]
+  
+  // Get the current pathname
+  const currentPath = req.nextUrl.pathname;
 
-    // Exclude public routes from middleware
-    if (publicRoutes.includes(currentPath)) {
-        return NextResponse.next();
-    }
+  const isPublicRoute = publicRoutes.includes(currentPath)
+  const isOpenRoute = openRoutePrefixes.some(prefix => currentPath.startsWith(prefix))
 
-    //Checking the routes prefixes
-    const isProtectedRoute = protectedRoutePrefixes.some(prefix => currentPath.startsWith(prefix));
-    const isStudentRoute = studentRoutePrefixes.some(prefix => currentPath.startsWith(prefix));
-    // const isTeacherRoute  = teacherRoutePrefixes.some(prefix => currentPath.startsWith(prefix));
-
-    if (isProtectedRoute) {
-        const isAuth = req.cookies.get("token")?.value;
-        const role = req.cookies.get("role")?.value;
-
-        // Protection from not authenticated users
-        if (!isAuth) {
-            return NextResponse.redirect(new URL("/login", req.nextUrl));
-        }
-        
-        // Student views
-        if (isStudentRoute && !(role === "admin" || role === "teacher")) {
-            return NextResponse.redirect(new URL("/", req.nextUrl));
-        }
-        // Teacher views
-        // if(isTeacherRoute && !(role === "admin" || role === "student")){
-        //     return NextResponse.redirect(new URL("/", req.nextUrl))
-        // }
-    }
-
+  // Exclude public routes from middleware
+  if (isPublicRoute || isOpenRoute) {
     return NextResponse.next();
+  }
+
+  //Checking the routes prefixes
+  const isProtectedRoute = protectedRoutePrefixes.some((prefix) =>
+    currentPath.startsWith(prefix)
+  );
+  const isStudentRoute = studentRoutePrefixes.some((prefix) =>
+    currentPath.startsWith(prefix)
+  );
+
+  if (isProtectedRoute) {
+    const isAuth = req.cookies.get("token")?.value;
+    const role = req.cookies.get("role")?.value;
+
+    // Protection from not authenticated users
+    if (!isAuth) {
+      return NextResponse.redirect(new URL("/login", req.nextUrl));
+    }
+
+    // Student views
+    if (isStudentRoute && !(role === "admin" || role === "teacher")) {
+      return NextResponse.redirect(new URL("/", req.nextUrl));
+    }
+  }
+
+  return NextResponse.next();
 }
+
 
 // Exclude API routes, static files, and assets
 export const config = {
-    matcher: ["/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|assets/).*)"]
+  matcher: [
+    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|assets/).*)",
+  ],
 };
