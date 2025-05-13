@@ -108,7 +108,7 @@ export function TableBatchWiseAssessment() {
                 {assessment.assessmentLevel}
               </TableCell>
               <TableCell className="text-right">
-                <Link href={`/assessmentViewer/edit/${assessment._id}`}>
+                <Link href={`/assessmentViewer/create/${assessment._id}`}>
                   <Button type="button">View</Button>
                 </Link>
               </TableCell>
