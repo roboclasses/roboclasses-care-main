@@ -65,6 +65,13 @@ export type QuestionType={
   answer: 'A' | 'B' | 'C' | 'D'
 }
 
+export type AssessmentType={
+  _id: string
+  batch: string
+  assessmentLevel: string
+  questions: QuestionType[]
+}
+
 export type AnswerType={
   _id: string
   candidate: string
@@ -72,13 +79,6 @@ export type AnswerType={
   batch: string
   assessmentLevel: string
   submissionTime: Date
-}
-
-export type AssessmentType={
-  _id: string
-  batch: string
-  assessmentLevel: string
-  questions: QuestionType[]
 }
 
 export type studentType = {
