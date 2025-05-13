@@ -75,7 +75,7 @@ export function NewCourseEntryForm() {
               <FormLabel>Course Name</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Enter the course name (e.g., Scratch Level 1)"
+                  placeholder="e.g., Scratch L1"
                   {...field}
                   required
                   className="bg-muted-foreground h-12 shadow-none rounded-xl"
