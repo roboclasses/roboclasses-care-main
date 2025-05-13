@@ -10,57 +10,56 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-// import { toast } from "@/hooks/use-toast";
-import { AnswerType } from "@/types/Types";
-
+import { AnswerType, AssessmentType } from "@/types/Types";
 import useSWR from "swr";
 import axios, { AxiosError } from "axios";
-// import Link from "next/link";
-// import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
-// import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-// import { useMemo, useState } from "react";
-import { AnswerUrl } from "@/constants";
+import { AnswerUrl, AssessmentUrl } from "@/constants";
 import { format } from "date-fns";
-// import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 export function TableStudentWiseAnswer() {
-//   const [role, setRole] = useState('teacher')
   const { data: answerData= [], isLoading, isValidating, error } = useSWR<AnswerType[]>(AnswerUrl,fetcher);  
+  const [assessmentData, setAssessmentData] = useState<AssessmentType[]>([])
 
-  // Handle filter data
-//   const filteredData = useMemo(()=>{
-//     if(!data) return [];
+  // Fetching answer set from assessment module
+  useEffect(()=>{
+    const handleFetch = async()=>{
+      try {
+        const res = await axios.get(AssessmentUrl)
+        setAssessmentData(res.data)
+        
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    handleFetch();
+    
+  },[])
 
-//      return data.filter((item)=>{
-//       if(role === 'teacher' && item.role !== 'teacher') return false
-//       if(role === 'admin' && item.role !== 'admin') return false;
-//       return true;
-//     })
 
-//   },[data, role])
+  // handle asseessment score
+  const calculateAssessmentScore = (answerItem: AnswerType): number =>{
+    const matchingAssesment = assessmentData.find((a)=> a.batch === answerItem.batch && a.assessmentLevel === answerItem.assessmentLevel)
 
-  // Handle delete a course
-//   const handleDelete = async(id:string)=>{
-//     try {
-//       const res = await axios.delete(`${UsersUrl}/${id}`)
-//       console.log(res.data);
+    if(!matchingAssesment) return 0;
 
-//       mutate((data)=>data?.filter((user)=>user._id !== id))
+    const {questions} = matchingAssesment;
 
-//       const {message} = res.data;
-//       toast({title: "Success✅", description: message, variant: "default"});
+    let score = 0
+    for(let i=0; i< questions.length; i++){
+      const correctAnswer = questions[i].answer.toUpperCase();
+      const studentAnswer = answerItem.answer[i]?.toUpperCase();
 
-//           } catch (error: unknown) {
-//             if(error instanceof AxiosError){
-//               console.log(error);  
-//               const {message} = error.response?.data
-//               toast({ title:"Failed", description: message || "An unknown error has occurred.", variant:"destructive" })
-//             }
-//     }
-//   }
+      if(correctAnswer === studentAnswer){
+        score += 1;
+      }
+    }
+    return score; 
+
+  }
 
  // Handle edge cases
  if (isLoading) return <div>Loading...</div>;
@@ -72,22 +71,8 @@ export function TableStudentWiseAnswer() {
  if (answerData?.length === 0) return <div>Empty list for Users</div>;
 
 
-
   return (
     <div>
-    {/* <div className="flex items-center justify-between mb-6">
-      <h1 className="lg:text-4xl text-2xl font-semibold text-center">{role==='teacher' ? "Manage Teachers" : 'Manage Admins'}</h1>
-      <Select onValueChange={(value)=>setRole(value)} defaultValue="teacher">
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Filter Roles"/>
-        </SelectTrigger>
-        <SelectContent defaultValue={"teacher"}>
-          <SelectItem value="teacher">View Teachers</SelectItem>
-          <SelectItem value="admin">View Admins</SelectItem>
-        </SelectContent>
-      </Select>
-    </div> */}
-
     <Table className="border border-black">
       <TableCaption>A list of answers given by students</TableCaption>
       <TableHeader>
@@ -96,7 +81,8 @@ export function TableStudentWiseAnswer() {
           <TableHead className="w-[100px]">Subject</TableHead>
           <TableHead className="w-[100px]">Level</TableHead>
           <TableHead className="w-[100px]">Submission Time</TableHead>
-          <TableHead>Answer</TableHead>
+          <TableHead>Out Of</TableHead>
+          <TableHead>Assessment Score</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -106,17 +92,10 @@ export function TableStudentWiseAnswer() {
             <TableCell className="font-medium">{ans.batch}</TableCell>
             <TableCell className="font-medium">{ans.assessmentLevel}</TableCell>
             <TableCell className="font-medium">{ans.submissionTime ? format(new Date(ans.submissionTime), 'PPpp') : ''}</TableCell>
-            <TableCell className="font-medium">{ans.answer.map((item, index)=>(
-              <div key={index} className="flex flex-row items-center gap-1">
-                <p>{index+1}.</p>
-                <p>{item}</p>
-              </div>
-            ))}</TableCell>
-            {/* <TableCell className="text-right">
-              <Link href={`/assessmentViewer/edit/${assessment._id}`}>
-              <Button type="button">View</Button>
-              </Link>
-            </TableCell> */}
+            <TableCell className="font-medium">{ assessmentData.find(
+                    (a) => a.batch === ans.batch && a.assessmentLevel === ans.assessmentLevel
+                  )?.questions.length || "-"}</TableCell>
+            <TableCell className="font-medium">{calculateAssessmentScore(ans)}</TableCell>
           </TableRow>
         ))}
       </TableBody>
