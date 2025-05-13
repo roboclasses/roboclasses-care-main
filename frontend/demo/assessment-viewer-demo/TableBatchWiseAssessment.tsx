@@ -117,7 +117,7 @@ export function TableBatchWiseAssessment() {
                   type="button"
                   variant="link"
                   onClick={() => {
-                    const link = `${window.location.origin}/assessmentViewer/edit/${assessment._id}`;
+                    const link = `${window.location.origin}/assessmentViewer/create/${assessment._id}`;
                     navigator.clipboard
                       .writeText(link)
                       .then(() => {
