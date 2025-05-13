@@ -196,7 +196,7 @@ export function AssessmentSubmissionForm() {
                 />
               </FormControl>
               <FormDescription>
-              This field is for difficulty level of the assessment
+              This field is for assessment level
               </FormDescription>
               <FormMessage />
             </FormItem>

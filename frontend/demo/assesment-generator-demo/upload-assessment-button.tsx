@@ -10,6 +10,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -113,7 +114,7 @@ export function UploadAssessmentButton() {
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
           <Share2 className="h-4 w-4 mr-2" />
-          Upload and Share
+          Upload to db
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] ">
@@ -135,13 +136,16 @@ export function UploadAssessmentButton() {
                 name="batch"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="font-semibold">Batch Name</FormLabel>
+                    <FormLabel>Batch Name</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value} >
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select batch" />
+                        <SelectTrigger className="shadow-none rounded-xl h-12">
+                          <SelectValue placeholder="Select a batch" />
                         </SelectTrigger>
                       </FormControl>
+                      <FormDescription>
+                        This drop-down is for selecting the batch
+                      </FormDescription>
                       <SelectContent>
                         {batchDetails?.map((item: batchType) => (
                           <SelectItem value={item.batch} key={item._id}>
@@ -161,15 +165,18 @@ export function UploadAssessmentButton() {
                 name="assessmentLevel"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="font-semibold">
+                    <FormLabel>
                       Assessment Level
                     </FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="shadow-none rounded-xl h-12">
                           <SelectValue placeholder="Select assessment level" />
                         </SelectTrigger>
                       </FormControl>
+                      <FormDescription>
+                        This drop-down is for selecting the assessment level
+                      </FormDescription>
                       <SelectContent>
                         <SelectItem value={"Level 1"}>Level 1</SelectItem>
                         <SelectItem value={"Level 2"}>Level 2</SelectItem>
@@ -211,7 +218,7 @@ export function UploadAssessmentButton() {
                         name="questions"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="font-semibold">
+                            <FormLabel>
                               Assessment File
                             </FormLabel>
                             <FormControl>
