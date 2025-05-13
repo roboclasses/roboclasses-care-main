@@ -81,14 +81,14 @@ export function TableUsers() {
           <SelectValue placeholder="Filter Roles"/>
         </SelectTrigger>
         <SelectContent defaultValue={"teacher"}>
-          <SelectItem value="teacher">View Teachers</SelectItem>
-          <SelectItem value="admin">View Admins</SelectItem>
+          <SelectItem value="teacher">Teachers</SelectItem>
+          <SelectItem value="admin">Admins</SelectItem>
         </SelectContent>
       </Select>
     </div>
 
     <Table className="border border-black">
-      <TableCaption>A list of Users</TableCaption>
+      <TableCaption>A list of roles</TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead className="w-[100px]">User Full Name</TableHead>
@@ -96,7 +96,6 @@ export function TableUsers() {
           <TableHead>Role</TableHead>
           <TableHead>Working Hours</TableHead>
           <TableHead>Working Days</TableHead>
-          <TableHead>Role</TableHead>
           <TableHead>Edit</TableHead>
           <TableHead>Delete</TableHead>
         </TableRow>
@@ -122,7 +121,7 @@ export function TableUsers() {
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={5}>Total Rows</TableCell>
+          <TableCell colSpan={7}>Total Rows</TableCell>
           <TableCell className="text-right">{filteredData?.length}</TableCell>
         </TableRow>
       </TableFooter>

@@ -122,7 +122,7 @@ export function TableBatchEntries() {
   return (
     <div>
       <div className="flex flex-col">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-8">
           <h1 className="lg:text-4xl text-xl font-semibold text-center">
         {batchStatus==='active' ? "Active Batches" : "Completed Batches"}
           </h1>
@@ -136,7 +136,7 @@ export function TableBatchEntries() {
             </SelectContent>
           </Select>
         </div>
-        {user.role === 'admin' && <div className="flex lg:w-full w-[300px] max-w-sm items-center border border-gray-300 rounded-lg px-2 py-1">
+        {user.role === 'admin' && <div className="flex lg:w-full w-[300px] mb-4 items-center border border-gray-300 rounded-md px-2 py-1">
           <Search className="h-4 w-4 mr-2.5" />
           <Input type="search" placeholder="Search Teacher..." className="w-full border-0" value={searchQuery} onChange={(e)=>setSearchQuery(e.target.value)}/>
         </div>}
