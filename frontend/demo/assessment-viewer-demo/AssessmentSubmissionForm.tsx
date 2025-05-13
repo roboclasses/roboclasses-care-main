@@ -22,7 +22,7 @@ import { AnswerUrl, AssessmentUrl } from "@/constants"
 import { useParams } from "next/navigation"
 import { QuestionType } from "@/types/Types"
 import { Input } from "@/components/ui/input"
-import { getUserSession } from "@/lib/session"
+// import { getUserSession } from "@/lib/session"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 
 
@@ -41,26 +41,26 @@ export function AssessmentSubmissionForm() {
 
   const {id} = useParams();
   const [data, setData] = useState<QuestionType[]>([])
-  const [user, setUser] = useState({role:"", name:""})
+  // const [user, setUser] = useState({role:"", name:""})
 
   // Fetching logged-in user's credentials
-  useEffect(()=>{
-    try {
-      const handleFetch = async()=>{
-        const session = await getUserSession();
-        if(!session.role || !session.name){
-          throw new Error('No user session is found.')
-        }
-        setUser({role: session.role, name: session.name})
-      }
+  // useEffect(()=>{
+  //   try {
+  //     const handleFetch = async()=>{
+  //       const session = await getUserSession();
+  //       if(!session.role || !session.name){
+  //         throw new Error('No user session is found.')
+  //       }
+  //       setUser({role: session.role, name: session.name})
+  //     }
 
-      handleFetch();
+  //     handleFetch();
       
-    } catch (error) {
-      console.error(error);
-    }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
 
-  },[])
+  // },[])
 
 
 
@@ -75,7 +75,7 @@ export function AssessmentSubmissionForm() {
             setData(assessmentData.questions)
             // if(user.role==='student'){
               form.reset({
-                candidate:user.name, 
+                candidate:assessmentData.candidate, 
                 answer: new Array(assessmentData.questions.length).fill(""), 
                 batch: assessmentData.batch, 
                 assessmentLevel: assessmentData.assessmentLevel
@@ -87,7 +87,7 @@ export function AssessmentSubmissionForm() {
     }
 
     handleFetch();
-  },[form, id, user])
+  },[form, id, ])
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log(data);
@@ -141,7 +141,6 @@ export function AssessmentSubmissionForm() {
                 <Input
                   {...field}
                   required
-                  disabled
                   className="bg-muted-foreground h-12 shadow-none rounded-xl"
                 />
               </FormControl>
