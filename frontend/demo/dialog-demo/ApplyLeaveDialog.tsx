@@ -20,7 +20,7 @@ interface leaveType{
     defaultValue?:string
 }
 
-export function ApplyLeaveDialog({name, variant, className, color, defaultValue}:leaveType) {
+ function ApplyLeaveDialog({name, variant, className, color, defaultValue}:leaveType) {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -38,3 +38,5 @@ export function ApplyLeaveDialog({name, variant, className, color, defaultValue}
     </Dialog>
   )
 }
+
+export default ApplyLeaveDialog;

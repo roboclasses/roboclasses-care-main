@@ -1,7 +1,8 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import React from 'react'
-import { ApplyLeaveDialog } from '../dialog-demo/ApplyLeaveDialog'
+const DynamicApplyLeaveDialog = dynamic(()=>import('@/demo/dialog-demo/ApplyLeaveDialog'))
 // import { FaStar } from "react-icons/fa";
 
 
@@ -20,7 +21,7 @@ const Header = () => {
             {/* Starred feature only ui */}
             {/* {isStarred ? <FaStar size={20} color='gold' onClick={handleStarred} /> : <FaStar size={20} color='gray' onClick={handleStarred}/>} */}
         </div>
-        <ApplyLeaveDialog name='Request time off' variant='default' className='rounded-full'/>
+        <DynamicApplyLeaveDialog name='Request time off' variant='default' className='rounded-full'/>
     </div>
   )
 }

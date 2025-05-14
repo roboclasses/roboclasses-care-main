@@ -7,7 +7,7 @@ import { adjustedNormalLeave, calculateLeaveDays, currentYear } from "@/lib/util
 
 import CardApplyLeaves from "./CardApplyLeaves";
 import { HolidaySheet } from "./HolidaySheet";
-import { ApplyLeaveDialog } from "../dialog-demo/ApplyLeaveDialog";
+const DynamicApplyLeaveDialog = dynamic(() => import('../dialog-demo/ApplyLeaveDialog'), {ssr: false})
 
 import React, { useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
@@ -16,6 +16,7 @@ import Cookies from "js-cookie";
 import { MdHolidayVillage } from "react-icons/md";
 import { FaHandHoldingMedical } from "react-icons/fa6";
 import { FaCalendar } from "react-icons/fa";
+import dynamic from "next/dynamic";
 
 const fetcher = (url: string) => axios.get(url, {headers: { Authorization: Cookies.get("token") }}).then((res) => res.data);
 
@@ -86,7 +87,7 @@ const CardViewDemo = () => {
         </div>
       ),
       dialog: (
-        <ApplyLeaveDialog
+        <DynamicApplyLeaveDialog
           name="Request Normal"
           variant="secondary"
           defaultValue={LEAVE_POLICY.normal.name}
@@ -108,7 +109,7 @@ const CardViewDemo = () => {
         </div>
       ),
       dialog: (
-        <ApplyLeaveDialog
+        <DynamicApplyLeaveDialog
           name="Request Sick"
           variant="secondary"
           defaultValue={LEAVE_POLICY.sick.name}
