@@ -12,16 +12,18 @@ const page = () => {
         src={PRIVATE_WALLPAPER}
         alt="private-wallpaper"
         fill
-        style={{objectFit:"cover"}}
+        style={{ objectFit: "cover" }}
         priority
       />
       <div className="z-10 flex items-center justify-center backdrop-blur-sm">
         <div className="lg:mt-5 mt-10 bg-background/95 p-8 m-4 rounded-xl shadow-lg">
-        <div className="mb-8 flex flex-col items-center">
-          <h1 className="lg:text-4xl text-2xl mb-4 text-center font-serif">
-          Create a New Course
-          </h1>
-          <Label className="text-gray-500 md:text-lg text-xs text-center">Courses for Kids</Label>
+          <div className="mb-8 flex flex-col items-center">
+            <h1 className="lg:text-4xl text-2xl mb-4 text-center font-serif">
+              Create a New Course
+            </h1>
+            <Label className="text-gray-500 md:text-lg text-xs text-center">
+              Courses for Kids
+            </Label>
           </div>
           <NewCourseEntryForm />
         </div>
