@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -13,7 +14,6 @@ import {
 } from "@/components/ui/form";
 import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import SubmitButton from "../button-demo/SubmitButton";
@@ -88,105 +88,121 @@ export function RegistrationForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
-        {/* Student Full Name */}
+        {/* Student full name and Parent full name */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
         <FormField
           control={form.control}
           name="studentName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Student Full Name</FormLabel>
+              <FormLabel>Student Full Name</FormLabel>
               <FormControl>
                 <Input
                   placeholder="Enter student name"
                   {...field}
                   required
-                  className="bg-white"
+                  className="shadow-none rounded-xl h-12 bg-muted-foreground"
                 />
               </FormControl>
+              <FormDescription>
+                This field is for student full name
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        {/* Parent Full Name */}
         <FormField
           control={form.control}
           name="parentName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Parent Full Name</FormLabel>
+              <FormLabel>Parent Full Name</FormLabel>
               <FormControl>
                 <Input
                   placeholder="Enter parent name"
                   {...field}
                   required
-                  className="bg-white"
+                  className="shadow-none rounded-xl h-12 bg-muted-foreground"
                 />
               </FormControl>
+              <FormDescription>
+                This field is for parent full name
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        
-        {/* Mobile Number */}
+        </div>
+
+        {/* Mobile number and Email address */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
         <FormField
           control={form.control}
           name="destination"
           render={({ field }) => (
             <FormItem>
-               <FormLabel className="font-semibold">Contact Details</FormLabel>
+               <FormLabel>Contact Details</FormLabel>
                 <FormControl>
                 <PhoneInput
                   country={"ae"}
                   placeholder="Parents Contact/Whatsapp number"   
                   {...field}  
-                  inputStyle={{width: "320px"}}
+                  inputStyle={{width: "320px", height: "48px"}}
                   inputProps={{ ref: field.ref, required: true }}
-                
                 />
               </FormControl>
+              <FormDescription>
+                This field is for mobile number
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        {/* Email Address */}
        <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Email Address</FormLabel>
+              <FormLabel>Email Address</FormLabel>
               <FormControl>
                 <Input
                   placeholder="Enter your email address"
                   {...field}
                   required
                   type="email"
-                  className="bg-white"
+                  className="shadow-none rounded-xl h-12 bg-muted-foreground"
                 />
               </FormControl>
+              <FormDescription>
+                This field is for email address
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+        </div>
 
         {/* Full Location Details */}
-        <div className="flex items-center gap-2">
-        <Label className="font-semibold">Full Address</Label>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
         <FormField
           control={form.control}
           name="address"
           render={({ field }) => (
             <FormItem>
+              <FormLabel>Loaction</FormLabel>
               <FormControl>
                 <Input
                   placeholder="Enter location"
                   {...field}
                   required
-                  className="bg-white"
+                  className="shadow-none rounded-xl h-12 bg-muted-foreground"
                 />
               </FormControl>
+               <FormDescription>
+                This field is for current address
+               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -196,16 +212,20 @@ export function RegistrationForm() {
               name="country"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>Country</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                     required
                   >
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="shadow-none rounded-xl h-12">
                         <SelectValue placeholder="Select your country"/>
                       </SelectTrigger>
                     </FormControl>
+                    <FormDescription>
+                      This field is for country name
+                    </FormDescription>
                     <SelectContent>
                       {countries.map((item)=>(
                         <SelectItem value={item.name} key={item.id}>{item.name}</SelectItem>
@@ -217,45 +237,52 @@ export function RegistrationForm() {
         />
         </div>
 
-        {/* Courses done Earlier */}
+        {/* Grade and Courses done earlier */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
         <FormField
           control={form.control}
           name="courses"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Courses Done</FormLabel>
+              <FormLabel>Courses Done</FormLabel>
               <FormControl>
                 <Input
                   placeholder="Enter Courses done earlier"
                   {...field}
                   required
-                  className="bg-white"
+                  className="shadow-none rounded-xl h-12 bg-muted-foreground"
                 />
               </FormControl>
+              <FormDescription>
+                This field is for courses done earlier
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        {/* Grade */}
         <FormField
           control={form.control}
           name="grade"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Student Grade</FormLabel>
+              <FormLabel>Student Grade</FormLabel>
               <FormControl>
                 <Input
                   placeholder="Enter your grade"
                   {...field}
                   required
-                  className="bg-white"
+                  className="shadow-none rounded-xl h-12 bg-muted-foreground"
                 />
               </FormControl>
+              <FormDescription>
+                This field is for your grade
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+        </div>
 
         <SubmitButton name={isSubmitting ? 'Submitting...' : 'Register'} type="submit" disabled={isSubmitting}/>
       </form>
