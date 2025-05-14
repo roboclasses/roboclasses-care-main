@@ -10,8 +10,8 @@ const Page = () => {
       <Image
         src={PRIVATE_WALLPAPER}
         alt="wallpaper"
-        layout="fill"
-        objectFit="cover"
+        fill
+        style={{objectFit: 'cover'}}
         priority
       />
       <div className="z-10 flex items-center justify-center backdrop-blur-sm">
