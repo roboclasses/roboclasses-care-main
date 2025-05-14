@@ -194,7 +194,7 @@ export function RegistrationForm() {
               <FormLabel>Loaction</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Enter location"
+                  placeholder="Enter your location"
                   {...field}
                   required
                   className="shadow-none rounded-xl h-12 bg-muted-foreground"
@@ -224,7 +224,7 @@ export function RegistrationForm() {
                       </SelectTrigger>
                     </FormControl>
                     <FormDescription>
-                      This field is for country name
+                      This field is for country
                     </FormDescription>
                     <SelectContent>
                       {countries.map((item)=>(
@@ -254,7 +254,7 @@ export function RegistrationForm() {
                 />
               </FormControl>
               <FormDescription>
-                This field is for courses done earlier
+                This field is for course
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -276,7 +276,7 @@ export function RegistrationForm() {
                 />
               </FormControl>
               <FormDescription>
-                This field is for your grade
+                This field is for grade
               </FormDescription>
               <FormMessage />
             </FormItem>
