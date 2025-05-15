@@ -48,6 +48,7 @@ const Page = () => {
               height={400}
               width={450}
               alt={items.alt}
+              loading="lazy"
               className={cn("rounded-xl shadow-sm hover:shadow-2xl transition-all duration-100 delay-75" , 
               activeComponent === items.id ? "filter grayscale blur-sm transition-all duration-150 delay-75 hover:shadow-none" : "")}
             />
