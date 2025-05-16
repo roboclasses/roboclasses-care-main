@@ -9,7 +9,7 @@ import {
 
 // For mapping teachers in drop-down
 export const teachers = [
-  { id: 1, name: "All" },
+  { id: 1, name: "Admin" },
   { id: 2, name: "Kritika Maheswari" },
   { id: 3, name: "Monty" },
   { id: 4, name: "Kiruthika PK" },
