@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -91,15 +92,18 @@ export function EditCourseEntryForm() {
           name="course"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Course Name</FormLabel>
+              <FormLabel>Course Name</FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   required
                   disabled         
-                  className="bg-white"
+                  className="bg-muted-foreground h-12 shadow-none rounded-xl"
                 />
               </FormControl>
+              <FormDescription>
+                This field is for edit courses name. Users can see the updated value in course table.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -111,14 +115,17 @@ export function EditCourseEntryForm() {
           name="numberOfClasses"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Edit Number of Classes</FormLabel>
+              <FormLabel>Edit Number of Classes</FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   required
-                  className="bg-white"
+                  className="bg-muted-foreground h-12 shadow-none rounded-xl"
                 />
               </FormControl>
+              <FormDescription>
+                This field is for edit number of classess. Users can see the updated value.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
