@@ -163,7 +163,7 @@ const filteredData = useMemo(() => {
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={7}>Total Rows</TableCell>
+          <TableCell colSpan={9}>Total Rows</TableCell>
           <TableCell className="text-right">{filteredData.length}</TableCell>
         </TableRow>
       </TableFooter>

@@ -47,7 +47,7 @@ export function RegistrationForm() {
       email:"",
       courses: "",
       address:"",
-      country:"",
+      country:"UAE",
       grade:"",
     }
   });
