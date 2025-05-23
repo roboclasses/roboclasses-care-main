@@ -11,7 +11,7 @@ const page = () => {
       </div>
 
       <div className="space-y-4">
-      <Label className="font-semibold lg:text-4xl text-xl">Student Answer Sheets</Label>
+      <Label className="font-semibold lg:text-4xl text-xl">Batch wise Student Marks Sheets</Label>
       <TableStudentWiseAnswer />
       </div>
     </div>
