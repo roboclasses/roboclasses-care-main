@@ -1,10 +1,10 @@
-FROM node:lts-slim
+FROM node:23.11-slim
 
 WORKDIR /app
 
 COPY . .
 
-RUN npm i
+RUN npm install
 
 EXPOSE 8002
 
