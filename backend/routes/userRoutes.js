@@ -5,6 +5,7 @@ import { deleteUserController, getUserController, getUsersController, loginContr
 
 const router = express.Router();
 
+
 router.post('/auth/signup',authLimiter, signupController)
 
 router.post('/auth/login', authLimiter, loginController)
@@ -16,5 +17,6 @@ router.get('/users/:id',getUserController)
 router.put('/users/:id',updateUserController)
 
 router.delete('/users/:id', deleteUserController)
+
 
 export default router;

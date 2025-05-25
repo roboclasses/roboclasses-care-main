@@ -4,6 +4,7 @@ import { createHolidayController, getHolidaysController } from "../controllers/h
 const router = express.Router();
 
 router.post("/holiday", createHolidayController)
+
 router.get("/holiday", getHolidaysController)
 
 

@@ -75,11 +75,6 @@ export const deleteNormalClassController = async(req, res)=>{
     try {
         const {id} = req.params;
 
-        // Validate the ID format
-        if (!isValidObjectId(id)) {
-            return res.status(400).json({ success: false, message: "Invalid ID format." });
-        }
-
         const data = await NormalClass.findByIdAndDelete(id);
         console.log(data);
 
