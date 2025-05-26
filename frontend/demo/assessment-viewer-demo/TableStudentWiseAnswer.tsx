@@ -16,12 +16,15 @@ import axios, { AxiosError } from "axios";
 import { AnswerUrl, AssessmentUrl } from "@/constants";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
+import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
+import { toast } from "@/hooks/use-toast";
+import Cookies from 'js-cookie';
 
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 export function TableStudentWiseAnswer() {
-  const { data: answerData= [], isLoading, isValidating, error } = useSWR<AnswerType[]>(AnswerUrl,fetcher);  
+  const { data: answerData= [], isLoading, isValidating, error, mutate } = useSWR<AnswerType[]>(AnswerUrl,fetcher);  
   const [assessmentData, setAssessmentData] = useState<AssessmentType[]>([])
 
   // Fetching answer set from assessment module
@@ -61,6 +64,27 @@ export function TableStudentWiseAnswer() {
 
   }
 
+    // Handle delete question
+    const handleDelete = async(id: string)=>{
+      try {
+        const res = await axios.delete(`${AnswerUrl}/${id}`, {headers: {Authorization: Cookies.get('token')}})
+        console.log(res.data);
+  
+        mutate();
+  
+        const {message} = res.data;
+        toast({title:'Success✅', description: message, variant: 'default'})
+        
+      } catch (error:unknown) {
+        if(error instanceof AxiosError){
+           console.error(error);
+  
+           const {message} = error.response?.data;
+           toast({title:'Failed', description: message || 'An unknown error has occurred.', variant: 'destructive'})
+        }
+      }
+    }
+
  // Handle edge cases
  if (isLoading) return <div>Loading...</div>;
  if (error instanceof AxiosError){
@@ -83,6 +107,7 @@ export function TableStudentWiseAnswer() {
           <TableHead className="w-[100px]">Submission Time</TableHead>
           <TableHead>Out Of</TableHead>
           <TableHead>Assessment Score</TableHead>
+          <TableHead>Delete</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -96,6 +121,9 @@ export function TableStudentWiseAnswer() {
                     (a) => a.batch === ans.batch && a.assessmentLevel === ans.assessmentLevel
                   )?.questions.length || "-"}</TableCell>
             <TableCell className="font-medium">{calculateAssessmentScore(ans)}</TableCell>
+            <TableCell>
+              <DeleteAlertDemo onDelete={()=>handleDelete(ans._id)} onCancel={()=>console.log('Delete action cancelled')}/>
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

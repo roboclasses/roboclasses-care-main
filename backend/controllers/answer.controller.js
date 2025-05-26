@@ -27,3 +27,17 @@ export const getAnswerController = async(_req, res)=>{
         res.status(500).json({success: false, message: "Internal server error."})
     }
 }
+
+export const deleteAnswerController = async(req, res)=>{
+    try {
+        const {id} = req.params;
+
+        const data = await Answer.findByIdAndDelete(id);
+        console.log(data);
+
+        res.status(204).end()
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({success: false, message: "Internal server error."})
+    }
+}

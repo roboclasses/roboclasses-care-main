@@ -10,61 +10,52 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
+
+import { AssessmentUrl } from "@/constants";
 import { AssessmentType } from "@/types/Types";
+import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 
 import useSWR from "swr";
 import axios, { AxiosError } from "axios";
 import Link from "next/link";
-// import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
-// import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-// import { useMemo, useState } from "react";
-import { AssessmentUrl } from "@/constants";
-import { Button } from "@/components/ui/button";
 import { Copy } from "lucide-react";
+import Cookies from "js-cookie";
+
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 export function TableBatchWiseAssessment() {
-  //   const [role, setRole] = useState('teacher')
   const {
     data: assessmentData = [],
     isLoading,
     isValidating,
     error,
+    mutate
   } = useSWR<AssessmentType[]>(AssessmentUrl, fetcher);
 
-  // Handle filter data
-  //   const filteredData = useMemo(()=>{
-  //     if(!data) return [];
+  // Handle delete question
+  const handleDelete = async(id: string)=>{
+    try {
+      const res = await axios.delete(`${AssessmentUrl}/${id}`, {headers: {Authorization: Cookies.get('token')}})
+      console.log(res.data);
 
-  //      return data.filter((item)=>{
-  //       if(role === 'teacher' && item.role !== 'teacher') return false
-  //       if(role === 'admin' && item.role !== 'admin') return false;
-  //       return true;
-  //     })
+      mutate();
 
-  //   },[data, role])
+      const {message} = res.data;
+      toast({title:'Success✅', description: message, variant: 'default'})
+      
+    } catch (error:unknown) {
+      if(error instanceof AxiosError){
+         console.error(error);
 
-  // Handle delete a course
-  //   const handleDelete = async(id:string)=>{
-  //     try {
-  //       const res = await axios.delete(`${UsersUrl}/${id}`)
-  //       console.log(res.data);
+         const {message} = error.response?.data;
+         toast({title:'Failed', description: message || 'An unknown error has occurred.', variant: 'destructive'})
+      }
+    }
+  }
 
-  //       mutate((data)=>data?.filter((user)=>user._id !== id))
-
-  //       const {message} = res.data;
-  //       toast({title: "Success✅", description: message, variant: "default"});
-
-  //           } catch (error: unknown) {
-  //             if(error instanceof AxiosError){
-  //               console.log(error);
-  //               const {message} = error.response?.data
-  //               toast({ title:"Failed", description: message || "An unknown error has occurred.", variant:"destructive" })
-  //             }
-  //     }
-  //   }
 
   // Handle edge cases
   if (isLoading) return <div>Loading...</div>;
@@ -77,19 +68,6 @@ export function TableBatchWiseAssessment() {
 
   return (
     <div>
-      {/* <div className="flex items-center justify-between mb-6">
-      <h1 className="lg:text-4xl text-2xl font-semibold text-center">{role==='teacher' ? "Manage Teachers" : 'Manage Admins'}</h1>
-      <Select onValueChange={(value)=>setRole(value)} defaultValue="teacher">
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Filter Roles"/>
-        </SelectTrigger>
-        <SelectContent defaultValue={"teacher"}>
-          <SelectItem value="teacher">View Teachers</SelectItem>
-          <SelectItem value="admin">View Admins</SelectItem>
-        </SelectContent>
-      </Select>
-    </div> */}
-
       <Table className="border border-black">
         <TableCaption>A list of Batch wise Assessment</TableCaption>
         <TableHeader>
@@ -98,6 +76,7 @@ export function TableBatchWiseAssessment() {
             <TableHead className="w-[100px]">Assessment Level</TableHead>
             <TableHead>Assessment Form</TableHead>
             <TableHead>Assessment Link</TableHead>
+            <TableHead>Delete</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -144,12 +123,15 @@ export function TableBatchWiseAssessment() {
                   Copy Link
                 </Button>
               </TableCell>
+              <TableCell>
+                <DeleteAlertDemo onDelete={()=>handleDelete(assessment._id)} onCancel={()=>console.log('Delete action cancelled')}/>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
         <TableFooter>
           <TableRow>
-            <TableCell colSpan={4}>Total Rows</TableCell>
+            <TableCell colSpan={5}>Total Rows</TableCell>
             <TableCell className="text-right">
               {assessmentData.length}
             </TableCell>
