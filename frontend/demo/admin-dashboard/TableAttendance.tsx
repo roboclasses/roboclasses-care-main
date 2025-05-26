@@ -10,21 +10,30 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Button } from "@/components/ui/button"
+
 import { toast } from "@/hooks/use-toast"
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo"
 import { EditButton } from "../button-demo/EditButton"
-
 import { getUserSession } from "@/lib/session"
 import { AttendanceUrl, CoursesUrl } from "@/constants"
+import { attendanceType, courseType } from "@/types/Types"
 
+import Link from "next/link"
 import useSWR from "swr"
 import axios, { AxiosError } from "axios"
 import React, { useEffect, useMemo, useState } from "react"
-import Link from "next/link"
 import { format } from "date-fns"
 import Cookies from "js-cookie";
-import { attendanceType, courseType } from "@/types/Types"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { ArrowUpDown, Calendar } from "lucide-react"
 
 
 const fetcher = (url:string) => axios.get(url).then((res) => res.data)
@@ -34,6 +43,8 @@ export function TableAttendance() {
   const { data, isLoading, isValidating, error, mutate } = useSWR<attendanceType[]>(AttendanceUrl, fetcher)
   const { data:coursesData, isLoading: coursesLoading } = useSWR<courseType[]>(CoursesUrl, fetcher)
   const [attendanceStatus, setAttendanceStatus] = useState("active");
+  const [sortOrder, setSortOrder] = useState("latest")
+  
 
   // Fetch user session
   useEffect(()=>{
@@ -55,28 +66,21 @@ export function TableAttendance() {
 const filteredData = useMemo(() => {
   if (!data || !coursesData) return [];
 
-  return data.filter((item) => {
+  const filteredData = data.filter((item) => {
     if (user.role === 'teacher' && item.teacher !== user.name) return false;
     if (user.role === 'admin' && item.teacher === user.name) return false;
     if(attendanceStatus === 'active' && item.completed === 'Yes') return false;
     if(attendanceStatus === 'completed' && item.completed === 'No') return false;
-    
-    // Apply class length filtering only if numberOfClasses exists
-    // if (coursesData[0].numberOfClasses) {
-    //   const classLength = item.classes.length;
-
-    //   const hasTooManyClasses = coursesData.some(course => {
-    //     return classLength >= Number(course.numberOfClasses);
-    //   });
-
-    //   if (hasTooManyClasses) {
-    //     return false;
-    //   }
-    // }
-
   return true;
   });
-}, [data, coursesData, user, attendanceStatus]);
+
+  return filteredData.sort((a,b)=>{
+    const dateA = new Date(a.startDate).getTime();
+    const dateB = new Date(b.startDate).getTime();
+    return sortOrder === 'latest' ? (dateB - dateA) : (dateA - dateB)
+  })
+
+}, [data, coursesData, user.role, user.name, attendanceStatus, sortOrder]);
 
   // Handle delete attendance
   const handleDelete = async (id:string) => {
@@ -112,6 +116,9 @@ const filteredData = useMemo(() => {
           <h1 className="lg:text-4xl text-xl font-semibold text-center">
         {attendanceStatus==='active' ? "Active Attendances" : "Completed Attendances"}
           </h1>
+          <div className="flex items-center gap-2">
+            
+          {/* Filter by Status(Active/Completed) */}
           <Select onValueChange={(value)=>setAttendanceStatus(value)} defaultValue="active">
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Filter Attendances"/>
@@ -121,6 +128,25 @@ const filteredData = useMemo(() => {
               <SelectItem value="completed">Completed</SelectItem>
             </SelectContent>
           </Select>
+
+          {/* Filter by Start Date (Latest Date/Oldest Date) */}
+          <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="w-full sm:w-auto">
+                  <Calendar className="w-4 h-4 mr-2" />
+                  Sort by Date: {sortOrder === "latest" ? "Latest First" : "Oldest First"}
+                  <ArrowUpDown className="w-4 h-4 ml-2" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-[200px]" align="end">
+                <DropdownMenuRadioGroup value={sortOrder} onValueChange={setSortOrder}>
+                  <DropdownMenuRadioItem value="latest">Latest First</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="oldest">Oldest First</DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+          </div>
         </div>
     <Table className="border border-black">
       <TableCaption>A list of attendances</TableCaption>
