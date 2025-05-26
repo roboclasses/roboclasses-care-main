@@ -99,4 +99,20 @@ const getAssessmentByIdController = async(req, res)=>{
   }
 }
 
-export {upload, createAssessmentController, getAssessmentController, getAssessmentByIdController};
+const deleteAssessmentController = async(req, res)=>{
+  try {
+    const {id} = req.params;
+
+    const data = await Assessment.findByIdAndDelete(id)
+    console.log(data);
+
+    res.status(204).end();
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({success: false, message: "Internal server error."})
+  }
+}
+
+
+export {upload, createAssessmentController, getAssessmentController, getAssessmentByIdController, deleteAssessmentController};
