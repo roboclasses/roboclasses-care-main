@@ -116,7 +116,7 @@ const filteredData = useMemo(() => {
           <h1 className="lg:text-4xl text-xl font-semibold text-center">
         {attendanceStatus==='active' ? "Active Attendances" : "Completed Attendances"}
           </h1>
-          <div className="flex items-center gap-2">
+          <div className="grid lg:grid-cols-2 grid-cols-1 gap-2">
             
           {/* Filter by Status(Active/Completed) */}
           <Select onValueChange={(value)=>setAttendanceStatus(value)} defaultValue="active">
@@ -132,10 +132,10 @@ const filteredData = useMemo(() => {
           {/* Filter by Start Date (Latest Date/Oldest Date) */}
           <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="w-full sm:w-auto">
-                  <Calendar className="w-4 h-4 mr-2" />
+                <Button variant="outline" className="flex items-center gap-1">
+                  <Calendar className="w-4 h-4" />
                   Sort by Date: {sortOrder === "latest" ? "Latest First" : "Oldest First"}
-                  <ArrowUpDown className="w-4 h-4 ml-2" />
+                  <ArrowUpDown className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-[200px]" align="end">
