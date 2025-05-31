@@ -64,7 +64,7 @@ export function TableBatchWiseAssessment() {
     return <div>{message || "An unknown error has occurred."}</div>;
   }
   if (isValidating) return <div>Refreshing...</div>;
-  if (assessmentData?.length === 0) return <div>Empty list for Users</div>;
+  if (assessmentData?.length === 0) return <div>Empty list for assessments</div>;
 
   return (
     <div>

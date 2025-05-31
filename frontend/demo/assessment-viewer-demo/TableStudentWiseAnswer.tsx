@@ -92,7 +92,7 @@ export function TableStudentWiseAnswer() {
   return <div>{message || 'An unknown error has occurred.'}</div>;
  } 
  if (isValidating) return <div>Refreshing...</div>;
- if (answerData?.length === 0) return <div>Empty list for Users</div>;
+ if (answerData?.length === 0) return <div>Empty list for answers</div>;
 
 
   return (
