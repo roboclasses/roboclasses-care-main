@@ -81,6 +81,29 @@ export type AnswerType={
   submissionTime: Date
 }
 
+export type FeedbackQuestions={
+  _id:string
+  question: string
+  option:{
+    a: string
+    b: string
+    c: string
+  },
+  answer: 'A' | 'B' | 'C' 
+}
+
+export type FeedbackType={
+  _id: string
+  batch: string
+  teacher: string
+  student: string
+  email: string
+  destination?: string
+  feedbacks: FeedbackQuestions,
+  recommendProgram: string,
+  additionalFeedback: string, 
+}
+
 export type studentType = {
   _id: string;
   studentId:string;
