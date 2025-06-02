@@ -99,7 +99,7 @@ export type FeedbackType={
   student: string
   email: string
   destination?: string
-  feedbacks: FeedbackQuestions,
+  feedbackAnswer: string[],
   recommendProgram: string,
   additionalFeedback: string, 
 }

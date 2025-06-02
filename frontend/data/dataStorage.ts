@@ -119,3 +119,42 @@ export const LEAVE_POLICY = {
     description: "UAE public holidays",
   },
 };
+
+//Feedback data
+export const FeedbackData = [
+  {
+    id: 1,
+    question: "How excited or interested was your child about attending the Course?",
+    option: { a: "Very Excited", b: "Excited", c: "Not excited at all" },
+  },
+  {
+    id: 2,
+    question: "Do you feel your child has learned useful skills in coding and robotics through this program?",
+    option: { a: "Yes", b: "No", c: "Not sure" },
+  },
+  {
+    id: 3,
+    question: "Have you noticed any improvement in your child’s problem-solving, creativity, or logical thinking since starting the program?",
+    option: { a: "Yes", b: "No", c: "Not sure" },
+  },
+  {
+    id: 4,
+    question: "How well did the teacher communicate with you about your child’s progress?",
+    option: { a: "Excellent", b: "Good", c: "Needs improvement" },
+  },
+  {
+    id: 5,
+    question: "Did your child find the teacher helpful and encouraging during the classes?",
+    option: { a: "Yes", b: "No", c: "Not sure" },
+  },
+  {
+    id: 6,
+    question: "Were the class timings, assignments, and pace suitable for your child?",
+    option: { a: "Yes", b: "No", c: "Not sure" },
+  },
+  {
+    id: 7,
+    question: "Do you feel the teaching methods used were appropriate for your child’s age and understanding level?",
+    option: { a: "Yes", b: "No", c: "Not sure" },
+  },
+];

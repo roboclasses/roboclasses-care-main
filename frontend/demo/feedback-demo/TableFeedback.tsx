@@ -21,7 +21,6 @@ import useSWR from "swr";
 import axios, { AxiosError } from "axios";
 import Link from "next/link";
 import { Copy } from "lucide-react";
-// import Cookies from "js-cookie";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -73,11 +72,15 @@ export function TableFeedback() {
         <TableCaption>A list of Batch wise Feedbacks</TableCaption>
         <TableHeader>
           <TableRow>
+            <TableHead className="w-[100px]">Status</TableHead>
             <TableHead className="w-[100px]">Batch Name</TableHead>
             <TableHead className="w-[100px]">Student Name</TableHead>
             <TableHead>Teacher Name</TableHead>
             <TableHead>Student Email</TableHead>
             <TableHead>Student Contact</TableHead>
+            <TableHead>Feedback Answers(MCQ)</TableHead>
+            <TableHead>Recommandation</TableHead>
+            <TableHead>Additional Feedback</TableHead>
             <TableHead>Feedback</TableHead>
             <TableHead>Feedback Link</TableHead>
             <TableHead>Delete</TableHead>
@@ -86,6 +89,7 @@ export function TableFeedback() {
         <TableBody>
           {feedbackData?.map((feedback: FeedbackType) => (
             <TableRow key={feedback._id}>
+              <TableCell className="font-medium">{'#'}</TableCell>
               <TableCell className="font-medium">{feedback.batch}</TableCell>
               <TableCell className="font-medium">{feedback.student}</TableCell>
               <TableCell className="font-medium">{feedback.teacher}</TableCell>
@@ -95,6 +99,9 @@ export function TableFeedback() {
                 </Link>
               </TableCell>
               <TableCell className="font-medium">{`+${feedback.destination}`}</TableCell>
+              <TableCell className="font-medium">{feedback.feedbackAnswer.map((item)=>(item)).join(', ')}</TableCell>
+              <TableCell className="text-sm text-balance">{feedback.recommendProgram}</TableCell>
+              <TableCell className="text-sm text-balance">{feedback.additionalFeedback}</TableCell>
               <TableCell className="text-right">
                 <Link href={`/feedbackViewer/edit/${feedback._id}`}>
                   <Button type="button">View</Button>
@@ -143,7 +150,7 @@ export function TableFeedback() {
         </TableBody>
         <TableFooter>
           <TableRow>
-            <TableCell colSpan={8}>Total Rows</TableCell>
+            <TableCell colSpan={12}>Total Rows</TableCell>
             <TableCell className="text-right">{feedbackData.length}</TableCell>
           </TableRow>
         </TableFooter>
