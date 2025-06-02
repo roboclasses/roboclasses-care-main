@@ -3,10 +3,11 @@
 import * as React from "react";
 import {
   AlignEndVerticalIcon,
+  AppWindowMacIcon,
   BookIcon,
   BookOpenIcon,
   Calendar,
-  FormInputIcon,
+  EyeIcon,
   LayoutDashboard,
   LifeBuoy,
   School,
@@ -64,49 +65,6 @@ useEffect(()=>{
       avatar: avatar,
     },
 
-    // navMain: [
-    //   {
-    //     title: "Take Appointment",
-    //     url: "#",
-    //     icon: SquareTerminal,
-    //     isActive: true,
-    //     items: [
-    //       {
-    //         title: "Register a Student",
-    //         url: "/appointment/studentRegister",
-    //       },
-    //       {
-    //         title: "Demo Class",
-    //         url: "/appointment/reminder/demo-class",
-    //       },
-    //       {
-    //         title: "Normal Class",
-    //         url: "/appointment/reminder/normal-class",
-    //       },
-    //     ],
-    //   },
-    //   {
-    //     title:  "Admin Dashboard",
-    //     url:  "/adminDashboard",
-    //     icon: LayoutDashboard,
-    //     isActive: false,
-    //   },
-    //   {
-    //     title: "Teachers View",
-    //     url: "/teacherView",
-    //     icon: View,
-    //   },
-    //   {
-    //     title: "New Batch Entry",
-    //     url: "/newBatchEntry",
-    //     icon: School,
-    //   },
-    //   {
-    //     title: "New Course Entry",
-    //     url: "/courseEntry",
-    //     icon: BookIcon,
-    //   },
-    // ],
     navMainAdmin: [
       
       {
@@ -173,7 +131,17 @@ useEffect(()=>{
       {
         title: "Assessment Viewer",
         url: "/assessmentViewer",
-        icon: FormInputIcon,
+        icon: EyeIcon,
+      },
+      {
+        title: "Feedback Admin",
+        url: "/feedbackAdmin",
+        icon: AppWindowMacIcon,
+      },
+            {
+        title: "Feedback Viewer",
+        url: "/feedbackViewer",
+        icon: EyeIcon,
       },
     ],
 
@@ -234,37 +202,13 @@ useEffect(()=>{
         url: "/assessmentGenerator",
         icon: BookOpenIcon,
       },
+      {
+        title: "Assessment Viewer",
+        url: "/assessmentViewer",
+        icon: EyeIcon,
+      },
     ],
 
-    // navMainTeacher: [
-    //   {
-    //     title: "Take Appointment",
-    //     url: "#",
-    //     icon: SquareTerminal,
-    //     isActive: true,
-    //     items: [
-    //       {
-    //         title: "Demo Class",
-    //         url: "/appointment/reminder/demo-class",
-    //       },
-    //       {
-    //         title: "Normal Class",
-    //         url: "/appointment/reminder/normal-class",
-    //       },
-    //     ],
-    //   },
-    //   {
-    //     title:  "Admin Dashboard",
-    //     url:  "/adminDashboard",
-    //     icon: LayoutDashboard,
-    //     isActive: false,
-    //   },
-    //   {
-    //     title: "Teachers View",
-    //     url: "/teacherView",
-    //     icon: View,
-    //   },
-    // ],
     navMainStudent: [
       {
         title: "Take Appointment",
