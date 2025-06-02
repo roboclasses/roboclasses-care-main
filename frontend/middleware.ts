@@ -9,6 +9,7 @@ export function middleware(req: NextRequest) {
     "/adminDashboard",
     "/appointment",
     "/assessmentGenerator",
+    "/feedbackAdmin",
     "/courseEntry",
     "/manageAttendance",
     "/manageRoles",
@@ -21,6 +22,7 @@ export function middleware(req: NextRequest) {
     "/appointment/reminder/normal-class",
     "/appointment/reminder/demo-class",
     "/assessmentGenerator",
+    "/feedbackAdmin",
     "/courseEntry",
     "/manageAttendance",
     "/manageRoles",
@@ -30,7 +32,7 @@ export function middleware(req: NextRequest) {
   ];
 
   const publicRoutes = ["/login", "/signup"];
-  const openRoutePrefixes = ["/assessmentViewer"]
+  const openRoutePrefixes = ["/assessmentViewer", "/feedbackViewer"]
   
   // Get the current pathname
   const currentPath = req.nextUrl.pathname;
