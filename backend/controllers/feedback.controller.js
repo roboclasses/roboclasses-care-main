@@ -2,9 +2,9 @@ import { Feedback } from "../models/feedback.model.js";
 
 export const createFeedbackController = async(req, res)=>{
     try {
-        const {batch, student, teacher, email, destination, feedbacks, recommendProgram, additionalFeedback, } = req.body;
+        const {batch, student, teacher, email, destination, feedbackAnswer, recommendProgram, additionalFeedback, } = req.body;
 
-        const data = await Feedback.create({batch, student, teacher, email, destination, feedbacks, recommendProgram, additionalFeedback});
+        const data = await Feedback.create({batch, student, teacher, email, destination, feedbackAnswer, recommendProgram, additionalFeedback});
         console.log(data);
 
         res.status(201).json({success: true, message: "Feedback created successfully"})
