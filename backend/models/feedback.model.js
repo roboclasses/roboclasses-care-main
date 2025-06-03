@@ -5,12 +5,8 @@ const feedbackSchema = new mongoose.Schema({
     student:{type:String, required:true},
     teacher:{type:String, required:true},
     email:{type:String, required:true, index: true},
-    destination:{type:String, required:true},
-    feedbackAnswer:{
-    type: [String],
-    enum: ["A", "B", "C"],
-    required: true,
-  },
+    destination:{type:String},
+    feedbackAnswer:{ type: [String], enum: ["A", "B", "C"], required: true },
     recommendProgram: {
       type: String,
       default:'',
@@ -19,6 +15,10 @@ const feedbackSchema = new mongoose.Schema({
       type: String,
        default:'',
     },
-})
+    isCompleted:{
+      type: Boolean,
+      default: false
+    },
+},{timestamps: true})
 
 export const Feedback = mongoose.models.Feedback ?? mongoose.model('Feedback', feedbackSchema)

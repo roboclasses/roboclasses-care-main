@@ -99,9 +99,11 @@ export type FeedbackType={
   student: string
   email: string
   destination?: string
-  feedbackAnswer: string[],
-  recommendProgram: string,
-  additionalFeedback: string, 
+  feedbackAnswer: string[]
+  recommendProgram: string
+  additionalFeedback: string
+  isCompleted: boolean
+  updatedAt: Date
 }
 
 export type studentType = {
