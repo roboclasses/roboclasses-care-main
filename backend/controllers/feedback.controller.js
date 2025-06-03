@@ -2,7 +2,7 @@ import { Feedback } from "../models/feedback.model.js";
 
 export const createFeedbackController = async(req, res)=>{
     try {
-        const {batch, student, teacher, email, destination, feedbackAnswer, recommendProgram, additionalFeedback, } = req.body;
+        const {batch, student, teacher, email, destination, feedbackAnswer, recommendProgram, additionalFeedback} = req.body;
 
         const data = await Feedback.create({batch, student, teacher, email, destination, feedbackAnswer, recommendProgram, additionalFeedback});
         console.log(data);
@@ -48,7 +48,7 @@ export const updateFeedbackController = async(req, res)=>{
         const {id} = req.params;
         const feedbackDetails = req.body;
 
-        const data = await Feedback.findByIdAndUpdate(id, feedbackDetails, {new: true})
+        const data = await Feedback.findByIdAndUpdate(id, {...feedbackDetails, isCompleted:true}, {new: true})
         console.log(data);
 
         res.status(200).json({success: true, message: "Feedback updated successfully."})

@@ -21,6 +21,8 @@ import useSWR from "swr";
 import axios, { AxiosError } from "axios";
 import Link from "next/link";
 import { Copy } from "lucide-react";
+import { FaCircle } from "react-icons/fa";
+import { format } from "date-fns";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -81,6 +83,7 @@ export function TableFeedback() {
             <TableHead>Feedback Answers(MCQ)</TableHead>
             <TableHead>Recommandation</TableHead>
             <TableHead>Additional Feedback</TableHead>
+             <TableHead>Feedback Time</TableHead>
             <TableHead>Feedback</TableHead>
             <TableHead>Feedback Link</TableHead>
             <TableHead>Delete</TableHead>
@@ -89,19 +92,43 @@ export function TableFeedback() {
         <TableBody>
           {feedbackData?.map((feedback: FeedbackType) => (
             <TableRow key={feedback._id}>
-              <TableCell className="font-medium">{'#'}</TableCell>
+              <TableCell className="font-medium">
+                {feedback.isCompleted === true ? (
+                  <Button variant={'outline'} className="p-2 rounded-full font-semibold">
+                    <FaCircle style={{ color: "green" }} size={16} /> Completed
+                  </Button>
+                ) : feedback.isCompleted === false ? (
+                  <Button variant={'outline'} className="p-2 rounded-full font-semibold">
+                    <FaCircle style={{ color: "blue" }} size={16} /> Active
+                  </Button>
+                ) : (
+                  false
+                )}
+              </TableCell>
               <TableCell className="font-medium">{feedback.batch}</TableCell>
               <TableCell className="font-medium">{feedback.student}</TableCell>
               <TableCell className="font-medium">{feedback.teacher}</TableCell>
               <TableCell className="font-medium">
-                <Link href={`mailto:${feedback.email}`} className="text-blue-500 hover:underline">
+                <Link
+                  href={`mailto:${feedback.email}`}
+                  className="text-blue-500 hover:underline"
+                >
                   {feedback.email}
                 </Link>
               </TableCell>
               <TableCell className="font-medium">{`+${feedback.destination}`}</TableCell>
-              <TableCell className="font-medium">{feedback.feedbackAnswer.map((item)=>(item)).join(', ')}</TableCell>
-              <TableCell className="text-sm text-balance">{feedback.recommendProgram}</TableCell>
-              <TableCell className="text-sm text-balance">{feedback.additionalFeedback}</TableCell>
+              <TableCell className="font-medium">
+                {feedback.feedbackAnswer.map((item) => item).join(", ")}
+              </TableCell>
+              <TableCell className="text-sm text-balance">
+                {feedback.recommendProgram}
+              </TableCell>
+              <TableCell className="text-sm text-balance">
+                {feedback.additionalFeedback}
+              </TableCell>
+              <TableCell className="text-sm text-balance">
+                {format(new Date(feedback.updatedAt), 'PPpp')}
+              </TableCell>
               <TableCell className="text-right">
                 <Link href={`/feedbackViewer/edit/${feedback._id}`}>
                   <Button type="button">View</Button>
