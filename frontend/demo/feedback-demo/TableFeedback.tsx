@@ -127,7 +127,7 @@ export function TableFeedback() {
                 {feedback.additionalFeedback}
               </TableCell>
               <TableCell className="text-sm text-balance">
-                {format(new Date(feedback.updatedAt), 'PPpp')}
+                {feedback.updatedAt ? format(new Date(feedback.updatedAt), 'PPpp') : null}
               </TableCell>
               <TableCell className="text-right">
                 <Link href={`/feedbackViewer/edit/${feedback._id}`}>
