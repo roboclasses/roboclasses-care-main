@@ -31,6 +31,7 @@ import { Copy, LucideChevronsUpDown } from "lucide-react";
 import { FaCircle } from "react-icons/fa";
 import { format, isValid } from "date-fns";
 import { useMemo, useState } from "react";
+import { Card } from "@/components/ui/card";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -90,8 +91,8 @@ const filteredData = useMemo(()=>{
   if (feedbackData?.length === 0) return <div>Empty list for feedbacks</div>;
 
   return (
-    <div>
-      <Table className="border border-black">
+    <Card className="p-2">
+      <Table>
         <TableCaption>A list of Batch wise Feedbacks</TableCaption>
         <TableHeader>
           <TableRow>
@@ -218,6 +219,6 @@ const filteredData = useMemo(()=>{
           </TableRow>
         </TableFooter>
       </Table>
-    </div>
+    </Card>
   );
 }
