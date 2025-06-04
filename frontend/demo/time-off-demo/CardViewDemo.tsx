@@ -77,7 +77,7 @@ const CardViewDemo = () => {
       header: `${usedAdjustedNormalLeaveDays} of ${
         LEAVE_POLICY.normal.total
       } days remaining`,
-      icon: (<FaCalendar size={30} color="pink"/>),
+      icon: (<FaCalendar size={40} color="#65a30d"/>),
       content: (
         <div>
           <p>{LEAVE_POLICY.normal.description}</p>
@@ -99,7 +99,7 @@ const CardViewDemo = () => {
       header: `${LEAVE_POLICY.sick.total - usedSickLeaveDays} of ${
         LEAVE_POLICY.sick.total
       } days remaining`,
-      icon: (<FaHandHoldingMedical size={30} color="pink"/>),
+      icon: (<FaHandHoldingMedical size={40} color="#65a30d"/>),
       content: (
         <div>
           <p>{LEAVE_POLICY.sick.description}</p>
@@ -139,7 +139,7 @@ const CardViewDemo = () => {
     {
       id: 3,
       header: LEAVE_POLICY.holidays.name,
-      icon: (<MdHolidayVillage size={30} color="pink"/>),
+      icon: (<MdHolidayVillage size={40} color="#65a30d" />),
       content: (
         <div>
           <p>{LEAVE_POLICY.holidays.description}</p>

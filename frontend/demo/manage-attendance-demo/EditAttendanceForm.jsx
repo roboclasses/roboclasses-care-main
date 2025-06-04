@@ -142,7 +142,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
           {/* Buttons */}
           <div className="flex justify-between">
             <div className="flex items-center gap-2">
-              <Button type="button" onClick={handleAddClass} disabled={handleNumber(numberOfClasses) >= 60} style={{background : "maroon"}}>Add Classes</Button>
+              <Button type="button" onClick={handleAddClass} disabled={handleNumber(numberOfClasses) >= 60} style={{background: "green"}}>Add Classes</Button>
             </div>
             <SubmitButton name={isSubmitting ? 'Updating...' : 'Update'} type="submit" disabled={isSubmitting}/>
           </div>
