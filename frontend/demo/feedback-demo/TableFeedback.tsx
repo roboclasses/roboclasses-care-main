@@ -10,6 +10,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 
@@ -20,9 +27,10 @@ import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 import useSWR from "swr";
 import axios, { AxiosError } from "axios";
 import Link from "next/link";
-import { Copy } from "lucide-react";
+import { Copy, LucideChevronsUpDown } from "lucide-react";
 import { FaCircle } from "react-icons/fa";
-import { format } from "date-fns";
+import { format, isValid } from "date-fns";
+import { useMemo, useState } from "react";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -34,6 +42,19 @@ export function TableFeedback() {
     error,
     mutate,
   } = useSWR<FeedbackType[]>(FeedbackUrl, fetcher);
+  const [sortOrder, setSortOrder] = useState("active")
+
+  // Handle Filter table
+const filteredData = useMemo(()=>{
+  if(!feedbackData) return [];
+
+   return feedbackData.filter((item:FeedbackType)=>{
+    if(sortOrder === 'active' && item.isCompleted === true) return false;
+    if(sortOrder === 'completed' && item.isCompleted === false) return false;
+    return true;
+   })
+
+},[feedbackData, sortOrder])
 
   // Handle delete question
   const handleDelete = async (id: string) => {
@@ -74,7 +95,22 @@ export function TableFeedback() {
         <TableCaption>A list of Batch wise Feedbacks</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Status</TableHead>
+            <TableHead className="w-[100px] flex items-center gap-2"> 
+              Status
+              <div>
+                 <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                  <LucideChevronsUpDown size={16}/>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-[200px]" align="end">
+                <DropdownMenuRadioGroup value={sortOrder} onValueChange={setSortOrder}>
+                  <DropdownMenuRadioItem value="active">Active</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="completed">Completed</DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+          </DropdownMenu>
+              </div>
+            </TableHead>
             <TableHead className="w-[100px]">Batch Name</TableHead>
             <TableHead className="w-[100px]">Student Name</TableHead>
             <TableHead>Teacher Name</TableHead>
@@ -90,7 +126,7 @@ export function TableFeedback() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {feedbackData?.map((feedback: FeedbackType) => (
+          {filteredData?.map((feedback: FeedbackType) => (
             <TableRow key={feedback._id}>
               <TableCell className="font-medium">
                 {feedback.isCompleted === true ? (
@@ -127,7 +163,7 @@ export function TableFeedback() {
                 {feedback.additionalFeedback}
               </TableCell>
               <TableCell className="text-sm text-balance">
-                {feedback.updatedAt ? format(new Date(feedback.updatedAt), 'PPpp') : null}
+                {(feedback.updatedAt && isValid(feedback.updatedAt)) ? format(new Date(feedback.updatedAt), 'PPpp') : null}
               </TableCell>
               <TableCell className="text-right">
                 <Link href={`/feedbackViewer/edit/${feedback._id}`}>
