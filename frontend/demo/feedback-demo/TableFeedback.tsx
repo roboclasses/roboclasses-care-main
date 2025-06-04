@@ -215,7 +215,7 @@ const filteredData = useMemo(()=>{
         <TableFooter>
           <TableRow>
             <TableCell colSpan={12}>Total Rows</TableCell>
-            <TableCell className="text-right">{feedbackData.length}</TableCell>
+            <TableCell className="text-right">{filteredData.length}</TableCell>
           </TableRow>
         </TableFooter>
       </Table>
