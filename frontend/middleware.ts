@@ -16,6 +16,8 @@ export function middleware(req: NextRequest) {
     "/newBatchEntry",
     "/teachersAvailability",
     "/timeOff",
+    "/assessmentViewer",
+    "/feedbackViewer",
   ];
   const studentRoutePrefixes = [
     "/adminDashboard",
@@ -29,10 +31,12 @@ export function middleware(req: NextRequest) {
     "/newBatchEntry",
     "/teachersAvailability",
     "/timeOff",
+    "/assessmentViewer",
+    "/feedbackViewer",
   ];
 
   const publicRoutes = ["/login", "/signup"];
-  const openRoutePrefixes = ["/assessmentViewer", "/feedbackViewer"]
+  const openRoutePrefixes = ["/assessmentViewer/create", "/feedbackViewer/edit"]
   
   // Get the current pathname
   const currentPath = req.nextUrl.pathname;
