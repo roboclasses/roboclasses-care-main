@@ -111,13 +111,13 @@ export function HolidaySheet() {
   }
 
   return (
-    <Sheet>
+    <Sheet >
       <SheetTrigger asChild>
         <Button variant="outline" className="rounded-full shadow-none">
           <IoSettingsSharp />
         </Button>
       </SheetTrigger>
-      <SheetContent className="space-y-4">
+      <SheetContent className="space-y-4" side={'right'}>
         <SheetHeader>
           <SheetTitle>Enter Holiday</SheetTitle>
           <SheetDescription>
