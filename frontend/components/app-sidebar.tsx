@@ -13,6 +13,7 @@ import {
   School,
   Send,
   SquareTerminal,
+  User2,
   Users,
   View,
 } from "lucide-react";
@@ -66,7 +67,6 @@ useEffect(()=>{
     },
 
     navMainAdmin: [
-      
       {
         title: "Take Appointment",
         url: "#",
@@ -96,7 +96,7 @@ useEffect(()=>{
       {
         title: "Manage Attendance",
         url: "/manageAttendance",
-        icon: View,
+        icon: AlignEndVerticalIcon,
       },
       {
         title: "New Batch Entry",
@@ -121,7 +121,7 @@ useEffect(()=>{
       {
         title: "Teachers Availability",
         url: "/teachersAvailability",
-        icon: AlignEndVerticalIcon,
+        icon: User2,
       },
       {
         title: "Assessment Generator",
@@ -131,7 +131,7 @@ useEffect(()=>{
       {
         title: "Assessment Viewer",
         url: "/assessmentViewer",
-        icon: EyeIcon,
+        icon: View,
       },
       {
         title: "Feedback Admin",
@@ -141,7 +141,7 @@ useEffect(()=>{
             {
         title: "Feedback Viewer",
         url: "/feedbackViewer",
-        icon: EyeIcon,
+        icon: View,
       },
     ],
 
