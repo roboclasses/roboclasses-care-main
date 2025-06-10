@@ -1,58 +1,40 @@
-# Appointment scheduling app including whatsapp reminder using cron-job
+# ROBOclasses Care 
 
-This project consists of a frontend and backend, both of which can be run locally. Follow the steps below to set up and start each part of the project. (Please try to setup locally)
+A web application for online curriculum management. Built with next.js and express.js, ROBOclasses Care helps students to enroll in courses and activities, helps teachers to manage attendances, classes and availability etc. also Admins can see insights in admin dashboard.
 
+## Features
 
----
+- Parents can register for their child to enroll in our courses.
+- Admins can create or edit courses.
+- Teachers can create or edit batches.
+- Teachers can craete demo-class and normal-class as well.
+- Demo classes are scheduled in a way that students should recieve whatsapp-reminder before 1hour as well as 24hours before.
+- Teachers can record what curriculum are taught in attendance module.
+- Admins can see insights via tables and cards in admin dashboard with filters (status, name etc.).
+- Teachers availability are displayed in calender view in days format.
+- Teachers and admins can take leave (normal/sick) from our time-off module.
+- Admins can manage roles in manage roles module.
+- We have AI powered assessment module.
+- We recently made one feedback module to take feedbacks from parents.
 
-## Areas of improvement
+## Tech Stack
 
-- Responsiveness for tablet devices is pending.
-- Codebase refactor and docementation are pending.
-- We have to make production grade code for this SAAS.
+- next.js (v14) for frontend heavy
+- express.js for robust backend
+- JWT for auth (role based authentication and authorization)
+- express-rate-limit for rate limiter
+- TailwindCSS for styling
+- MongoDB for database
+- node-cron for scheduling cron jobs
 
----
+## Getting Started
 
-## live URLs for both frontend and backend deployments (Check the code for full URLs)
-
-- FRONTEND URL: https://app-roboclasses-care.up.railway.app
-- BACKEND URL: https://api-roboclasses-care.up.railway.app
-
----
-
-
-## Prerequisites
-
-- **Node.js** and **npm** installed on your machine.
-
----
-
-
-
-### Frontend
-
-
-1. **Install Dependencies**:
-   ```bash
-   npm install
-
-2. **Start the Development Server**:
-   ```bash
-   npm run dev
-
-3. **Replace the .env.local file's credentials with your own credentials**:
+1. Clone the repository
+2. copy `.env` and fill your credentials
+3. Install dependencies with `npm install`
+4. Run development server with `npm run dev`
+5. Build for production with `npm run build`
 
 
-### Backend
 
-
-1. **Install Dependencies**:
-   ```bash
-   npm install
-
-2. **Start the Development Server**:
-   ```bash
-   npm run dev     
-
-3. **Replace the .env file's credentials with your own**:
 
