@@ -4,6 +4,7 @@ import {nanoid} from "nanoid"
 
 const assessmentSchema = new mongoose.Schema({
     batch: {type:String, required: true},
+    teacher: {type: String, required: true},
     assessmentLevel: {type:String, required: true},
     questions: [{
         question:{type: String, required: true},

@@ -2,9 +2,9 @@ import { Answer } from "../models/answer.model.js";
 
 export const createAnswerController = async(req, res)=>{
     try {
-        const {answer, candidate, assessmentId, batch, assessmentLevel, submissionTime} = req.body;
+        const {answer, candidate, teacher, assessmentId, batch, assessmentLevel, submissionTime} = req.body;
 
-        const data = await Answer.create({answer, candidate, assessmentId, batch, assessmentLevel, submissionTime})
+        const data = await Answer.create({answer, candidate, teacher, assessmentId, batch, assessmentLevel, submissionTime})
         console.log(data);
 
         res.status(201).json({success: true, message: "Answer set created successfully."})

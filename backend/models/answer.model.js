@@ -15,6 +15,10 @@ const answerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+    teacher:{
+    type: String,
+    required: true,
+  },
   batch:{
     type: String,
     required: true,

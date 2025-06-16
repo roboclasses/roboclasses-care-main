@@ -20,7 +20,7 @@ const createAssessmentController = async(req, res)=>{
         const filePath = req.file.path;
         console.log("file path:", filePath);
         
-        const {batch, assessmentLevel} = req.body;
+        const {batch, teacher, assessmentLevel} = req.body;
 
         fs.createReadStream(filePath)
         .pipe(csv())
@@ -45,7 +45,7 @@ const createAssessmentController = async(req, res)=>{
         })
         .on('end', async () => {
           try {
-            const newAssessment = new Assessment({batch, assessmentLevel, questions:assessments})
+            const newAssessment = new Assessment({batch, teacher, assessmentLevel, questions:assessments})
             await newAssessment.save()
             
             fs.unlinkSync(filePath);

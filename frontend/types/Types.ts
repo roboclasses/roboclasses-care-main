@@ -68,6 +68,7 @@ export type QuestionType={
 export type AssessmentType={
   _id: string
   batch: string
+  teacher: string
   assessmentLevel: string
   questions: QuestionType[]
 }
@@ -75,6 +76,7 @@ export type AssessmentType={
 export type AnswerType={
   _id: string
   candidate: string
+  teacher: string
   answer: string[]
   batch: string
   assessmentLevel: string
