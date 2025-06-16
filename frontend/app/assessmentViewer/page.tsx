@@ -6,12 +6,12 @@ const page = () => {
   return (
     <div className="p-5 2xl:w-full xl:w-[1000px] lg:w-[800px] md:w-[500px] w-[420px] space-y-8">
       <div className="space-y-4">
-      <Label className="font-semibold lg:text-4xl text-xl">Batch wise Questions</Label>
+      <Label className="lg:text-4xl text-xl">Batch wise Questions</Label>
       <TableBatchWiseAssessment />
       </div>
 
       <div className="space-y-4">
-      <Label className="font-semibold lg:text-4xl text-xl">Batch wise Student Marks Sheets</Label>
+      <Label className="lg:text-4xl text-xl">Batch wise Student Marks Sheets</Label>
       <TableStudentWiseAnswer />
       </div>
     </div>
