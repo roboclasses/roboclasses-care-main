@@ -41,22 +41,26 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { useParams, useRouter } from "next/navigation";
 
 const FormSchema = z.object({
   batch: z.string({ required_error: "Please select a batch" }),
+  teacher: z.string().min(3, {message: "Teacher name must be 3 character long"}),
   assessmentLevel: z.string({
     required_error: "Please select assesment level",
   }),
-  questions: z.any().refine((file) => {
-    if (typeof window === "undefined") return true; // Skip check on server
-    return file instanceof File && file.name.endsWith(".csv");
-  }, {
-    message: "Please upload a valid CSV file",
-  }),
+  questions: z.any().refine(
+    (file) => {
+      if (typeof window === "undefined") return true; // Skip check on server
+      return file instanceof File && file.name.endsWith(".csv");
+    },
+    {
+      message: "Please upload a valid CSV file",
+    }
+  ),
 });
-
 
 const fetcher = (url: string) =>
   axios
@@ -73,6 +77,34 @@ export function UploadAssessmentButton() {
     fetcher
   );
   const [file, setFile] = useState("");
+  const { id } = useParams();
+  const router = useRouter();
+
+  const batchName = form.watch("batch");
+
+  //Handle find teacher
+  useEffect(() => {
+    const handleFetch = async () => {
+      try {
+        const res = await axios.get(`${NewBatchEntryUrl}?name=${batchName}`, {
+          headers: { Authorization: Cookies.get("token") },
+        });
+        console.log(res.data);
+        if (res.data) {
+          const selectedBatch = res.data.find((item: batchType) => item.batch === batchName)
+          console.log("Selected batch: ", selectedBatch)
+
+          if (selectedBatch) {
+            form.setValue("teacher", selectedBatch.teacher || "");
+          }
+        }
+      } catch (error) {
+        console.error(error);
+        form.setValue("teacher", "");
+      }
+    };
+    handleFetch()
+  }, [batchName, form, id]);
 
   // Handle form status
   const { isSubmitting } = form.formState;
@@ -81,14 +113,15 @@ export function UploadAssessmentButton() {
     console.log("data is: ", data);
     try {
       const formData = new FormData();
-      formData.append('batch', data.batch)
-      formData.append('assessmentLevel', data.assessmentLevel)
-      formData.append('questions', data.questions)
+      formData.append("batch", data.batch);
+      formData.append("teacher", data.teacher)
+      formData.append("assessmentLevel", data.assessmentLevel);
+      formData.append("questions", data.questions);
 
-      const res = await axios.post(AssessmentUrl, formData, { headers:{"Content-Type":"multipart/form-data"}});
+      const res = await axios.post(AssessmentUrl, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       console.log(res.data);
-      
-      form.reset();
 
       const { message } = res.data;
       toast({
@@ -96,6 +129,9 @@ export function UploadAssessmentButton() {
         description: message,
         variant: "default",
       });
+
+      router.push('/assessmentViewer')
+
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         console.error(error);
@@ -137,7 +173,7 @@ export function UploadAssessmentButton() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Batch Name</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value} >
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger className="shadow-none rounded-xl h-12">
                           <SelectValue placeholder="Select a batch" />
@@ -159,15 +195,36 @@ export function UploadAssessmentButton() {
                 )}
               />
 
+              {/* Teacher Name */}
+              <FormField
+                control={form.control}
+                name="teacher"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Teacher Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        required
+                        disabled
+                        {...field}
+                        className="shadow-none rounded-xl h-12 bg-muted-foreground"
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      This field is for teacher name
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               {/* Select Assessment Level */}
               <FormField
                 control={form.control}
                 name="assessmentLevel"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
-                      Assessment Level
-                    </FormLabel>
+                    <FormLabel>Assessment Level</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger className="shadow-none rounded-xl h-12">
@@ -218,9 +275,7 @@ export function UploadAssessmentButton() {
                         name="questions"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>
-                              Assessment File
-                            </FormLabel>
+                            <FormLabel>Assessment File</FormLabel>
                             <FormControl>
                               <input
                                 id="dropzone-file"

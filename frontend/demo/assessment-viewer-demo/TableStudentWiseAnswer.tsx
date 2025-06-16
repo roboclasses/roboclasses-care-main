@@ -15,15 +15,31 @@ import useSWR from "swr";
 import axios, { AxiosError } from "axios";
 import { AnswerUrl, AssessmentUrl } from "@/constants";
 import { format } from "date-fns";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 import { toast } from "@/hooks/use-toast";
 import Cookies from 'js-cookie';
+import { getUserSession } from "@/lib/session";
 
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 export function TableStudentWiseAnswer() {
+    const [user, setUser] = useState({name:"", role:""})
+  
+    // Handle fetch user session
+    useEffect(()=>{
+      const handleFetch = async()=>{
+        const session = await getUserSession();
+        if(!session.role || !session.name){
+          throw new Error('No user session is found')
+        }
+        setUser({name:session.name, role:session.role})
+      }
+      handleFetch();
+  
+    },[])
+  
   const { data: answerData= [], isLoading, isValidating, error, mutate } = useSWR<AnswerType[]>(AnswerUrl,fetcher);  
   const [assessmentData, setAssessmentData] = useState<AssessmentType[]>([])
 
@@ -64,6 +80,18 @@ export function TableStudentWiseAnswer() {
 
   }
 
+    // Handle filter assessment
+    const filteredData = useMemo(()=>{
+      if(!answerData) return[];
+      return answerData.filter((item:AnswerType)=>{
+        if(user.role === 'teacher' && user.name !== item.teacher) return false;
+        if(user.role === 'admin' && user.name === item.teacher) return false;
+        return true;
+      })
+  
+    },[answerData, user])
+  
+
     // Handle delete question
     const handleDelete = async(id: string)=>{
       try {
@@ -102,6 +130,7 @@ export function TableStudentWiseAnswer() {
       <TableHeader>
         <TableRow>
           <TableHead className="w-[100px]">Batch Name</TableHead>
+          <TableHead className="w-[100px]">Batch Name</TableHead>
           <TableHead className="w-[100px]">Candidate Name</TableHead>
           <TableHead className="w-[100px]">Level</TableHead>
           <TableHead className="w-[100px]">Submission Time</TableHead>
@@ -111,9 +140,10 @@ export function TableStudentWiseAnswer() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {answerData?.map((ans: AnswerType) => (
+        {filteredData.map((ans: AnswerType) => (
           <TableRow key={ans._id}>
             <TableCell className="font-medium">{ans.batch}</TableCell>
+             <TableCell className="font-medium">{ans.teacher}</TableCell>
             <TableCell className="font-medium">{ans.candidate}</TableCell>
             <TableCell className="font-medium">{ans.assessmentLevel}</TableCell>
             <TableCell className="font-medium">{ans.submissionTime ? format(new Date(ans.submissionTime), 'PPpp') : ''}</TableCell>
@@ -129,8 +159,8 @@ export function TableStudentWiseAnswer() {
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={7}>Total Rows</TableCell>
-          <TableCell className="text-right">{answerData.length}</TableCell>
+          <TableCell colSpan={8}>Total Rows</TableCell>
+          <TableCell className="text-right">{filteredData.length}</TableCell>
         </TableRow>
       </TableFooter>
     </Table>

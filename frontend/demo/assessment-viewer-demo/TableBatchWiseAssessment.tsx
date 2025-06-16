@@ -22,11 +22,28 @@ import axios, { AxiosError } from "axios";
 import Link from "next/link";
 import { Copy } from "lucide-react";
 import Cookies from "js-cookie";
+import { useEffect, useMemo, useState } from "react";
+import { getUserSession } from "@/lib/session";
 
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 export function TableBatchWiseAssessment() {
+  const [user, setUser] = useState({name:"", role:""})
+
+  // Handle fetch user session
+  useEffect(()=>{
+    const handleFetch = async()=>{
+      const session = await getUserSession();
+      if(!session.role || !session.name){
+        throw new Error('No user session is found')
+      }
+      setUser({name:session.name, role:session.role})
+    }
+    handleFetch();
+
+  },[])
+
   const {
     data: assessmentData = [],
     isLoading,
@@ -34,6 +51,17 @@ export function TableBatchWiseAssessment() {
     error,
     mutate
   } = useSWR<AssessmentType[]>(AssessmentUrl, fetcher);
+
+  // Handle filter assessment
+  const filteredData = useMemo(()=>{
+    if(!assessmentData) return[];
+    return assessmentData.filter((item:AssessmentType)=>{
+      if(user.role === 'teacher' && user.name !== item.teacher) return false;
+      if(user.role === 'admin' && user.name === item.teacher) return false;
+      return true;
+    })
+
+  },[assessmentData, user])
 
   // Handle delete question
   const handleDelete = async(id: string)=>{
@@ -56,7 +84,6 @@ export function TableBatchWiseAssessment() {
     }
   }
 
-
   // Handle edge cases
   if (isLoading) return <div>Loading...</div>;
   if (error instanceof AxiosError) {
@@ -73,6 +100,7 @@ export function TableBatchWiseAssessment() {
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">Batch Name</TableHead>
+             <TableHead className="w-[100px]">Teacher Name</TableHead>
             <TableHead className="w-[100px]">Assessment Level</TableHead>
             <TableHead>Assessment Form</TableHead>
             <TableHead>Assessment Link</TableHead>
@@ -80,9 +108,10 @@ export function TableBatchWiseAssessment() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {assessmentData?.map((assessment: AssessmentType) => (
+          {filteredData.map((assessment: AssessmentType) => (
             <TableRow key={assessment._id}>
               <TableCell className="font-medium">{assessment.batch}</TableCell>
+              <TableCell className="font-medium">{assessment.teacher}</TableCell>
               <TableCell className="font-medium">
                 {assessment.assessmentLevel}
               </TableCell>
@@ -131,9 +160,9 @@ export function TableBatchWiseAssessment() {
         </TableBody>
         <TableFooter>
           <TableRow>
-            <TableCell colSpan={5}>Total Rows</TableCell>
+            <TableCell colSpan={6}>Total Rows</TableCell>
             <TableCell className="text-right">
-              {assessmentData.length}
+              {filteredData.length}
             </TableCell>
           </TableRow>
         </TableFooter>

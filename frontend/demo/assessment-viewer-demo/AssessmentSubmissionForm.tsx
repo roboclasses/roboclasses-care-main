@@ -46,6 +46,7 @@ const FormSchema = z.object({
     })
   ),
   candidate: z.string().optional(),
+  teacher: z.string().optional(),
   batch: z.string().optional(),
   assessmentLevel: z.string().optional(),
 });
@@ -70,6 +71,7 @@ export function AssessmentSubmissionForm() {
         setData(assessmentData.questions);
         form.reset({
           candidate: assessmentData.candidate,
+          teacher: assessmentData.teacher,
           answer: new Array(assessmentData.questions.length).fill(""),
           batch: assessmentData.batch,
           assessmentLevel: assessmentData.assessmentLevel,
@@ -95,6 +97,7 @@ export function AssessmentSubmissionForm() {
     const payload = {
       answer: data.answer,
       candidate: data.candidate,
+      teacher: data.teacher,
       assessmentId: id,
       batch: data.batch,
       assessmentLevel: data.assessmentLevel,
@@ -177,6 +180,31 @@ export function AssessmentSubmissionForm() {
                         <FormDescription>
                           This field is for the candidate who will give the
                           assessment
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </AccordionContent>
+
+                <AccordionContent>
+                  {/* Teacher Name */}
+                  <FormField
+                    control={form.control}
+                    name="teacher"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Teacher Name</FormLabel>
+                        <FormControl>
+                          <Input
+                            required
+                            disabled
+                            {...field}
+                            className="bg-muted-foreground h-12 shadow-none rounded-xl"
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          This field is for teacher name
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
