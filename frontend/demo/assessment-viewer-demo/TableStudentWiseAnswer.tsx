@@ -20,12 +20,24 @@ import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 import { toast } from "@/hooks/use-toast";
 import Cookies from 'js-cookie';
 import { getUserSession } from "@/lib/session";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { LucideChevronsUpDown } from "lucide-react";
+import { teachers } from "@/data/dataStorage";
+import { Card } from "@/components/ui/card";
 
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 export function TableStudentWiseAnswer() {
     const [user, setUser] = useState({name:"", role:""})
+    const [sortOrder, setSortOrder] = useState("All")
+    
   
     // Handle fetch user session
     useEffect(()=>{
@@ -80,17 +92,23 @@ export function TableStudentWiseAnswer() {
 
   }
 
-    // Handle filter assessment
-    const filteredData = useMemo(()=>{
-      if(!answerData) return[];
-      return answerData.filter((item:AnswerType)=>{
-        if(user.role === 'teacher' && user.name !== item.teacher) return false;
-        if(user.role === 'admin' && user.name === item.teacher) return false;
-        return true;
-      })
-  
-    },[answerData, user])
-  
+  // Handle filter assessment
+  const filteredData = useMemo(() => {
+  if (!answerData) return [];
+
+  return answerData.filter((item: AnswerType) => {
+    if (user.role === "teacher") {
+      return user.name === item.teacher;
+    }
+
+    if (user.role === "admin") {
+      if (sortOrder === "All") return true;
+      return item.teacher === sortOrder;
+    }
+
+    return true; // Fallback: allow all
+  });
+}, [answerData, sortOrder, user]);
 
     // Handle delete question
     const handleDelete = async(id: string)=>{
@@ -124,13 +142,33 @@ export function TableStudentWiseAnswer() {
 
 
   return (
-    <div>
-    <Table className="border border-black">
+    <Card className="p-2">
+    <Table>
       <TableCaption>A list of marks given to students</TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead className="w-[100px]">Batch Name</TableHead>
-          <TableHead className="w-[100px]">Batch Name</TableHead>
+          <TableHead className="w-[100px] flex items-center gap-2">Teacher Name
+            {user.role === 'admin' && (<div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <LucideChevronsUpDown size={16} />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-[200px]" align="end">
+                    <DropdownMenuRadioGroup
+                      value={sortOrder}
+                      onValueChange={setSortOrder}
+                    >
+                      {teachers.map((item) => (
+                        <DropdownMenuRadioItem key={item.id} value={item.name}>
+                          {item.name}
+                        </DropdownMenuRadioItem>
+                      ))}
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>)}
+          </TableHead>
           <TableHead className="w-[100px]">Candidate Name</TableHead>
           <TableHead className="w-[100px]">Level</TableHead>
           <TableHead className="w-[100px]">Submission Time</TableHead>
@@ -164,6 +202,6 @@ export function TableStudentWiseAnswer() {
         </TableRow>
       </TableFooter>
     </Table>
-    </div>
+    </Card>
   );
 }
