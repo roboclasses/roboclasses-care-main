@@ -59,6 +59,7 @@ export function AssessmentSubmissionForm() {
 
   const { id } = useParams();
   const [data, setData] = useState<QuestionType[]>([]);
+  const [statusCode, setStatusCode] = useState<number | null>(null)
 
   // Fetching assessment quetions and options
   useEffect(() => {
@@ -107,6 +108,7 @@ export function AssessmentSubmissionForm() {
     try {
       const res = await axios.post(AnswerUrl, payload);
       console.log(res.data);
+      setStatusCode(res.status);
       form.reset();
 
       const { message } = res.data;
@@ -126,7 +128,7 @@ export function AssessmentSubmissionForm() {
 
   return (
     <>
-      {isSubmitSuccessful ? (
+      {(isSubmitSuccessful  && statusCode === 201)? (
         <Card className="p-2 rounded flex flex-col items-center">
           <CardHeader className="text-2xl">✅</CardHeader>
           <CardContent className="text-pretty text-lg font-serif">
