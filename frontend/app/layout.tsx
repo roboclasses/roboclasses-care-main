@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { DM_Sans } from "next/font/google";
 import "./globals.css";
 
 import NavBar from "@/components/NavBar";
@@ -8,16 +8,11 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { Toaster } from "@/components/ui/toaster";
 import type { Viewport } from 'next'
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+const dmSans = DM_Sans({
+  subsets:['latin'],
+  variable: "--font-dm-sans",
+  display: "swap",
+})
 
 export const metadata: Metadata = {
   title: "ROBO CLASSES care",
@@ -29,10 +24,6 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  // themeColor: 'black',
-  // colorScheme: 'dark'
-  // Also supported but less commonly used
-  // interactiveWidget: 'resizes-visual',
 }
 
 export default function RootLayout({
@@ -43,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
+        className={`${dmSans.variable} antialiased overflow-x-hidden`}
       >
         <SidebarProvider>
           <AppSidebar />
