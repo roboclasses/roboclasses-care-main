@@ -24,6 +24,7 @@ import useSWR from "swr";
 import Link from "next/link";
 import {format} from "date-fns"
 import Cookies from "js-cookie";
+import { Card } from "@/components/ui/card";
 
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
@@ -107,9 +108,10 @@ export function TableNormalClass() {
 
 
   return (
-    <div>
+    <>
     <h1 className="lg:text-4xl text-xl font-semibold mb-6 text-center">Normal Classes</h1>
-    <Table className="border border-black">
+    <Card className="p-2">
+    <Table>
       <TableCaption>
         A list of booked appointments for Normal Class
       </TableCaption>
@@ -152,6 +154,7 @@ export function TableNormalClass() {
         </TableRow>
       </TableFooter>
     </Table>
-    </div>
+    </Card>
+    </>
   );
 }
