@@ -55,7 +55,7 @@ const Page = () => {
           </Link>
         ))}
       </div>
-      <div className="lg:w-full w-[400px] lg:px-20 px-5">
+      <div className="lg:w-full w-[400px] min-h-dvh lg:px-20 px-5">
         {renderComponnets()}
       </div>
     </div>

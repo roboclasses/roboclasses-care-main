@@ -40,6 +40,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import Cookies from "js-cookie";
 import { ArrowUpDown, Calendar } from "lucide-react";
+import { Card } from "@/components/ui/card";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -127,7 +128,7 @@ export function TableAttendance() {
   if (data?.length === 0) return <div>Empty list for Attendances</div>;
 
   return (
-    <div>
+    <>
       <div className="flex justify-between items-center mb-6">
         <h1 className="lg:text-4xl text-xl font-semibold text-center">
           {attendanceStatus === "active"
@@ -175,66 +176,72 @@ export function TableAttendance() {
           </DropdownMenu>
         </div>
       </div>
-      <Table className="border border-black">
-        <TableCaption>A list of attendances</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">Batch Name</TableHead>
-            <TableHead className="w-[100px]">Teacher Name</TableHead>
-            <TableHead>Start Date</TableHead>
-            <TableHead>Classes</TableHead>
-            <TableHead>Topics Covered</TableHead>
-            <TableHead>Number of Classes Done</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Edit</TableHead>
-            <TableHead>Delete</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredData.map((items: attendanceType) => (
-            <TableRow key={items._id}>
-              <TableCell>{items.batchName}</TableCell>
-              <TableCell>{items.teacher}</TableCell>
-              <TableCell>
-                {items.startDate ? format(items.startDate, "MMM dd, yyyy") : ""}
-              </TableCell>
-              <TableCell>
-                {items.classes
-                  ? items.classes
-                      .map((date) => format(date, "MMM dd, yyyy"))
-                      .join(", ")
-                  : ""}
-              </TableCell>
-              <TableCell>
-                {items.curriculumTaught
-                  ? items.curriculumTaught.map((item) => item).join(", ")
-                  : ""}
-              </TableCell>
-              <TableCell>{items.classes.length}</TableCell>
-              <TableCell>
-                {items.completed === "Yes" ? "Completed" : "Active"}
-              </TableCell>
+      <Card className="p-2">
+        <Table>
+          <TableCaption>A list of attendances</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[100px]">Batch Name</TableHead>
+              <TableHead className="w-[100px]">Teacher Name</TableHead>
+              <TableHead>Start Date</TableHead>
+              <TableHead>Classes</TableHead>
+              <TableHead>Topics Covered</TableHead>
+              <TableHead>Number of Classes Done</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Edit</TableHead>
+              <TableHead>Delete</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredData.map((items: attendanceType) => (
+              <TableRow key={items._id}>
+                <TableCell>{items.batchName}</TableCell>
+                <TableCell>{items.teacher}</TableCell>
+                <TableCell>
+                  {items.startDate
+                    ? format(items.startDate, "MMM dd, yyyy")
+                    : ""}
+                </TableCell>
+                <TableCell>
+                  {items.classes
+                    ? items.classes
+                        .map((date) => format(date, "MMM dd, yyyy"))
+                        .join(", ")
+                    : ""}
+                </TableCell>
+                <TableCell>
+                  {items.curriculumTaught
+                    ? items.curriculumTaught.map((item) => item).join(", ")
+                    : ""}
+                </TableCell>
+                <TableCell>{items.classes.length}</TableCell>
+                <TableCell>
+                  {items.completed === "Yes" ? "Completed" : "Active"}
+                </TableCell>
+                <TableCell className="text-right">
+                  <Link href={`/manageAttendance/edit/${items._id}`}>
+                    <EditButton name="Edit" type="button" />
+                  </Link>
+                </TableCell>
+                <TableCell className="text-right">
+                  <DeleteAlertDemo
+                    onCancel={() => console.log("Delete action canceled")}
+                    onDelete={() => handleDelete(items._id)}
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TableCell colSpan={9}>Total Rows</TableCell>
               <TableCell className="text-right">
-                <Link href={`/manageAttendance/edit/${items._id}`}>
-                  <EditButton name="Edit" type="button" />
-                </Link>
-              </TableCell>
-              <TableCell className="text-right">
-                <DeleteAlertDemo
-                  onCancel={() => console.log("Delete action canceled")}
-                  onDelete={() => handleDelete(items._id)}
-                />
+                {filteredData.length}
               </TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={9}>Total Rows</TableCell>
-            <TableCell className="text-right">{filteredData.length}</TableCell>
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </div>
+          </TableFooter>
+        </Table>
+      </Card>
+    </>
   );
 }

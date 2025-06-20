@@ -21,6 +21,7 @@ import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useMemo, useState } from "react";
 import { UsersUrl } from "@/constants";
+import { Card } from "@/components/ui/card";
 
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
@@ -87,7 +88,8 @@ export function TableUsers() {
       </Select>
     </div>
 
-    <Table className="border border-black">
+    <Card className="p-2">
+    <Table>
       <TableCaption>A list of roles</TableCaption>
       <TableHeader>
         <TableRow>
@@ -126,6 +128,7 @@ export function TableUsers() {
         </TableRow>
       </TableFooter>
     </Table>
+    </Card>
     </div>
   );
 }

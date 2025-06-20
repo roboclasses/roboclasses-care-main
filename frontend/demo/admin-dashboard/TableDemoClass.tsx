@@ -31,6 +31,7 @@ import axios, { AxiosError } from "axios";
 import Link from "next/link";
 import { format } from "date-fns";
 import Cookies from "js-cookie";
+import { Card } from "@/components/ui/card";
 
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
@@ -106,7 +107,7 @@ export function TableDemoClass() {
   if (isValidating) return <div>Refershing data...</div>;
 
   return (
-    <div>
+    <>
       <div className="flex justify-between items-center mb-6">
         <h1 className="lg:text-4xl text-xl font-semibold text-center">
           Demo Classes
@@ -122,7 +123,8 @@ export function TableDemoClass() {
         </Select>
       </div>
 
-      <Table className="border border-black">
+      <Card className="p-2">
+      <Table>
         <TableCaption>
           A list of booked appointments for Demo Class
         </TableCaption>
@@ -177,6 +179,7 @@ export function TableDemoClass() {
           </TableRow>
         </TableFooter>
       </Table>
-    </div>
+      </Card>
+    </>
   );
 }
