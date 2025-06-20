@@ -28,11 +28,19 @@ import 'react-phone-input-2/lib/style.css'
 const FormSchema = z.object({
   studentName: z.string().min(3, { message: "Student Name must be atleast 3 characters long"}),
   parentName: z.string().min(3, { message: "Parent Name must be atleast 3 characters long"}),
-  destination: z.string().min(12, { message: "Please enter a valid phone number"}),
+  destination: z
+  .string()
+  .min(10, { message: "Mobile number is too short" })
+  .refine((val) => {
+    const digits = val.replace(/\D/g, ""); // Remove non-digit characters
+    return digits.length === 12 && digits.startsWith("9715");
+  }, {
+    message: "Please enter a valid UAE mobile number (e.g., +9715XXXXXXXX)"
+  }),
   email: z.string().email({message:"Please enter a valid email"}),
   address: z.string().min(3, {message: "Address must be atleast 3 characters long"}),
   country: z.string().min(2, {message: "Country must be atleast 2 characters long"}),
-  grade: z.string().min(1, {message: "Grade must be atlest 1 digit long"}),
+  grade: z.string().min(1, {message: "Grade must have minimum 1 value"}).max(2, {message: "Grade must have maximum 2 value"}),
   courses: z.string().min(2, { message: "Course must be atleast 2 characters long"}),
 });
 
@@ -272,6 +280,7 @@ export function RegistrationForm() {
                   placeholder="Enter your grade"
                   {...field}
                   required
+                  type="number"
                   className="shadow-none rounded-xl h-12 bg-muted-foreground"
                 />
               </FormControl>

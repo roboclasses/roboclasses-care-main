@@ -26,12 +26,20 @@ import Cookies from "js-cookie";
 import SubmitButton from "../button-demo/SubmitButton";
 
 const FormSchema = z.object({
-  studentName: z.string().optional(),
-  parentName: z.string().optional(),
-  destination: z.string().optional(),
-  email: z.string().optional(),
-  address: z.string().optional(),
-  grade: z.string().optional(),
+  studentName: z.string().min(3, {message: "Student name must be atleast 3 character long"}),
+  parentName: z.string().min(3, {message: "Parent name must be atleast 3 character long"}),
+  destination: z
+  .string()
+  .min(10, { message: "Mobile number is too short" })
+  .refine((val) => {
+    const digits = val.replace(/\D/g, ""); // Remove non-digit characters
+    return digits.length === 12 && digits.startsWith("971");
+  }, {
+    message: "Please enter a valid UAE mobile number"
+  }),
+  email: z.string().email({message: "Please enter a valid email"}),
+  address: z.string().min(3, {message: "Address must be atleast 3 character long"}),
+  grade: z.string().min(1, {message: "Grade must have minimum 1 value"}).max(2, {message: "Grade must have maximum 2 value"}),
   courses: z.string().optional(),
 });
 
@@ -78,7 +86,7 @@ export function EditStudentDetails() {
   // Handle form status
   const { isSubmitting } = form.formState;
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
+  async function onSubmit(data: z.infer<typeof FormSchema>) {    
     try {
       const payload = {
         studentName: data.studentName,
@@ -89,9 +97,7 @@ export function EditStudentDetails() {
         grade: data.grade,
         courses: data.courses,
       };
-      const res = await axios.put(`${StudentRegUrl}/${id}`, payload, {
-        headers: { Authorization: Cookies.get("token") },
-      });
+      const res = await axios.put(`${StudentRegUrl}/${id}`, payload, {headers: { Authorization: Cookies.get("token") }});
       console.log(res.data);
 
       const { message } = res.data;
@@ -227,7 +233,7 @@ export function EditStudentDetails() {
                   <Input
                     required
                     {...field}
-                    type="text"
+                    type="number"
                     title="Edit Grade"
                     className="shadow-none rounded-xl h-12 bg-muted-foreground"
                   />
