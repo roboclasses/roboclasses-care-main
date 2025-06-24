@@ -12,7 +12,13 @@ import {
 import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import SubmitButton from "../button-demo/SubmitButton";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,9 +32,8 @@ import { useParams } from "next/navigation";
 import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import { format } from "date-fns";
-import 'react-phone-input-2/lib/style.css'
+import "react-phone-input-2/lib/style.css";
 import PhoneInput from "react-phone-input-2";
-
 
 //For mapping reminder times
 const items = [
@@ -42,36 +47,41 @@ const items = [
   },
 ];
 
-
 const FormSchema = z.object({
-    userName: z.string().optional(),
-    destination: z.string().optional(),
-    course: z.string().optional(),
-    teacher: z.string().optional(),
-    date: z.string().optional(),
-    time: z.string().optional(),
-    timeZone: z.string().optional(),
-    batchNumber: z.string().optional(),
-    converted: z.string().optional(),
-    // items: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one item."}),
-    items: z.array(z.string()).default([])
-  });
+  userName: z.string().min(3, 'Username must be atleast 3 character long.'),
+  destination: z
+  .string()
+  .min(10, { message: "Mobile number is too short" })
+  .refine((val) => {
+    const digits = val.replace(/\D/g, ""); // Remove non-digit characters
+    return digits.length === 12 && digits.startsWith("971");
+  }, { message: "Please enter a valid UAE mobile number (e.g., +971XXXXXXX)" }),
+  course: z.string().min(2, "Course name must be atleast 2 character long"),
+  teacher: z.string().min(3, "Teacher name must be atleast 3 character long"),
+  date: z.string(),
+  time: z.string(),
+  timeZone: z.string(),
+  batchNumber: z.string().min(3, 'Batch number must be atleast 3 character long.'),
+  converted: z.string(),
+  // items: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one item."}),
+  items: z.array(z.string()).default([]),
+});
 
 export function EditDemoClassForm() {
-  const {id}  = useParams();
+  const { id } = useParams();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       userName: "",
       destination: "",
-      course:"",
+      course: "",
       teacher: "",
-      date:"",
-      time:"",
-      timeZone:"",
+      date: "",
+      time: "",
+      timeZone: "",
       batchNumber: "",
-      converted:"",
+      converted: "",
       items: ["1hour"],
     },
   });
@@ -80,7 +90,9 @@ export function EditDemoClassForm() {
   useEffect(() => {
     const handleFetch = async () => {
       try {
-        const res = await axios.get(`${DemoClassUrl}/${id}`, { headers: { Authorization: Cookies.get("token") }});
+        const res = await axios.get(`${DemoClassUrl}/${id}`, {
+          headers: { Authorization: Cookies.get("token") },
+        });
         console.log(res.data);
 
         form.reset({
@@ -88,12 +100,15 @@ export function EditDemoClassForm() {
           destination: res.data.destination,
           course: res.data.course,
           teacher: res.data.teacher,
-          date: res.data.date ? format(new Date(res.data.date), 'yyyy-MM-dd') : '',
+          date: res.data.date
+            ? format(new Date(res.data.date), "yyyy-MM-dd")
+            : "",
           time: res.data.time,
           timeZone: res.data.timeZone,
           batchNumber: res.data.batchNumber,
           converted: res.data.converted,
-        })
+          items: res.data.items ?? [],
+        });
       } catch (error) {
         console.log(error);
       }
@@ -118,22 +133,24 @@ export function EditDemoClassForm() {
         converted: data.converted,
         items: data.items.length > 0 ? data.items : ["1hour"], // Ensure at least one item is selected
       };
-  
+
       const res = await axios.put(`${DemoClassUrl}/${id}`, payload);
       console.log(res.data);
 
-      const {message} = res.data;
-      toast({ title: "Success✅", description: message, variant: "default"});
-      
-    } catch (error:unknown) {
-      if(error instanceof AxiosError){
+      const { message } = res.data;
+      toast({ title: "Success✅", description: message, variant: "default" });
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
         console.error(error);
-        const {message} = error.response?.data;
-        toast({ title: "Failed", description: message || "An unknown error has occurred.", variant: "destructive"});
+        const { message } = error.response?.data;
+        toast({
+          title: "Failed",
+          description: message || "An unknown error has occurred.",
+          variant: "destructive",
+        });
       }
     }
   }
-  
 
   return (
     <Form {...form}>
@@ -141,187 +158,241 @@ export function EditDemoClassForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
-        {/* Student Full Name */}
-        <FormField
-          control={form.control}
-          name="userName"
-          render={({field}) => (
-            <FormItem>
-              <FormLabel className="font-semibold">Student Name</FormLabel>
-              <Input  
-                {...field}
-                required 
-              />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Mobile Number */}
-        <FormField
-          control={form.control}
-          name="destination"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-semibold">Contact Details</FormLabel>
-              <FormControl>
-              <PhoneInput
-                  country={"ae"}
-                  {...field}  
-                  inputStyle={{width: "320px"}}
-                  inputProps={{ ref: field.ref, required: true }}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Course */}
-        <FormField
-          control={form.control}
-          name="course"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-semibold">Edit Course</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  required
-                  disabled         
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Teacher Name */}
-        <FormField
-          control={form.control}
-          name="teacher"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-semibold">Edit Teacher</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  required
-                  disabled                 
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Date */}
-        <FormField
-          control={form.control}
-          name="date"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-semibold">Edit Date</FormLabel>
-              <FormControl>
-                <Input
-                  required
-                  type="date"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Time */}
-        <FormField
-          control={form.control}
-          name="time"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-semibold">Edit Time</FormLabel>
-              <FormControl>
-                <Input
-                  required
-                  type="time"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Timezone */}
-         <FormField
+        {/* Student Full Name and Mobile Number */}
+        <div className="grid lg:grid-cols-2 grid-cols-1 gap-2">
+          <FormField
             control={form.control}
-                      name="timeZone"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="font-semibold">Edit Timezone Details</FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                            required
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select timezone"/>
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                               {timezone.map((item)=>(
-                                <SelectItem value={item.name} key={item.id}>{item.country}</SelectItem>
-                               ))
-                               }
-                               
-                            </SelectContent>
-                          </Select>
-                        </FormItem>
+            name="userName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Student Full Name</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    required
+                    type="text"
+                    title="Full Name"
+                    className="shadow-none rounded-xl h-12 bg-muted-foreground"
+                  />
+                </FormControl>
+                <FormDescription>
+                  Edit student name, this will be displayed in demo-class table.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
             )}
           />
 
-        {/* Batch Number */}
+          <div className="w-full max-w-md">
+            <FormField
+              control={form.control}
+              name="destination"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Contact Details</FormLabel>
+                  <FormControl>
+                    <PhoneInput
+                      country={"ae"}
+                      {...field}
+                      inputStyle={{ width: "100%", height: "48px" }}
+                      inputProps={{ ref: field.ref, required: true }}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Edit mobile number, this will be displayed in demo-class
+                    table.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+
+        {/* Course and Teacher Name */}
+        <div className="grid lg:grid-cols-2 grid-cols-1 gap-2">
+          <FormField
+            control={form.control}
+            name="course"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Course</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    required
+                    disabled
+                    type="text"
+                    title="Course"
+                    className="shadow-none rounded-xl h-12"
+                  />
+                </FormControl>
+                <FormDescription>
+                  This disabled field is for course name.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="teacher"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Teacher Name</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    required
+                    disabled
+                    type="text"
+                    title="Teacher Name"
+                    className="shadow-none rounded-xl h-12"
+                  />
+                </FormControl>
+                <FormDescription>
+                  This disabled field is for teacher name.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        {/* Date and Time*/}
+        <div className="grid lg:grid-cols-2 grid-cols-1 gap-2">
+          <FormField
+            control={form.control}
+            name="date"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Date</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    required
+                    type="date"
+                    title="Date"
+                    className="shadow-none rounded-xl h-12 bg-muted-foreground"
+                  />
+                </FormControl>
+                <FormDescription>
+                  Edit appointment date, this will be displayed in demo-class
+                  table.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="time"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Time</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    required
+                    type="time"
+                    title="Date"
+                    className="shadow-none rounded-xl h-12 bg-muted-foreground"
+                  />
+                </FormControl>
+                <FormDescription>
+                  Edit appointment date, this will be displayed in demo-class
+                  table.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        {/* Batch Number and Class Converter drop-down (yes/no) */}
+        <div className="grid lg:grid-cols-2 grid-cols-1 gap-2">
         <FormField
           control={form.control}
           name="batchNumber"
-          render={({field}) => (
+          render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Batch Number</FormLabel>
-              <Input  
-                {...field}
-                required 
-              />
+              <FormLabel>Batch Number</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  required
+                  type="text"
+                  title="Batch Number"
+                  placeholder="Enter batch number"
+                  className="shadow-none rounded-xl h-12 bg-muted-foreground"
+                />
+              </FormControl>
+              <FormDescription>
+                Enter batch number. This will displayed to demo-class table.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
-
         />
 
-        {/* Convert */}
         <FormField
           control={form.control}
-              name="converted"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="font-semibold">Class Converted?</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    required
-                    defaultValue="No"
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Yes to convert"/>
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                        <SelectItem value={"Yes"} >Yes</SelectItem>
-                        <SelectItem value={"No"} >NO</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormItem>
+          name="converted"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Class Converted?</FormLabel>
+              <Select onValueChange={field.onChange} required defaultValue="No">
+                <FormControl>
+                  <SelectTrigger className="shadow-none rounded-xl h-12">
+                    <SelectValue />
+                  </SelectTrigger>
+                </FormControl>
+                <FormDescription>
+                  Select YES or NO. This will displayed to demo-class table.
+                </FormDescription>
+                <SelectContent>
+                  <SelectItem value={"Yes"}>YES</SelectItem>
+                  <SelectItem value={"No"}>NO</SelectItem>
+                </SelectContent>
+              </Select>
+            </FormItem>
+          )}
+        />
+        </div>
+
+        {/* Timezone */}
+        <FormField
+          control={form.control}
+          name="timeZone"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                Edit Timezone Details
+              </FormLabel>
+              <Select
+                onValueChange={field.onChange}
+                value={field.value}
+                required
+              >
+                <FormControl>
+                  <SelectTrigger className="shadow-none rounded-xl h-12">
+                    <SelectValue defaultValue={field.value}/>
+                  </SelectTrigger>
+                </FormControl>
+                <FormDescription>
+                  Edit timezone. This will displayed to demo-class table.
+                </FormDescription>
+                <SelectContent>
+                  {timezone.map((item) => (
+                    <SelectItem value={item.name} key={item.id}>
+                      {item.country}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormItem>
           )}
         />
 
@@ -377,7 +448,11 @@ export function EditDemoClassForm() {
           )}
         />
 
-        <SubmitButton name={isSubmitting ? 'Updating...' : 'Upadte'} type="submit" disabled={isSubmitting}/>
+        <SubmitButton
+          name={isSubmitting ? "Updating..." : "Upadte"}
+          type="submit"
+          disabled={isSubmitting}
+        />
       </form>
     </Form>
   );
