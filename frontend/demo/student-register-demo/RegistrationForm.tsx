@@ -33,7 +33,7 @@ const FormSchema = z.object({
   .min(10, { message: "Mobile number is too short" })
   .refine((val) => {
     const digits = val.replace(/\D/g, ""); // Remove non-digit characters
-    return digits.length === 12 && digits.startsWith("9715");
+    return digits.length === 12 && digits.startsWith("971");
   }, {
     message: "Please enter a valid UAE mobile number (e.g., +9715XXXXXXXX)"
   }),
