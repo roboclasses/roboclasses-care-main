@@ -36,10 +36,11 @@ import { format } from "date-fns";
 
 
 const FormSchema = z.object({
-  batchName: z.string().min(2, { message: "Batch Name must be at least 2 characters long" }),
+  batchName: z.string().nonempty('Batch is required').min(3, { message: "Batch name must be atleast 3 character long" }),
   startDate: z.string().optional(),
-  classes: z.array(z.string().optional()),
-  teacher:z.string(),
+  classes: z.array(z.string().optional())
+  .refine((arr)=>arr.some((cls)=>(cls && cls.trim().length > 0)), {message: "At least one class must be provided", path: ['classes']}),
+  teacher:z.string().optional(),
 });
 
 export function AttendanceForm() {
@@ -178,10 +179,10 @@ export function AttendanceForm() {
           render={({ field }) => (
             <FormItem>
                <FormLabel className="font-semibold"> Batches </FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value} required >
+              <Select onValueChange={field.onChange} value={field.value} required>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a Batch" />
+                    <SelectValue placeholder="Select a Batch"/>
                   </SelectTrigger>
                 </FormControl>
                 <FormMessage />
@@ -252,7 +253,7 @@ export function AttendanceForm() {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder={`Add Class ${index+1}`} {...field} type="date" />
+                <Input placeholder={`Add Class ${index+1}`} {...field} type="date"/>
               </FormControl>
               <FormMessage />
             </FormItem>

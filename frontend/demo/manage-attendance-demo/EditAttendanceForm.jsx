@@ -178,7 +178,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
                 </FormItem>
               )}
             /> 
-            
+
+            {/* Curriculum Name */}
             <FormField
               control={form.control}
               name={`curriculumTaught.${index}`}
@@ -203,12 +204,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
                         <FormLabel className="font-semibold">Attendance Completed?</FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          value={field.value}
                           required
                         >
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="Select (Yes/No)" />
+                              <SelectValue defaultValue={field.value}/>
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
