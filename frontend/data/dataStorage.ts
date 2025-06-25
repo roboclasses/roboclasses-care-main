@@ -31,12 +31,12 @@ export const timezone = [
 
 // For mapping image-icons
 export const imageIcons = [
-  { id: "student", img: STUDENT_IMAGE, alt: "students-pic" },
-  { id: "democlass", img: DEMO_CLASS_IMAGE, alt: "demo-classes-pic" },
-  { id: "normalclass", img: NORMAL_CLASS_IMAGE, alt: "normal-classes-pic" },
-  { id: "attendance", img: ATTENDANCES_IMAGE, alt: "attendances-pic" },
-  { id: "batch", img: BATCHES_IMAGE, alt: "batches-pic" },
-  { id: "course", img: COURSES_IMAGE, alt: "courses-pic" },
+  { slug: "student", img: STUDENT_IMAGE, alt: "students-pic" },
+  { slug: "democlass", img: DEMO_CLASS_IMAGE, alt: "demo-classes-pic" },
+  { slug: "normalclass", img: NORMAL_CLASS_IMAGE, alt: "normal-classes-pic" },
+  { slug: "attendance", img: ATTENDANCES_IMAGE, alt: "attendances-pic" },
+  { slug: "batch", img: BATCHES_IMAGE, alt: "batches-pic" },
+  { slug: "course", img: COURSES_IMAGE, alt: "courses-pic" },
 ];
 
 // For mapping countries
