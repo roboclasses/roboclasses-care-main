@@ -26,16 +26,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { passwordValidation } from "@/lib/helpers";
+import { Button } from "@/components/ui/button";
+import { Eye, EyeOff } from "lucide-react";
 
 const FormSchema = z.object({
-  name: z.string().min(3, { message: "Name must be 3 characters long" }),
-  email: z.string().email({ message: "Please enter a valid email" }),
-  password: z.string().min(6, { message: "Password must be 6 characters long" }),
-  role: z.enum(["student","teacher","admin"],{message: "Roles must be one of: Student, Teacher, Admin"}),
+  name: z.string().min(3, "Name must be 3 characters long"),
+  email: z.string().email("Please enter a valid email"),
+  password: z.string().min(8, "Password is too short").regex(passwordValidation, 'Your password is not valid'),
+  role: z.string()
+  .nonempty("This field can't be empty")
+  .refine(val => ["student", "teacher", "admin"].includes(val), {
+    message: "Role must be one of: student, teacher, admin",
+  })
 });
 
 export function SignupForm() {
   const router = useRouter();
+  const [showPassword, setShowPassword] = React.useState(false);
+
+    // Mode toggle for password visibility
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -63,26 +76,22 @@ export function SignupForm() {
       }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-     let errorMessage = 'An error occurred during signup'
+    } catch (error: unknown) {
+     let errorMessage = "An error occurred during signup";
 
-      // Different type of error handling
-     if(typeof error.response?.data === 'string'){
-      errorMessage = error.response.data
-     }
-     else if(error.response?.data?.message){
-      errorMessage = error.response?.data.message
-     }
-     else if(error.message){
-      errorMessage = error.message
-     }
-
+    if (axios.isAxiosError(error)) {
+      if (typeof error.response?.data === "string") {
+        errorMessage = error.response.data;
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+    } else if (error instanceof Error) {
+      errorMessage = error.message;
+    }
       console.log(error);
-      toast({
-        title: "Failed",
-        description: errorMessage,
-        variant: "destructive",
-      });
+      toast({ title: "Signup  Failed", description: errorMessage, variant: "destructive" });
     }
   };
 
@@ -107,7 +116,7 @@ export function SignupForm() {
                       required
                       autoComplete="name"
                       type="text"
-                      placeholder="James Bond"
+                      placeholder="e.g. James Bond"
                       className="h-12 rounded-xl shadow-none"
                     />
                   </FormControl>
@@ -163,7 +172,7 @@ export function SignupForm() {
                       required
                       autoComplete="email"
                       type="email"
-                      placeholder="bond@gmail.com"
+                      placeholder="e.g. bond@gmail.com"
                       className="h-12 rounded-xl shadow-none"
                     />
                   </FormControl>
@@ -182,21 +191,37 @@ export function SignupForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
+                    <div className="relative">
                     <Input
                       {...field}
                       id="password"
                       name="password"
                       required
                       autoComplete="password"
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       placeholder="Enter a strong password"
                       className="h-12 rounded-xl shadow-none"
                     />
+
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={togglePasswordVisibility}
+                        aria-label={ showPassword ? "Hide password" : "Show password" }
+                      >
+                        {showPassword ? (<Eye className="h-4 w-4 text-muted-foreground" />) : (<EyeOff className="h-4 w-4 text-muted-foreground" />)}
+                      </Button>
+
+                    </div>
                   </FormControl>
                   <FormMessage/>
                 </FormItem>
               )}
             ></FormField>
+
+            
           </div>
 
           <SubmitButton name={isSubmitting ? 'Creating account...' : 'Signup'} type="submit" disabled = {isSubmitting}/>
