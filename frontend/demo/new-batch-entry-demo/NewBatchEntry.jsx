@@ -37,9 +37,15 @@ import "react-phone-input-2/lib/style.css";
 import PhoneInput from "react-phone-input-2";
 
 const FormSchema = z.object({
-  batch: z.string().min(2, "Batch Number must be atleast 2 characters long" ),
-  course: z.string().nonempty("Please select a course").min(2, "Course Name must be atleast 2 characters long" ),
-  teacher: z.string().nonempty("Please select a teacher").min(3, "Teacher Name must be atleast 3 characters long" ),
+  batch: z.string().min(2, "Batch Number must be atleast 2 characters long"),
+  course: z
+    .string()
+    .nonempty("Please select a course")
+    .min(2, "Course Name must be atleast 2 characters long"),
+  teacher: z
+    .string()
+    .nonempty("Please select a teacher")
+    .min(3, "Teacher Name must be atleast 3 characters long"),
   startDate: z.string(),
   dayTimeEntries: z.array(
     z.object({
@@ -48,16 +54,20 @@ const FormSchema = z.object({
     })
   ),
   timeZone: z.string().nonempty("Please select a timezone"),
-  numberOfClasses: z.string().max(3, 'Number of classes must have maximum 3 digits'),
-  studentName: z.string().min(3, "Student Name must be atlest 3 characters long"),
+  numberOfClasses: z
+    .string()
+    .max(3, "Number of classes must have maximum 3 digits"),
+  studentName: z
+    .string()
+    .min(3, "Student Name must be atlest 3 characters long"),
   destination: z
     .string()
-    .min(10, "Mobile number is too short" )
+    .min(10, "Mobile number is too short")
     .refine((val) => {
       const digits = val.replace(/\D/g, ""); // Remove non-digit characters
       return digits.length === 12 && digits.startsWith("971");
     }, "Please enter a valid UAE mobile number (e.g., +971XXXXXXX)"),
-  email: z.string().email('Please enter a valid email'),
+  email: z.string().email("Please enter a valid email"),
 });
 
 export function NewBatchEntryForm() {
@@ -321,7 +331,7 @@ export function NewBatchEntryForm() {
                   <FormDescription>
                     Select a course. This will displayed in batch entries table.
                   </FormDescription>
-                  <FormMessage/>
+                  <FormMessage />
                   <SelectContent>
                     {courses.map((item) => (
                       <SelectItem value={item.course} key={item._id}>
@@ -485,10 +495,17 @@ export function NewBatchEntryForm() {
               <FormItem>
                 <FormLabel>Email Address</FormLabel>
                 <FormControl>
-                  <Input {...field} type="email" title="Email Address" required disabled className="h-12 shadow-none rounded-xl" />
+                  <Input
+                    {...field}
+                    type="email"
+                    title="Email Address"
+                    required
+                    disabled
+                    className="h-12 shadow-none rounded-xl"
+                  />
                 </FormControl>
                 <FormDescription>
-                  This disabled field is for email address
+                  This disabled field is for email address.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
