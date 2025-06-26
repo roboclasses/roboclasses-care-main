@@ -254,7 +254,7 @@ export function EditBatchForm() {
                   />
                 </FormControl>
                 <FormDescription>
-                  Edit start date. This will be displayed in batch entries from.
+                  Edit start date. This will be displayed in batch entries table.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -274,7 +274,7 @@ export function EditBatchForm() {
                     </SelectTrigger>
                   </FormControl>
                   <FormDescription>
-                    Edit timezone. This will be displayed in batch entries from.
+                    Edit timezone. This will be displayed in batch entries table.
                   </FormDescription>
                   <SelectContent>
                     {timezone.map((item) => (
@@ -488,6 +488,7 @@ export function EditBatchForm() {
                       ></div>
                     </div>
                   </FormControl>
+                  <FormDescription>This is disabled color coding field.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
