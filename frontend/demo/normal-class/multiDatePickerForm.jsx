@@ -27,6 +27,7 @@ import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import PhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
+import { Label } from "@/components/ui/label";
 
 
 // For mapping time value to send reminder checkbox
@@ -42,12 +43,19 @@ const items = [
 ];
 
 const FormSchema = z.object({
-  items: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select atleast one item"}),
-  batch: z.string().min(2, { message: "Batch Name must be atleast 2 characters long"}),
-  userName: z.string().min(3, { message:"Student Name must be atlest 3 characters long"}),
-  destination:z.string().optional(),
-  email:z.string().optional(),
-  teacher: z.string().optional(),
+  // items: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select atleast one item"}),
+  items: z.array(z.string()).default([]),
+  batch: z.string().nonempty("Please select a batch").min(2, "Batch Name must be atleast 2 characters long"),
+  userName: z.string().min(3, "Student Name must be atlest 3 characters long"),
+  destination: z
+    .string()
+    .min(10, { message: "Mobile number is too short" })
+    .refine((val) => {
+      const digits = val.replace(/\D/g, ""); // Remove non-digit characters
+      return digits.length === 12 && digits.startsWith("971");
+    }, { message: "Please enter a valid UAE mobile number (e.g., +971XXXXXXX)" }),
+  email:z.string().email("Please enter a valid email"),
+  teacher: z.string().min(3, "Teacher name must be atleast 3 characters long"),
   allDates: z.array(
     z.object({
       date: z.string(),
@@ -55,8 +63,8 @@ const FormSchema = z.object({
       weekDay: z.string(),
     })
   ).optional(),
-  timeZone:z.string().optional(),
-  numberOfClasses:z.string().optional(),
+  timeZone:z.string().nonempty("Please select a timezone"),
+  numberOfClasses:z.string().max(3, "Number of classes must contains maximum of 3 digit"),
 });
 
 // Calculating date, time and day by start date
@@ -234,29 +242,30 @@ export function MultiDatePickerForm() {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-4"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
 
     {/* Calculated Date, Time and Weekday */}
-{form.watch("allDates")?.map((entry, index) => (
+{form.watch("allDates")?.map((_entry, index) => (
+  <>
+  <Label className="font-bold lg:text-md text-sm text-center">Class {index+1}</Label>
   <div key={index} className="flex gap-2 items-center">
     <FormField
       control={form.control}
       name={`allDates.${index}.date`}
       render={({ field }) => (
         <FormItem>
-          <FormLabel className="font-semibold">Date</FormLabel>
+          <FormLabel>Date</FormLabel>
           <FormControl>
             <Input
               {...field}
               required
               disabled
               type="date"
-              className="bg-white"
+              title="Appointment Date"
+              className="h-12 rounded-xl shadow-none"
             />
           </FormControl>
+          <FormDescription>Provided appointment date. This will be displayed in administrator table.</FormDescription>
           <FormMessage />
         </FormItem>
       )}
@@ -267,16 +276,18 @@ export function MultiDatePickerForm() {
       name={`allDates.${index}.time`}
       render={({ field }) => (
         <FormItem>
-          <FormLabel className="font-semibold">Time</FormLabel>
+          <FormLabel>Time</FormLabel>
           <FormControl>
             <Input
               {...field}
               required
               disabled
               type="time"
-              className="bg-white"
+              title="Appointment Time"
+              className="h-12 rounded-xl shadow-none"
             />
           </FormControl>
+          <FormDescription>Provided appointment time. This will be displayed in administrator table.</FormDescription>
           <FormMessage />
         </FormItem>
       )}
@@ -287,20 +298,24 @@ export function MultiDatePickerForm() {
       name={`allDates.${index}.weekDay`}
       render={({ field }) => (
         <FormItem>
-          <FormLabel className="font-semibold">WeekDay</FormLabel>
+          <FormLabel>WeekDay</FormLabel>
           <FormControl>
             <Input
               {...field}
               required
               disabled
-              className="bg-white"
+              type="text"
+              title="Appointment Day"
+              className="h-12 rounded-xl shadow-none"
             />
           </FormControl>
+          <FormDescription>Provided appointment day. This will be displayed in administrator table.</FormDescription>
           <FormMessage />
         </FormItem>
       )}
     />
   </div>
+  </>
 ))}
 
       {/* Search Student Name */}
@@ -309,53 +324,63 @@ export function MultiDatePickerForm() {
           name="userName"
           render={() => (
             <FormItem>
-              <FormLabel className="font-semibold">Student Name</FormLabel>
+              <FormLabel>Student Name</FormLabel>
+              <FormControl>
               <StudentSearch onSelect={handleStudentSelect} selectedStudent={selectedStudent}/>
+              </FormControl>
+              <FormDescription>Select a student. This will be displayed in administrator table.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        {/* Mobile Number */}
+        {/* Mobile Number and Email Address */}
+        <div className="grid lg:grid-cols-2 grid-cols-1 gap-2">
+        <div className="w-full max-w-md">
         <FormField
           control={form.control}
           name="destination"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Contact Details</FormLabel>
+              <FormLabel>Contact Details</FormLabel>
               <FormControl>
               <PhoneInput
                   country={"ae"}
                   {...field}  
                   disabled       
-                  inputStyle={{width: "320px"}}
+                  inputStyle={{width: "100%", height: "48px"}}
                   inputProps={{ ref: field.ref, required: true }}
                 />
               </FormControl>
+              <FormDescription>Provided student&apos;s mobile number. This will be displayed in administrator table.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+        </div>
 
-        {/* Email Address */}
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Email Address</FormLabel>
+              <FormLabel>Email Address</FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   required
                   disabled
-                  className="bg-white"
+                  type="email"
+                  title="Email Address"
+                  className="h-12 rounded-xl shadow-none"
                 />
               </FormControl>
+              <FormDescription>Provided student&apos;s email address. This will be displayed in administrator table.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+        </div>
 
         {/* Batch Details */}
         <FormField
@@ -363,17 +388,18 @@ export function MultiDatePickerForm() {
               name="batch"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-semibold">Batch Details</FormLabel>
+                  <FormLabel>Batch Details</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                     required
                   >
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="h-12 rounded-xl shadow-none" title="Batch">
                         <SelectValue placeholder="Select batch"/>
                       </SelectTrigger>
                     </FormControl>
+                    <FormDescription>Select batch. This will be displayed in administrator table.</FormDescription>
                     <SelectContent>
                       {data.map((item)=>(
                         <SelectItem value={item.batch} key={item._id}>{item.batch}</SelectItem>
@@ -384,65 +410,74 @@ export function MultiDatePickerForm() {
           )}
         />
 
-        {/* Teacher Name */}
+        {/* Teacher Name, Timezone and Number of Classes*/}
+        <div className="lg:flex items-center gap-2">
         <FormField
           control={form.control}
           name="teacher"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Teacher Name</FormLabel>
+              <FormLabel>Teacher Name</FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   required
                   disabled
-                  className="bg-white"
+                  type="text"
+                  title="Teacher Name"
+                  className="h-12 rounded-xl shadow-none"
                 />
               </FormControl>
+              <FormDescription>Provided teacher name. This will be displayed in administrator table.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        {/* Timezone */}
         <FormField
           control={form.control}
           name="timeZone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Timezone</FormLabel>
+              <FormLabel>Timezone</FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   required
                   disabled
-                  className="bg-white"
+                  type="text"
+                  title="Timezone"
+                  className="h-12 rounded-xl shadow-none"
                 />
               </FormControl>
+              <FormDescription>Provided timezone details. This will be displayed in administrator table.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        {/* Number of Classes */}
         <FormField
           control={form.control}
           name="numberOfClasses"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Number of Classes</FormLabel>
+              <FormLabel>Number of Classes</FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   required
                   disabled
-                  className="bg-white"
+                  type="number"
+                  title="Number of Classes"
+                  className="h-12 rounded-xl shadow-none"
                 />
               </FormControl>
+              <FormDescription>Provided number of classes. This will be displayed in administrator table.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+        </div>
 
         {/* Items */}
         <FormField
@@ -451,7 +486,7 @@ export function MultiDatePickerForm() {
           render={() => (
             <FormItem>
               <div className="mb-4">
-                <FormLabel className="font-bold">
+                <FormLabel>
                   When to send the Reminder
                 </FormLabel>
                 <FormDescription>

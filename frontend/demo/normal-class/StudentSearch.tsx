@@ -46,7 +46,7 @@ const StudentSearch = ({ onSelect, selectedStudent }: studentSearchType) => {
   return (
     <div className="w-full">
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
+        <PopoverTrigger asChild title="Student Search">
           <Button
             variant="outline"
             role="combobox"
