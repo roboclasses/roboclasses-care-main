@@ -7,6 +7,7 @@ import { toast } from "@/hooks/use-toast";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -21,19 +22,28 @@ import MultiDateTimeEntry from "./MultiDateTimeEntry";
 import axios, { AxiosError } from "axios";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import 'react-phone-input-2/lib/style.css'
+import "react-phone-input-2/lib/style.css";
 import PhoneInput from "react-phone-input-2";
 
 // Define form schema
 const FormSchema = z.object({
-  teacher: z.string().optional(),
-  batch: z.string().optional(),
-  userName: z.string().optional(),
-  destination: z.string().optional(),
-  dateTimeEntries: z.array(z.object({
-    date: z.string(),
-    time: z.string(),
-  })).optional(),
+  teacher: z.string().min(3, "Teacher name must be atleast 3 characters long"),
+  batch: z.string().nonempty("Please select a batch").min(2, "Batch Name must be atleast 2 characters long"),
+  userName: z.string().min(3, "Student Name must be atlest 3 characters long"),
+ destination: z
+    .string()
+    .min(10, { message: "Mobile number is too short" })
+    .refine((val) => {
+      const digits = val.replace(/\D/g, ""); // Remove non-digit characters
+      return digits.length === 12 && digits.startsWith("971");
+    }, { message: "Please enter a valid UAE mobile number (e.g., +971XXXXXXX)" }),
+  dateTimeEntries: z
+    .array(
+      z.object({
+        date: z.string(),
+        time: z.string(),
+      })
+    ).optional(),
 });
 
 export function EditNormalClassForm() {
@@ -57,12 +67,12 @@ export function EditNormalClassForm() {
       try {
         const res = await axios.get(`${NormalClassUrl}/${id}`);
 
-        const normalClassDetails = res.data; 
+        const normalClassDetails = res.data;
 
-        const initialDateTimeEntries = normalClassDetails.dateTimeEntries || []
+        const initialDateTimeEntries = normalClassDetails.dateTimeEntries || [];
 
         //Initialize dayTimeEntries state
-        setDateTimeEntries(initialDateTimeEntries)
+        setDateTimeEntries(initialDateTimeEntries);
 
         form.reset({
           teacher: normalClassDetails.teacher,
@@ -86,31 +96,37 @@ export function EditNormalClassForm() {
   };
 
   // Handle form status
-  const {isSubmitting} = form.formState;
+  const { isSubmitting } = form.formState;
 
   // Submit handler
   async function onSubmit(data) {
     try {
-      const currentDateTimeEntries = form.getValues("dateTimeEntries") || []
-      const transformedDateTimeEntries = dateTimeEntries.length > 0 ? {
-        date: dateTimeEntries.map(entry => entry.date), // Extract all dates into an array
-        time: dateTimeEntries.map(entry => entry.time), // Extract all times into an array
-      } : currentDateTimeEntries
+      const currentDateTimeEntries = form.getValues("dateTimeEntries") || [];
+      const transformedDateTimeEntries =
+        dateTimeEntries.length > 0
+          ? {
+              date: dateTimeEntries.map((entry) => entry.date), // Extract all dates into an array
+              time: dateTimeEntries.map((entry) => entry.time), // Extract all times into an array
+            }
+          : currentDateTimeEntries;
 
       const payload = {
         ...data,
-        ...transformedDateTimeEntries
+        ...transformedDateTimeEntries,
       };
       const res = await axios.put(`${NormalClassUrl}/${id}`, payload);
 
-      const {message} = res.data;
+      const { message } = res.data;
       toast({ title: "Success✅", description: message, variant: "default" });
-
     } catch (error) {
-      if(error instanceof AxiosError){
+      if (error instanceof AxiosError) {
         console.error(error);
-        const {message} = error.response.data;
-        toast({ title: "Error", description: message || "An unknown error has occurred.", variant: "destructive" });
+        const { message } = error.response.data;
+        toast({
+          title: "Error",
+          description: message || "An unknown error has occurred.",
+          variant: "destructive",
+        });
       }
     }
   }
@@ -121,6 +137,7 @@ export function EditNormalClassForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
+        {/* Date and Time */}
         <MultiDateTimeEntry onEntriesChange={handleDateTimeEntriesChange} />
 
         {/* Student Name */}
@@ -129,34 +146,50 @@ export function EditNormalClassForm() {
           name="userName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Student Name</FormLabel>
+              <FormLabel>Student Name</FormLabel>
               <FormControl>
-                <Input {...field} className="bg-white" required />
+                <Input
+                  {...field}
+                  required
+                  disabled
+                  type="text"
+                  title="Student Name"
+                  className="h-12 rounded-xl shadow-none"
+                />
               </FormControl>
+              <FormDescription>
+                This disabled field is for student name.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
         {/* Phone Number */}
-        <FormField
-          control={form.control}
-          name="destination"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-semibold">Contact Details</FormLabel>
-              <FormControl>
-                <PhoneInput
-                  country={"ae"}
-                  {...field}  
-                  inputStyle={{width: "320px"}}
-                  inputProps={{ ref: field.ref, required: true }}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-         )}
-        />
+        <div className="w-full max-w-md">
+          <FormField
+            control={form.control}
+            name="destination"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Contact Details</FormLabel>
+                <FormControl>
+                  <PhoneInput
+                    disabled
+                    country={"ae"}
+                    {...field}
+                    inputStyle={{ width: "100%", height: "48px" }}
+                    inputProps={{ ref: field.ref, required: true }}
+                  />
+                </FormControl>
+                <FormDescription>
+                  This disabled field is for mobile number.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         {/* Batch Name */}
         <FormField
@@ -164,10 +197,20 @@ export function EditNormalClassForm() {
           name="batch"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Batch Name</FormLabel>
+              <FormLabel>Batch Name</FormLabel>
               <FormControl>
-                <Input {...field} disabled className="bg-white" required />
+                <Input
+                  {...field}
+                  required
+                  disabled
+                  type="text"
+                  title="Batch Name"
+                  className="h-12 rounded-xl shadow-none"
+                />
               </FormControl>
+              <FormDescription>
+                This disabled field is for batch name.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -181,14 +224,28 @@ export function EditNormalClassForm() {
             <FormItem>
               <FormLabel className="font-semibold">Teacher Name</FormLabel>
               <FormControl>
-                <Input {...field} disabled className="bg-white" required />
+                <Input
+                  {...field}
+                  required
+                  disabled
+                  type="text"
+                  title="Teacher"
+                  className="h-12 rounded-xl shadow-none"
+                />
               </FormControl>
+              <FormDescription>
+                This disabled field is for teacher name.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <SubmitButton name={isSubmitting ? 'Updating...' : 'Update'} type="submit" disabled={isSubmitting}/>
+        <SubmitButton
+          name={isSubmitting ? "Updating..." : "Update"}
+          type="submit"
+          disabled={isSubmitting}
+        />
       </form>
     </Form>
   );
