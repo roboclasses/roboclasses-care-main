@@ -21,7 +21,7 @@ const page = () => {
           <h1 className="md:text-4xl text-2xl mb-4 text-center font-serif">
             Kid-Friendly Assessment Generator
           </h1>
-          <Label className="text-gray-500 md:text-lg text-xs text-center">
+          <Label className="text-gray-500 md:text-sm text-xs text-center">
             Create customized educational assessments for children in seconds using AI
           </Label>
         </div>

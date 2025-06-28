@@ -67,7 +67,7 @@ export function TableCourseEntries() {
 
   return (
     <>
-      <h1 className="lg:text-4xl text-xl font-semibold mb-6 text-center">
+      <h1 className="lg:text-4xl text-xl font-semibold mb-4 text-center">
         Current Courses
       </h1>
       <Card className="p-2">

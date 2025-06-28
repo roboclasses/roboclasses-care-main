@@ -76,7 +76,7 @@ export function StudentsTable() {
 
   return (
     <>
-    <h1 className="lg:text-4xl text-xl font-semibold mb-6 text-center">All Students</h1>
+    <h1 className="lg:text-4xl text-xl font-semibold mb-4 text-center">All Students</h1>
     <Card className="p-2">
     <Table>
       <TableCaption>A list of Students</TableCaption>
