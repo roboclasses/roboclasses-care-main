@@ -74,8 +74,8 @@ export function TableUsers() {
 
 
   return (
-    <div>
-    <div className="flex items-center justify-between mb-6">
+    <>
+    <div className="flex items-center justify-between mb-4">
       <h1 className="lg:text-4xl text-2xl font-semibold text-center">{role==='teacher' ? "Manage Teachers" : 'Manage Admins'}</h1>
       <Select onValueChange={(value)=>setRole(value)} defaultValue="teacher">
         <SelectTrigger className="w-[180px]">
@@ -129,6 +129,6 @@ export function TableUsers() {
       </TableFooter>
     </Table>
     </Card>
-    </div>
+    </>
   );
 }
