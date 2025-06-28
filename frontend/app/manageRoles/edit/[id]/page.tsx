@@ -22,7 +22,7 @@ const page = () => {
               Edit Role Form
             </h1>
             <Label className="text-gray-500 lg:text-lg text-sm">
-              Edit roles here
+              Edit role here
             </Label>
           </div>
           <EditUserForm />

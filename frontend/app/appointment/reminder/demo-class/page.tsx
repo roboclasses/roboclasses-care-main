@@ -20,7 +20,7 @@ const page = () => {
             <h1 className="lg:text-4xl text-2xl mb-4 font-serif">
               Demo Class Form
             </h1>
-            <Label className="text-gray-500 md:text-lg text-sm">Book Appointment for Demo Classes</Label>
+            <Label className="text-gray-500 md:text-sm text-xs">Book Appointment for Demo Classes</Label>
           </div>
           <DatePickerForm />
         </div>

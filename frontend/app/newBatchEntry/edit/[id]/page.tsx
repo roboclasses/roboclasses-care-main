@@ -20,7 +20,7 @@ const Page = () => {
           <h1 className="lg:text-4xl text-2xl mb-4 text-center font-serif">
             Edit Batch Form
           </h1>
-          <Label className="text-gray-500 md:text-lg text-xs text-center">Edit batch entries here</Label>
+          <Label className="text-gray-500 lg:text-sm text-xs text-center">Edit batch entries here</Label>
           </div>
           <EditBatchForm />
         </div>

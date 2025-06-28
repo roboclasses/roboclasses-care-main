@@ -109,7 +109,7 @@ export function TableNormalClass() {
 
   return (
     <>
-    <h1 className="lg:text-4xl text-xl font-semibold mb-6 text-center">Normal Classes</h1>
+    <h1 className="lg:text-4xl text-xl font-semibold mb-4 text-center">Normal Classes</h1>
     <Card className="p-2">
     <Table>
       <TableCaption>

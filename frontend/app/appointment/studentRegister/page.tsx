@@ -20,7 +20,7 @@ const Page = () => {
             <h1 className="lg:text-4xl text-2xl mb-4 font-serif">
               Student Registration Form
             </h1>
-            <Label className="text-gray-500 md:text-lg text-sm">
+            <Label className="text-gray-500 md:text-sm text-xs">
               Register student here
             </Label>
           </div>

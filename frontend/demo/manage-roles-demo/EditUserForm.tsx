@@ -217,11 +217,11 @@ export function EditUserForm() {
               <FormLabel>Edit Role</FormLabel>
               <Select value={field.value} onValueChange={field.onChange} required >
                 <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select Role..." title="Roles"/>
+                  <SelectTrigger className="h-12 rounded-xl shadow-none">
+                    <SelectValue title="Roles"/>
                   </SelectTrigger>
                 </FormControl>
-                <FormDescription>This drop down is for select roles. This will be displayed in roles table.</FormDescription>
+                <FormDescription>This drop down is for edit roles. This will be displayed in roles table.</FormDescription>
                 <SelectContent>
                   <SelectItem value={"teacher"}>Teacher</SelectItem>
                   <SelectItem value={"admin"}>Admin</SelectItem>

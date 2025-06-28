@@ -108,7 +108,7 @@ export function TableDemoClass() {
 
   return (
     <>
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-4">
         <h1 className="lg:text-4xl text-xl font-semibold text-center">
           Demo Classes
         </h1>

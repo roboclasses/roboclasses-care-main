@@ -21,7 +21,7 @@ const page = () => {
             <h1 className="lg:text-4xl text-2xl mb-4 text-center font-serif">
               Batch Entry Form
             </h1>
-            <Label className="text-gray-500 md:text-lg text-xs text-center">
+            <Label className="text-gray-500 lg:text-sm text-xs text-center">
               Create a batch here
             </Label>
           </div>

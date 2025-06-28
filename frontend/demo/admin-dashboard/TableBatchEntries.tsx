@@ -136,7 +136,7 @@ export function TableBatchEntries() {
   return (
     <>
       <div className="flex flex-col">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between items-center mb-4">
           <h1 className="lg:text-4xl text-xl font-semibold text-center">
             {batchStatus === "active" ? "Active Batches" : "Completed Batches"}
           </h1>
