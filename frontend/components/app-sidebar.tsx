@@ -223,6 +223,36 @@ useEffect(()=>{
         ],
       },
     ],
+    
+    navMainConstructor: [
+      {
+        title: "Take Appointment",
+        url: "#",
+        icon: SquareTerminal,
+        isActive: true,
+        items: [
+          {
+            title: "Demo Class",
+            url: "/appointment/reminder/demo-class",
+          },
+          {
+            title: "Normal Class",
+            url: "/appointment/reminder/normal-class",
+          },
+        ],
+      },
+      {
+        title:  "Admin Dashboard",
+        url:  "/adminDashboard",
+        icon: LayoutDashboard,
+        isActive: false,
+      },
+      {
+        title: "Teachers Availability",
+        url: "/teachersAvailability",
+        icon: User2,
+      },
+    ],
 
     navSecondary: [
       {
@@ -248,6 +278,8 @@ useEffect(()=>{
         return data.navMainTeacher;
       case "student":
         return data.navMainStudent;
+      case "constructor":
+        return data.navMainConstructor;  
       default:
         return [];
     }

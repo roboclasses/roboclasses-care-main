@@ -10,9 +10,9 @@ const router = express.Router();
 
 router.post("/newBatchEntries", authMiddleware, roleMiddleware("teacher", "admin"), createBatchController);
 
-router.get("/newBatchEntries", authMiddleware, roleMiddleware("teacher", "admin", "student"), getBatchController);
+router.get("/newBatchEntries", authMiddleware, roleMiddleware("teacher", "admin", "student", "constructor"), getBatchController);
 
-router.get("/newBatchEntries/:id", authMiddleware, roleMiddleware("teacher", "admin", "student"), getBatchByIdController);
+router.get("/newBatchEntries/:id", authMiddleware, roleMiddleware("teacher", "admin", "student", "constructor"), getBatchByIdController);
 
 router.put("/newBatchEntries/:id", authMiddleware, roleMiddleware("teacher", "admin"), updateBatchController);
 

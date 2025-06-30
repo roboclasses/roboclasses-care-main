@@ -35,6 +35,18 @@ export function middleware(req: NextRequest) {
     "/feedbackViewer",
   ];
 
+  const constructorRoutePrefixes = [
+    "/assessmentGenerator",
+    "/feedbackAdmin",
+    "/courseEntry",
+    "/manageAttendance",
+    "/manageRoles",
+    "/newBatchEntry",
+    "/timeOff",
+    "/assessmentViewer",
+    "/feedbackViewer",
+  ]
+
   const publicRoutes = ["/login", "/signup"];
   const openRoutePrefixes = ["/assessmentViewer/create", "/feedbackViewer/edit"]
   
@@ -56,6 +68,9 @@ export function middleware(req: NextRequest) {
   const isStudentRoute = studentRoutePrefixes.some((prefix) =>
     currentPath.startsWith(prefix)
   );
+  const isConstructorRoute = constructorRoutePrefixes.some((prefix) =>
+    currentPath.startsWith(prefix)
+  );
 
   if (isProtectedRoute) {
     const isAuth = req.cookies.get("token")?.value;
@@ -67,7 +82,12 @@ export function middleware(req: NextRequest) {
     }
 
     // Student views
-    if (isStudentRoute && !(role === "admin" || role === "teacher")) {
+    if (isStudentRoute && !(role === "admin" || role === "teacher" || role === "constructor")) {
+      return NextResponse.redirect(new URL("/", req.nextUrl));
+    }
+
+    // Constructor views
+    if(isConstructorRoute && !(role==="admin" || role === "teacher")){
       return NextResponse.redirect(new URL("/", req.nextUrl));
     }
   }
