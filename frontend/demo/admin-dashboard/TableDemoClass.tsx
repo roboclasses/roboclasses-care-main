@@ -17,6 +17,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { toast } from "@/hooks/use-toast";
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 import { EditButton } from "../button-demo/EditButton";
@@ -32,15 +39,18 @@ import Link from "next/link";
 import { format } from "date-fns";
 import Cookies from "js-cookie";
 import { Card } from "@/components/ui/card";
-
+import { LucideChevronsUpDown } from "lucide-react";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 export function TableDemoClass() {
   const [user, setUser] = useState({ role: "", name: "" });
-  const { data, error, isLoading, isValidating, mutate } = useSWR<appointmentTypes[]>(DemoClassUrl, fetcher);
+  const { data, error, isLoading, isValidating, mutate } = useSWR<
+    appointmentTypes[]
+  >(DemoClassUrl, fetcher);
   const [demoClasses, setDemoClasses] = useState("upcoming");
-  const [compensationClasses, setCompensationClasses] = useState("demo")
+  const [compensationClasses, setCompensationClasses] = useState("demo");
+  const [sortOrder, setSortOrder] = useState("ALL");
 
   // Fetch logged-in teacher session
   useEffect(() => {
@@ -74,29 +84,39 @@ export function TableDemoClass() {
 
       if (user.role === "teacher" && item.teacher !== user.name) return false;
 
-      if(compensationClasses === "demo" && item.isCompensationClass === true) return false;
-      if(compensationClasses === "compensation" && item.isCompensationClass === false) return false;
+      if (compensationClasses === "demo" && item.isCompensationClass === true) return false;
+      if (compensationClasses === "compensation" && item.isCompensationClass === false) return false;
+
+      if (sortOrder === "No" && item.converted === "Yes") return false;
+      if (sortOrder === "Yes" && item.converted === "No") return false;
 
       return true;
     });
-  }, [compensationClasses, data, demoClasses, user.name, user.role]);
+  }, [compensationClasses, data, demoClasses, sortOrder, user.name, user.role]);
 
   // Handle delete appointment
   const handleDelete = async (appointmentId: string) => {
     try {
-      const res = await axios.delete(`${DemoClassUrl}/${appointmentId}`, { headers: { Authorization: Cookies.get("token") }});
+      const res = await axios.delete(`${DemoClassUrl}/${appointmentId}`, {
+        headers: { Authorization: Cookies.get("token") },
+      });
       console.log(res.data);
 
-      mutate((data) => data?.filter((appointment) => appointment._id !== appointmentId));
+      mutate((data) =>
+        data?.filter((appointment) => appointment._id !== appointmentId)
+      );
 
       const { message } = res.data;
       toast({ title: "Success✅", description: message, variant: "default" });
-
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         console.log(error);
         const { message } = error.response?.data;
-        toast({ title: "Failed", description: message || "An unknown error has occurred.",variant: "destructive"});
+        toast({
+          title: "Failed",
+          description: message || "An unknown error has occurred.",
+          variant: "destructive",
+        });
       }
     }
   };
@@ -112,91 +132,149 @@ export function TableDemoClass() {
 
   return (
     <>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-4 gap-2">
         <h1 className="lg:text-4xl text-xl font-semibold text-center">
-          Demo Classes
+          {compensationClasses === "demo"
+            ? "Demo Classes"
+            : compensationClasses === "compensation"
+            ? "Compensation Classes"
+            : false}
         </h1>
         <div className="w-full grid lg:grid-cols-2 grid-cols-1 gap-2">
           {/* Select upcoming/old classes */}
-        <Select defaultValue="upcoming" onValueChange={(value) => setDemoClasses(value)}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="upcoming">Upcoming</SelectItem>
-            <SelectItem value="old">Old</SelectItem>
-          </SelectContent>
-        </Select>
+          <Select
+            defaultValue="upcoming"
+            onValueChange={(value) => setDemoClasses(value)}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="upcoming">Upcoming</SelectItem>
+              <SelectItem value="old">Old</SelectItem>
+            </SelectContent>
+          </Select>
 
-        {/* Select compensation/demo classes */}
-        <Select defaultValue="demo" onValueChange={(value) => setCompensationClasses(value)}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="demo">Demo Classes</SelectItem>
-            <SelectItem value="compensation">Compensation Classes</SelectItem>
-          </SelectContent>
-        </Select>
+          {/* Select compensation/demo classes */}
+          <Select
+            defaultValue="demo"
+            onValueChange={(value) => setCompensationClasses(value)}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="demo">Demo Classes</SelectItem>
+              <SelectItem value="compensation">Compensation Classes</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
       <Card className="p-2">
-      <Table>
-        <TableCaption>
-          A list of booked appointments for Demo Class
-        </TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">Student Name</TableHead>
-            <TableHead className="w-[100px]">{user.role === "admin" && "Contact Details"}</TableHead>
-            <TableHead className="w-[100px]">Course Name</TableHead>
-            <TableHead className="w-[100px]">Teacher Name</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead>Time</TableHead>
-            <TableHead>Timezone</TableHead>
-            <TableHead>Converted</TableHead>
-            <TableHead>Batch Number</TableHead>
-            <TableHead>Edit</TableHead>
-            <TableHead>Delete</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredData?.map((appointment: appointmentTypes) => (
-            <TableRow key={appointment._id}>
-              <TableCell className="font-medium">{appointment.userName}</TableCell>
-              <TableCell className="font-medium">{user.role === "admin" && appointment.destination}</TableCell>
-              <TableCell className="font-medium">{appointment.course}</TableCell>
-              <TableCell className="font-medium">{appointment.teacher}</TableCell>
-              <TableCell className="text-right">{appointment.date? format(appointment.date, "MMM dd, yyyy") : ""}
-              </TableCell>
-              <TableCell className="text-right">{appointment.time}</TableCell>
-              <TableCell className="text-right">{appointment.timeZone}</TableCell>
-              <TableCell className="text-right">{appointment.converted}</TableCell>
-              <TableCell className="text-right">{appointment.batchNumber}</TableCell>
+        <Table>
+          <TableCaption>
+            A list of booked appointments for Demo Class
+          </TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[100px]">Student Name</TableHead>
+              <TableHead className="w-[100px]">
+                {user.role === "admin" && "Contact Details"}
+              </TableHead>
+              <TableHead className="w-[100px]">Course Name</TableHead>
+              <TableHead className="w-[100px]">Teacher Name</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead>Time</TableHead>
+              <TableHead>Timezone</TableHead>
+              <TableHead className="flex items-center gap-2">
+                Converted
+                <div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <LucideChevronsUpDown size={16} />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-[200px]" align="end">
+                      <DropdownMenuRadioGroup
+                        value={sortOrder}
+                        onValueChange={setSortOrder}
+                      >
+                        <DropdownMenuRadioItem value="ALL">
+                          All 
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="No">
+                          Not Converted
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Yes">
+                          Converted
+                        </DropdownMenuRadioItem>
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </TableHead>
+              <TableHead>Batch Number</TableHead>
+              <TableHead>Edit</TableHead>
+              <TableHead>Delete</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredData?.map((appointment: appointmentTypes) => (
+              <TableRow key={appointment._id}>
+                <TableCell className="font-medium">
+                  {appointment.userName}
+                </TableCell>
+                <TableCell className="font-medium">
+                  {user.role === "admin" && appointment.destination}
+                </TableCell>
+                <TableCell className="font-medium">
+                  {appointment.course}
+                </TableCell>
+                <TableCell className="font-medium">
+                  {appointment.teacher}
+                </TableCell>
+                <TableCell className="text-right">
+                  {appointment.date
+                    ? format(appointment.date, "MMM dd, yyyy")
+                    : ""}
+                </TableCell>
+                <TableCell className="text-right">{appointment.time}</TableCell>
+                <TableCell className="text-right">
+                  {appointment.timeZone}
+                </TableCell>
+                <TableCell className="text-right">
+                  {appointment.converted}
+                </TableCell>
+                <TableCell className="text-right">
+                  {appointment.batchNumber}
+                </TableCell>
 
-              <TableCell className="text-right">
-                <Link href={`/appointment/reminder/demo-class/edit/${appointment._id}`}>
-                  <EditButton name="Edit" type="button" />
-                </Link>
-              </TableCell>
+                <TableCell className="text-right">
+                  <Link
+                    href={`/appointment/reminder/demo-class/edit/${appointment._id}`}
+                  >
+                    <EditButton name="Edit" type="button" />
+                  </Link>
+                </TableCell>
 
+                <TableCell className="text-right">
+                  <DeleteAlertDemo
+                    onCancel={() => console.log("Delete action canceled")}
+                    onDelete={() => handleDelete(appointment._id)}
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TableCell colSpan={11}>Total Rows</TableCell>
               <TableCell className="text-right">
-                <DeleteAlertDemo
-                  onCancel={() => console.log("Delete action canceled")}
-                  onDelete={() => handleDelete(appointment._id)}
-                />
+                {filteredData?.length}
               </TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={11}>Total Rows</TableCell>
-            <TableCell className="text-right">{filteredData?.length}</TableCell>
-          </TableRow>
-        </TableFooter>
-      </Table>
+          </TableFooter>
+        </Table>
       </Card>
     </>
   );
