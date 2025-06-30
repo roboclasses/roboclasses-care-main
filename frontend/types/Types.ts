@@ -17,6 +17,7 @@ export type appointmentTypes = {
   teacher?: string;
   converted?:string;
   batchNumber?:string;
+  isCompensationClass?: boolean
 };
 
 

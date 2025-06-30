@@ -41,6 +41,10 @@ const appointmentSchema = new mongoose.Schema(
     batchNumber:{
       type:String,
       default:""
+    },
+    isCompensationClass: {
+      type: Boolean,
+      default: false,
     }
   },
   {

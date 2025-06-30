@@ -33,6 +33,7 @@ import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import "react-phone-input-2/lib/style.css";
 import PhoneInput from "react-phone-input-2";
+import { Switch } from "@/components/ui/switch";
 
 // for mapping checkbox value and label
 const items = [
@@ -62,6 +63,7 @@ const FormSchema = z.object({
   timeZone: z.string(),
   // items: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select atleast one item"}),
   items: z.array(z.string()).default([]),
+  isCompensationClass: z.boolean(),
 });
 
 export function DatePickerForm() {
@@ -90,11 +92,14 @@ export function DatePickerForm() {
       time: "",
       timeZone: userTimeZone,
       items: ["1hour"],
+      isCompensationClass: false,
     },
   });
 
   // Handle form status
   const { isSubmitting } = form.formState;
+  console.log(form.getValues('isCompensationClass'));
+
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
@@ -108,9 +113,10 @@ export function DatePickerForm() {
         timeZone: data.timeZone,
         date: formattedDate,
         items: data.items,
+        isCompensationClass: data.isCompensationClass,
       };
       console.log(JSON.stringify(payload));
-
+      
       const res = await axios.post(DemoClassUrl, payload);
       console.log(res.data);
 
@@ -330,6 +336,29 @@ export function DatePickerForm() {
             </FormItem>
           )}
         />
+
+        {/* Switch to Compensation Class */}
+        <FormField
+                    control={form.control}
+                    name="isCompensationClass"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                        <div className="space-y-0.5">
+                          <FormLabel>Compensation Class</FormLabel>
+                          <FormDescription>
+                            This field is for switching to compensation class.
+                          </FormDescription>
+                        </div>
+                        <FormControl>
+                          <Switch
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            title="Switch to Compensation Class"
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
 
         {/* Check box Items for reminders*/}
         <FormField

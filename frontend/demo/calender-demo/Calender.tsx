@@ -198,14 +198,14 @@ const batchEvents = useMemo(() => {
 
         return {
           id: demo._id,
-          title: "Demo Class",
+          title: demo.isCompensationClass === false ? "Demo Class": "Compensation Class",
           start: demoDate,
           end: eventEnd,
           allDay: false,
           extendedProps: {
             type: "demo",
           },
-          classNames:  demo ? ["demo-event"] : [],
+          classNames:  demo.isCompensationClass === false ? ["demo-event"] : ["compensation-event"]
         };
       })
       .filter((event): event is NonNullable<typeof event> => event !== null);
@@ -317,6 +317,12 @@ const batchEvents = useMemo(() => {
     }
 
     .fc .demo-event {
+      background-color: #ef4444 !important; /* Tailwind red-500 */
+      border-color: #ef4444 !important;
+      color: white !important;
+    }
+
+    .fc .compensation-event {
       background-color: #ef4444 !important; /* Tailwind red-500 */
       border-color: #ef4444 !important;
       color: white !important;
