@@ -4,8 +4,8 @@ import { Appointment } from "../models/demoClass.model.js";
 
 export const createDemoClassController = async(req, res)=>{
     try {
-        const {date, userName, destination, course, teacher, time, items,timeZone, converted, batchNumber} = req.body;
-        const newDemoClass = {date, userName, destination, course, teacher, time, items,timeZone, converted, batchNumber};
+        const {date, userName, destination, course, teacher, time, items,timeZone, converted, batchNumber, isCompensationClass} = req.body;
+        const newDemoClass = {date, userName, destination, course, teacher, time, items,timeZone, converted, batchNumber, isCompensationClass};
 
         const data = await Appointment.create(newDemoClass)
         console.log(data);

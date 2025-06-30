@@ -40,6 +40,7 @@ export function TableDemoClass() {
   const [user, setUser] = useState({ role: "", name: "" });
   const { data, error, isLoading, isValidating, mutate } = useSWR<appointmentTypes[]>(DemoClassUrl, fetcher);
   const [demoClasses, setDemoClasses] = useState("upcoming");
+  const [compensationClasses, setCompensationClasses] = useState("demo")
 
   // Fetch logged-in teacher session
   useEffect(() => {
@@ -73,9 +74,12 @@ export function TableDemoClass() {
 
       if (user.role === "teacher" && item.teacher !== user.name) return false;
 
+      if(compensationClasses === "demo" && item.isCompensationClass === true) return false;
+      if(compensationClasses === "compensation" && item.isCompensationClass === false) return false;
+
       return true;
     });
-  }, [data, demoClasses, user]);
+  }, [compensationClasses, data, demoClasses, user.name, user.role]);
 
   // Handle delete appointment
   const handleDelete = async (appointmentId: string) => {
@@ -112,15 +116,29 @@ export function TableDemoClass() {
         <h1 className="lg:text-4xl text-xl font-semibold text-center">
           Demo Classes
         </h1>
-        <Select onValueChange={(value) => setDemoClasses(value)}>
+        <div className="w-full grid lg:grid-cols-2 grid-cols-1 gap-2">
+          {/* Select upcoming/old classes */}
+        <Select defaultValue="upcoming" onValueChange={(value) => setDemoClasses(value)}>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filter Demo Classes" />
+            <SelectValue />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="upcoming">Upcoming</SelectItem>
             <SelectItem value="old">Old</SelectItem>
           </SelectContent>
         </Select>
+
+        {/* Select compensation/demo classes */}
+        <Select defaultValue="demo" onValueChange={(value) => setCompensationClasses(value)}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="demo">Demo Classes</SelectItem>
+            <SelectItem value="compensation">Compensation Classes</SelectItem>
+          </SelectContent>
+        </Select>
+        </div>
       </div>
 
       <Card className="p-2">

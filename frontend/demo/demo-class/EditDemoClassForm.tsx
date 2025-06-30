@@ -34,6 +34,7 @@ import Cookies from "js-cookie";
 import { format } from "date-fns";
 import "react-phone-input-2/lib/style.css";
 import PhoneInput from "react-phone-input-2";
+import { Switch } from "@/components/ui/switch";
 
 //For mapping reminder times
 const items = [
@@ -65,6 +66,7 @@ const FormSchema = z.object({
   converted: z.string(),
   // items: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one item."}),
   items: z.array(z.string()).default([]),
+  isCompensationClass: z.boolean(),
 });
 
 export function EditDemoClassForm() {
@@ -83,6 +85,7 @@ export function EditDemoClassForm() {
       batchNumber: "",
       converted: "",
       items: ["1hour"],
+      isCompensationClass:false,
     },
   });
 
@@ -108,6 +111,7 @@ export function EditDemoClassForm() {
           batchNumber: res.data.batchNumber,
           converted: res.data.converted,
           items: res.data.items ?? [],
+          isCompensationClass: res.data.isCompensationClass,
         });
       } catch (error) {
         console.log(error);
@@ -132,6 +136,7 @@ export function EditDemoClassForm() {
         batchNumber: data.batchNumber,
         converted: data.converted,
         items: data.items.length > 0 ? data.items : ["1hour"], // Ensure at least one item is selected
+        isCompensationClass: data.isCompensationClass,
       };
 
       const res = await axios.put(`${DemoClassUrl}/${id}`, payload);
@@ -395,6 +400,29 @@ export function EditDemoClassForm() {
             </FormItem>
           )}
         />
+
+         {/* Switch to Compensation Class */}
+                <FormField
+                            control={form.control}
+                            name="isCompensationClass"
+                            render={({ field }) => (
+                              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                                <div className="space-y-0.5">
+                                  <FormLabel>Convert to Compensation Class</FormLabel>
+                                  <FormDescription>
+                                    This field is for converting demo class to compensation class.
+                                  </FormDescription>
+                                </div>
+                                <FormControl>
+                                  <Switch
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                    title="Convert to Compensation Class"
+                                  />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
 
         {/* Items for sending reminder */}
         <FormField
