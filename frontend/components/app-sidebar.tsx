@@ -278,7 +278,7 @@ useEffect(()=>{
         return data.navMainTeacher;
       case "student":
         return data.navMainStudent;
-      case "constructor":
+      case "contractor":
         return data.navMainConstructor;  
       default:
         return [];

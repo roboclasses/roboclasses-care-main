@@ -82,11 +82,11 @@ export function middleware(req: NextRequest) {
     }
 
     // Student views
-    if (isStudentRoute && !(role === "admin" || role === "teacher" || role === "constructor")) {
+    if (isStudentRoute && !(role === "admin" || role === "teacher" || role === "contractor")) {
       return NextResponse.redirect(new URL("/", req.nextUrl));
     }
 
-    // Constructor views
+    // Contractor views
     if(isConstructorRoute && !(role==="admin" || role === "teacher")){
       return NextResponse.redirect(new URL("/", req.nextUrl));
     }

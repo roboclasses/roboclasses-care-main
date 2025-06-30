@@ -74,7 +74,7 @@ const batchEvents = useMemo(() => {
       if (isNaN(startDate.getTime())) return false; // Invalid date
       startDate.setHours(0, 0, 0, 0);
       return (
-        ((user.role === 'admin' || user.role === 'constructor') ? 
+        ((user.role === 'admin' || user.role === 'contractor') ? 
           (batch.teacher === teacher) : 
             user.role === 'teacher' ? 
               (batch.teacher === user.name) : 
@@ -171,7 +171,7 @@ const batchEvents = useMemo(() => {
         demoDate.setHours(0, 0, 0, 0);
         return (demoDate >= today && 
                 typeof demo.time === "string" && 
-                ((user.role === 'admin' || user.role === 'constructor') ? 
+                ((user.role === 'admin' || user.role === 'contractor') ? 
                   (demo.teacher === teacher) : 
                     user.role === 'teacher' ? 
                       (demo.teacher === user.name) : 
@@ -225,7 +225,7 @@ const batchEvents = useMemo(() => {
   return (
     <div className="grid lg:grid-cols-1 grid-cols-1 w-full px-5 justify-start items-start gap-5">
       <div className="flex flex-row justify-center mt-2">
-      {(user.role === "admin" || user.role === "constructor") && (<Select value={teacher} onValueChange={(value)=>setTeacher(value)}>
+      {(user.role === "admin" || user.role === "contractor") && (<Select value={teacher} onValueChange={(value)=>setTeacher(value)}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Filter Teachers"/>
             </SelectTrigger>

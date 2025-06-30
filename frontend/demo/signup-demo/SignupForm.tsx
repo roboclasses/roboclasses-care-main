@@ -36,8 +36,8 @@ const FormSchema = z.object({
   password: z.string().min(8, "Password is too short").regex(passwordValidation, 'Your password is not valid'),
   role: z.string()
   .nonempty("This field can't be empty")
-  .refine(val => ["student", "teacher", "admin", "constructor"].includes(val), {
-    message: "Role must be one of: student, teacher, admin, constructor",
+  .refine(val => ["student", "teacher", "admin", "contractor"].includes(val), {
+    message: "Role must be one of: student, teacher, admin, contractor",
   })
 });
 
@@ -149,7 +149,7 @@ export function SignupForm() {
                       <SelectItem value="student">Student</SelectItem>
                       <SelectItem value="teacher">Teacher</SelectItem>
                       <SelectItem value="admin">Admin</SelectItem>
-                      <SelectItem value="constructor">Constructor</SelectItem>
+                      <SelectItem value="contractor">Contractor</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormItem>
