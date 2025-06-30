@@ -30,7 +30,7 @@ import { useEffect } from "react";
 import { useParams } from "next/navigation";
 
 // Roles data
-const validRoles = ['admin', 'teacher'];
+const validRoles = ['admin', 'teacher', 'contractor'];
 
 const FormSchema = z.object({
   name: z.string().min(3, {message: "User name must be atleast 3 character long."}),
@@ -48,7 +48,7 @@ export function EditUserForm() {
     defaultValues: {
       name: "",
       email: "",
-      role: 'admin',
+      role: "",
       workingHours: "",
       workingDays: "",
     },
@@ -225,6 +225,7 @@ export function EditUserForm() {
                 <SelectContent>
                   <SelectItem value={"teacher"}>Teacher</SelectItem>
                   <SelectItem value={"admin"}>Admin</SelectItem>
+                  <SelectItem value={"contractor"}>Contractor</SelectItem>
                 </SelectContent>
               </Select>
             </FormItem>

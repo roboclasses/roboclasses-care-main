@@ -28,19 +28,20 @@ const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 export function TableUsers() {
   const [role, setRole] = useState('teacher')
-  const { data, isLoading, isValidating, error, mutate } = useSWR<usersType[]>(UsersUrl,fetcher);
+  const { data:userData, isLoading, isValidating, error, mutate } = useSWR<usersType[]>(UsersUrl,fetcher);
 
   // Handle filter data
   const filteredData = useMemo(()=>{
-    if(!data) return [];
+    if(!userData) return [];
 
-     return data.filter((item)=>{
+     return userData.filter((item)=>{
       if(role === 'teacher' && item.role !== 'teacher') return false
       if(role === 'admin' && item.role !== 'admin') return false;
+      if(role === 'contractor' && item.role !== 'contractor') return false;
       return true;
     })
 
-  },[data, role])
+  },[userData, role])
 
   // Handle delete a course
   const handleDelete = async(id:string)=>{
@@ -69,21 +70,26 @@ export function TableUsers() {
   return <div>{message || 'An unknown error has occurred.'}</div>;
  } 
  if (isValidating) return <div>Refreshing...</div>;
- if (data?.length === 0) return <div>Empty list for Users</div>;
+ if (userData?.length === 0) return <div>Empty list for Users</div>;
 
 
 
   return (
     <>
     <div className="flex items-center justify-between mb-4">
-      <h1 className="lg:text-4xl text-2xl font-semibold text-center">{role==='teacher' ? "Manage Teachers" : 'Manage Admins'}</h1>
+      <h1 className="lg:text-4xl text-2xl font-semibold text-center">{role==='teacher' ? "Manage Teachers" 
+      : role==='admin' ? 'Manage Admins' 
+      : role === 'contractor' ? 'Manage Contractor' 
+      : ''}
+      </h1>
       <Select onValueChange={(value)=>setRole(value)} defaultValue="teacher">
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Filter Roles"/>
         </SelectTrigger>
-        <SelectContent defaultValue={"teacher"}>
+        <SelectContent>
           <SelectItem value="teacher">Teachers</SelectItem>
           <SelectItem value="admin">Admins</SelectItem>
+           <SelectItem value="contractor">Contractors</SelectItem>
         </SelectContent>
       </Select>
     </div>
