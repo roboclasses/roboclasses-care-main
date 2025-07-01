@@ -224,7 +224,7 @@ useEffect(()=>{
       },
     ],
     
-    navMainConstructor: [
+    navMainContractor: [
       {
         title: "Take Appointment",
         url: "#",
@@ -279,7 +279,7 @@ useEffect(()=>{
       case "student":
         return data.navMainStudent;
       case "contractor":
-        return data.navMainConstructor;  
+        return data.navMainContractor;  
       default:
         return [];
     }
@@ -290,7 +290,7 @@ useEffect(()=>{
   
   return (
     <>
-      {!pathname.startsWith("/login") && !pathname.startsWith("/signup") &&  (
+      {(!pathname.startsWith("/login") && !pathname.startsWith("/signup")) &&  (
         <Sidebar variant="inset" {...props}>
           <SidebarHeader className="rounded">
             <SidebarMenu>
