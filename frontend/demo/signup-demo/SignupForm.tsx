@@ -32,13 +32,9 @@ import { Eye, EyeOff } from "lucide-react";
 
 const FormSchema = z.object({
   name: z.string().min(3, "Name must be 3 characters long"),
-  email: z.string().email("Please enter a valid email"),
-  password: z.string().min(8, "Password is too short").regex(passwordValidation, 'Your password is not valid'),
-  role: z.string()
-  .nonempty("This field can't be empty")
-  .refine(val => ["student", "teacher", "admin", "contractor"].includes(val), {
-    message: "Role must be one of: student, teacher, admin, contractor",
-  })
+  email: z.string().trim().email("Please enter a valid email"),
+  password: z.string().trim().min(8, "Password is too short").regex(passwordValidation, 'Your password is not valid'),
+  role: z.enum(["student", "teacher", "admin", "contractor"])
 });
 
 export function SignupForm() {
@@ -61,7 +57,7 @@ export function SignupForm() {
   });
 
   // Handle form status
-  const {isSubmitting} = form.formState;
+  const {isSubmitting} = form.formState;  
 
   // handle user signup
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
