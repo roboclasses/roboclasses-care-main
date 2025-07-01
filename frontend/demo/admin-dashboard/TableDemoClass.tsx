@@ -24,10 +24,12 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+
 import { toast } from "@/hooks/use-toast";
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 import { EditButton } from "../button-demo/EditButton";
-
 import { getUserSession } from "@/lib/session";
 import { appointmentTypes } from "@/types/Types";
 import { DemoClassUrl } from "@/constants";
@@ -38,18 +40,24 @@ import axios, { AxiosError } from "axios";
 import Link from "next/link";
 import { format } from "date-fns";
 import Cookies from "js-cookie";
-import { Card } from "@/components/ui/card";
 import { LucideChevronsUpDown } from "lucide-react";
+import { FaCircle } from "react-icons/fa6";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
+type TCompensationClassesType = 'demo' | 'compensation'
+
+// Table caption data
+const tableCaptions:Record<TCompensationClassesType, string> = {
+  demo: "A list of booked appointments for Demo Class",
+  compensation: "A list of booked appointments for Compensation Class"
+}
+
 export function TableDemoClass() {
   const [user, setUser] = useState({ role: "", name: "" });
-  const { data, error, isLoading, isValidating, mutate } = useSWR<
-    appointmentTypes[]
-  >(DemoClassUrl, fetcher);
+  const { data, error, isLoading, isValidating, mutate } = useSWR<appointmentTypes[]>(DemoClassUrl, fetcher);
   const [demoClasses, setDemoClasses] = useState("upcoming");
-  const [compensationClasses, setCompensationClasses] = useState("demo");
+  const [compensationClasses, setCompensationClasses] = useState<TCompensationClassesType>("demo");
   const [sortOrder, setSortOrder] = useState("ALL");
 
   // Fetch logged-in teacher session
@@ -138,7 +146,7 @@ export function TableDemoClass() {
             ? "Demo Classes"
             : compensationClasses === "compensation"
             ? "Compensation Classes"
-            : false}
+            : null}
         </h1>
         <div className="w-full grid lg:grid-cols-2 grid-cols-1 gap-2">
           {/* Select upcoming/old classes */}
@@ -158,7 +166,7 @@ export function TableDemoClass() {
           {/* Select compensation/demo classes */}
           <Select
             defaultValue="demo"
-            onValueChange={(value) => setCompensationClasses(value)}
+            onValueChange={(value) => setCompensationClasses(value as TCompensationClassesType)}
           >
             <SelectTrigger className="w-[180px]">
               <SelectValue />
@@ -174,7 +182,7 @@ export function TableDemoClass() {
       <Card className="p-2">
         <Table>
           <TableCaption>
-            A list of booked appointments for Demo Class
+            {tableCaptions[compensationClasses] || null}
           </TableCaption>
           <TableHeader>
             <TableRow>
@@ -221,42 +229,30 @@ export function TableDemoClass() {
           <TableBody>
             {filteredData?.map((appointment: appointmentTypes) => (
               <TableRow key={appointment._id}>
-                <TableCell className="font-medium">
-                  {appointment.userName}
-                </TableCell>
-                <TableCell className="font-medium">
-                  {user.role === "admin" && appointment.destination}
-                </TableCell>
-                <TableCell className="font-medium">
-                  {appointment.course}
-                </TableCell>
-                <TableCell className="font-medium">
-                  {appointment.teacher}
-                </TableCell>
-                <TableCell className="text-right">
-                  {appointment.date
-                    ? format(appointment.date, "MMM dd, yyyy")
-                    : ""}
-                </TableCell>
+                <TableCell className="font-medium"> {appointment.userName} </TableCell>
+                <TableCell className="font-medium"> {user.role === "admin" && appointment.destination} </TableCell>
+                <TableCell className="font-medium"> {appointment.course} </TableCell>
+                <TableCell className="font-medium"> {appointment.teacher} </TableCell>
+                <TableCell className="text-right"> {appointment.date ? format(appointment.date, "MMM dd, yyyy") : ""} </TableCell>
                 <TableCell className="text-right">{appointment.time}</TableCell>
+                <TableCell className="text-right"> {appointment.timeZone} </TableCell>
                 <TableCell className="text-right">
-                  {appointment.timeZone}
+                  {appointment.converted === 'No' ? (
+                  <Button variant={'outline'} className="rounded-full">
+                    <FaCircle style={{ color: "red" }} /> Not Converted
+                   </Button>) 
+                   : appointment.converted === 'Yes' ? (
+                   <Button variant={'outline'} className="rounded-full">
+                    <FaCircle style={{ color: "green" }} /> Converted
+                   </Button>) 
+                   : null}
                 </TableCell>
+                <TableCell className="text-right"> {appointment.batchNumber} </TableCell>
                 <TableCell className="text-right">
-                  {appointment.converted}
-                </TableCell>
-                <TableCell className="text-right">
-                  {appointment.batchNumber}
-                </TableCell>
-
-                <TableCell className="text-right">
-                  <Link
-                    href={`/appointment/reminder/demo-class/edit/${appointment._id}`}
-                  >
+                  <Link href={`/appointment/reminder/demo-class/edit/${appointment._id}`}>
                     <EditButton name="Edit" type="button" />
                   </Link>
                 </TableCell>
-
                 <TableCell className="text-right">
                   <DeleteAlertDemo
                     onCancel={() => console.log("Delete action canceled")}
