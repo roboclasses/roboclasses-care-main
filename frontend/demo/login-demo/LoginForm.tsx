@@ -19,8 +19,8 @@ import { Eye, EyeOff } from "lucide-react";
 import { passwordValidation } from "@/lib/helpers";
 
 const FormSchema = z.object({
-  email: z.string().email("Please enter a valid email"),
-  password: z.string().min(8, "Password is too short").regex(passwordValidation, "Your password is not valid"),
+  email: z.string().trim().email("Please enter a valid email"),
+  password: z.string().trim().min(8, "Password is too short").regex(passwordValidation, "Your password is not valid"),
 });
 
 export function LoginForm() {
