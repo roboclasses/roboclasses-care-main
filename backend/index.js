@@ -14,7 +14,7 @@ import newCourseEntry from "./routes/newCourseEntryRoute.js"
 import studentRoutes from "./routes/studentRoute.js"
 import timeOffRoutes from "./routes/timeOffRoute.js"
 import holidayRoutes from "./routes/holidayRoutes.js"
-import eventRoutes from "./routes/eventRoutes.js"
+// import eventRoutes from "./routes/eventRoutes.js"
 import assessmentRoutes from "./routes/assessmentRoute.js"
 import answerRoutes from "./routes/answerRoute.js"
 import feedbackRoutes from "./routes/feedbackRoute.js"
@@ -48,7 +48,7 @@ app.use('/api/v1',newCourseEntry)
 app.use('/api/v1',attendanceRoutes)
 app.use('/api/v1',timeOffRoutes)
 app.use('/api/v1',holidayRoutes)
-app.use('/api/v1',eventRoutes)
+// app.use('/api/v1',eventRoutes)
 app.use('/api/v1',assessmentRoutes)
 app.use('/api/v1',answerRoutes)
 app.use('/api/v1',feedbackRoutes)

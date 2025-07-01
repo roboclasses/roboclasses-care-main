@@ -10,7 +10,7 @@
 // export const UsersUrl = "http://localhost:8003/api/v1/users";
 // export const TimeOffUrl = "http://localhost:8003/api/v1/timeOff";
 // export const HolidayUrl = "http://localhost:8003/api/v1/holiday";
-// export const EventUrl = "http://localhost:8003/api/v1/events";
+// // export const EventUrl = "http://localhost:8003/api/v1/events";
 // export const AssessmentUrl = "http://localhost:8003/api/v1/assessment";
 // export const AnswerUrl = "http://localhost:8003/api/v1/answer";
 // export const FeedbackUrl = "http://localhost:8003/api/v1/feedbacks";
@@ -30,7 +30,7 @@ export const StudentRegUrl = "https://api-roboclasses-care.up.railway.app/api/v1
 export const UsersUrl = "https://api-roboclasses-care.up.railway.app/api/v1/users";
 export const TimeOffUrl = "https://api-roboclasses-care.up.railway.app/api/v1/timeOff";
 export const HolidayUrl = "https://api-roboclasses-care.up.railway.app/api/v1/holiday";
-export const EventUrl = "https://api-roboclasses-care.up.railway.app/api/v1/events";
+// export const EventUrl = "https://api-roboclasses-care.up.railway.app/api/v1/events";
 export const AssessmentUrl = "https://api-roboclasses-care.up.railway.app/api/v1/assessment";
 export const AnswerUrl = "https://api-roboclasses-care.up.railway.app/api/v1/answer";
 export const FeedbackUrl = "https://api-roboclasses-care.up.railway.app/api/v1/feedbacks";
