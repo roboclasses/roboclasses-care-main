@@ -25,7 +25,7 @@ import { useParams } from "next/navigation";
 
 const FormSchema = z.object({
   course: z.string().optional(),
-  numberOfClasses: z.string().optional(),
+  numberOfClasses: z.string().trim().optional(),
 });
 
 export function EditCourseEntryForm() {

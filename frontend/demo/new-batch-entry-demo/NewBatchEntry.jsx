@@ -48,9 +48,9 @@ const FormSchema = z.object({
     })
   ),
   timeZone: z.string().nonempty("Please select a timezone"),
-  numberOfClasses: z.string().max(3, "Number of classes must have maximum 3 digits").trim(),
+  numberOfClasses: z.string().trim().max(3, "Number of classes must have maximum 3 digits").trim(),
   studentName: z.string().min(3, "Student Name must be atlest 3 characters long"),
-  email: z.string().email("Please enter a valid email"),
+  email: z.string().trim().email("Please enter a valid email"),
   destination: z.string().min(10, "Mobile number is too short")
     .refine((val) => {
       const digits = val.replace(/\D/g, ""); // Remove non-digit characters

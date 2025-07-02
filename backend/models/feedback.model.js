@@ -4,7 +4,7 @@ const feedbackSchema = new mongoose.Schema({
     batch:{type:String, required:true},
     student:{type:String, required:true},
     teacher:{type:String, required:true},
-    email:{type:String, required:true, index: true},
+    email:{type:String, required:true, index: true, trim: true},
     destination:{type:String},
     feedbackAnswer:{ type: [String], enum: ["A", "B", "C"], required: true },
     recommendProgram: {
