@@ -27,17 +27,18 @@ export const signupController  = async(req, res)=>{
 export const loginController = async(req, res)=>{
     try {
         const {email, password} = req.body;
+
         const user = await User.findOne({email})
         if(!user){
             return res.status(404).json({success:false, message:"No user found with this email."})
         }
-
+        
         const matchedPassword = await bcrypt.compare(password, user.password)
         if(!matchedPassword){
             return res.status(403).json({success:false, message: "Invalid credentials."})
         }
 
-        const jwtToken = jwt.sign({email:user.email, _id:user._id, name:user.name, role:user.role}, process.env.JWT_SECRET, {expiresIn: "10d"})
+        const jwtToken = jwt.sign({email:user.email, _id:user._id, name:user.name, role:user.role}, process.env.JWT_SECRET, {expiresIn: "10d"})        
 
         return res.status(200).json(
         {
@@ -45,9 +46,9 @@ export const loginController = async(req, res)=>{
             message: "Logged-in successfully.", 
             jwtToken, 
             name:user.name, 
-            email:user.email, 
+            email:user.email.trim(), 
             _id:user._id, 
-            role:user.role
+            role:user.role.trim()
         })
 
     } catch (error) {

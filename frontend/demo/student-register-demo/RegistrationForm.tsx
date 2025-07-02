@@ -37,7 +37,7 @@ const FormSchema = z.object({
   }, {
     message: "Please enter a valid UAE mobile number (e.g., +9715XXXXXXXX)"
   }),
-  email: z.string().email({message:"Please enter a valid email"}),
+  email: z.string().trim().email({message:"Please enter a valid email"}),
   address: z.string().min(3, {message: "Address must be atleast 3 characters long"}),
   country: z.string().min(2, {message: "Country must be atleast 2 characters long"}),
   grade: z.string().min(1, {message: "Grade must have minimum 1 value"}).max(2, {message: "Grade must have maximum 2 value"}),
