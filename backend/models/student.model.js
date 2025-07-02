@@ -10,7 +10,7 @@ const studentSchema = new mongoose.Schema({
     studentId:{type:String, index:true, required:true, unique:true, default:()=>nanoid(5)},
     parentName:{type:String, required:true},
     destination:{type:String, required:true},
-    email:{type:String, unique:true, index:true, required:true},
+    email:{type:String, unique:true, index:true, trim:true, required:true},
     address:{type:String, required:true},
     grade:{type:String, required:true},
     courses:{type:String, required:true}

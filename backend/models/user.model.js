@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       enum: ["student", "teacher", "admin", "contractor"],
+      trim: true,
       required: true,
     },
     workingHours: { type: String, default: "" },
