@@ -21,6 +21,7 @@ const timeOffSchema = new mongoose.Schema({
     status:{
         type:String,
         required:true,
+        trim:true,
         default:"Requested"
     },
 },{timestamps: true})

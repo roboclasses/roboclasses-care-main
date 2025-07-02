@@ -54,7 +54,7 @@ const FormSchema = z.object({
       const digits = val.replace(/\D/g, ""); // Remove non-digit characters
       return digits.length === 12 && digits.startsWith("971");
     }, { message: "Please enter a valid UAE mobile number (e.g., +971XXXXXXX)" }),
-  email:z.string().email("Please enter a valid email"),
+  email:z.string().trim().email("Please enter a valid email"),
   teacher: z.string().min(3, "Teacher name must be atleast 3 characters long"),
   allDates: z.array(
     z.object({
@@ -64,7 +64,7 @@ const FormSchema = z.object({
     })
   ).optional(),
   timeZone:z.string().nonempty("Please select a timezone"),
-  numberOfClasses:z.string().max(3, "Number of classes must contains maximum of 3 digit"),
+  numberOfClasses:z.string().trim().max(3, "Number of classes must contains maximum of 3 digit"),
 });
 
 // Calculating date, time and day by start date

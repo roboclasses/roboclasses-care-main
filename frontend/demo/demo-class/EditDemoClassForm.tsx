@@ -62,7 +62,7 @@ const FormSchema = z.object({
   date: z.string(),
   time: z.string(),
   timeZone: z.string(),
-  batchNumber: z.string().min(3, 'Batch number must be atleast 3 character long.'),
+  batchNumber: z.string().trim().min(3, 'Batch number must be atleast 3 character long.'),
   converted: z.string(),
   // items: z.array(z.string()).refine((value) => value.some((item) => item), {message: "You have to select at least one item."}),
   items: z.array(z.string()).default([]),

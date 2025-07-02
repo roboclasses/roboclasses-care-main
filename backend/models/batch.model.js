@@ -28,6 +28,7 @@ const newBatchEntrySchema = new mongoose.Schema({
     },
     numberOfClasses:{
         type:String,
+        trim: true,
     },
     studentName:{
         type:String,
@@ -41,6 +42,7 @@ const newBatchEntrySchema = new mongoose.Schema({
         type:String,
         required:true,
         index:true,
+        trim: true,
     },
     completed:{
         type:String,

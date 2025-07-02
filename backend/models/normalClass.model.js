@@ -23,6 +23,8 @@ const normalClassSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
+      trim: true,
+      index: true,
     },
     batch: {
       type: String,
@@ -46,6 +48,7 @@ const normalClassSchema = new mongoose.Schema(
     },
     numberOfClasses: {
       type: String,
+      trim: true,
     },
     items: {
       type: [String],

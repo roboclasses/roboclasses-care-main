@@ -60,7 +60,7 @@ const FormSchema = z.object({
       })
     ).optional(),
   timeZone: z.string().nonempty("Please select a timezone"),
-  numberOfClasses: z.string().max(3, 'Number of classes must have maximum 3 digits'),
+  numberOfClasses: z.string().trim().max(3, 'Number of classes must have maximum 3 digits'),
   studentName: z.string().min(3, "Student Name must be atlest 3 characters long" ),
   destination: z
     .string()
@@ -69,7 +69,7 @@ const FormSchema = z.object({
       const digits = val.replace(/\D/g, ""); // Remove non-digit characters
       return digits.length === 12 && digits.startsWith("971");
     }, "Please enter a valid UAE mobile number (e.g., +971XXXXXXX)"),
-  email: z.string().email('Please enter a valid email'),
+  email: z.string().trim().email('Please enter a valid email'),
   completed: z.string().nonempty("Please select (YES/NO)").optional(),
   colorCode: z.string().optional(),
   isColorCoding: z.boolean().optional(),
