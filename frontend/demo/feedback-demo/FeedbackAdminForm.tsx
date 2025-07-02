@@ -129,7 +129,7 @@ export function FeedbackAdminForm() {
             <FormItem>
               <FormLabel className="flex items-center gap-1">
                 Batch Details
-                <p style={{ color: "red", fontSize: "1.5em" }}>*</p>
+                
               </FormLabel>
               <Select
                 onValueChange={field.onChange}
@@ -168,8 +168,7 @@ export function FeedbackAdminForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="flex items-center gap-1">
-                  Student Name{" "}
-                  <p style={{ color: "red", fontSize: "1.5em" }}>*</p>
+                  Student Name
                 </FormLabel>
                 <FormControl>
                   <Input
@@ -195,8 +194,7 @@ export function FeedbackAdminForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="flex items-center gap-1">
-                  Teacher Name{" "}
-                  <p style={{ color: "red", fontSize: "1.5em" }}>*</p>
+                  Teacher Name
                 </FormLabel>
                 <FormControl>
                   <Input
@@ -249,8 +247,7 @@ export function FeedbackAdminForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="flex items-center gap-1">
-                  Email Address{" "}
-                  <p style={{ color: "red", fontSize: "1.5em" }}>*</p>
+                  Email Address
                 </FormLabel>
                 <FormControl>
                   <Input
