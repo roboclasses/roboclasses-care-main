@@ -36,21 +36,25 @@ import { useParams } from "next/navigation";
 
 import "react-phone-input-2/lib/style.css";
 import PhoneInput from "react-phone-input-2";
+import { HexColorPicker } from "react-colorful";
 
 // Generate random colors
-const generateRandomColorCode = () => {
-  const letters = "0123456789ABCDEF";
-  let color = "#";
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-};
+// const generateRandomColorCode = () => {
+//   const letters = "0123456789ABCDEF";
+//   let color = "#";
+//   for (let i = 0; i < 6; i++) {
+//     color += letters[Math.floor(Math.random() * 16)];
+//   }
+//   return color;
+// };
 
 // Define form schema
 const FormSchema = z.object({
-  batch: z.string().min(2, "Batch Number must be atleast 2 characters long" ),
-  teacher: z.string().nonempty("Please select a teacher").min(3, "Teacher Name must be atleast 3 characters long" ),
+  batch: z.string().min(2, "Batch Number must be atleast 2 characters long"),
+  teacher: z
+    .string()
+    .nonempty("Please select a teacher")
+    .min(3, "Teacher Name must be atleast 3 characters long"),
   startDate: z.string().optional(),
   dayTimeEntries: z
     .array(
@@ -58,26 +62,32 @@ const FormSchema = z.object({
         day: z.string(),
         time: z.string(),
       })
-    ).optional(),
+    )
+    .optional(),
   timeZone: z.string().nonempty("Please select a timezone"),
-  numberOfClasses: z.string().trim().max(3, 'Number of classes must have maximum 3 digits'),
-  studentName: z.string().min(3, "Student Name must be atlest 3 characters long" ),
+  numberOfClasses: z
+    .string()
+    .trim()
+    .max(3, "Number of classes must have maximum 3 digits"),
+  studentName: z
+    .string()
+    .min(3, "Student Name must be atlest 3 characters long"),
   destination: z
     .string()
-    .min(10, "Mobile number is too short" )
+    .min(10, "Mobile number is too short")
     .refine((val) => {
       const digits = val.replace(/\D/g, ""); // Remove non-digit characters
       return digits.length === 12 && digits.startsWith("971");
     }, "Please enter a valid UAE mobile number (e.g., +971XXXXXXX)"),
-  email: z.string().trim().email('Please enter a valid email'),
+  email: z.string().trim().email("Please enter a valid email"),
   completed: z.string().nonempty("Please select (YES/NO)").optional(),
-  colorCode: z.string().optional(),
   isColorCoding: z.boolean().optional(),
 });
 
 export function EditBatchForm() {
   const { id } = useParams();
   const [dayTimeEntries, setDayTimeEntries] = useState([]);
+  const [color, setColor] = useState("#0055A4");
 
   // Initialize react-hook-form
   const form = useForm({
@@ -94,7 +104,6 @@ export function EditBatchForm() {
       email: "",
       completed: "",
       isColorCoding: false,
-      colorCode: "#0055A4",
     },
   });
 
@@ -126,7 +135,7 @@ export function EditBatchForm() {
           destination: batchDetails.destination,
           completed: batchDetails.completed,
           isColorCoding: batchDetails.isColorCoding || false,
-          colorCode: batchDetails.colorCode || "#0055A4",
+          // colorCode: batchDetails.colorCode || "#0055A4",
         });
       } catch (error) {
         console.error("Failed to fetch batch details:", error);
@@ -186,10 +195,11 @@ export function EditBatchForm() {
       const startDate = new Date(data.startDate).toISOString().split("T")[0];
 
       // Generate new color code if isColorCoding is true
-      const colorCode =
-        data.isColorCoding === true
-          ? generateRandomColorCode()
-          : data.colorCode || "#0055A4";
+      // const colorCode =
+      //   data.isColorCoding === true
+      //     ? generateRandomColorCode()
+      //     : data.colorCode || "#0055A4";
+      const colorCode = color;
 
       const payload = {
         batch: data.batch,
@@ -254,7 +264,8 @@ export function EditBatchForm() {
                   />
                 </FormControl>
                 <FormDescription>
-                  Edit start date. This will be displayed in batch entries table.
+                  Edit start date. This will be displayed in batch entries
+                  table.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -274,7 +285,8 @@ export function EditBatchForm() {
                     </SelectTrigger>
                   </FormControl>
                   <FormDescription>
-                    Edit timezone. This will be displayed in batch entries table.
+                    Edit timezone. This will be displayed in batch entries
+                    table.
                   </FormDescription>
                   <SelectContent>
                     {timezone.map((item) => (
@@ -468,31 +480,41 @@ export function EditBatchForm() {
           />
 
           {form.watch("isColorCoding") && (
-            <FormField
-              control={form.control}
-              name="colorCode"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Color Code</FormLabel>
-                  <FormControl>
-                    <div className="flex items-center gap-2">
-                      <Input
-                        {...field}
-                        disabled
-                        title="Color Code"
-                        className="h-12 bg-accent-foreground rounded-xl shadow-none"
-                      />
-                      <div
-                        style={{ backgroundColor: field.value }}
-                        className="py-4 px-4 rounded-full border-2"
-                      ></div>
-                    </div>
-                  </FormControl>
-                  <FormDescription>This is disabled color coding field.</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            // <FormField
+            //   control={form.control}
+            //   name="colorCode"
+            //   render={({ field }) => (
+            //     <FormItem>
+            //       <FormLabel>Color Code</FormLabel>
+            //       <FormControl>
+            //         <div className="flex items-center gap-2">
+            //           <Input
+            //             {...field}
+            //             disabled
+            //             title="Color Code"
+            //             className="h-12 bg-accent-foreground rounded-xl shadow-none"
+            //           />
+            //           <div
+            //             style={{ backgroundColor: field.value }}
+            //             className="py-4 px-4 rounded-full border-2"
+            //           ></div>
+            //         </div>
+            //       </FormControl>
+            //       <FormDescription>This is disabled color coding field.</FormDescription>
+            //       <FormMessage />
+            //     </FormItem>
+            //   )}
+            // />
+            <div className="flex flex-col items-center gap-4">
+              <HexColorPicker color={color} onChange={setColor} className="max-w-md w-full" />
+              <div className="flex items-center gap-2">
+                <p>{color}</p>
+                <div
+                  style={{ backgroundColor: color}}
+                  className="py-4 px-4 rounded-full border-2"
+                ></div>
+              </div>
+            </div>
           )}
         </div>
 
@@ -503,16 +525,19 @@ export function EditBatchForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Batch Completed?</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                value={field.value}
-              >
+              <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
-                  <SelectTrigger className="h-12 rounded-xl shadow-none" title="batch Completed Drop-Down">
-                    <SelectValue defaultValue={"No"}/>
+                  <SelectTrigger
+                    className="h-12 rounded-xl shadow-none"
+                    title="batch Completed Drop-Down"
+                  >
+                    <SelectValue defaultValue={"No"} />
                   </SelectTrigger>
                 </FormControl>
-                <FormDescription>Select YES or NO. This will be dispalyed in batch entries table.</FormDescription>
+                <FormDescription>
+                  Select YES or NO. This will be dispalyed in batch entries
+                  table.
+                </FormDescription>
                 <SelectContent>
                   <SelectItem value={"Yes"}>{"YES"}</SelectItem>
                   <SelectItem value={"No"}>{"NO"}</SelectItem>
