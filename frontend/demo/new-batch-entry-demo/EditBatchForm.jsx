@@ -26,7 +26,7 @@ import { Switch } from "@/components/ui/switch";
 import SubmitButton from "../button-demo/SubmitButton";
 import MultiDayTimeEntry from "./MultiDayTimeEntry";
 import { NewBatchEntryUrl, StudentRegUrl } from "@/constants";
-import { timezone, userTimeZone } from "@/data/dataStorage";
+import { timezone } from "@/data/dataStorage";
 
 import Cookies from "js-cookie";
 import { format } from "date-fns";
@@ -87,7 +87,7 @@ export function EditBatchForm() {
       teacher: "",
       startDate: "",
       dayTimeEntries: [],
-      timeZone: userTimeZone, // Default to user's timezone
+      timeZone: "Asia/Dubai", // Default to user's timezone
       numberOfClasses: "",
       studentName: "",
       destination: "+971",
@@ -119,7 +119,7 @@ export function EditBatchForm() {
             ? format(new Date(batchDetails.startDate), "yyyy-MM-dd")
             : "",
           dayTimeEntries: initialDayTimeEntries,
-          timeZone: batchDetails.timeZone || userTimeZone,
+          timeZone: batchDetails.timeZone || "Asia/Dubai",
           numberOfClasses: batchDetails.numberOfClasses,
           studentName: batchDetails.studentName,
           email: batchDetails.email,

@@ -27,7 +27,7 @@ import { getUserSession } from "@/lib/session";
 import MultiDayTimeEntry from "./MultiDayTimeEntry";
 import StudentSearch from "../normal-class/StudentSearch";
 import { CoursesUrl, NewBatchEntryUrl, StudentRegUrl } from "@/constants";
-import { teachers, timezone, userTimeZone } from "@/data/dataStorage";
+import { teachers, timezone } from "@/data/dataStorage";
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -108,7 +108,7 @@ export function NewBatchEntryForm() {
         day: "",
         time: "",
       },
-      timeZone: userTimeZone,
+      timeZone: "Asia/Dubai",
       numberOfClasses: "",
       studentName: "",
       destination: "+971",
