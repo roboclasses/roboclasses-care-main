@@ -51,6 +51,7 @@ export type usersType={
   role:string;
   workingHours:string;
   workingDays:string
+  zoomApi: string
 }
 
 export type QuestionType={

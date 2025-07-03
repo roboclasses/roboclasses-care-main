@@ -22,6 +22,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useMemo, useState } from "react";
 import { UsersUrl } from "@/constants";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Copy } from "lucide-react";
 
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
@@ -104,32 +106,65 @@ export function TableUsers() {
           <TableHead>Role</TableHead>
           <TableHead>Working Hours</TableHead>
           <TableHead>Working Days</TableHead>
+          {<TableHead>Copy Zoom Api</TableHead>}
           <TableHead>Edit</TableHead>
           <TableHead>Delete</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {filteredData?.map((users: usersType) => (
-          <TableRow key={users._id}>
-            <TableCell className="font-medium">{users.name}</TableCell>
-            <TableCell className="font-medium">{users.email}</TableCell>
-            <TableCell className="font-medium">{users.role}</TableCell>
-            <TableCell className="font-medium">{users.workingHours}</TableCell>
-            <TableCell className="font-medium">{users.workingDays}</TableCell>
+        {filteredData?.map((item: usersType) => (
+          <TableRow key={item._id}>
+            <TableCell className="font-medium">{item.name}</TableCell>
+            <TableCell className="font-medium">{item.email}</TableCell>
+            <TableCell className="font-medium">{item.role}</TableCell>
+            <TableCell className="font-medium">{item.workingHours}</TableCell>
+            <TableCell className="font-medium">{item.workingDays}</TableCell>
             <TableCell className="text-right">
-              <Link href={`/manageRoles/edit/${users._id}`}>
+                <Button
+                  type="button"
+                  variant="link"
+                  onClick={() => {
+                    const api = item.zoomApi
+                    navigator.clipboard
+                      .writeText(api)
+                      .then(() => {
+                        toast({
+                          title: "Success ✅",
+                          description: "Zoom Api copied to clipboard",
+                          color: "green",
+                          duration: 3000,
+                        });
+                      })
+                      .catch(() => {
+                        toast({
+                          title: "Error",
+                          description: "Failed to copy Api to clipboard",
+                          variant: "destructive",
+                          duration: 3000,
+                        });
+                      });
+                  }}
+                  title="Copy zoom api"
+                  className="flex items-center gap-2"
+                >
+                  <Copy className="h-4 w-4" />
+                  Zoom Api 
+                </Button>
+              </TableCell>
+            <TableCell className="text-right">
+              <Link href={`/manageRoles/edit/${item._id}`}>
               <EditButton name="Edit" type="button" />
               </Link>
             </TableCell>
             <TableCell className="text-right">
-              <DeleteAlertDemo onCancel={()=>console.log("Delete action canceled")} onDelete={()=>handleDelete(users._id)}/>
+              <DeleteAlertDemo onCancel={()=>console.log("Delete action canceled")} onDelete={()=>handleDelete(item._id)}/>
             </TableCell>
           </TableRow>
         ))}
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={7}>Total Rows</TableCell>
+          <TableCell colSpan={8}>Total Rows</TableCell>
           <TableCell className="text-right">{filteredData?.length}</TableCell>
         </TableRow>
       </TableFooter>
