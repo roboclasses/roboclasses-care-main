@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema(
     },
     workingHours: { type: String, default: "" },
     workingDays: { type: String, default: "" },
+    zoomApi: {type: String, trim: true, default: ""}
   },
   { timestamps: true }
 );

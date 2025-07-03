@@ -38,6 +38,7 @@ const FormSchema = z.object({
   role: z.string().min(1, {message: "Role must be at least 1 character long"}).refine((val)=>validRoles.includes(val),{message: "Invalid role selected."}),
   workingHours: z.string().min(3, {message: "Working hours must be atleast 3 character long."}),
   workingDays: z.string().min(3, {message: "Working days must be atleast 3 character long."}),
+  zoomApi: z.string().trim().min(2, 'Meeting ID must be atleast 2 characters long').optional(),
 });
 
 export function EditUserForm() {
@@ -51,6 +52,7 @@ export function EditUserForm() {
       role: "",
       workingHours: "",
       workingDays: "",
+      zoomApi:"",
     },
   });
 
@@ -67,6 +69,7 @@ export function EditUserForm() {
           role: res.data.role,
           workingHours: res.data.workingHours,
           workingDays: res.data.workingDays,
+          zoomApi: res.data.zoomApi,
         });
       } catch (error) {
         console.log(error);
@@ -86,6 +89,7 @@ export function EditUserForm() {
         role: data.role,
         workingHours: data.workingHours,
         workingDays: data.workingDays,
+        zoomApi: data.zoomApi,
       };
       const res = await axios.put(`${UsersUrl}/${id}`, payload);
       console.log(res.data);
@@ -207,6 +211,28 @@ export function EditUserForm() {
             )}
           />
         </div>
+
+        {/* Meeting ID  */}
+         <FormField
+            control={form.control}
+            name="zoomApi"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Zoom Api</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    required
+                    type="text"
+                    title="Meeting ID"
+                    className="shadow-none rounded-xl h-12 bg-accent-foreground"
+                  />
+                </FormControl>
+                <FormDescription>Provided zoom api details. This will be displayed to admin only.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
         {/* Edit User role */}
         <FormField
