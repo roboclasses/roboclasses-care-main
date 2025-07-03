@@ -17,7 +17,7 @@ export const teachers = [
 ];
 
 // For detect system timezone
-export const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+// export const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 // For mapping timezones in drop down
 export const timezone = [
@@ -26,7 +26,6 @@ export const timezone = [
   { id: 3, name: "Asia/Riyadh", country: "Saudi Arab" },
   { id: 4, name: "America/Toronto", country: "Canada" },
   { id: 5, name: "Asia/Dubai", country: "UAE" },
-  { id: 6, name: userTimeZone, country: "Your Timezone" },
 ];
 
 // For mapping image-icons
