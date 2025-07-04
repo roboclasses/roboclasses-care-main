@@ -19,8 +19,10 @@ import { CoursesUrl } from "@/constants";
 import SubmitButton from "../button-demo/SubmitButton";
 
 import axios, { AxiosError } from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import SuccessMessageCard from "@/components/reusabels/SuccessMessageCard";
+import { Label } from "@/components/ui/label";
 
 
 const FormSchema = z.object({
@@ -30,6 +32,7 @@ const FormSchema = z.object({
 
 export function EditCourseEntryForm() {
     const {id} = useParams();
+    const [isSuccess, setIsSuccess] = useState(false);
 
     const form = useForm<z.infer<typeof FormSchema>>({
       resolver: zodResolver(FormSchema),
@@ -56,7 +59,7 @@ export function EditCourseEntryForm() {
     },[form, id])
 
     // Handle form status
-    const {isSubmitting} = form.formState;
+    const {isSubmitting, isSubmitSuccessful} = form.formState;
 
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -67,9 +70,9 @@ export function EditCourseEntryForm() {
       }
       const res = await axios.put(`${CoursesUrl}/${id}`, payload);
       console.log(res.data);
-      form.reset();
       
-      const {message} = res.data;
+      const {message, success} = res.data;
+      setIsSuccess(success)
       toast({ title: "Success✅", description: message, variant: "default" });
     } catch (error: unknown) {
       if(error instanceof AxiosError){
@@ -81,11 +84,22 @@ export function EditCourseEntryForm() {
   }
 
   return (
-    <Form {...form}>
+    <>
+    {(isSubmitSuccessful && isSuccess) 
+    ? (<SuccessMessageCard content="Thank you for updating Course."/>) 
+    : (<Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
+         <div className="mb-8 flex flex-col items-center">
+                    <h1 className="lg:text-4xl text-2xl mb-4 text-center font-serif">
+                      Edit Course
+                    </h1>
+                    <Label className="text-gray-500 lg:text-sm text-xs text-center">
+                      Courses for Kids
+                    </Label>
+                  </div>
         {/* Course Name */}
         <FormField
           control={form.control}
@@ -133,6 +147,7 @@ export function EditCourseEntryForm() {
 
         <SubmitButton name={isSubmitting ? 'Updating...' : 'Update'} type="submit" disabled={isSubmitting}/>
       </form>
-    </Form>
+    </Form>)}
+    </>
   );
 }

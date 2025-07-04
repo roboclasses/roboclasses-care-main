@@ -29,15 +29,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-import { FaCircleArrowRight } from "react-icons/fa6";
-import Link from "next/link";
 import { Label } from "@/components/ui/label";
+import SuccessMessageCard from "@/components/reusabels/SuccessMessageCard";
 
 const FormSchema = z.object({
   answer: z.array(
@@ -59,7 +52,7 @@ export function AssessmentSubmissionForm() {
 
   const { id } = useParams();
   const [data, setData] = useState<QuestionType[]>([]);
-  const [statusCode, setStatusCode] = useState<number | null>(null)
+  const [isSuccess, setIsSuccess] = useState(false)
 
   // Fetching assessment quetions and options
   useEffect(() => {
@@ -108,10 +101,10 @@ export function AssessmentSubmissionForm() {
     try {
       const res = await axios.post(AnswerUrl, payload);
       console.log(res.data);
-      setStatusCode(res.status);
-      form.reset();
+      // form.reset();
 
-      const { message } = res.data;
+      const { message, success } = res.data;
+      setIsSuccess(success)
       toast({ title: "Success✅", description: message, variant: "default" });
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
@@ -128,22 +121,9 @@ export function AssessmentSubmissionForm() {
 
   return (
     <>
-      {(isSubmitSuccessful  && statusCode === 201)? (
-        <Card className="p-2 rounded flex flex-col items-center">
-          <CardHeader className="text-2xl">✅</CardHeader>
-          <CardContent className="text-pretty text-lg font-serif">
-            Thank you for submitting your assesement, Teacher will let you know
-            your score shortly
-          </CardContent>
-          <CardFooter>
-            <Link className="flex items-center gap-2" href={"/"}>
-              <Button>
-                Back to Home <FaCircleArrowRight size={25} />
-              </Button>
-            </Link>
-          </CardFooter>
-        </Card>
-      ) : (
+      {(isSubmitSuccessful && isSuccess)
+      ? ( <SuccessMessageCard content="Thank you for submitting the assessment. One of our teacher will reach you soon."/>) 
+      : (
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div className="mb-8 flex flex-col items-center">

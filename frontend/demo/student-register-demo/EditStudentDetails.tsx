@@ -18,12 +18,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "@/hooks/use-toast";
 
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "react-phone-input-2/lib/style.css";
 import PhoneInput from "react-phone-input-2";
 import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import SubmitButton from "../button-demo/SubmitButton";
+import SuccessMessageCard from "@/components/reusabels/SuccessMessageCard";
+import { Label } from "@/components/ui/label";
 
 const FormSchema = z.object({
   studentName: z.string().min(3, {message: "Student name must be atleast 3 character long"}),
@@ -45,6 +47,7 @@ const FormSchema = z.object({
 
 export function EditStudentDetails() {
   const { id } = useParams();
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -84,7 +87,7 @@ export function EditStudentDetails() {
   }, [form, id]);
 
   // Handle form status
-  const { isSubmitting } = form.formState;
+  const { isSubmitting, isSubmitSuccessful } = form.formState;
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {    
     try {
@@ -100,7 +103,8 @@ export function EditStudentDetails() {
       const res = await axios.put(`${StudentRegUrl}/${id}`, payload, {headers: { Authorization: Cookies.get("token") }});
       console.log(res.data);
 
-      const { message } = res.data;
+      const { message, success } = res.data;
+      setIsSuccess(success)
       toast({ title: "Success✅", description: message, variant: "default" });
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
@@ -116,11 +120,22 @@ export function EditStudentDetails() {
   }
 
   return (
-    <Form {...form}>
+    <>
+    {(isSubmitSuccessful && isSuccess) 
+    ? (<SuccessMessageCard content="Thank you for update. One of our teacher will reach you soon."/>) 
+    : (<Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
+        <div className="mb-8 flex flex-col items-center text-center">
+            <h1 className="lg:text-4xl text-2xl mb-4 font-serif">
+              Edit registration Form
+            </h1>
+            <Label className="text-gray-500 md:text-sm text-xs">
+              Edit student details
+            </Label>
+          </div>
         {/* Student Full Name and Parent Full Name */}
         <div className="grid lg:grid-cols-2 grid-cols-1 gap-2">
           <FormField
@@ -302,6 +317,7 @@ export function EditStudentDetails() {
           disabled={isSubmitting}
         />
       </form>
-    </Form>
+    </Form>)}
+    </>
   );
 }

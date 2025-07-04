@@ -27,7 +27,7 @@ import { useForm } from "react-hook-form";
 import { DemoClassUrl } from "@/constants";
 import { timezone } from "@/data/dataStorage";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
@@ -35,6 +35,8 @@ import { format } from "date-fns";
 import "react-phone-input-2/lib/style.css";
 import PhoneInput from "react-phone-input-2";
 import { Switch } from "@/components/ui/switch";
+import SuccessMessageCard from "@/components/reusabels/SuccessMessageCard";
+import { Label } from "@/components/ui/label";
 
 //For mapping reminder times
 const items = [
@@ -71,6 +73,7 @@ const FormSchema = z.object({
 
 export function EditDemoClassForm() {
   const { id } = useParams();
+  const [isSuccess, setIsSuccess] = useState(false)
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -121,7 +124,10 @@ export function EditDemoClassForm() {
   }, [form, id]);
 
   // Handle form status
-  const { isSubmitting } = form.formState;
+  const { isSubmitting ,isSubmitSuccessful } = form.formState;
+
+  console.log("submit is successful",isSubmitSuccessful);
+  
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
@@ -142,7 +148,8 @@ export function EditDemoClassForm() {
       const res = await axios.put(`${DemoClassUrl}/${id}`, payload);
       console.log(res.data);
 
-      const { message } = res.data;
+      const { message, success } = res.data;
+      setIsSuccess(success)
       toast({ title: "Success✅", description: message, variant: "default" });
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
@@ -158,11 +165,21 @@ export function EditDemoClassForm() {
   }
 
   return (
-    <Form {...form}>
+    <>{(isSubmitSuccessful && isSuccess) 
+      ? (<SuccessMessageCard content="Thank your for updating Demo Class form."/>)
+      : (<Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
+          <div className="mb-8 flex flex-col items-center text-center">
+            <h1 className="lg:text-4xl text-2xl mb-2 font-serif">
+              Edit Demo Class Form
+            </h1>
+            <Label className="text-gray-500 lg:text-sm text-xs">
+              Edit appointment for Demo Class
+            </Label>
+          </div>
         {/* Student Full Name and Mobile Number */}
         <div className="grid lg:grid-cols-2 grid-cols-1 gap-2">
           <FormField
@@ -482,6 +499,7 @@ export function EditDemoClassForm() {
           disabled={isSubmitting}
         />
       </form>
-    </Form>
+      </Form>)}
+    </>
   );
 }

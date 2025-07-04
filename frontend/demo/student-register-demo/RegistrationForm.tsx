@@ -23,6 +23,9 @@ import { StudentRegUrl } from "@/constants";
 import axios, { AxiosError } from "axios";
 import PhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
+import { useState } from "react";
+import SuccessMessageCard from "@/components/reusabels/SuccessMessageCard";
+import { Label } from "@/components/ui/label";
 
 
 const FormSchema = z.object({
@@ -45,6 +48,7 @@ const FormSchema = z.object({
 });
 
 export function RegistrationForm() {
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -61,7 +65,7 @@ export function RegistrationForm() {
   });
 
   // Handle form status 
-  const { isSubmitting }  = form.formState;
+  const { isSubmitting, isSubmitSuccessful }  = form.formState;
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
@@ -77,9 +81,10 @@ export function RegistrationForm() {
 
       const res = await axios.post(StudentRegUrl,payload);
       console.log(res.data);
-      form.reset();
+      // form.reset();
 
-      const {message} = res.data;
+      const {message, success} = res.data;
+      setIsSuccess(success)
       toast({ title: "Success✅", description: message, variant:"default" });
     } catch (error:unknown) {
           if(error instanceof AxiosError){
@@ -91,11 +96,22 @@ export function RegistrationForm() {
   }
 
   return (
-    <Form {...form}>
+    <>
+    {(isSubmitSuccessful && isSuccess) 
+    ? (<SuccessMessageCard content="Thank you for register. One of our teacher will reach you soon."/>) 
+    : (<Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
+         <div className="mb-8 flex flex-col items-center text-center">
+                    <h1 className="lg:text-4xl text-2xl mb-4 font-serif">
+                      Student Registration Form
+                    </h1>
+                    <Label className="text-gray-500 md:text-sm text-xs">
+                      Register student here
+                    </Label>
+                  </div>
         {/* Student full name and Parent full name */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
         <FormField
@@ -295,6 +311,7 @@ export function RegistrationForm() {
 
         <SubmitButton name={isSubmitting ? 'Submitting...' : 'Register'} type="submit" disabled={isSubmitting}/>
       </form>
-    </Form>
+    </Form>)}
+    </>
   );
 }
