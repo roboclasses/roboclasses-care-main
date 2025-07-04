@@ -28,6 +28,7 @@ import Cookies from "js-cookie";
 import PhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
 import { Label } from "@/components/ui/label";
+import SuccessMessageCard from "@/components/reusabels/SuccessMessageCard";
 
 
 // For mapping time value to send reminder checkbox
@@ -98,6 +99,7 @@ const getNextClassDate = (startDate, daysOfWeek, times)=>{
 export function MultiDatePickerForm() {
   const [data, setData] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null)
+  const [isSuccess, setIsSuccess] = useState(false)
   
 // Handle fetch batches
   useEffect(()=>{
@@ -212,7 +214,7 @@ export function MultiDatePickerForm() {
   },[batchName, form])
 
   // Handle form status
-  const {isSubmitting} = form.formState;
+  const {isSubmitting, isSubmitSuccessful} = form.formState;
 
   
   async function onSubmit(data) {
@@ -227,9 +229,10 @@ export function MultiDatePickerForm() {
       const res = await axios.post(NormalClassUrl, payload);
   
       console.log(res.data);
-      form.reset();
+      // form.reset();
 
-      const {message} = res.data;
+      const {message, success} = res.data;
+      setIsSuccess(success);
       toast({ title: "Success✅", description: message, variant: "default" });
     } catch (error) {
       if(error instanceof AxiosError){
@@ -241,8 +244,20 @@ export function MultiDatePickerForm() {
   }
 
   return (
-    <Form {...form}>
+    <>
+    {(isSubmitSuccessful && isSuccess) 
+    ? (<SuccessMessageCard content="Thank you for submitting Normal Class Form."/>) 
+    : (<Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+
+        <div className="mb-8 flex flex-col items-center text-center">
+                    <h1 className="lg:text-4xl text-2xl mb-4 font-serif">
+                      Normal Class Form
+                    </h1>
+                    <Label className="text-gray-500 md:text-sm text-xs">
+                      Create normal class here
+                    </Label>
+                  </div>
 
     {/* Calculated Date, Time and Weekday */}
 {form.watch("allDates")?.map((_entry, index) => (
@@ -533,6 +548,7 @@ export function MultiDatePickerForm() {
 
         <SubmitButton name={isSubmitting ? 'Creating...' : 'Create'} type="submit" disabled={isSubmitting}/>
       </form>
-    </Form>
+    </Form>)}
+    </>
   );
 }

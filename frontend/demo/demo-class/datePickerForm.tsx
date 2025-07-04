@@ -27,6 +27,7 @@ import SubmitButton from "../button-demo/SubmitButton";
 import { DemoClassUrl } from "@/constants";
 import { getUserSession } from "@/lib/session";
 import { teachers, timezone } from "@/data/dataStorage";
+import SuccessMessageCard from "@/components/reusabels/SuccessMessageCard";
 
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -35,15 +36,6 @@ import "react-phone-input-2/lib/style.css";
 import PhoneInput from "react-phone-input-2";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { FaCircleArrowRight } from "react-icons/fa6";
-import Link from "next/link";
 
 // for mapping checkbox value and label
 const items = [
@@ -159,21 +151,9 @@ export function DatePickerForm() {
   }
   return (
     <>
-      {isSubmitSuccessful && isSuccess ? (
-        <Card className="p-2 rounded flex flex-col items-center">
-          <CardHeader className="text-2xl">✅</CardHeader>
-          <CardContent className="text-pretty text-lg font-serif">
-            Thank you for submitting demo class form.
-          </CardContent>
-          <CardFooter>
-              <Link className="flex items-center gap-2" href={"/"}>
-              <Button>
-                Back to Home <FaCircleArrowRight size={25} />
-              </Button>
-            </Link>
-          </CardFooter>
-        </Card>
-      ) : (
+      {(isSubmitSuccessful && isSuccess) 
+      ? (<SuccessMessageCard content="Thank you for submitting Demo Class form."/>) 
+      : (
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}

@@ -24,6 +24,8 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import "react-phone-input-2/lib/style.css";
 import PhoneInput from "react-phone-input-2";
+import SuccessMessageCard from "@/components/reusabels/SuccessMessageCard";
+import { Label } from "@/components/ui/label";
 
 // Define form schema
 const FormSchema = z.object({
@@ -49,6 +51,7 @@ const FormSchema = z.object({
 export function EditNormalClassForm() {
   const { id } = useParams();
   const [dateTimeEntries, setDateTimeEntries] = useState([]);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(FormSchema),
@@ -96,7 +99,7 @@ export function EditNormalClassForm() {
   };
 
   // Handle form status
-  const { isSubmitting } = form.formState;
+  const { isSubmitting, isSubmitSuccessful } = form.formState;
 
   // Submit handler
   async function onSubmit(data) {
@@ -116,7 +119,8 @@ export function EditNormalClassForm() {
       };
       const res = await axios.put(`${NormalClassUrl}/${id}`, payload);
 
-      const { message } = res.data;
+      const { message, success } = res.data;
+      setIsSuccess(success);
       toast({ title: "Success✅", description: message, variant: "default" });
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -132,11 +136,20 @@ export function EditNormalClassForm() {
   }
 
   return (
-    <Form {...form}>
+    <>
+    {(isSubmitSuccessful && isSuccess) 
+    ? (<SuccessMessageCard content="Thank you for updating Normal Class form."/>) 
+    : (<Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
+        <div className="mb-8 flex flex-col items-center text-center">
+                  <h1 className="lg:text-4xl text-2xl mb-4 font-serif">
+                    Edit Normal Class Form
+                  </h1>
+                  <Label className="text-gray-500 md:text-sm text-xs">Edit appointment for normal class here</Label>
+                  </div>
         {/* Date and Time */}
         <MultiDateTimeEntry onEntriesChange={handleDateTimeEntriesChange} />
 
@@ -247,6 +260,7 @@ export function EditNormalClassForm() {
           disabled={isSubmitting}
         />
       </form>
-    </Form>
+    </Form>)}
+    </>
   );
 }

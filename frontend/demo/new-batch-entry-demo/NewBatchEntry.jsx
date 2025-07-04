@@ -35,6 +35,8 @@ import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import "react-phone-input-2/lib/style.css";
 import PhoneInput from "react-phone-input-2";
+import SuccessMessageCard from "@/components/reusabels/SuccessMessageCard";
+import { Label } from "@/components/ui/label";
 
 const FormSchema = z.object({
   batch: z.string().min(2, "Batch Number must be atleast 2 characters long"),
@@ -63,6 +65,7 @@ export function NewBatchEntryForm() {
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
   const [courses, setCourses] = useState([]);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const [dayTimeEntries, setDayTimeEntries] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -181,7 +184,7 @@ export function NewBatchEntryForm() {
   }, [courseName, form]);
 
   // Handle form status
-  const { isSubmitting } = form.formState;
+  const { isSubmitting, isSubmitSuccessful } = form.formState;
 
   async function onSubmit(data) {
     try {
@@ -207,9 +210,10 @@ export function NewBatchEntryForm() {
       });
       console.log(res.data);
 
-      form.reset();
+      // form.reset();
 
-      const { message } = res.data;
+      const { message, success } = res.data;
+      setIsSuccess(success);
       toast({ title: "Success✅", description: message, variant: "default" });
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -225,11 +229,22 @@ export function NewBatchEntryForm() {
   }
 
   return (
-    <Form {...form}>
+    <>
+    {(isSubmitSuccessful && isSuccess) 
+    ? (<SuccessMessageCard content="Thank you for creating a New Batch."/>) 
+    : (<Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
+        <div className="mb-8 flex flex-col items-center">
+                    <h1 className="lg:text-4xl text-2xl mb-4 text-center font-serif">
+                      Batch Entry Form
+                    </h1>
+                    <Label className="text-gray-500 lg:text-sm text-xs text-center">
+                      Create a batch here
+                    </Label>
+                  </div>
         {/* Multi Day Time Entry  */}
         <MultiDayTimeEntry onEntriesChange={handleDateTimeEntriesChange} />
 
@@ -507,6 +522,7 @@ export function NewBatchEntryForm() {
           disabled={isSubmitting}
         />
       </form>
-    </Form>
+    </Form>)}
+    </>
   );
 }

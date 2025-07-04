@@ -37,6 +37,8 @@ import { useParams } from "next/navigation";
 import "react-phone-input-2/lib/style.css";
 import PhoneInput from "react-phone-input-2";
 import { HexColorPicker } from "react-colorful";
+import SuccessMessageCard from "@/components/reusabels/SuccessMessageCard";
+import { Label } from "@/components/ui/label";
 
 // Generate random colors
 // const generateRandomColorCode = () => {
@@ -88,6 +90,7 @@ export function EditBatchForm() {
   const { id } = useParams();
   const [dayTimeEntries, setDayTimeEntries] = useState([]);
   const [color, setColor] = useState("#0055A4");
+  const [isSuccess, setIsSuccess] = useState(false);
 
   // Initialize react-hook-form
   const form = useForm({
@@ -177,7 +180,7 @@ export function EditBatchForm() {
   }, [form, studentName]);
 
   // Handle form status
-  const { isSubmitting } = form.formState;
+  const { isSubmitting, isSubmitSuccessful } = form.formState;
 
   // Submit handler
   async function onSubmit(data) {
@@ -221,9 +224,8 @@ export function EditBatchForm() {
       });
       console.log(res.data);
 
-      form.reset();
-
-      const { message } = res.data;
+      const { message, success } = res.data;
+      setIsSuccess(success);
       toast({ title: "Success✅", description: message, variant: "default" });
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -239,11 +241,20 @@ export function EditBatchForm() {
   }
 
   return (
-    <Form {...form}>
+    <>
+    {(isSubmitSuccessful && isSuccess) 
+    ? (<SuccessMessageCard content="Thank you for updating batch."/>) 
+    : (<Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
+        <div className="mb-8 flex flex-col items-center">
+                  <h1 className="lg:text-4xl text-2xl mb-4 text-center font-serif">
+                    Edit Batch Form
+                  </h1>
+                  <Label className="text-gray-500 lg:text-sm text-xs text-center">Edit batch entries here</Label>
+                  </div>
         <MultiDayTimeEntry onEntriesChange={handleDateTimeEntriesChange} />
 
         {/* Start Date and Timezone Selector */}
@@ -554,6 +565,7 @@ export function EditBatchForm() {
           disabled={isSubmitting}
         />
       </form>
-    </Form>
+    </Form>)}
+    </>
   );
 }

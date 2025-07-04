@@ -19,6 +19,9 @@ import { CoursesUrl } from "@/constants";
 import SubmitButton from "../button-demo/SubmitButton";
 
 import axios, { AxiosError } from "axios";
+import { useState } from "react";
+import SuccessMessageCard from "@/components/reusabels/SuccessMessageCard";
+import { Label } from "@/components/ui/label";
 
 const FormSchema = z.object({
   course: z
@@ -27,21 +30,24 @@ const FormSchema = z.object({
 });
 
 export function NewCourseEntryForm() {
+  const [isSuccess, setIsSuccess] = useState(false);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: { course: "" },
   });
 
   // Handle form status
-  const { isSubmitting } = form.formState;
+  const { isSubmitting, isSubmitSuccessful } = form.formState;
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
       const res = await axios.post(CoursesUrl, data);
       console.log(res.data);
-      form.reset();
+      // form.reset();
 
-      const { message } = res.data;
+      const { message, success } = res.data;
+      setIsSuccess(success);
       toast({
         title: "Success✅",
         description: message,
@@ -61,7 +67,18 @@ export function NewCourseEntryForm() {
   }
 
   return (
-    <Form {...form}>
+    <>
+    {(isSubmitSuccessful && isSuccess) 
+    ? (<SuccessMessageCard content="Thank you for creating a Course."/>) 
+    : (<Form {...form}>
+       <div className="mb-8 flex flex-col items-center">
+                  <h1 className="lg:text-4xl text-2xl mb-4 text-center font-serif">
+                    Create a New Course
+                  </h1>
+                  <Label className="text-gray-500 lg:text-sm text-xs text-center">
+                    Courses for Kids
+                  </Label>
+                </div>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
@@ -95,6 +112,7 @@ export function NewCourseEntryForm() {
           disabled={isSubmitting}
         />
       </form>
-    </Form>
+    </Form>)}
+    </>
   );
 }
