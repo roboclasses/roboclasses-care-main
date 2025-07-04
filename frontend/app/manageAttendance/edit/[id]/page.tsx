@@ -3,7 +3,6 @@ import { EditAttendanceForm } from "@/demo/manage-attendance-demo/EditAttendance
 const page = () => {
   return (
     <main className="grid grid-cols-1 p-10">
-      <h1 className="lg:text-4xl text-xl mb-4 font-serif">Edit Attendances</h1>
       <EditAttendanceForm />
     </main>
   );

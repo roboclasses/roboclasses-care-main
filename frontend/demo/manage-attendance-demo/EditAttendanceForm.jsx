@@ -27,6 +27,7 @@
   import Cookies from "js-cookie";
   import { format } from "date-fns";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import SuccessMessageCard from "@/components/reusabels/SuccessMessageCard";
 
 
   const FormSchema = z.object({
@@ -40,6 +41,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
   export function EditAttendanceForm() {
     const {id} = useParams();
     const [numberOfClasses, setNumberOfClasses] = useState(0);
+    const [isSuccess, setIsSuccess] = useState(false);
 
     const form = useForm({
       resolver: zodResolver(FormSchema),
@@ -87,7 +89,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 
     // Handle form status
-    const {isSubmitting} = form.formState;
+    const {isSubmitting, isSubmitSuccessful} = form.formState;
 
     // Handle form submission
     async function onSubmit(data) {
@@ -108,7 +110,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
         const res = await axios.put(`${AttendanceUrl}/${id}`, payload, { headers: { Authorization: Cookies.get("token") }});
         console.log(res.data);
 
-        const {message} = res.data;
+        const {message, success} = res.data;
+        setIsSuccess(success);
         toast({ title: "Success✅", description: message, variant: "default" });
         
       } catch (error) {
@@ -121,8 +124,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
     }
 
     return (
-      <Form {...form}>
+      <>
+      {(isSubmitSuccessful && isSuccess) 
+      ? (<SuccessMessageCard content="Thank you for updating attendance form."/>) 
+      : (<Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 gap-2 flex flex-col ">
+        <h1 className="lg:text-4xl text-xl mb-4 font-serif">Edit Attendances</h1>
 
         {/* Batch Name */}
           <FormField
@@ -223,6 +230,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
                   />
 
         </form>
-      </Form>
+      </Form>)}
+      </>
     );
   }

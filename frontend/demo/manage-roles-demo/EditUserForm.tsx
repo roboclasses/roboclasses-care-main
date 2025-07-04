@@ -26,8 +26,10 @@ import SubmitButton from "../button-demo/SubmitButton";
 import { UsersUrl } from "@/constants";
 
 import axios, { AxiosError } from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import SuccessMessageCard from "@/components/reusabels/SuccessMessageCard";
+import { Label } from "@/components/ui/label";
 
 // Roles data
 const validRoles = ['admin', 'teacher', 'contractor'];
@@ -43,6 +45,7 @@ const FormSchema = z.object({
 
 export function EditUserForm() {
   const { id } = useParams();
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -79,7 +82,7 @@ export function EditUserForm() {
   }, [form, id]);
 
   // Handle form status
-  const { isSubmitting } = form.formState;
+  const { isSubmitting, isSubmitSuccessful } = form.formState;
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
@@ -93,9 +96,11 @@ export function EditUserForm() {
       };
       const res = await axios.put(`${UsersUrl}/${id}`, payload);
       console.log(res.data);
-      form.reset();
+      // form.reset();
 
-      const { message } = res.data;
+      const { message, success } = res.data;
+      setIsSuccess(success);
+
       toast({ title: "Success✅", description: message, variant: "default" });
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
@@ -111,11 +116,22 @@ export function EditUserForm() {
   }
 
   return (
-    <Form {...form}>
+    <>
+    {(isSubmitSuccessful && isSuccess) 
+    ? (<SuccessMessageCard content="Thank you for updating user details."/>) 
+    : (<Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
+        <div className="mb-8 flex flex-col items-center text-center">
+                    <h1 className="lg:text-4xl text-2xl mb-4 font-serif">
+                      Edit Role Form
+                    </h1>
+                    <Label className="text-gray-500 lg:text-lg text-sm">
+                      Edit role here
+                    </Label>
+                  </div>
         {/* User Full Name and Email Address */}
         <div className="grid lg:grid-cols-2 grid-cols-1 gap-2">
           <FormField
@@ -264,6 +280,7 @@ export function EditUserForm() {
           disabled={isSubmitting}
         />
       </form>
-    </Form>
+    </Form>)}
+    </>
   );
 }

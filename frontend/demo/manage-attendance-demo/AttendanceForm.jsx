@@ -33,6 +33,7 @@ import { usePathname } from "next/navigation";
 import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import { format } from "date-fns";
+import SuccessMessageCard from "@/components/reusabels/SuccessMessageCard";
 
 
 const FormSchema = z.object({
@@ -49,6 +50,7 @@ export function AttendanceForm() {
   const [role, setRole] = useState("");
   const [name, setName] = useState("");
   const [numberOfClasses, setNumberOfClasses] = useState(0);
+  const [isSuccess, setIsSuccess] = useState(false);
 
 
   const form = useForm({
@@ -138,7 +140,7 @@ export function AttendanceForm() {
       };
 
     // Handle form status
-    const { isSubmitting } = form.formState;
+    const { isSubmitting, isSubmitSuccessful } = form.formState;
 
 
   async function onSubmit(data) {
@@ -156,7 +158,8 @@ export function AttendanceForm() {
       const res = await axios.post(AttendanceUrl ,payload)
       console.log(res.data);
       
-      const {message} = res.data;
+      const {message, success} = res.data;
+      setIsSuccess(success);
       toast({title:"Success✅", description: message, variant:"default"})
 
     } catch (error) {
@@ -169,9 +172,12 @@ export function AttendanceForm() {
   }
 
   return (
-    <Form {...form}>
+    <>
+    {(isSubmitSuccessful && isSuccess) 
+    ? (<SuccessMessageCard content="Thank you for submit Attendance form."/>) 
+    : (<Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-2">
-
+      <h1 className="lg:text-4xl text-xl mb-4 font-serif">Manage Attendance</h1>
         {/* Batch Name */}
         <FormField
           control={form.control}
@@ -262,6 +268,7 @@ export function AttendanceForm() {
     ))}
 
       </form>
-    </Form>
-  );
+    </Form>)}
+    </>
+  )
 }
