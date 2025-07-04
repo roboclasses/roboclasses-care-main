@@ -31,7 +31,9 @@ import {
 } from "@/components/ui/select";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import SuccessMessageCard from "@/components/reusabels/SuccessMessageCard";
+import { Label } from "@/components/ui/label";
 
 
 const fetcher = (url: string) => axios.get(url, { headers: { Authorization: Cookies.get("token") } }).then((res) => res.data);
@@ -45,6 +47,8 @@ const FormSchema = z.object({
 });
 
 export function FeedbackAdminForm() {
+  const [isSuccess, setIsSuccess] = useState(false);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -96,15 +100,16 @@ export function FeedbackAdminForm() {
   }, [batchName, form]);
 
   // Handle form status
-  const { isSubmitting } = form.formState;
+  const { isSubmitting, isSubmitSuccessful } = form.formState;
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
       const res = await axios.post(FeedbackUrl, data);
       console.log(res.data);
-      form.reset();
+      // form.reset();
 
-      const { message } = res.data;
+      const { message, success } = res.data;
+      setIsSuccess(success);
       toast({ title: "Success✅", description: message, variant: "default" });
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
@@ -116,7 +121,18 @@ export function FeedbackAdminForm() {
   }
 
   return (
-    <Form {...form}>
+    <>
+    {(isSubmitSuccessful && isSuccess) 
+    ? (<SuccessMessageCard content="Thank you for creating feedback."/>) 
+    : (<Form {...form}>
+       <div className="mb-8 flex flex-col items-center">
+                  <h1 className="lg:text-4xl text-2xl mb-4 text-center font-serif">
+                    Create a Batchwise Feedback
+                  </h1>
+                  <Label className="text-gray-500 lg:text-sm text-xs text-center">
+                    Please fill neccessary fields
+                  </Label>
+                </div>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
@@ -274,6 +290,7 @@ export function FeedbackAdminForm() {
           disabled={isSubmitting}
         />
       </form>
-    </Form>
+    </Form>)}
+    </>
   );
 }

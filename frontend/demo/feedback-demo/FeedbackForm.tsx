@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "@/hooks/use-toast";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { FeedbackUrl } from "@/constants";
 import { useParams } from "next/navigation";
@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/accordion";
 import { FeedbackData } from "@/data/dataStorage";
 import { Textarea } from "@/components/ui/textarea";
+import SuccessMessageCard from "@/components/reusabels/SuccessMessageCard";
 
 const FormSchema = z.object({
   feedbackAnswer: z.array(
@@ -48,6 +49,7 @@ export function FeedbackForm() {
   });
 
   const { id } = useParams();
+  const [isSuccess, setIsSuccess] = useState(false);
 
   // Fetching admin feedback details
   useEffect(() => {
@@ -70,15 +72,18 @@ export function FeedbackForm() {
     handleFetch();
   }, [form, id]);
 
+  const {isSubmitting, isSubmitSuccessful} = form.formState;
+
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log(data);
 
     try {
       const res = await axios.put(`${FeedbackUrl}/${id}`, data);
       console.log(res.data);
-      form.reset();
+      // form.reset();
 
-      const { message } = res.data;
+      const { message, success } = res.data;
+      setIsSuccess(success);
       toast({ title: "Success✅", description: message, variant: "default" });
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
@@ -94,7 +99,14 @@ export function FeedbackForm() {
   }
 
   return (
-    <Form {...form}>
+    <>
+    {(isSubmitSuccessful && isSuccess) 
+    ? (
+      <SuccessMessageCard 
+        content="Thank you for submitting your valuable feedback. One of our teacher will reach you soon."
+      />
+      ) 
+    : (<Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="item-1">
@@ -276,12 +288,11 @@ export function FeedbackForm() {
                 )}
               />
 
-
-
-        <Button type="submit" className="w-full">
-          Submit Feedback
+        <Button type="submit" disabled={isSubmitting} className="w-full">
+          {isSubmitting ? 'Submitting...' : 'Submit Feedback'}
         </Button>
       </form>
-    </Form>
+    </Form>)}
+    </>
   );
 }
