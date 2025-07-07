@@ -17,9 +17,10 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
   title: "ROBO CLASSES care",
   description: "STEM Accredited robotics and coding courses.",
-  icons: {
-    icon: "/favicon.ico",
-  },
+  ...(process.env.NODE_ENV === 'production' && { icons: {
+    icon:   "/favicon.ico" ,
+  }
+ }),
 };
 
 export const viewport: Viewport = {
