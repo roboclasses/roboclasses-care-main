@@ -130,19 +130,13 @@ const FormSchema = z.object({
   items: z.array(z.string()).default([]),
   isCompensationClass: z.boolean(),
   isZoomMeeting: z.boolean(),
-  topic: z.string().min(3, "Topic must be atleast 3 character long"),
-  type: z.string().max(1, "Type must contains maximum of 1 digit"),
-  duration: z
-    .string()
-    .min(1, "Duration must contains minimum of 1 digit")
-    .max(4, "Duration must contains maximum of 4 digit"),
-  agenda: z.string().min(3, "Agenda must be atleast 3 character long"),
+  topic: z.string().optional(),
+  type: z.string().optional(),
+  duration: z.string().optional(),
+  agenda: z.string().optional(),
   participants: z.array(z.string().email("Please enter a valid email")),
-  isMeetingSetting: z.boolean(),
-  meetingReminder: z
-    .string()
-    .min(1, "reminder must contain minimum of 1 digit")
-    .max(4, "reminder must contain maximum of 4 digit"),
+  isMeetingSetting: z.boolean().optional(),
+  meetingReminder: z.string().optional(),
 });
 
 export function DatePickerForm() {
