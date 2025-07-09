@@ -73,10 +73,10 @@ const appointmentSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
-     isMeetingSetting: {
-      type: Boolean,
-      default: false,
-    },
+    //  isMeetingSetting: {
+    //   type: Boolean,
+    //   default: false,
+    // },
      meetingReminder: {
       type: String,
       default: "",
