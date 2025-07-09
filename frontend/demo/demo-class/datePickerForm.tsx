@@ -222,9 +222,11 @@ export function DatePickerForm() {
         duration: data.duration,
         agenda: data.agenda,
         participants: fullParticipants,
+        // isMeetingSetting: data.isMeetingSetting,
         meetingReminder: data.meetingReminder,
       };
       console.log(JSON.stringify(payload));
+      // console.log("Meeting setting boolean: "+payload.isMeetingSetting)
 
       const res = await axios.post(DemoClassUrl, payload);
       console.log(res.data);
