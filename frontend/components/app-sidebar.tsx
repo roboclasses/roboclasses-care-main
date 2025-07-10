@@ -59,6 +59,7 @@ useEffect(()=>{
   fetchUserSession();
 },[pathname])
 
+ // Views data (side-bar)
   const data = {
     user: {
       name: name ,
@@ -84,6 +85,10 @@ useEffect(()=>{
           {
             title: "Normal Class",
             url: "/appointment/reminder/normal-class",
+          },
+           {
+            title: "Parent Teacher meeting",
+            url: "/appointment/PTM",
           },
         ],
       },
@@ -163,6 +168,10 @@ useEffect(()=>{
           {
             title: "Normal Class",
             url: "/appointment/reminder/normal-class",
+          },
+           {
+            title: "Parent Teacher meeting",
+            url: "/appointment/PTM",
           },
         ],
       },
