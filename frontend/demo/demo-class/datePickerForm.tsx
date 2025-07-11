@@ -26,7 +26,7 @@ import {
 import SubmitButton from "../button-demo/SubmitButton";
 import { DemoClassUrl } from "@/constants";
 import { getUserSession } from "@/lib/session";
-import { teachers, timezone } from "@/data/dataStorage";
+import { meetingTypeData, reminderData, teachers, timezone } from "@/data/dataStorage";
 import SuccessMessageCard from "@/components/reusabels/SuccessMessageCard";
 
 import { usePathname } from "next/navigation";
@@ -51,55 +51,6 @@ const items = [
   {
     id: "1hour",
     label: "1 Hour",
-  },
-];
-
-// Zoom meeting types data
-const meetingTypeData = [
-  {
-    id: "1",
-    type: "Instant Meeting",
-  },
-  {
-    id: "2",
-    type: "Scheduled Meeting",
-  },
-  {
-    id: "3",
-    type: "Recurring Meeting with no fixed time",
-  },
-  {
-    id: "4",
-    type: "Recurring Meeting with fixed time",
-  },
-];
-
-// Zoom meeting reminder data
-const reminderData = [
-  {
-    id: 1,
-    reminder: "15",
-    content: "15 minutes",
-  },
-  {
-    id: 2,
-    reminder: "30",
-    content: "30 minutes",
-  },
-  {
-    id: 3,
-    reminder: "60",
-    content: "1 hour",
-  },
-  {
-    id: 4,
-    reminder: "120",
-    content: "2 hours",
-  },
-  {
-    id: 5,
-    reminder: "1440",
-    content: "1 day",
   },
 ];
 
