@@ -24,6 +24,8 @@ import axios, { AxiosError } from "axios";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Download } from "lucide-react";
 
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
@@ -65,6 +67,34 @@ export function StudentsTable() {
     }
   };
 
+  // Handle download as CSV
+  const handleDownload = ()=>{
+    const rows = [['student name', 'contact details', 'email address', 'courses done']];
+    if (!data || data.length === 0) {
+      toast({ title: 'No data', description: 'No students to download.', variant: 'destructive' });
+      return;
+    }
+    data.forEach((student) => {
+      rows.push([
+        student.studentName || '',
+        student.destination || '',
+        student.email || '',
+        student.courses || '',
+      ]);
+    });
+    const csvContent = rows.map(row => row.map(field => `"${String(field).replace(/"/g, '""')}"`).join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'students.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    toast({ title: 'Download started', description: 'Student data CSV is downloading.', variant: 'default' });
+  }
+
   // Handle edge cases
   if (data?.length === 0) return <div>Empty list for Students</div>;
   if (error instanceof AxiosError){
@@ -76,7 +106,13 @@ export function StudentsTable() {
 
   return (
     <>
+    <div className="flex justify-between items-center w-full">
     <h1 className="lg:text-4xl text-xl font-semibold mb-4 text-center">All Students</h1>
+    <Button variant="outline" size="sm" onClick={handleDownload}>
+            <Download className="h-4 w-4 mr-2" />
+            Download as CSV
+          </Button>
+    </div>
     <Card className="p-2">
     <Table>
       <TableCaption>A list of Students</TableCaption>
