@@ -18,6 +18,7 @@ import holidayRoutes from "./routes/holidayRoutes.js"
 import assessmentRoutes from "./routes/assessmentRoute.js"
 import answerRoutes from "./routes/answerRoute.js"
 import feedbackRoutes from "./routes/feedbackRoute.js"
+import ptmRoutes from "./routes/ptmRoute.js"
 
 import { handleCleanupExpiredTimeOff } from "./jobs/cleanupExpiredTimeOff.js";
 
@@ -52,6 +53,7 @@ app.use('/api/v1',holidayRoutes)
 app.use('/api/v1',assessmentRoutes)
 app.use('/api/v1',answerRoutes)
 app.use('/api/v1',feedbackRoutes)
+app.use('/api/v1',ptmRoutes)
 
 
 
