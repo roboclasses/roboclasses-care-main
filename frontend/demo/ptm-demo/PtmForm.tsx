@@ -22,7 +22,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 
-import { CoursesUrl, NewBatchEntryUrl } from "@/constants";
+import { NewBatchEntryUrl, PtmUrl } from "@/constants";
 import SubmitButton from "../button-demo/SubmitButton";
 
 import axios, { AxiosError } from "axios";
@@ -167,8 +167,25 @@ export function PtmForm() {
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log(JSON.stringify(data))
     try {
-      // const finalParticipants = [...additionalParticipants]
-      const res = await axios.post(CoursesUrl, data);
+      const finalParticipants = [...additionalParticipants]
+      const payload = {
+        batch: data.batch,
+        studentName: data.batch,
+        email: data.email,
+        destination: data.destination,
+        teacher: data.teacher,
+        timeZone: data.timeZone,
+        date: data.date,
+        time: data.time,
+        topic: data.topic,
+        type: data.type,
+        duration: data.duration,
+        agenda: data.agenda,
+        participants: finalParticipants,
+        isMeetingSetting: data.isMeetingSetting,
+        meetingReminder: data.meetingReminder,
+      }
+      const res = await axios.post(PtmUrl, payload);
       console.log(res.data);
       // form.reset();
 
