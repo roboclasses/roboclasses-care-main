@@ -1,8 +1,14 @@
-import { TableNormalClass } from '@/demo/admin-dashboard/TableNormalClass'
-import React from 'react'
+import { TableNormalClass } from "@/demo/admin-dashboard/TableNormalClass";
+import { PtmTable } from "@/demo/ptm-demo/PtmTable";
+import React from "react";
 
 const page = () => {
-  return <TableNormalClass />
-}
+  return (
+    <div className="space-y-10">
+      <PtmTable />
+      <TableNormalClass />
+    </div>
+  );
+};
 
-export default page
+export default page;

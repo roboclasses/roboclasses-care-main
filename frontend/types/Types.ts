@@ -140,6 +140,25 @@ export type normalClassType = {
   numberOfClasses: string;
 };
 
+export type TPtmType={
+  _id: string
+  batch: string
+  studentName: string
+  email: string
+  destination: string
+  teacher: string
+  timeZone: string
+  date: Date
+  time: string
+  topic: string
+  type: number
+  duration: number
+  agenda: string
+  participants: string[]
+  isMeetingSetting: boolean
+  meetingReminder: number
+}
+
 export type leaveType = {
   length: unknown;
   _id: string;
