@@ -212,7 +212,7 @@ export function PtmForm() {
   return (
     <>
       {isSubmitSuccessful && isSuccess ? (
-        <SuccessMessageCard content="Thank you for creating a Course." />
+        <SuccessMessageCard content="Thank you for registering in PTM! One of our teachers will contact you soon." />
       ) : (
         <Form {...form}>
           <div className="mb-8 flex flex-col items-center">

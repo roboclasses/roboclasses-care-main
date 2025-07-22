@@ -126,7 +126,7 @@ import SuccessMessageCard from "@/components/reusabels/SuccessMessageCard";
     return (
       <>
       {(isSubmitSuccessful && isSuccess) 
-      ? (<SuccessMessageCard content="Thank you for updating attendance form."/>) 
+      ? (<SuccessMessageCard content="Thank you for updating attendance!"/>) 
       : (<Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 gap-2 flex flex-col ">
         <h1 className="lg:text-4xl text-xl mb-4 font-serif">Edit Attendances</h1>

@@ -86,7 +86,7 @@ export function EditCourseEntryForm() {
   return (
     <>
     {(isSubmitSuccessful && isSuccess) 
-    ? (<SuccessMessageCard content="Thank you for updating Course."/>) 
+    ? (<SuccessMessageCard content="Thank you for updating course!"/>) 
     : (<Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
