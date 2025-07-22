@@ -18,12 +18,18 @@ import useSWR from "swr";
 import axios, { AxiosError } from "axios";
 import Link from "next/link";
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useMemo, useState } from "react";
 import { UsersUrl } from "@/constants";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Copy } from "lucide-react";
+import { ArrowUpDown, Copy, User } from "lucide-react";
 
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
@@ -84,16 +90,34 @@ export function TableUsers() {
       : role === 'contractor' ? 'Manage Contractor' 
       : ''}
       </h1>
-      <Select onValueChange={(value)=>setRole(value)} defaultValue="teacher">
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Filter Roles"/>
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="teacher">Teachers</SelectItem>
-          <SelectItem value="admin">Admins</SelectItem>
-           <SelectItem value="contractor">Contractors</SelectItem>
-        </SelectContent>
-      </Select>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="flex items-center gap-1">
+                <User className="w-4 h-4" />
+                Sort by Roles:
+                {role === "teacher" ? "Teacher" : role === "admin" ? "Admin" : role === "contractor" ? "Contractor" : ""}
+                <ArrowUpDown className="w-4 h-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-[200px]" align="end">
+              <DropdownMenuRadioGroup
+                value={role}
+                onValueChange={setRole}
+              >
+                <DropdownMenuRadioItem value="teacher">
+                  Teacher
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="admin">
+                  Admin
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="contractor">
+                  Contractor
+                </DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+      
     </div>
 
     <Card className="p-2">
