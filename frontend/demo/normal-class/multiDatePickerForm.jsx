@@ -246,7 +246,7 @@ export function MultiDatePickerForm() {
   return (
     <>
     {(isSubmitSuccessful && isSuccess) 
-    ? (<SuccessMessageCard content="Thank you for submitting Normal Class Form."/>) 
+    ? (<SuccessMessageCard content="Thank you for registering in normal class! One of our teachers will contact you soon."/>) 
     : (<Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
 

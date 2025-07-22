@@ -166,7 +166,7 @@ export function EditDemoClassForm() {
 
   return (
     <>{(isSubmitSuccessful && isSuccess) 
-      ? (<SuccessMessageCard content="Thank your for updating Demo Class form."/>)
+      ? (<SuccessMessageCard content="Thank you for updating demo class! One of our teachers will contact you soon."/>)
       : (<Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}

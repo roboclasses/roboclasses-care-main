@@ -202,7 +202,7 @@ export function DatePickerForm() {
   return (
     <>
       {isSubmitSuccessful && isSuccess ? (
-        <SuccessMessageCard content="Thank you for submitting Demo Class form." />
+        <SuccessMessageCard content="Thank you for registering in demo class! One of our teachers will contact you soon." />
       ) : (
         <Form {...form}>
           <form

@@ -231,7 +231,7 @@ export function NewBatchEntryForm() {
   return (
     <>
     {(isSubmitSuccessful && isSuccess) 
-    ? (<SuccessMessageCard content="Thank you for creating a New Batch."/>) 
+    ? (<SuccessMessageCard content="Thank you for creating a batch!"/>) 
     : (<Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}

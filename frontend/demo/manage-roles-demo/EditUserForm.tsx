@@ -118,7 +118,7 @@ export function EditUserForm() {
   return (
     <>
     {(isSubmitSuccessful && isSuccess) 
-    ? (<SuccessMessageCard content="Thank you for updating user details."/>) 
+    ? (<SuccessMessageCard content="Thank you for updating role!"/>) 
     : (<Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
