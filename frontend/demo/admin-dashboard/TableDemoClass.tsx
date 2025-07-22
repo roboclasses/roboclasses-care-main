@@ -11,13 +11,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuRadioGroup,
@@ -40,7 +33,7 @@ import axios, { AxiosError } from "axios";
 import Link from "next/link";
 import { format } from "date-fns";
 import Cookies from "js-cookie";
-import { LucideChevronsUpDown } from "lucide-react";
+import { ArrowUpDown, Book, BookA, LucideChevronsUpDown } from "lucide-react";
 import { FaCircle } from "react-icons/fa6";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
@@ -150,32 +143,54 @@ export function TableDemoClass() {
         </h1>
         <div className="w-full grid lg:grid-cols-2 grid-cols-1 gap-2">
           {/* Select upcoming/old classes */}
-          <Select
-            defaultValue="upcoming"
-            onValueChange={(value) => setDemoClasses(value)}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="upcoming">Upcoming</SelectItem>
-              <SelectItem value="old">Old</SelectItem>
-            </SelectContent>
-          </Select>
+            <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="flex items-center gap-1">
+                <BookA className="w-4 h-4" />
+                Sort by Classes:
+                {demoClasses === "upcoming" ? "Upcoming" : "Old"}
+                <ArrowUpDown className="w-4 h-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-[200px]" align="end">
+              <DropdownMenuRadioGroup
+                value={demoClasses}
+                onValueChange={setDemoClasses}
+              >
+                <DropdownMenuRadioItem value="upcoming">
+                  Upcoming Classes
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="old">
+                  Old Classes
+                </DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           {/* Select compensation/demo classes */}
-          <Select
-            defaultValue="demo"
-            onValueChange={(value) => setCompensationClasses(value as TCompensationClassesType)}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="demo">Demo Classes</SelectItem>
-              <SelectItem value="compensation">Compensation Classes</SelectItem>
-            </SelectContent>
-          </Select>
+            <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="flex items-center gap-1">
+                <Book className="w-4 h-4" />
+                Sort by Classes:
+                {compensationClasses === "demo" ? "Demo" : "Compensation"}
+                <ArrowUpDown className="w-4 h-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-[200px]" align="end">
+              <DropdownMenuRadioGroup
+                value={compensationClasses}
+                onValueChange={(value)=>setCompensationClasses(value as TCompensationClassesType)}
+              >
+                <DropdownMenuRadioItem value="demo">
+                  Demo Classes
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="compensation">
+                  Compensation Classes
+                </DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 

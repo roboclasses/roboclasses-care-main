@@ -17,13 +17,6 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 
 import { toast } from "@/hooks/use-toast";
@@ -41,6 +34,7 @@ import { format } from "date-fns";
 import Cookies from "js-cookie";
 import { ArrowUpDown, Calendar } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { MdOutlineClass } from "react-icons/md";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -137,18 +131,29 @@ export function TableAttendance() {
         </h1>
         <div className="grid lg:grid-cols-2 grid-cols-1 gap-2 w-full">
           {/* Filter by Status(Active/Completed) */}
-          <Select
-            onValueChange={(value) => setAttendanceStatus(value)}
-            defaultValue="active"
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Filter Attendances" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="active">Active</SelectItem>
-              <SelectItem value="completed">Completed</SelectItem>
-            </SelectContent>
-          </Select>
+            <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="flex items-center gap-1">
+                <MdOutlineClass className="w-4 h-4" />
+                Sort by Attendances:
+                {attendanceStatus === "active" ? "Active" : "Completed"}
+                <ArrowUpDown className="w-4 h-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-[200px]" align="end">
+              <DropdownMenuRadioGroup
+                value={attendanceStatus}
+                onValueChange={setAttendanceStatus}
+              >
+                <DropdownMenuRadioItem value="active">
+                  Active Attendances
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="completed">
+                  Completed Attendances
+                </DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           {/* Filter by Start Date (Latest Date/Oldest Date) */}
           <DropdownMenu>

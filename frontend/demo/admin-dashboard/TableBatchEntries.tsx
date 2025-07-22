@@ -11,12 +11,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { EditButton } from "../button-demo/EditButton";
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
@@ -31,9 +31,11 @@ import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import useSWR from "swr";
 import Link from "next/link";
-import { Search } from "lucide-react";
+import { ArrowUpDown, Search } from "lucide-react";
 import { format } from "date-fns";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { MdClass } from "react-icons/md";
 
 const fetcher = (url: string) =>
   axios
@@ -140,18 +142,29 @@ export function TableBatchEntries() {
           <h1 className="lg:text-4xl text-xl font-semibold text-center">
             {batchStatus === "active" ? "Active Batches" : "Completed Batches"}
           </h1>
-          <Select
-            onValueChange={(value) => setBatchStatus(value)}
-            defaultValue="active"
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filter Batches" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="active">Active</SelectItem>
-              <SelectItem value="completed">Completed</SelectItem>
-            </SelectContent>
-          </Select>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="flex items-center gap-1">
+                <MdClass className="w-4 h-4" />
+                Sort by Batches:
+                {batchStatus === "active" ? "Active" : "Completed"}
+                <ArrowUpDown className="w-4 h-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-[200px]" align="end">
+              <DropdownMenuRadioGroup
+                value={batchStatus}
+                onValueChange={setBatchStatus}
+              >
+                <DropdownMenuRadioItem value="active">
+                  Active Batches
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="completed">
+                  Completed Batches
+                </DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
         {user.role === "admin" && (
           <div className="flex gap-2 lg:w-full w-[300px] mb-4 items-center border border-gray-300 rounded-full px-2 py-1">
