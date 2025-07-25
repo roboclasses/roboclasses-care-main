@@ -32,9 +32,10 @@ import axios, { AxiosError } from "axios";
 import React, { useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import Cookies from "js-cookie";
-import { ArrowUpDown, Calendar } from "lucide-react";
+import { ArrowUpDown, Calendar, Search } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { MdOutlineClass } from "react-icons/md";
+import { Input } from "@/components/ui/input";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -49,6 +50,7 @@ export function TableAttendance() {
   );
   const [attendanceStatus, setAttendanceStatus] = useState("active");
   const [sortOrder, setSortOrder] = useState("latest");
+  const [searchQuery, setSearchQuery] = useState("")
 
   // Fetch user session
   useEffect(() => {
@@ -77,6 +79,7 @@ export function TableAttendance() {
         return false;
       if (attendanceStatus === "completed" && item.completed === "No")
         return false;
+      if(searchQuery && !item.teacher.toLowerCase().includes(searchQuery.toLowerCase())) return false
       return true;
     });
 
@@ -85,7 +88,7 @@ export function TableAttendance() {
       const dateB = new Date(b.startDate).getTime();
       return sortOrder === "latest" ? dateB - dateA : dateA - dateB;
     });
-  }, [data, coursesData, user.role, user.name, attendanceStatus, sortOrder]);
+  }, [data, coursesData, user.role, user.name, attendanceStatus, searchQuery, sortOrder]);
 
   // Handle delete attendance
   const handleDelete = async (id: string) => {
@@ -123,6 +126,7 @@ export function TableAttendance() {
 
   return (
     <>
+    <div>
       <div className="flex justify-between items-center gap-2 mb-4">
         <h1 className="lg:text-4xl text-xl font-semibold text-center">
           {attendanceStatus === "active"
@@ -181,6 +185,21 @@ export function TableAttendance() {
           </DropdownMenu>
         </div>
       </div>
+
+      {user.role === "admin" && (
+          <div className="flex gap-2 lg:w-full w-[300px] mb-4 items-center border border-gray-300 rounded-full px-2 py-1">
+            <Search className="h-4 w-4 mr-2.5" />
+            <Input
+              type="search"
+              placeholder="Search Teacher..."
+              className="w-full border-0 rounded-full"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+        )}
+        </div>
+
       <Card className="p-2">
         <Table>
           <TableCaption>A list of attendances</TableCaption>
