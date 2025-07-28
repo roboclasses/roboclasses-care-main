@@ -137,7 +137,7 @@ export function TableNormalClass() {
             <TableCell>{user.role === 'admin' && appointment.destination}</TableCell>
             <TableCell className="text-center"> {handleTime(appointment.time, appointment.date)} </TableCell>
             <TableCell>
-              <Link href={`/appointment/reminder/normal-class/edit/${appointment._id}`}>
+              <Link href={`/appointment/normal-class/edit/${appointment._id}`}>
               <EditButton name="Edit" type="button" />
               </Link>
             </TableCell>

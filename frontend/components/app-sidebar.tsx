@@ -80,11 +80,11 @@ useEffect(()=>{
           },
           {
             title: "Demo Class",
-            url: "/appointment/reminder/demo-class",
+            url: "/appointment/demo-class",
           },
           {
             title: "Normal Class",
-            url: "/appointment/reminder/normal-class",
+            url: "/appointment/normal-class",
           },
            {
             title: "Parent Teacher meeting",
