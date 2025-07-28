@@ -264,7 +264,7 @@ export function TableDemoClass() {
                 </TableCell>
                 <TableCell className="text-right"> {appointment.batchNumber} </TableCell>
                 <TableCell className="text-right">
-                  <Link href={`/appointment/reminder/demo-class/edit/${appointment._id}`}>
+                  <Link href={`/appointment/demo-class/edit/${appointment._id}`}>
                     <EditButton name="Edit" type="button" />
                   </Link>
                 </TableCell>
