@@ -36,6 +36,7 @@ import { ArrowUpDown, Calendar, Search } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { MdOutlineClass } from "react-icons/md";
 import { Input } from "@/components/ui/input";
+import { AddButton } from "../button-demo/AddButton";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -126,6 +127,10 @@ export function TableAttendance() {
 
   return (
     <>
+    <div className="flex items-center justify-center mb-4">
+        <AddButton name="Add Attendance" type="button" link={'/manageAttendance'}/>
+    </div>
+
     <div>
       <div className="flex justify-between items-center gap-2 mb-4">
         <h1 className="lg:text-4xl text-xl font-semibold text-center">
@@ -198,7 +203,7 @@ export function TableAttendance() {
             />
           </div>
         )}
-        </div>
+    </div>
 
       <Card className="p-2">
         <Table>

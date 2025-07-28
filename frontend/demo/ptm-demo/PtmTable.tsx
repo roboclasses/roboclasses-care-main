@@ -24,6 +24,7 @@ import Link from "next/link";
 import {format} from "date-fns"
 import { Card } from "@/components/ui/card";
 import { PtmUrl } from "@/constants";
+import { AddButton } from "../button-demo/AddButton";
 
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
@@ -91,6 +92,9 @@ export function PtmTable() {
 
   return (
     <>
+     <div className="flex items-center justify-center mb-4">
+        <AddButton name="Add PTM" type="button" link={'/appointment/PTM'}/>
+      </div>
     <h1 className="lg:text-4xl text-xl font-semibold mb-4 text-center">PTM Table</h1>
     <Card className="p-2">
     <Table>

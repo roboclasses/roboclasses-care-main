@@ -35,6 +35,7 @@ import { format } from "date-fns";
 import Cookies from "js-cookie";
 import { ArrowUpDown, Book, BookA, LucideChevronsUpDown } from "lucide-react";
 import { FaCircle } from "react-icons/fa6";
+import { AddButton } from "../button-demo/AddButton";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -133,6 +134,9 @@ export function TableDemoClass() {
 
   return (
     <>
+      <div className="flex items-center justify-center mb-4">
+        <AddButton name="Add Demo Class" type="button" link={'/appointment/demo-class'}/>
+      </div>    
       <div className="flex justify-between items-center mb-4 gap-2">
         <h1 className="lg:text-4xl text-xl font-semibold text-center">
           {compensationClasses === "demo"

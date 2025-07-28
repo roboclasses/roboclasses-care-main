@@ -25,6 +25,7 @@ import Link from "next/link";
 import {format} from "date-fns"
 import Cookies from "js-cookie";
 import { Card } from "@/components/ui/card";
+import { AddButton } from "../button-demo/AddButton";
 
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
@@ -109,6 +110,9 @@ export function TableNormalClass() {
 
   return (
     <>
+    <div className="flex items-center justify-center mb-4">
+      <AddButton name="Add Normal Class" type="button" link={'/appointment/normal-class'}/>
+    </div> 
     <h1 className="lg:text-4xl text-xl font-semibold mb-4 text-center">Normal Classes</h1>
     <Card className="p-2">
     <Table>

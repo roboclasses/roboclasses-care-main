@@ -36,6 +36,7 @@ import { format } from "date-fns";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MdClass } from "react-icons/md";
+import { AddButton } from "../button-demo/AddButton";
 
 const fetcher = (url: string) =>
   axios
@@ -137,6 +138,10 @@ export function TableBatchEntries() {
 
   return (
     <>
+    <div className="flex items-center justify-center mb-4">
+      <AddButton name="Add Batch" type="button" link={'/newBatchEntry'}/>
+    </div>
+
       <div className="flex flex-col">
         <div className="flex justify-between items-center mb-4">
           <h1 className="lg:text-4xl text-xl font-semibold text-center">
