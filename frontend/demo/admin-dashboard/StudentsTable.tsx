@@ -26,6 +26,7 @@ import Cookies from "js-cookie";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
+import { AddButton } from "../button-demo/AddButton";
 
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
@@ -106,6 +107,9 @@ export function StudentsTable() {
 
   return (
     <>
+          <div className="flex items-center justify-center mb-4">
+            <AddButton name="Add Student" type="button" link={'/appointment/studentRegister'}/>
+          </div>
     <div className="flex justify-between items-center w-full">
     <h1 className="lg:text-4xl text-xl font-semibold mb-4 text-center">All Students</h1>
     <Button variant="outline" size="sm" onClick={handleDownload}>

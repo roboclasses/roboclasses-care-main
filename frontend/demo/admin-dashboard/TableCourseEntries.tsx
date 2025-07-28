@@ -22,6 +22,7 @@ import axios, { AxiosError } from "axios";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { Card } from "@/components/ui/card";
+import { AddButton } from "../button-demo/AddButton";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -67,6 +68,9 @@ export function TableCourseEntries() {
 
   return (
     <>
+      <div className="flex items-center justify-center mb-4">
+        <AddButton name="Add Course" type="button" link={'/courseEntry'}/>
+      </div>
       <h1 className="lg:text-4xl text-xl font-semibold mb-4 text-center">
         Current Courses
       </h1>

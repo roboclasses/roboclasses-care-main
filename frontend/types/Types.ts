@@ -1,9 +1,12 @@
+import { Url } from "next/dist/shared/lib/router/router";
+
 export type btnType = {
   name: string;
   type: "submit" | "button" | "reset";
   disabled?: boolean;
   onClick?: () => void;
   className?: string;
+  link?: Url
 };
 
 export type appointmentTypes = {
