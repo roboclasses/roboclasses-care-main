@@ -193,6 +193,7 @@ export type attendanceType = {
   classes: [Date];
   curriculumTaught: [string],
   completed: string;
+  dateRange: {from: string, to:string};
 }
 
 
