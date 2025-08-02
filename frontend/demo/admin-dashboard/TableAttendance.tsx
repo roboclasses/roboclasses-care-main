@@ -30,7 +30,7 @@ import Link from "next/link";
 import useSWR from "swr";
 import axios, { AxiosError } from "axios";
 import React, { useEffect, useMemo, useState } from "react";
-import { format } from "date-fns";
+import { formatDate } from "date-fns";
 import Cookies from "js-cookie";
 import { ArrowUpDown, Calendar, Search } from "lucide-react";
 import { Card } from "@/components/ui/card";
@@ -127,12 +127,12 @@ export function TableAttendance() {
 
   return (
     <>
-    <div className="flex items-center justify-center mb-4">
+    <div className="flex item-center justify-center mb-4">
         <AddButton name="Add Attendance" type="button" link={'/manageAttendance'}/>
     </div>
 
     <div>
-      <div className="flex justify-between items-center gap-2 mb-4">
+      <div className="flex justify-between item-center gap-2 mb-4">
         <h1 className="lg:text-4xl text-xl font-semibold text-center">
           {attendanceStatus === "active"
             ? "Active Attendances"
@@ -142,7 +142,7 @@ export function TableAttendance() {
           {/* Filter by Status(Active/Completed) */}
             <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="flex items-center gap-1">
+              <Button variant="outline" className="flex item-center gap-1">
                 <MdOutlineClass className="w-4 h-4" />
                 Sort by Attendances:
                 {attendanceStatus === "active" ? "Active" : "Completed"}
@@ -167,7 +167,7 @@ export function TableAttendance() {
           {/* Filter by Start Date (Latest Date/Oldest Date) */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="flex items-center gap-1">
+              <Button variant="outline" className="flex item-center gap-1">
                 <Calendar className="w-4 h-4" />
                 Sort by Date:
                 {sortOrder === "latest" ? "Latest First" : "Oldest First"}
@@ -192,7 +192,7 @@ export function TableAttendance() {
       </div>
 
       {user.role === "admin" && (
-          <div className="flex gap-2 lg:w-full w-[300px] mb-4 items-center border border-gray-300 rounded-full px-2 py-1">
+          <div className="flex gap-2 lg:w-full w-[300px] mb-4 item-center border border-gray-300 rounded-full px-2 py-1">
             <Search className="h-4 w-4 mr-2.5" />
             <Input
               type="search"
@@ -217,45 +217,53 @@ export function TableAttendance() {
               <TableHead>Topics Covered</TableHead>
               <TableHead>Number of Classes Done</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>Holiday (From)</TableHead>
+              <TableHead>Holiday (To)</TableHead>
               <TableHead>Edit</TableHead>
               <TableHead>Delete</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredData.map((items: attendanceType) => (
-              <TableRow key={items._id}>
-                <TableCell>{items.batchName}</TableCell>
-                <TableCell>{items.teacher}</TableCell>
+            {filteredData.map((item: attendanceType) => (
+              <TableRow key={item._id}>
+                <TableCell>{item.batchName}</TableCell>
+                <TableCell>{item.teacher}</TableCell>
                 <TableCell>
-                  {items.startDate
-                    ? format(items.startDate, "MMM dd, yyyy")
+                  {item.startDate
+                    ? formatDate(item.startDate, "MMM dd, yyyy")
                     : ""}
                 </TableCell>
                 <TableCell>
-                  {items.classes
-                    ? items.classes
-                        .map((date) => format(date, "MMM dd, yyyy"))
+                  {item.classes
+                    ? item.classes
+                        .map((date) => formatDate(date, "MMM dd, yyyy"))
                         .join(", ")
                     : ""}
                 </TableCell>
                 <TableCell>
-                  {items.curriculumTaught
-                    ? items.curriculumTaught.map((item) => item).join(", ")
+                  {item.curriculumTaught
+                    ? item.curriculumTaught.map((item) => item).join(", ")
                     : ""}
                 </TableCell>
-                <TableCell>{items.classes.length}</TableCell>
+                <TableCell>{item.classes.length}</TableCell>
                 <TableCell>
-                  {items.completed === "Yes" ? "Completed" : "Active"}
+                  {item.completed === "Yes" ? "Completed" : "Active"}
                 </TableCell>
+                 <TableCell>
+                    {item.dateRange?.from ? formatDate(item.dateRange?.from, "MMM dd, yyyy") : ""}
+                  </TableCell>
+                  <TableCell>
+                    {item.dateRange?.to ? formatDate(item.dateRange?.to, "MMM dd, yyyy") : ""}
+                  </TableCell>
                 <TableCell className="text-right">
-                  <Link href={`/manageAttendance/edit/${items._id}`}>
+                  <Link href={`/manageAttendance/edit/${item._id}`}>
                     <EditButton name="Edit" type="button" />
                   </Link>
                 </TableCell>
                 <TableCell className="text-right">
                   <DeleteAlertDemo
                     onCancel={() => console.log("Delete action canceled")}
-                    onDelete={() => handleDelete(items._id)}
+                    onDelete={() => handleDelete(item._id)}
                   />
                 </TableCell>
               </TableRow>

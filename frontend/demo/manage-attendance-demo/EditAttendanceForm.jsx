@@ -10,6 +10,7 @@
   import {
     Form,
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -25,14 +26,25 @@
   import { useParams } from "next/navigation";
   import axios, { AxiosError } from "axios";
   import Cookies from "js-cookie";
-  import { format } from "date-fns";
+  import { formatDate } from "date-fns";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import SuccessMessageCard from "@/components/reusabels/SuccessMessageCard";
-
+import { addDays } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
 
   const FormSchema = z.object({
     batchName: z.string().min(2, { message: "Batch Name must be at least 2 characters long" }).optional(),
     startDate: z.string().optional(),
+    dateRange:z.object({
+      from: z.date({required_error: "This field is required."}),
+      to: z.date().optional()
+    }),
     classes: z.array(z.string()).optional(),
     curriculumTaught: z.array(z.string().optional()),
     completed: z.string(),
@@ -48,11 +60,17 @@ import SuccessMessageCard from "@/components/reusabels/SuccessMessageCard";
       defaultValues: {
         batchName: "",
         startDate: "",
+        dateRange: {from: new Date(), to: addDays(new Date(), 7)},
         classes: [],
         curriculumTaught:[""],
         completed:"",
       },
     });
+
+    const [dateRange, setDateRange] = useState({
+    from: new Date(),
+    to: addDays(new Date(), 7),
+  });
 
     // Fetch the existing attendance data
     useEffect(() => {
@@ -64,8 +82,8 @@ import SuccessMessageCard from "@/components/reusabels/SuccessMessageCard";
           // Pre-populate the form with fetched data
           form.reset({
             batchName: attendanceData.batchName,
-            startDate: attendanceData.startDate ? format(new Date(attendanceData.startDate), 'yyyy-MM-dd') : '',
-            classes: attendanceData.classes.map((cls) => format(new Date(cls), 'yyyy-MM-dd')),
+            startDate: attendanceData.startDate ? formatDate(new Date(attendanceData.startDate), 'yyyy-MM-dd') : '',
+            classes: attendanceData.classes.map((cls) => formatDate(new Date(cls), 'yyyy-MM-dd')),
             curriculumTaught: attendanceData.curriculumTaught.map((c) => c),
             completed: attendanceData.completed,
           });
@@ -102,6 +120,7 @@ import SuccessMessageCard from "@/components/reusabels/SuccessMessageCard";
         const payload = {
           batchName: data.batchName,
           startDate: startDate,
+          dateRange: data.dateRange,
           classes: classes,
           curriculumTaught: curriculumTaught,
           completed: data.completed,
@@ -201,6 +220,57 @@ import SuccessMessageCard from "@/components/reusabels/SuccessMessageCard";
             /> 
             </div> 
           ))}
+
+                      {/* Date Range Picker */}
+                      <Label>Holiday date range</Label>
+                        <FormField
+                          control={form.control}
+                          name="dateRange"
+                          render={({ field }) => (
+                            <FormItem>
+                              <Popover>
+                                <PopoverTrigger asChild>
+                                  <Button
+                                    id="date"
+                                    variant={"outline"}
+                                    className="w-full justify-start text-left font-normal h-12 rounded-xl shadow-none"
+                                  >
+                                    <CalendarIcon className="mr-2" />
+                                    {dateRange?.from ? (
+                                      dateRange.to ? (
+                                        <>
+                                          {formatDate(dateRange.from, "LLL dd, y")} -{" "}
+                                          {formatDate(dateRange.to, "LLL dd, y")}
+                                        </>
+                                      ) : (
+                                        formatDate(dateRange.from, "LLL dd, y")
+                                      )
+                                    ) : (
+                                      <span>Pick a date range</span>
+                                    )}
+                                  </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0" align="start">
+                                  <Calendar
+                                    initialFocus
+                                    mode="range"
+                                    defaultMonth={dateRange?.from}
+                                    selected={dateRange}
+                                    onSelect={(range) => {
+                                      setDateRange(range);
+                                      field.onChange(range);
+                                    }}
+                                    numberOfMonths={1}
+                                  />
+                                </PopoverContent>
+                              </Popover>
+                              <FormDescription>
+                                Select the date range for holidays.
+                              </FormDescription>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
 
           {/* All classes are covered? */}
                   <FormField
