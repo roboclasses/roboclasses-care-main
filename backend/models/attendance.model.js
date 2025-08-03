@@ -29,7 +29,7 @@ const attendanceSchema = new mongoose.Schema({
     },
         dateRange:{
         type:{from: Date, to: Date},
-        default: {from: new Date(), to: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)},
+        default: {},
         index: true,
     },
 
