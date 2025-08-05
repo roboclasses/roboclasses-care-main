@@ -36,6 +36,7 @@ export const HolidayUrl = "https://api-roboclasses-care.up.railway.app/api/v1/ho
 export const AssessmentUrl = "https://api-roboclasses-care.up.railway.app/api/v1/assessment";
 export const AnswerUrl = "https://api-roboclasses-care.up.railway.app/api/v1/answer";
 export const FeedbackUrl = "https://api-roboclasses-care.up.railway.app/api/v1/feedbacks";
+export const PtmUrl = "https://api-roboclasses-care.up.railway.app/api/v1/ptm";
 export const StudentHolidayUrl = "https://api-roboclasses-care.up.railway.app/api/v1/studentHoliday";
 
 
