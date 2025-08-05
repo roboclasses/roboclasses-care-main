@@ -79,6 +79,10 @@ useEffect(()=>{
             url: "/appointment/studentRegister",
           },
           {
+            title: "Student Holiday",
+            url: "/appointment/holiday",
+          },
+          {
             title: "Demo Class",
             url: "/appointment/demo-class",
           },
@@ -228,6 +232,10 @@ useEffect(()=>{
           {
             title: "Register a Student",
             url: "/appointment/studentRegister",
+          },
+          {
+            title: "Student Holiday",
+            url: "/appointment/holiday",
           },
         ],
       },

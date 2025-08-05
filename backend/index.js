@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 import helmet from "helmet";
 
 import { dbConnect } from "./config/db.js";
-
 import demoClassAppointmentRoutes from "./routes/demoClassAppointmentRoute.js"
 import newBatchEntryRoutes from "./routes/newBatchEntryRoute.js"
 import attendanceRoutes from "./routes/attendanceRoute.js"
@@ -19,17 +18,20 @@ import assessmentRoutes from "./routes/assessmentRoute.js"
 import answerRoutes from "./routes/answerRoute.js"
 import feedbackRoutes from "./routes/feedbackRoute.js"
 import ptmRoutes from "./routes/ptmRoute.js"
-
+import studentHolidayRoutes from "./routes/studentHolidayRoute.js"
 import { handleCleanupExpiredTimeOff } from "./jobs/cleanupExpiredTimeOff.js";
-
 dotenv.config();
+
 const app = express();
+
 
 // connect to db
 dbConnect();
 
+
 // cleanup function that runs everyday at midnight
 handleCleanupExpiredTimeOff();
+
 
 // middlewares
 // app.use(cors());
@@ -49,13 +51,11 @@ app.use('/api/v1',newCourseEntry)
 app.use('/api/v1',attendanceRoutes)
 app.use('/api/v1',timeOffRoutes)
 app.use('/api/v1',holidayRoutes)
-// app.use('/api/v1',eventRoutes)
 app.use('/api/v1',assessmentRoutes)
 app.use('/api/v1',answerRoutes)
 app.use('/api/v1',feedbackRoutes)
 app.use('/api/v1',ptmRoutes)
-
-
+app.use('/api/v1', studentHolidayRoutes)
 
 
 // listning on port
