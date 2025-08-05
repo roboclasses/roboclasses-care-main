@@ -15,6 +15,7 @@ export const AssessmentUrl = "http://localhost:8003/api/v1/assessment";
 export const AnswerUrl = "http://localhost:8003/api/v1/answer";
 export const FeedbackUrl = "http://localhost:8003/api/v1/feedbacks";
 export const PtmUrl = "http://localhost:8003/api/v1/ptm";
+export const StudentHolidayUrl = "http://localhost:8003/api/v1/studentHoliday";
 
 
 
@@ -35,6 +36,7 @@ export const PtmUrl = "http://localhost:8003/api/v1/ptm";
 // export const AssessmentUrl = "https://api-roboclasses-care.up.railway.app/api/v1/assessment";
 // export const AnswerUrl = "https://api-roboclasses-care.up.railway.app/api/v1/answer";
 // export const FeedbackUrl = "https://api-roboclasses-care.up.railway.app/api/v1/feedbacks";
+// export const StudentHolidayUrl = "https://api-roboclasses-care.up.railway.app/api/v1/studentHoliday";
 
 
 
