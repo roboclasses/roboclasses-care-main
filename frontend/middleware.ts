@@ -21,8 +21,8 @@ export function middleware(req: NextRequest) {
   ];
   const studentRoutePrefixes = [
     "/adminDashboard",
-    "/appointment/reminder/normal-class",
-    "/appointment/reminder/demo-class",
+    "/appointment/normal-class",
+    "/appointment/demo-class",
     "/assessmentGenerator",
     "/feedbackAdmin",
     "/courseEntry",
@@ -35,7 +35,7 @@ export function middleware(req: NextRequest) {
     "/feedbackViewer",
   ];
 
-  const constructorRoutePrefixes = [
+  const contractorRoutePrefixes = [
     "/assessmentGenerator",
     "/feedbackAdmin",
     "/courseEntry",
@@ -68,7 +68,7 @@ export function middleware(req: NextRequest) {
   const isStudentRoute = studentRoutePrefixes.some((prefix) =>
     currentPath.startsWith(prefix)
   );
-  const isConstructorRoute = constructorRoutePrefixes.some((prefix) =>
+  const isContractorRoute = contractorRoutePrefixes.some((prefix) =>
     currentPath.startsWith(prefix)
   );
 
@@ -87,7 +87,7 @@ export function middleware(req: NextRequest) {
     }
 
     // Contractor views
-    if(isConstructorRoute && !(role==="admin" || role === "teacher")){
+    if(isContractorRoute && !(role==="admin" || role === "teacher")){
       return NextResponse.redirect(new URL("/", req.nextUrl));
     }
   }
