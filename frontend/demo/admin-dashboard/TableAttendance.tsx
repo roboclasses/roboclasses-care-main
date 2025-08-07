@@ -23,7 +23,6 @@ import { toast } from "@/hooks/use-toast";
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 import { EditButton } from "../button-demo/EditButton";
 import { getUserSession } from "@/lib/session";
-import { AttendanceUrl, CoursesUrl } from "@/constants";
 import { attendanceType, courseType } from "@/types/Types";
 
 import Link from "next/link";
@@ -37,6 +36,7 @@ import { Card } from "@/components/ui/card";
 import { MdOutlineClass } from "react-icons/md";
 import { Input } from "@/components/ui/input";
 import { AddButton } from "../button-demo/AddButton";
+import { AttendanceUrl, CoursesUrl } from "@/constants";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
