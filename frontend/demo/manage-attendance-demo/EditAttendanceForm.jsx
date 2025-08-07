@@ -86,6 +86,10 @@ import { Calendar } from "@/components/ui/calendar";
             classes: attendanceData.classes.map((cls) => formatDate(new Date(cls), 'yyyy-MM-dd')),
             curriculumTaught: attendanceData.curriculumTaught.map((c) => c),
             completed: attendanceData.completed,
+            dateRange: {
+              from: new Date(attendanceData.dateRange.from),
+              to: attendanceData.dateRange.to ? new Date(attendanceData.dateRange.to) : undefined,
+            },
           });
 
           setNumberOfClasses(attendanceData.classes.length);
