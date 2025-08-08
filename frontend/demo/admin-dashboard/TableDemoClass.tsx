@@ -36,6 +36,7 @@ import Cookies from "js-cookie";
 import { ArrowUpDown, Book, BookA, LucideChevronsUpDown } from "lucide-react";
 import { FaCircle } from "react-icons/fa6";
 import { AddButton } from "../button-demo/AddButton";
+import { ExportAlertDemo } from "../dialog-demo/ExportAlertDemo";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -123,6 +124,48 @@ export function TableDemoClass() {
     }
   };
 
+  // Handle download demo class data as CSV
+    const handleDownload = () => {
+    const rows = [
+      ["batch number", "student name", "conatct details", "course"],
+    ];
+    if (!data || data.length === 0) {
+      toast({
+        title: "No data",
+        description: "No demo classes to download.",
+        variant: "destructive",
+      });
+      return;
+    }
+    data.forEach((student) => {
+      rows.push([
+        student.batchNumber|| "",
+        student.userName || "",
+        student.destination || "",
+        student.course || "",
+      ]);
+    });
+    const csvContent = rows
+      .map((row) =>
+        row.map((field) => `"${String(field).replace(/"/g, '""')}"`).join(",")
+      )
+      .join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "democlass.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    toast({
+      title: "Download started",
+      description: "Demo class data CSV is downloading.",
+      variant: "default",
+    });
+  };
+
   // Handle edge cases
   if (data?.length === 0) return <div>Empty list for Demo Classes</div>;
   if (error instanceof AxiosError) {
@@ -145,7 +188,7 @@ export function TableDemoClass() {
             ? "Compensation Classes"
             : null}
         </h1>
-        <div className="w-full grid lg:grid-cols-2 grid-cols-1 gap-2">
+        <div className="lg:flex items-center gap-2 w-full justify-center">
           {/* Select upcoming/old classes */}
             <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -195,6 +238,9 @@ export function TableDemoClass() {
               </DropdownMenuRadioGroup>
             </DropdownMenuContent>
           </DropdownMenu>
+
+          {/* Export demo class data as CSV for backeup only*/}
+          <ExportAlertDemo onExport={handleDownload} onCancel={()=>console.log('Export action cancelled.')}/>
         </div>
       </div>
 

@@ -118,7 +118,7 @@ useEffect(()=>{
         icon: BookIcon,
       },
       {
-        title: "Manage Roles",
+        title: "Manage Employee Roles",
         url: "/manageRoles",
         icon: Users,
       },
