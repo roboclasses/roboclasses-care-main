@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post("/students", createStudentController)
 
-router.get("/students", authMiddleware, roleMiddleware('admin', 'teacher'), getStudentsController)
+router.get("/students", getStudentsController)
 
 router.get("/students/:id", getStudentByIdController)
 
