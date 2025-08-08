@@ -40,7 +40,7 @@ const FormSchema = z.object({
   role: z.string().min(1, {message: "Role must be at least 1 character long"}).refine((val)=>validRoles.includes(val),{message: "Invalid role selected."}),
   workingHours: z.string().min(3, {message: "Working hours must be atleast 3 character long."}),
   workingDays: z.string().min(3, {message: "Working days must be atleast 3 character long."}),
-  zoomApi: z.string().trim().min(2, 'Meeting ID must be atleast 2 characters long').optional(),
+  zoomApi: z.string().optional(),
 });
 
 export function EditUserForm() {
@@ -238,7 +238,6 @@ export function EditUserForm() {
                 <FormControl>
                   <Input
                     {...field}
-                    required
                     type="text"
                     title="Meeting ID"
                     className="shadow-none rounded-xl h-12 bg-accent-foreground"
