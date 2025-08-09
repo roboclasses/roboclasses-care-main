@@ -9,7 +9,7 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import { FaCircleArrowRight } from "react-icons/fa6";
 
-const SuccessMessageCard = ({content}:{content:string}) => {
+const SuccessMessageCard = ({content, to}:{content:string, to:string}) => {
   return (
     <Card className="p-2 rounded flex flex-col items-center">
       <CardHeader className="text-2xl">✅</CardHeader>
@@ -17,7 +17,7 @@ const SuccessMessageCard = ({content}:{content:string}) => {
         {content}
       </CardContent>
       <CardFooter>
-        <Link className="flex items-center gap-2" href={"/"}>
+        <Link className="flex items-center gap-2" href={to}>
           <Button>
             Back to Dashboard <FaCircleArrowRight size={25} />
           </Button>

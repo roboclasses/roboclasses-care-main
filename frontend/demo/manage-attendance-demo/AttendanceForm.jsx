@@ -174,7 +174,7 @@ export function AttendanceForm() {
   return (
     <>
     {(isSubmitSuccessful && isSuccess) 
-    ? (<SuccessMessageCard content="Thank you for taking attendance!"/>) 
+    ? (<SuccessMessageCard content="Thank you for taking attendance!" to="/adminDashboard/attendance"/>) 
     : (<Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-2">
       <h1 className="lg:text-4xl text-xl mb-4 font-serif">Manage Attendance</h1>

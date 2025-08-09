@@ -138,7 +138,7 @@ export function EditNormalClassForm() {
   return (
     <>
     {(isSubmitSuccessful && isSuccess) 
-    ? (<SuccessMessageCard content="Thank you for updating normal class! One of our teachers will contact you soon."/>) 
+    ? (<SuccessMessageCard content="Thank you for updating normal class! One of our teachers will contact you soon." to="/adminDashboard/normalclass"/>) 
     : (<Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}

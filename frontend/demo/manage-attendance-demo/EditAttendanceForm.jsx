@@ -184,7 +184,7 @@ export function EditAttendanceForm() {
   return (
     <>
       {isSubmitSuccessful && isSuccess ? (
-        <SuccessMessageCard content="Thank you for updating attendance!" />
+        <SuccessMessageCard content="Thank you for updating attendance!" to="/adminDashboard/attendance"/>
       ) : (
         <Form {...form}>
           <form

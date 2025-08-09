@@ -98,7 +98,7 @@ export function RegistrationForm() {
   return (
     <>
     {(isSubmitSuccessful && isSuccess) 
-    ? (<SuccessMessageCard content="Thank you for registering! One of our teachers will contact you soon."/>) 
+    ? (<SuccessMessageCard content="Thank you for registering! One of our teachers will contact you soon." to="/adminDashboard/student"/>) 
     : (<Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
