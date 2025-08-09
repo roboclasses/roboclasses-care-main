@@ -122,7 +122,7 @@ export function EditStudentDetails() {
   return (
     <>
     {(isSubmitSuccessful && isSuccess) 
-    ? (<SuccessMessageCard content="Thank you for updating student details! One of our teachers will contact you soon."/>) 
+    ? (<SuccessMessageCard content="Thank you for updating student details! One of our teachers will contact you soon." to="/adminDashboard/student"/>) 
     : (<Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}

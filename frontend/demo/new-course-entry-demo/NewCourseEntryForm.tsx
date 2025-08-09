@@ -69,7 +69,7 @@ export function NewCourseEntryForm() {
   return (
     <>
     {(isSubmitSuccessful && isSuccess) 
-    ? (<SuccessMessageCard content="Thank you for creating course!"/>) 
+    ? (<SuccessMessageCard content="Thank you for creating course!" to="/adminDashboard/course"/>) 
     : (<Form {...form}>
        <div className="mb-8 flex flex-col items-center">
                   <h1 className="lg:text-4xl text-2xl mb-4 text-center font-serif">

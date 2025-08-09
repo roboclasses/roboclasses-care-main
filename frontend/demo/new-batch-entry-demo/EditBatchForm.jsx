@@ -243,7 +243,7 @@ export function EditBatchForm() {
   return (
     <>
     {(isSubmitSuccessful && isSuccess) 
-    ? (<SuccessMessageCard content="Thank you for updating this batch!"/>) 
+    ? (<SuccessMessageCard content="Thank you for updating this batch!" to="/adminDashboard/batch"/>) 
     : (<Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
