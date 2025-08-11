@@ -239,6 +239,12 @@ useEffect(()=>{
           },
         ],
       },
+       {
+        title:  "Student Dashboard",
+        url:  "/students/dashboard",
+        icon: LayoutDashboard,
+        isActive: false,
+      },
     ],
     
     navMainContractor: [

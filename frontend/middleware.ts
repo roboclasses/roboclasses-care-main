@@ -18,6 +18,7 @@ export function middleware(req: NextRequest) {
     "/timeOff",
     "/assessmentViewer",
     "/feedbackViewer",
+    "/students"
   ];
   const studentRoutePrefixes = [
     "/adminDashboard",
