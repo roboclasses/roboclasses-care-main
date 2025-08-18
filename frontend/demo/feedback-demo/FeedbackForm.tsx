@@ -103,6 +103,7 @@ export function FeedbackForm() {
     {(isSubmitSuccessful && isSuccess) 
     ? (
       <SuccessMessageCard 
+        to="/"
         content="Thank you for submitting your valuable feedback! One of our teacher will reach you soon."
       />
       ) 

@@ -122,7 +122,7 @@ export function AssessmentSubmissionForm() {
   return (
     <>
       {(isSubmitSuccessful && isSuccess)
-      ? ( <SuccessMessageCard content="Thank you for submitting the assessment. One of our teacher will reach you soon."/>) 
+      ? ( <SuccessMessageCard to="/" content="Thank you for submitting the assessment. One of our teacher will reach you soon."/>) 
       : (
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

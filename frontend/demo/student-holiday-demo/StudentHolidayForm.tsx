@@ -89,7 +89,7 @@ const [dateRange, setDateRange] = useState<DateRange | undefined>({
   return (
     <>
       {isSubmitSuccessful && isSuccess ? (
-        <SuccessMessageCard content="Thank you for creating holiday for students!" />
+        <SuccessMessageCard to="/" content="Thank you for creating holiday for students!" />
       ) : (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
