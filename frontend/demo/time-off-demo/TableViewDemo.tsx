@@ -167,7 +167,7 @@ const TableViewDemo = () => {
 
       </CardHeader>
       <CardContent className="w-full overflow-x-auto">
-        {error ?? leaves?.length === 0 ?? isLoading ?? isValidating ?
+        {(error || leaves?.length === 0 || isLoading || isValidating) ?
         (handleEdgeCases()) : (
           <Table>
             <TableCaption>A list of past leaves</TableCaption>
