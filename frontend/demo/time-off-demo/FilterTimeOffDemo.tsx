@@ -43,10 +43,10 @@ const handleApplyFilters = ()=>{
           Filter
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 space-y-4">
+      <PopoverContent className="space-y-4">
 
         {/* Filter by type */}
-        <div>
+        <div className="space-y-2">
           <Label className="font-semibold">Filter by type</Label>
           <Select onValueChange={setType}>
             <SelectTrigger className="w-full">
@@ -64,10 +64,10 @@ const handleApplyFilters = ()=>{
         </div>
 
          {/* Filter by status */}
-        <div>
+        <div className="space-y-2">
           <Label className="font-semibold">Filter by status</Label>
           <Select onValueChange={setStatus}>
-            <SelectTrigger className="w-full]">
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="Select a type" />
             </SelectTrigger>
             <SelectContent>
@@ -82,7 +82,7 @@ const handleApplyFilters = ()=>{
         </div>
 
         {/* Filter by from date */}
-        <div>
+        <div className="space-y-2">
           <Label className="font-semibold">From date</Label>
           <Input type="date" value={fromDate} onChange={(e)=>setFromDate(e.target.value)}/>
         </div>

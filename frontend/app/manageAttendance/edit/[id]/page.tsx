@@ -1,4 +1,4 @@
-import { EditAttendanceForm } from "@/demo/manage-attendance-demo/EditAttendanceForm";
+import { EditAttendanceForm } from "@/demo/attendance-demo/EditAttendanceForm";
 
 const page = () => {
   return (

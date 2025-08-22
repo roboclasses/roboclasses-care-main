@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 
 import { PRIVATE_WALLPAPER } from "@/constants/images";
-import { NewCourseEntryForm } from "@/demo/new-course-entry-demo/NewCourseEntryForm";
+import { NewCourseEntryForm } from "@/demo/course-entry-demo/NewCourseEntryForm";
 
 const page = () => {
   return (

@@ -11,15 +11,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import SubmitButton from "../button-demo/SubmitButton";
 import { FormField, FormItem, FormControl, Form, FormMessage } from "@/components/ui/form";
-import { toast } from "@/hooks/use-toast";
 import { LoginUrl } from "@/constants";
-import { createUserSession } from "@/lib/session";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
 import { passwordValidation } from "@/lib/helpers";
+import { toast } from "sonner";
+import { createUserSession } from "@/lib/session";
 
 const FormSchema = z.object({
-  email: z.string().trim().email("Please enter a valid email"),
+  email: z.email("Please enter a valid email"),
   password: z.string().trim().min(8, "Password is too short").regex(passwordValidation, "Your password is not valid"),
 });
 
@@ -53,7 +53,7 @@ export function LoginForm() {
       if (success) {
         await createUserSession(jwtToken, role, _id, email, name);
         router.push("/");
-        toast({ title: "Success✅", description: message, variant: "default" });
+        toast.success(message)
       }
       
     } catch (error: unknown) {
@@ -69,22 +69,18 @@ export function LoginForm() {
         errorMessage = error.message;
       }
         console.log(error);
-        toast({
-          title: "Failed",
-          description: errorMessage,
-          variant: "destructive",
-        });
+       toast.error(errorMessage || 'An unknown error has occurred.')
       }
     }
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full px-5">
-        <div className="grid items-center gap-5">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full lg:px-40 px-5">
+        <div className="space-y-5">
 
           {/* Email Address */}
-          <div className="flex flex-col gap-2">
+          <div className="space-y-2">
             <Label htmlFor="email">Email Address</Label>
             <FormField
               control={form.control}
@@ -100,7 +96,7 @@ export function LoginForm() {
                       autoComplete="email"
                       type="email"
                       placeholder="Enter your email address"
-                      className="h-12 rounded-xl shadow-none"
+                      className="py-6 rounded-xl shadow-none"
                     />
                   </FormControl>
                   <FormMessage />
@@ -110,7 +106,7 @@ export function LoginForm() {
           </div>
 
           {/* Password */}
-          <div className="flex flex-col gap-2">
+          <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
             <FormField
               control={form.control}
@@ -127,7 +123,7 @@ export function LoginForm() {
                         autoComplete="password"
                         type={showPassword ? "text" : "password"}
                         placeholder="Confirm your password"
-                        className="h-12 rounded-xl shadow-none pr-10"
+                        className="py-6 rounded-xl shadow-none pr-10"
                       />
                       <Button
                         type="button"

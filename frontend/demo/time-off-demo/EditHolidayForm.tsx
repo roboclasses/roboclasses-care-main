@@ -13,13 +13,13 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { toast } from "@/hooks/use-toast"
 
 import { TimeOffUrl } from "@/constants"
 import SubmitButton from "../button-demo/SubmitButton"
 
 import axios, { AxiosError } from "axios"
 import Cookies from "js-cookie";
+import { toast } from "sonner"
 
 
 const FormSchema = z.object({
@@ -51,13 +51,13 @@ export function EditHoidayForm() {
       form.reset();
 
       const {message} = res.data;
-      toast({ title: "Success✅", description: message, variant:"default" })  
+      toast.success(message)
         
     } catch (error:unknown) {
       if(error instanceof AxiosError){
         const {message} = error.response?.data;
         console.error(error);
-        toast({ title: "Failed", description: message || "An unknown error has occurred.", variant:"destructive" })  
+        toast.error(message || "An unknown error has occurred." )
       }
     } 
   }

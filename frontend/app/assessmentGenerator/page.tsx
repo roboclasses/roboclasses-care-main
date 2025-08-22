@@ -3,7 +3,7 @@ import Image from "next/image";
 
 import { PRIVATE_WALLPAPER } from "@/constants/images";
 import { Label } from "@/components/ui/label";
-import { AssessmentGeneratorForm } from "@/demo/assesment-generator-demo/AssessmentGeneratorForm";
+import { AssessmentGeneratorForm } from "@/demo/assessment-demo/AssessmentGeneratorForm";
 
 const page = () => {
   return (

@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 
 import { PRIVATE_WALLPAPER } from "@/constants/images";
-import { AssessmentSubmissionForm } from "@/demo/assessment-viewer-demo/AssessmentSubmissionForm";
+import { AssessmentSubmissionForm } from "@/demo/assessment-demo/AssessmentSubmissionForm";
 
 const page = () => {
   return (

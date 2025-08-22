@@ -2,8 +2,8 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { LoginForm } from "@/demo/login-demo/LoginForm";
 import { LOGO_IMG, PUBLIC_WALLPAPER } from "@/constants/images";
+import { LoginForm } from "@/demo/login-demo/LoginForm";
 
 const page = () => {
   return (
@@ -18,12 +18,17 @@ const page = () => {
       <div className="flex flex-col items-center justify-center gap-5">
         <Image src={LOGO_IMG} height={200} width={200} alt="robo-class-logo" />
 
-        {/* <p className="lg:text-4xl text-lg font-bold">Login to your Account</p> */}
+         <div className="w-full px-5 space-y-2 text-center">
+          <h1 className="lg:text-2xl text-xl font-semibold">Welcome back</h1>
+          <p className="lg:text-base text-sm text-">
+            Sign in to your account to continue!
+          </p>
+        </div>
         <LoginForm />
 
-        <div className="flex gap-2 items-center font-bold lg:text-sm text-xs">
+        <div className="flex gap-2 items-center text-sm">
           <p>Dont have an Account?</p>
-          <Link href="/signup" className="text-lime-600 focus:underline transition-colors duration-150 delay-75">
+          <Link href="/signup" className="text-lime-500 hover:underline ">
             Signup
           </Link>
         </div>

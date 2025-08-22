@@ -34,7 +34,7 @@ const HeroSection = () => {
               onClick={() => setActivetab(item.id)}
               className={cn(
                 "tab-item",
-                activeTab === item.id && "tab-item-active"
+                activeTab === item.id && "border-b-4 rounded border-lime-500 p-2 font-semibold text-lime-500"
               )}
             >
               {item.name}

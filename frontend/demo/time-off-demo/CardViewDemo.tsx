@@ -3,7 +3,7 @@ import { leaveType } from "@/types/Types";
 import { TimeOffUrl } from "@/constants";
 import { LEAVE_POLICY } from "@/data/dataStorage";
 import { getUserSession } from "@/lib/session";
-import { adjustedNormalLeave, calculateLeaveDays, currentYear } from "@/lib/utils";
+import { adjustedNormalLeave, calculateLeaveDays, currentYear } from "@/lib/helpers";
 
 import CardApplyLeaves from "./CardApplyLeaves";
 import { HolidaySheet } from "./HolidaySheet";
@@ -77,7 +77,7 @@ const CardViewDemo = () => {
       header: `${usedAdjustedNormalLeaveDays} of ${
         LEAVE_POLICY.normal.total
       } days remaining`,
-      icon: (<FaCalendar size={40} color="#65a30d"/>),
+      icon: (<FaCalendar size={50} color="#65a30d"/>),
       content: (
         <div>
           <p>{LEAVE_POLICY.normal.description}</p>
@@ -99,7 +99,7 @@ const CardViewDemo = () => {
       header: `${LEAVE_POLICY.sick.total - usedSickLeaveDays} of ${
         LEAVE_POLICY.sick.total
       } days remaining`,
-      icon: (<FaHandHoldingMedical size={40} color="#65a30d"/>),
+      icon: (<FaHandHoldingMedical size={50} color="#65a30d"/>),
       content: (
         <div>
           <p>{LEAVE_POLICY.sick.description}</p>
@@ -116,30 +116,10 @@ const CardViewDemo = () => {
         />
       ),
     },
-    // {
-    //   id: 3,
-    //   header: "Half Day",
-    //   icon: (<FaHourglassHalf size={30} color="pink"/>),
-    //   content: (
-    //     <div>
-    //       <p>{LEAVE_POLICY.half.description}</p>
-    //       <p className="text-sm text-gray-500 mt-1">
-    //         Policy renews on January 1, {currentYear + 1}
-    //       </p>
-    //     </div>
-    //   ),
-    //   dialog: (
-    //     <ApplyLeaveDialog
-    //       name="Request Half"
-    //       variant="secondary"
-    //       defaultValue={LEAVE_POLICY.half.name}
-    //     />
-    //   ),
-    // },
     {
       id: 3,
       header: LEAVE_POLICY.holidays.name,
-      icon: (<MdHolidayVillage size={40} color="#65a30d" />),
+      icon: (<MdHolidayVillage size={50} color="#65a30d" />),
       content: (
         <div>
           <p>{LEAVE_POLICY.holidays.description}</p>
@@ -156,7 +136,7 @@ const CardViewDemo = () => {
       icon: (<HolidaySheet />),
       content: (
         <div>
-          <p>{"Reason: Enter or edit holidays"}</p>      
+          <p>Reason: Enter or edit holidays</p>      
         </div>
       ),
       dialog: null,
@@ -164,7 +144,7 @@ const CardViewDemo = () => {
   ], [usedAdjustedNormalLeaveDays, usedSickLeaveDays]);
 
   return (
-    <div className="grid lg:grid-cols-3 grid-cols-1 space-y-4">
+    <div className="grid lg:grid-cols-2 grid-cols-1 gap-4">
       {cards.map((item) => (
         <CardApplyLeaves
           key={item.id}

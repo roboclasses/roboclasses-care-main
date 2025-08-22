@@ -12,7 +12,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 
 import { FeedbackUrl, NewBatchEntryUrl } from "@/constants";
@@ -32,8 +31,9 @@ import {
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { useEffect, useState } from "react";
-import SuccessMessageCard from "@/components/reusabels/SuccessMessageCard";
 import { Label } from "@/components/ui/label";
+import SuccessMessageCard from "../card-demo/SuccessMessageCard";
+import { toast } from "sonner";
 
 
 const fetcher = (url: string) => axios.get(url, { headers: { Authorization: Cookies.get("token") } }).then((res) => res.data);
@@ -110,12 +110,12 @@ export function FeedbackAdminForm() {
 
       const { message, success } = res.data;
       setIsSuccess(success);
-      toast({ title: "Success✅", description: message, variant: "default" });
+      toast.success(message)
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         console.error(error);
         const { message } = error.response?.data;
-        toast({ title: "Failed", description: message || "An Unknown error is occurred", variant: "destructive" });
+        toast.error(message || 'An unknown error has occurred.')
       }
     }
   }
@@ -123,7 +123,7 @@ export function FeedbackAdminForm() {
   return (
     <>
     {(isSubmitSuccessful && isSuccess) 
-    ? (<SuccessMessageCard to="/" content="Thank you for creating feedback!"/>) 
+    ? (<SuccessMessageCard to="/feedbackViewer" content="Thank you for creating feedback!"/>) 
     : (<Form {...form}>
        <div className="mb-8 flex flex-col items-center">
                   <h1 className="lg:text-4xl text-2xl mb-4 text-center font-serif">
@@ -155,7 +155,7 @@ export function FeedbackAdminForm() {
                 <FormControl>
                   <SelectTrigger
                     title="Batch Name"
-                    className="bg-muted-foreground h-12 shadow-none rounded-xl"
+                    className="py-6 w-full shadow-none rounded-xl"
                   >
                     <SelectValue placeholder="Select batch" />
                   </SelectTrigger>
@@ -192,7 +192,7 @@ export function FeedbackAdminForm() {
                     required
                     disabled
                     title="Student Name"
-                    className="bg-muted-foreground h-12 shadow-none rounded-xl"
+                    className="py-6 shadow-none rounded-xl"
                   />
                 </FormControl>
                 <FormDescription>
@@ -218,7 +218,7 @@ export function FeedbackAdminForm() {
                     required
                     disabled
                     title="Teacher Name"
-                    className="bg-muted-foreground h-12 shadow-none rounded-xl"
+                    className="py-6 shadow-none rounded-xl"
                   />
                 </FormControl>
                 <FormDescription>
@@ -233,6 +233,7 @@ export function FeedbackAdminForm() {
 
         {/* Email and Contact details */}
         <div className="grid lg:grid-cols-2 grid-cols-1 gap-4">
+            <div className="w-full mx-w-md">
           <FormField
             control={form.control}
             name="destination"
@@ -244,7 +245,7 @@ export function FeedbackAdminForm() {
                     country={"ae"}
                     {...field}
                     disabled
-                    inputStyle={{ width: "330px", height: "48px" }}
+                    inputStyle={{ width: "100%", height: "48px" }}
                     inputProps={{ ref: field.ref, required: true }}
                   />
                 </FormControl>
@@ -256,6 +257,7 @@ export function FeedbackAdminForm() {
               </FormItem>
             )}
           />
+          </div>
 
           <FormField
             control={form.control}
@@ -271,7 +273,7 @@ export function FeedbackAdminForm() {
                     required
                     disabled
                     title="Email Address"
-                    className="bg-muted-foreground h-12 shadow-none rounded-xl"
+                    className="py-6 shadow-none rounded-xl"
                   />
                 </FormControl>
                 <FormDescription>
