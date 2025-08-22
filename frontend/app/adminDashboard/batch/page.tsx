@@ -1,4 +1,4 @@
-import { TableBatchEntries } from '@/demo/admin-dashboard/TableBatchEntries'
+import { TableBatchEntries } from '@/demo/table-demo/TableBatchEntries'
 import React from 'react'
 
 const page = () => {

@@ -23,7 +23,7 @@ const NavBar = () => {
         <BreadcrumbList className='lg:text-base text-xs font-sans'>
           <BreadcrumbItem className="hidden md:block">
             <BreadcrumbLink href="/">
-             {'Dashboard'}
+             {''}
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator className="hidden md:block" />  

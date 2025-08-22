@@ -24,7 +24,7 @@ import { TimeOffApprovalDemo } from "./TimeOffApprovalDemo";
 import { TimeOffUrl } from "@/constants";
 import { getUserSession } from "@/lib/session";
 import { leaveType } from "@/types/Types";
-import { adjustedNormalLeave, calculateLeaveDays } from "@/lib/utils";
+import { adjustedNormalLeave, calculateLeaveDays } from "@/lib/helpers";
 import { LEAVE_POLICY, teachers } from "@/data/dataStorage";
 
 import React, { useEffect, useMemo, useState } from "react";
@@ -167,8 +167,9 @@ const TableViewDemo = () => {
 
       </CardHeader>
       <CardContent className="w-full overflow-x-auto">
-        {(error || leaves?.length === 0 || isLoading || isValidating) ?
-        (handleEdgeCases()) : (
+        {(error || leaves?.length === 0 || isLoading || isValidating)
+        ? handleEdgeCases()
+        : (
           <Table>
             <TableCaption>A list of past leaves</TableCaption>
             <TableHeader>

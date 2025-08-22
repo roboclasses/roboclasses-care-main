@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 
 import { PRIVATE_WALLPAPER } from "@/constants/images";
-import { NewBatchEntryForm } from "@/demo/new-batch-entry-demo/NewBatchEntry";
+import { NewBatchEntryForm } from "@/demo/batch-entry-demo/NewBatchEntryForm";
 
 const page = () => {
   return (

@@ -2,7 +2,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -20,6 +19,7 @@ import { timeOffStatus } from "@/data/dataStorage"
 import axios, { AxiosError } from "axios"
 import Cookies from "js-cookie";
 import useSWR from "swr"
+import { toast } from "sonner"
 
 
 export interface timeOffIdType{
@@ -46,7 +46,7 @@ export function StatusUpdateForm({timeOffId}:timeOffIdType) {
       console.log(res.data);
   
       const {message} = res.data;
-      toast({ title: "Success✅", description: message, variant:"default" })  
+      toast.success(message)
 
       // For revalidating updated list
       mutate();
@@ -55,7 +55,7 @@ export function StatusUpdateForm({timeOffId}:timeOffIdType) {
       if(error instanceof AxiosError){
         console.error(error);
         const {message} = error.response?.data;
-        toast({ title: "Failed", description: message || "An unknown error has occurred.", variant:"destructive" })  
+        toast.error(message || "An unknown error has occurred.")
       }
     } 
   }

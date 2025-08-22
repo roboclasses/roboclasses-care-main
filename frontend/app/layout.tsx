@@ -1,12 +1,13 @@
-import type { Metadata } from "next";
-import { DM_Sans } from "next/font/google";
 import "./globals.css";
 
-import NavBar from "@/components/NavBar";
+import type { Metadata } from "next";
+import { DM_Sans } from "next/font/google";
+import type { Viewport } from "next";
+
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
-import { Toaster } from "@/components/ui/toaster";
-import type { Viewport } from "next";
+import NavBar from "@/components/NavBar";
+import { Toaster } from "@/components/ui/sonner";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -17,10 +18,11 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
   title: "ROBO CLASSES care",
   description: "STEM Accredited robotics and coding courses.",
-  ...(process.env.NODE_ENV === 'production' && { icons: {
-    icon:   "/favicon.ico" ,
-  }
- }),
+  ...(process.env.NODE_ENV === "production" && {
+    icons: {
+      icon: "/favicon.ico",
+    },
+  }),
 };
 
 export const viewport: Viewport = {

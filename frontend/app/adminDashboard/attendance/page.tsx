@@ -1,4 +1,4 @@
-import { TableAttendance } from '@/demo/admin-dashboard/TableAttendance'
+import { TableAttendance } from '@/demo/table-demo/TableAttendance'
 import React from 'react'
 
 const page = () => {

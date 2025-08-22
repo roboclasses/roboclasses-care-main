@@ -5,17 +5,25 @@ import {
   AlignEndVerticalIcon,
   AppWindowMacIcon,
   BookIcon,
+  BookOpen,
   BookOpenIcon,
   Calendar,
+  Calendar1,
   EyeIcon,
+  HelpingHand,
   LayoutDashboard,
+  Library,
   LifeBuoy,
+  NewspaperIcon,
   School,
   Send,
+  Settings2,
   SquareTerminal,
   User2,
   Users,
+  UsersIcon,
   View,
+  ViewIcon,
 } from "lucide-react";
 import { NavMain } from "@/components/nav-main";
 import { NavSecondary } from "@/components/nav-secondary";
@@ -29,11 +37,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { LOGO_IMG } from "@/constants/images";
 import { getUserSession } from "@/lib/session";
 
 import Link from "next/link";
 import Image from "next/image";
+import { LOGO_IMG } from "@/constants/images";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -62,7 +70,7 @@ useEffect(()=>{
  // Views data (side-bar)
   const data = {
     user: {
-      name: name ,
+      name: name,
       email: email ,
       avatar: avatar,
     },
@@ -223,26 +231,80 @@ useEffect(()=>{
     ],
 
     navMainStudent: [
-      {
-        title: "Take Appointment",
-        url: "#",
-        icon: SquareTerminal,
-        isActive: true,
-        items: [
-          {
-            title: "Register a Student",
-            url: "/appointment/studentRegister",
-          },
-          {
-            title: "Student Holiday",
-            url: "/appointment/holiday",
-          },
-        ],
-      },
+      // {
+      //   title: "Take Appointment",
+      //   url: "#",
+      //   icon: SquareTerminal,
+      //   isActive: true,
+      //   items: [
+      //     {
+      //       title: "Register a Student",
+      //       url: "/appointment/studentRegister",
+      //     },
+      //     {
+      //       title: "Student Holiday",
+      //       url: "/appointment/holiday",
+      //     },
+      //   ],
+      // },
        {
         title:  "Student Dashboard",
-        url:  "/students/dashboard",
+        url:  "/students/studentDashboard",
         icon: LayoutDashboard,
+        isActive: false,
+      },
+      {
+        title:  "Course catalog",
+        url:  "/students/courseCatalog",
+        icon: BookIcon,
+        isActive: false,
+      },
+      {
+        title:  "Assignments & Assessments",
+        url:  "/students/submission",
+        icon: BookOpen,
+        isActive: false,
+      },
+      {
+        title:  "Grades & Progress",
+        url:  "/students/gradesAndProgress",
+        icon: ViewIcon,
+        isActive: false,
+      },
+      {
+        title:  "Communication",
+        url:  "/students/communication",
+        icon: UsersIcon,
+        isActive: false,
+      },
+      {
+        title:  "Library",
+        url:  "/students/library",
+        icon: Library,
+        isActive: false,
+      },
+      {
+        title:  "Calendar",
+        url:  "/students/calendar",
+        icon: Calendar1,
+        isActive: false,
+      },
+      {
+        title:  "News & Announcements",
+        url:  "/students/news",
+        icon: NewspaperIcon,
+        isActive: false,
+      },
+      {
+        title:  "Profile & Settings",
+        url:  "/students/profileAndSettings",
+        icon: Settings2,
+        isActive: false,
+      },
+      {
+        title:  "Help & Support",
+        url:  "/students/helpAndSupport",
+        icon: HelpingHand,
         isActive: false,
       },
     ],
@@ -340,6 +402,7 @@ useEffect(()=>{
           </SidebarFooter>
         </Sidebar>
       )}
+
     </>
   );
 }

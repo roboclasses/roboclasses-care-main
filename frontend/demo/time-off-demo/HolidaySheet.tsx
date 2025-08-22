@@ -2,7 +2,6 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { toast } from "@/hooks/use-toast";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -49,6 +48,7 @@ import { addDays, format } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { CalendarIcon } from "lucide-react";
 import { IoSettingsSharp } from "react-icons/io5";
+import { toast } from "sonner";
 
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
@@ -62,7 +62,7 @@ interface holidayDataT {
 const formSchema = z.object({
   holiday: z.string().min(3, { message: "Holiday must be 3 characters" }),
   dateRange: z.object({
-    from: z.date({ required_error: "This field is required" }),
+    from: z.date(),
     to: z.date().optional(),
   }),
 });
@@ -99,13 +99,13 @@ export function HolidaySheet() {
       mutate();
 
       const { message } = res.data;
-      toast({ title: "Success✅", description: message, variant: "default" });
+      toast.success(message)
 
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         console.error(error);
         const { message } = error.response?.data;
-        toast({ title: "Failed", description: message, variant: "destructive" });
+        toast(message || 'An unknown error has occurred.')
       }
     }
   }
@@ -117,7 +117,7 @@ export function HolidaySheet() {
           <IoSettingsSharp />
         </Button>
       </SheetTrigger>
-      <SheetContent className="space-y-4" side={'right'}>
+      <SheetContent className="space-y-4 p-2" side={'right'}>
         <SheetHeader>
           <SheetTitle>Enter Holiday</SheetTitle>
           <SheetDescription>

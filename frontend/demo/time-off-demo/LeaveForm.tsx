@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { toast } from "@/hooks/use-toast";
 import {
   Form,
   FormControl,
@@ -38,15 +37,17 @@ import { DateRange } from "react-day-picker";
 import { addDays, format } from "date-fns";
 import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
+import { toast } from "sonner";
+import { Textarea } from "@/components/ui/textarea";
 
 const FormSchema = z.object({
   teacherName: z.string().min(2, { message: "Tecaher Name must be at least 2 characters." }),
   timeOffType: z.string().optional(),
   dateRange: z.object({
-    from: z.date({ required_error: "Start date is required." }),
+    from: z.date(),
     to: z.date().optional(),
   }),
-  notes: z.string().min(5, { message: "Note must be atleast 5 characters." }),
+  notes: z.string().optional()
 });
 
 export function LeaveForm({ defaultValue }: { defaultValue: string }) {
@@ -123,19 +124,19 @@ useEffect(() => {
       form.reset();
 
       const { message } = res.data;
-      toast({ title: "Success✅", description: message, variant: "default" });
+      toast.success(message)
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         const { message } = error.response?.data;
         console.error(error);
-        toast({ title: "Failed", description: message || "An unknown error has occurred.", variant: "destructive" });
+        toast.error(message || 'An unknown error has occurred.')
       }
     }
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
 
         {/* Teacher Full Name */}
         <FormField
@@ -146,7 +147,7 @@ useEffect(() => {
               <FormControl>
                 {user.role === "admin" ? (
                   <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger className="h-12 rounded-xl shadow-none">
+                    <SelectTrigger className="shadow-none rounded-xl py-6 w-full">
                       <SelectValue placeholder="Select a Teacher" />
                     </SelectTrigger>
                     <SelectContent>
@@ -161,7 +162,7 @@ useEffect(() => {
                   <Input
                     placeholder="Enter your full name"
                     {...field}
-                    className="h-12 rounded-xl shadow-none"
+                    className="shadow-none rounded-xl py-6"
                   />
                 ) : (
                   false
@@ -183,7 +184,7 @@ useEffect(() => {
             <FormItem>
               <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
-                  <SelectTrigger className="h-12 rounded-xl shadow-none">
+                  <SelectTrigger className="shadow-none rounded-xl py-6 w-full">
                     <SelectValue placeholder="Select time off type" />
                   </SelectTrigger>
                 </FormControl>
@@ -214,7 +215,7 @@ useEffect(() => {
                   <Button
                     id="date"
                     variant={"outline"}
-                    className="w-full justify-start text-left font-normal h-12 rounded-xl shadow-none"
+                    className="w-full justify-start text-left font-normal shadow-none rounded-xl py-6"
                   >
                     <CalendarIcon className="mr-2" />
                     {dateRange?.from ? (
@@ -253,17 +254,17 @@ useEffect(() => {
           )}
         />
 
-        {/* Note taking area */}
+        {/* Note taking area (Optional) */}
         <FormField
           control={form.control}
           name="notes"
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input
+                <Textarea
                   placeholder="Add note here"
                   {...field}
-                  className="h-16 rounded-xl shadow-none"
+                  className="h-20 rounded-xl shadow-none"
                 />
               </FormControl>
               <FormDescription>This is note taking area.</FormDescription>

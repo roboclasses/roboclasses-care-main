@@ -1,4 +1,4 @@
-import { StudentsTable } from '@/demo/admin-dashboard/StudentsTable'
+import { StudentsTable } from '@/demo/table-demo/StudentsTable'
 import React from 'react'
 
 const page = () => {

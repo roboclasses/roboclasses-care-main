@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -21,6 +22,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "lib/utils.ts", "demo/normal-class/multiDatePickerForm.jsx", "demo/normal-class/EditNormalClassForm.jsx", "demo/new-batch-entry-demo/NewBatchEntry.jsx", "demo/new-batch-entry-demo/EditBatchForm.jsx", "demo/manage-attendance-demo/AttendanceForm.jsx", "demo/manage-attendance-demo/EditAttendanceForm.jsx", "demo/admin-dashboard/TableAttendance.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "demo/appointment-demo/NormalClassForm.jsx", "demo/appointment-demo/EditNormalClassForm.jsx", "demo/batch-entry-demo/NewBatchEntryForm.jsx", "demo/batch-entry-demo/EditBatchEntryForm.jsx", "demo/attendance-demo/AttendanceForm.jsx"],
   "exclude": ["node_modules"]
 }

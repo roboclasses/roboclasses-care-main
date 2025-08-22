@@ -8,7 +8,7 @@ import { btnType } from '@/types/Types'
 
 const SubmitButton = ({name, type, onClick, disabled}:btnType) => {
   return (
-    <Button type={type} onClick={onClick} disabled={disabled}>
+    <Button type={type} onClick={onClick} disabled={disabled} className='w-full'>
       {name}
     </Button>
   )

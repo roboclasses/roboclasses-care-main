@@ -40,8 +40,8 @@ export function NavUser({
   const handleLogout = async()=>{
     await deleteUserSession();
     router.push('/login')
+    
   }
-
 
   return (
     <SidebarMenu>

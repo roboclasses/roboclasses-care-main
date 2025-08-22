@@ -1,4 +1,4 @@
-import { AttendanceForm } from "@/demo/manage-attendance-demo/AttendanceForm";
+import { AttendanceForm } from "@/demo/attendance-demo/AttendanceForm";
 
 export default function page() {
   return (

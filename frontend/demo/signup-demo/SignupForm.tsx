@@ -18,7 +18,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { SignupUrl } from "@/constants";
-import { toast } from "@/hooks/use-toast";
 import {
   Select,
   SelectContent,
@@ -29,10 +28,11 @@ import {
 import { passwordValidation } from "@/lib/helpers";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
 
 const FormSchema = z.object({
   name: z.string().min(3, "Name must be 3 characters long"),
-  email: z.string().trim().email("Please enter a valid email"),
+  email: z.email("Please enter a valid email"),
   password: z.string().trim().min(8, "Password is too short").regex(passwordValidation, 'Your password is not valid'),
   role: z.enum(["student", "teacher", "admin", "contractor"])
 });
@@ -68,10 +68,8 @@ export function SignupForm() {
 
       if (success) {
         router.push("/login");
-        toast({ title: "Success✅", description: message, variant: "default" });
+        toast.success(message)
       }
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: unknown) {
      let errorMessage = "An error occurred during signup";
 
@@ -87,17 +85,17 @@ export function SignupForm() {
       errorMessage = error.message;
     }
       console.log(error);
-      toast({ title: "Signup  Failed", description: errorMessage, variant: "destructive" });
+      toast.error(errorMessage || 'An unknown error has occurred.')
     }
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full px-5">
-        <div className="grid items-center gap-5">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full lg:px-40 px-5">
+        <div className="space-y-5">
 
           {/* Full Name */}
-          <div className="flex flex-col gap-2">
+          <div className="space-y-2">
             <Label htmlFor="name">Full Name</Label>
             <FormField
               control={form.control}
@@ -112,8 +110,8 @@ export function SignupForm() {
                       required
                       autoComplete="name"
                       type="text"
-                      placeholder="e.g. James Bond"
-                      className="h-12 rounded-xl shadow-none"
+                      placeholder="e.g., James Bond"
+                      className="py-6 rounded-xl shadow-none"
                     />
                   </FormControl>
                   <FormMessage/>
@@ -123,7 +121,7 @@ export function SignupForm() {
           </div>
 
           {/* Roles drop-down */}
-          <div className="flex flex-col gap-2">
+          <div className="space-y-2">
             <Label htmlFor="roles">Roles</Label>
             <FormField
               control={form.control}
@@ -136,7 +134,7 @@ export function SignupForm() {
                     required
                   >
                     <FormControl>
-                      <SelectTrigger className="h-12 rounded-xl shadow-none">
+                      <SelectTrigger className="py-6 rounded-xl shadow-none w-full">
                         <SelectValue placeholder="Select your role" id="roles"/>
                       </SelectTrigger>
                     </FormControl>
@@ -154,7 +152,7 @@ export function SignupForm() {
           </div>
 
           {/* Email Address */}
-          <div className="flex flex-col gap-2">
+          <div className="space-y-2">
             <Label htmlFor="email">Email Address</Label>
             <FormField
               control={form.control}
@@ -170,7 +168,7 @@ export function SignupForm() {
                       autoComplete="email"
                       type="email"
                       placeholder="e.g. bond@gmail.com"
-                      className="h-12 rounded-xl shadow-none"
+                      className="py-6 rounded-xl shadow-none"
                     />
                   </FormControl>
                   <FormMessage/>
@@ -180,7 +178,7 @@ export function SignupForm() {
           </div>
 
           {/* Password */}
-          <div className="flex flex-col gap-2">
+          <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
             <FormField
               control={form.control}
@@ -197,7 +195,7 @@ export function SignupForm() {
                       autoComplete="password"
                       type={showPassword ? "text" : "password"}
                       placeholder="Enter a strong password"
-                      className="h-12 rounded-xl shadow-none"
+                      className="py-6 rounded-xl shadow-none"
                     />
 
                     <Button

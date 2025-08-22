@@ -1,12 +1,3 @@
-import {
-  ATTENDANCES_IMAGE,
-  BATCHES_IMAGE,
-  COURSES_IMAGE,
-  DEMO_CLASS_IMAGE,
-  NORMAL_CLASS_IMAGE,
-  STUDENT_IMAGE,
-} from "@/constants/images";
-
 // For mapping teachers in drop-down
 export const teachers = [
   { id: 1, name: "All" },
@@ -25,16 +16,6 @@ export const timezone = [
   { id: 3, name: "Asia/Riyadh", country: "Saudi Arab" },
   { id: 4, name: "America/Toronto", country: "Canada" },
   { id: 5, name: "Asia/Dubai", country: "UAE" },
-];
-
-// For mapping image-icons
-export const imageIcons = [
-  { slug: "student", img: STUDENT_IMAGE, alt: "students-pic" },
-  { slug: "democlass", img: DEMO_CLASS_IMAGE, alt: "demo-classes-pic" },
-  { slug: "normalclass", img: NORMAL_CLASS_IMAGE, alt: "normal-classes-pic" },
-  { slug: "attendance", img: ATTENDANCES_IMAGE, alt: "attendances-pic" },
-  { slug: "batch", img: BATCHES_IMAGE, alt: "batches-pic" },
-  { slug: "course", img: COURSES_IMAGE, alt: "courses-pic" },
 ];
 
 // For mapping countries

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { PRIVATE_WALLPAPER } from "@/constants/images";
-import { EditNormalClassForm } from "@/demo/normal-class/EditNormalClassForm";
+import { EditNormalClassForm } from "@/demo/appointment-demo/EditNormalClassForm";
 
 const page = () => {
   return (

@@ -1,7 +1,7 @@
-import HeroSection from "@/components/home/heroSection";
+import Hero from '@/demo/dashboard/Hero'
 
-function page() {
-  return <HeroSection />
+const page = () => {
+  return <Hero />
 }
 
-export default page;
+export default page

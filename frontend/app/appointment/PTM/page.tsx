@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { PRIVATE_WALLPAPER } from "@/constants/images";
-import { PtmForm } from "@/demo/ptm-demo/PtmForm";
+import { PtmForm } from "@/demo/appointment-demo/PtmForm";
 
 const page = () => {
   return (

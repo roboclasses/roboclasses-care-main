@@ -1,15 +1,25 @@
 'use client'
 
-import { imageIcons } from "@/data/dataStorage";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { ReactNode } from "react";
 
+
 interface ILayoutType {
   children: ReactNode;
 }
+
+// For mapping image-icons
+const imageIcons = [
+  { slug: "student", img: "/assets/images/student.png", alt: "students-pic" },
+  { slug: "democlass", img: "/assets/images/democlasses.png", alt: "demo-classes-pic" },
+  { slug: "normalclass", img: "/assets/images/normalclasses.png", alt: "normal-classes-pic" },
+  { slug: "attendance", img: "/assets/images/attendance.png", alt: "attendances-pic" },
+  { slug: "batch", img: "/assets/images/batch.png", alt: "batches-pic" },
+  { slug: "course", img: "/assets/images/course.png", alt: "courses-pic" },
+];
 
 export default function AdminDashboardLayout({ children }: ILayoutType) {
     const path = usePathname();

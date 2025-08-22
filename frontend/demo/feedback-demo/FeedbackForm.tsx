@@ -15,7 +15,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { toast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { FeedbackUrl } from "@/constants";
@@ -29,11 +28,13 @@ import {
 } from "@/components/ui/accordion";
 import { FeedbackData } from "@/data/dataStorage";
 import { Textarea } from "@/components/ui/textarea";
-import SuccessMessageCard from "@/components/reusabels/SuccessMessageCard";
+import SuccessMessageCard from "../card-demo/SuccessMessageCard";
+import { toast } from "sonner";
+import { Label } from "@/components/ui/label";
 
 const FormSchema = z.object({
   feedbackAnswer: z.array(
-    z.enum(["A", "B", "C"], { required_error: "You need to select a option." })
+    z.enum(["A", "B", "C"], { error: "You need to select an option." })
   ),
   student: z.string().optional(),
   batch: z.string().optional(),
@@ -84,16 +85,12 @@ export function FeedbackForm() {
 
       const { message, success } = res.data;
       setIsSuccess(success);
-      toast({ title: "Success✅", description: message, variant: "default" });
+      toast.success(message)
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         console.error(error);
         const { message } = error.response?.data;
-        toast({
-          title: "Failed",
-          description: message || "An unknown error has occurred.",
-          variant: "destructive",
-        });
+        toast.error(message || 'An unknown error has occurred.')
       }
     }
   }
@@ -102,13 +99,22 @@ export function FeedbackForm() {
     <>
     {(isSubmitSuccessful && isSuccess) 
     ? (
-      <SuccessMessageCard 
-        to="/"
+      <SuccessMessageCard
+        to="/feedbackViewer"
         content="Thank you for submitting your valuable feedback! One of our teacher will reach you soon."
       />
       ) 
     : (<Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                  <div className="mb-8 flex flex-col items-center">
+                    <h1 className="lg:text-4xl text-2xl mb-4 text-center font-serif">
+                      Feedback Form
+                    </h1>
+                    <Label className="text-gray-500 md:text-lg text-xs text-center">
+                      Please check your details and fill the form, once done please
+                      submit
+                    </Label>
+                  </div>
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="item-1">
             <AccordionTrigger>View batch details</AccordionTrigger>
@@ -126,7 +132,7 @@ export function FeedbackForm() {
                         required
                         disabled
                         title="Batch Name"
-                        className="bg-muted-foreground h-12 shadow-none rounded-xl"
+                        className="py-6 shadow-none rounded-xl"
                       />
                     </FormControl>
                     <FormDescription>
@@ -152,7 +158,7 @@ export function FeedbackForm() {
                         required
                         disabled
                         title="Teacher Name"
-                        className="bg-muted-foreground h-12 shadow-none rounded-xl"
+                        className="py-6 shadow-none rounded-xl"
                       />
                     </FormControl>
                     <FormDescription>
@@ -178,7 +184,7 @@ export function FeedbackForm() {
                         required
                         disabled
                         title="Student Name"
-                        className="bg-muted-foreground h-12 shadow-none rounded-xl"
+                        className="py-6 shadow-none rounded-xl"
                       />
                     </FormControl>
                     <FormDescription>
@@ -254,7 +260,7 @@ export function FeedbackForm() {
                         placeholder="Please explain in few sentence..."
                         required
                         title="Would you recommend"
-                        className="bg-muted-foreground h-16 shadow-none rounded-xl"
+                        className="h-20 shadow-none rounded-xl"
                       />
                     </FormControl>
                     <FormDescription>
@@ -278,7 +284,7 @@ export function FeedbackForm() {
                         placeholder="Please explain in few sentence..."
                         required
                         title="Additional note"
-                        className="bg-muted-foreground h-16 shadow-none rounded-xl"
+                        className="h-20 shadow-none rounded-xl"
                       />
                     </FormControl>
                     <FormDescription>

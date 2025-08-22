@@ -1,8 +1,8 @@
 'use server'
-import { cookies } from "next/headers"
 
+import { cookies } from "next/headers";
 
- const cookie ={
+const cookie ={
     options:{ httponly: true, secure: false, samesite: "lax", path: '/' },
     duration:10 * 24 * 60 * 60 * 1000, //10 days
 
@@ -11,27 +11,30 @@ import { cookies } from "next/headers"
 const expires = new Date(Date.now()+cookie.duration);
 
 export async function createUserSession(token:string, role:string, _id:string, email:string, name:string){
-    cookies().set("token", token, {...cookie.options, expires})
-    cookies().set("role", role, {...cookie.options, expires})
-    cookies().set("_id", _id, {...cookie.options, expires})
-    cookies().set("email", email, {...cookie.options, expires})
-    cookies().set("name", name, {...cookie.options, expires})
+    const cookieStore = await cookies();
+    cookieStore.set("token", token, {...cookie.options, expires});
+    cookieStore.set("role", role, {...cookie.options, expires});
+    cookieStore.set("_id", _id, {...cookie.options, expires});
+    cookieStore.set("email", email, {...cookie.options, expires});
+    cookieStore.set("name", name, {...cookie.options, expires});
 }
 
 export async function getUserSession() {
+    const cookieStore = await cookies();
     return { 
-        name: cookies().get("name")?.value, 
-        role: cookies().get("role")?.value, 
-        email: cookies().get("email")?.value, 
-        token: cookies().get("token")?.value 
-        };
+        name: cookieStore.get("name")?.value, 
+        role: cookieStore.get("role")?.value, 
+        email: cookieStore.get("email")?.value, 
+        token: cookieStore.get("token")?.value 
+    };
 }
 
 export async function deleteUserSession(){
-    cookies().delete("token")
-    cookies().delete("role")
-    cookies().delete("_id",)
-    cookies().delete("email")
-    cookies().delete("name")
+    const cookieStore = await cookies();
+    cookieStore.delete("token");
+    cookieStore.delete("role");
+    cookieStore.delete("_id");
+    cookieStore.delete("email");
+    cookieStore.delete("name");
 }
 
