@@ -1,14 +1,33 @@
 'use client'
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Bell } from "lucide-react";
 import { useParams, usePathname } from "next/navigation";
+import { getUserSession } from "@/lib/session";
 
 const StudentHeader = () => {
   const pathname = usePathname();
   const {slug} = useParams();
+  const [user, setUser] = useState({name:"", role:""})
+
+  // Handle fetch student session
+  useEffect(()=>{
+    const handleFetch = async()=>{
+      try {
+        const session = await getUserSession();
+        if(!session.name || !session.role){
+          throw new Error('No user session found.')
+        }
+        setUser({name: session.name, role: session.role})
+        
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    handleFetch();
+  },[])
 
   // Screen name based on routes data
   const routesData = [
@@ -45,10 +64,10 @@ const StudentHeader = () => {
         <div className="flex items-center gap-3">
           <Avatar>
             <AvatarImage src="/assets/images/student-profile.png" />
-            <AvatarFallback>JD</AvatarFallback>
+            <AvatarFallback>{user?.name?.charAt(2).toUpperCase()}</AvatarFallback>
           </Avatar>
           <div>
-            <p className="font-medium">John Doe</p>
+            <p className="font-medium">{user.role === 'student' ? user.name : ''}</p>
             <p className="text-sm text-gray-500">3rd Year</p>
           </div>
         </div>
