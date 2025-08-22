@@ -40,7 +40,7 @@ export default function AdminDashboardLayout({ children }: ILayoutType) {
           </Link>
         ))}
       </div>
-      <div className="lg:w-full w-[400px] min-h-dvh lg:px-20 px-5">
+      <div className="lg:w-[1500px] w-[400px] min-h-dvh lg:px-20 px-5">
         {children}
       </div>
     </div>
