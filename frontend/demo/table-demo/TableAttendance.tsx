@@ -229,14 +229,14 @@ export function TableAttendance() {
                     ? formatDate(item.startDate, "MMM dd, yyyy")
                     : ""}
                 </TableCell>
-                <TableCell>
+                <TableCell className="w-[200px]">
                   {item.classes
                     ? item.classes
                         .map((date) => formatDate(date, "MMM dd, yyyy"))
                         .join(", ")
                     : ""}
                 </TableCell>
-                <TableCell>
+                <TableCell className="w-[200px]">
                   {item.curriculumTaught
                     ? item.curriculumTaught.map((item) => item).join(", ")
                     : ""}
