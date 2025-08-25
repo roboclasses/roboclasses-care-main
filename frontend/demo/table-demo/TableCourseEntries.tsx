@@ -75,8 +75,8 @@ export function TableCourseEntries() {
           <TableCaption>A list of courses</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px]">Course Name</TableHead>
-              <TableHead className="w-[100px]">Number of Classes</TableHead>
+              <TableHead >Course Name</TableHead>
+              <TableHead >Number of Classes</TableHead>
               <TableHead>Edit</TableHead>
               <TableHead>Delete</TableHead>
             </TableRow>
@@ -89,13 +89,13 @@ export function TableCourseEntries() {
                   {courses.numberOfClasses}
                 </TableCell>
 
-                <TableCell className="text-right">
+                <TableCell className="text-right w-[50px]">
                   <Link href={`/courseEntry/edit/${courses._id}`}>
                     <EditButton name="Edit" type="button" />
                   </Link>
                 </TableCell>
 
-                <TableCell className="text-right">
+                <TableCell className="text-right w-[50px]">
                   <DeleteAlertDemo
                     onCancel={() => console.log("Delete action canceled")}
                     onDelete={() => handleDelete(courses._id)}
