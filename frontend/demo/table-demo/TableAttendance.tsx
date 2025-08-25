@@ -208,15 +208,15 @@ export function TableAttendance() {
             <TableRow>
               <TableHead className="w-[100px]">Batch Name</TableHead>
               <TableHead className="w-[100px]">Teacher Name</TableHead>
-              <TableHead>Start Date</TableHead>
-              <TableHead>Classes</TableHead>
-              <TableHead>Topics Covered</TableHead>
-              <TableHead>Number of Classes Done</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Holiday (From)</TableHead>
-              <TableHead>Holiday (To)</TableHead>
-              <TableHead>Edit</TableHead>
-              <TableHead>Delete</TableHead>
+              <TableHead className="w-[100px]">Start Date</TableHead>
+              <TableHead className="w-[200px]">Classes</TableHead>
+              <TableHead className="w-[200px]">Topics Covered</TableHead>
+              <TableHead className="w-[100px]">Number of Classes Done</TableHead>
+              <TableHead className="w-[100px]">Status</TableHead>
+              <TableHead className="w-[100px]">Holiday (From)</TableHead>
+              <TableHead className="w-[100px]">Holiday (To)</TableHead>
+              <TableHead className="w-[50px]">Edit</TableHead>
+              <TableHead className="w-[50px]">Delete</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -267,7 +267,7 @@ export function TableAttendance() {
           </TableBody>
           <TableFooter>
             <TableRow>
-              <TableCell colSpan={9}>Total Rows</TableCell>
+              <TableCell colSpan={11}>Total Rows</TableCell>
               <TableCell className="text-right">
                 {filteredData.length}
               </TableCell>
