@@ -225,9 +225,15 @@ export function TableBatchEntries() {
                     : ""}
                 </TableCell>
                 <TableCell className="text-right">
-                  {handleTime(batch.day, batch.time)}{" "}
+                  <div className="text-center text-wrap w-[100px]">
+                    {handleTime(batch.day, batch.time)}
+                  </div>
                 </TableCell>
-                <TableCell className="text-right">{batch.timeZone}</TableCell>
+                <TableCell className="text-right">
+                   <div className="text-center text-wrap w-[100px]">
+                    {batch.timeZone}
+                  </div>
+                  </TableCell>
                 <TableCell className="text-right">
                   {batch.numberOfClasses}
                 </TableCell>

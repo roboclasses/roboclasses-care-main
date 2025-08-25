@@ -134,11 +134,11 @@ export function StudentsTable() {
               <TableHead >Parent Name</TableHead>
               <TableHead >Contact Details</TableHead>
               <TableHead >Email Address</TableHead>
-              <TableHead className="w-[100px]">Location Details</TableHead>
-              <TableHead className="w-[100px]">Grade</TableHead>
-              <TableHead className="w-[100px]">Courses Done</TableHead>
-              <TableHead className="w-[50px]">Edit</TableHead>
-              <TableHead className="w-[50px]">Delete</TableHead>
+              <TableHead >Location Details</TableHead>
+              <TableHead >Grade</TableHead>
+              <TableHead >Courses Done</TableHead>
+              <TableHead >Edit</TableHead>
+              <TableHead >Delete</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -149,9 +149,17 @@ export function StudentsTable() {
                 <TableCell className="font-medium">{Student.parentName}</TableCell>
                 <TableCell className="font-medium">{role === "admin" ? Student.destination : ""}</TableCell>
                 <TableCell>{role === "admin" ? Student.email : ""}</TableCell>
-                <TableCell className="text-right">{Student.address}</TableCell>
+                <TableCell className="text-right">
+                  <div className="w-[100px] text-wrap text-center">
+                  {Student.address}
+                  </div>
+                  </TableCell>
                 <TableCell className="text-right">{Student.grade}</TableCell>
-                <TableCell className="text-right">{Student.courses}</TableCell>
+                <TableCell className="text-right">
+                  <div className="w-[100px] text-wrap text-center">
+                  {Student.courses}
+                  </div>
+                  </TableCell>
                 <TableCell className="text-right">
                   {role === "admin" ? (
                     <Link href={`/appointment/studentRegister/edit/${Student._id}`}>

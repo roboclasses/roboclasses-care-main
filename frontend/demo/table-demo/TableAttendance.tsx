@@ -206,17 +206,17 @@ export function TableAttendance() {
           <TableCaption>A list of attendances</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px]">Batch Name</TableHead>
-              <TableHead className="w-[100px]">Teacher Name</TableHead>
-              <TableHead className="w-[100px]">Start Date</TableHead>
-              <TableHead className="w-[200px]">Classes</TableHead>
-              <TableHead className="w-[200px]">Topics Covered</TableHead>
-              <TableHead className="w-[100px]">Number of Classes Done</TableHead>
-              <TableHead className="w-[100px]">Status</TableHead>
-              <TableHead className="w-[100px]">Holiday (From)</TableHead>
-              <TableHead className="w-[100px]">Holiday (To)</TableHead>
-              <TableHead className="w-[50px]">Edit</TableHead>
-              <TableHead className="w-[50px]">Delete</TableHead>
+              <TableHead >Batch Name</TableHead>
+              <TableHead >Teacher Name</TableHead>
+              <TableHead >Start Date</TableHead>
+              <TableHead >Classes</TableHead>
+              <TableHead >Topics Covered</TableHead>
+              <TableHead >Number of Classes Done</TableHead>
+              <TableHead >Status</TableHead>
+              <TableHead >Holiday (From)</TableHead>
+              <TableHead >Holiday (To)</TableHead>
+              <TableHead >Edit</TableHead>
+              <TableHead >Delete</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -229,17 +229,21 @@ export function TableAttendance() {
                     ? formatDate(item.startDate, "MMM dd, yyyy")
                     : ""}
                 </TableCell>
-                <TableCell className="w-[200px]">
+                <TableCell>
+                  <div className="text-wrap text-center w-[300px]">
                   {item.classes
                     ? item.classes
                         .map((date) => formatDate(date, "MMM dd, yyyy"))
                         .join(", ")
                     : ""}
+                  </div>
                 </TableCell>
-                <TableCell className="w-[200px]">
+                <TableCell>
+                  <div className="text-wrap text-center w-[300px]">
                   {item.curriculumTaught
                     ? item.curriculumTaught.map((item) => item).join(", ")
                     : ""}
+                  </div>
                 </TableCell>
                 <TableCell>{item.classes.length}</TableCell>
                 <TableCell>
