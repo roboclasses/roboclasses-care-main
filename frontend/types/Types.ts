@@ -1,4 +1,5 @@
 import { Url } from "next/dist/shared/lib/router/router";
+import { ReactNode } from "react";
 
 export type btnType = {
   name: string;
@@ -195,5 +196,11 @@ export type attendanceType = {
   completed: string;
   dateRange: {from: string, to:string};
 }
+
+export type TCalendarType={
+  getEventTypeIcon: (type:string) => ReactNode,
+  getStatusColor: (status: string) => string,
+}
+
 
 
