@@ -1,8 +1,8 @@
-import SupportDemo from '@/demo/students-demo/help-and-support/SupportDemo'
+import HelpAndSupportDemo from '@/demo/students-demo/help-and-support/HelpAndSupportDemo'
 import React from 'react'
 
 const page = () => {
-  return <SupportDemo />
+  return <HelpAndSupportDemo />
 }
 
 export default page
