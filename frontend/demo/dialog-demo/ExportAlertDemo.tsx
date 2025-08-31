@@ -32,7 +32,7 @@ export function ExportAlertDemo({ onCancel, onExport }: alertDialogT) {
           </AlertDialogTitle>
           <AlertDialogDescription>
             <b>This data is protected under privacy and data protection laws.</b> Please ensure that you are authorized to export and handle this information.<br />
-            <span style={{ color: 'red' }}>
+            <span className="text-red-500">
               Proceed only if you understand and accept responsibility for data security.
             </span> 
           </AlertDialogDescription>

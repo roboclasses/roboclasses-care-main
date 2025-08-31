@@ -128,11 +128,11 @@ const filteredData = useMemo(()=>{
               <TableCell className="font-medium">
                 {feedback.isCompleted === true ? (
                   <Button variant={'outline'} className="p-2 rounded-full font-semibold">
-                    <FaCircle style={{ color: "green" }} size={16} /> Completed
+                    <FaCircle className="text-green-500" size={16} /> Completed
                   </Button>
                 ) : feedback.isCompleted === false ? (
                   <Button variant={'outline'} className="p-2 rounded-full font-semibold">
-                    <FaCircle style={{ color: "blue" }} size={16} /> Active
+                    <FaCircle className="text-blue-500" size={16} /> Active
                   </Button>
                 ) : (
                   false

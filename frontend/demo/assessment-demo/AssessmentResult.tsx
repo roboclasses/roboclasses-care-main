@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Download, Printer, RotateCcw, Info, Sparkles } from "lucide-react"
+import { Download, Printer, RotateCcw, Info, Sparkles, InfoIcon } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
 import { UploadAssessmentButton } from "./UploadAssessmentButton"
@@ -102,6 +102,7 @@ export function AssessmentResult({ assessment, onReset, notice, isAiGenerated, a
   }
 
   console.log("assesment: ", assessment);
+  console.log('Notice is', notice)
   
 
   return (
@@ -110,8 +111,8 @@ export function AssessmentResult({ assessment, onReset, notice, isAiGenerated, a
         <div className="flex items-center space-x-2">
           <h2 className="md:text-2xl text-lg font-bold text-gray-800">Generated Assessment</h2>
           {isAiGenerated && (
-            <Badge variant="outline" style={{background:"#FAF5FF", color:"#6B21A8", borderColor:"#E9D5FF"}}>
-              <Sparkles className="h-3 w-3 mr-1" style={{color:"#8B5CF6"}}/>
+            <Badge variant="outline" className="bg-purple-50 text-purple-600 border-purple-500">
+              <Sparkles className="h-3 w-3 mr-1 text-purple-600"/>
               AI Generated
             </Badge>
           )}
@@ -134,9 +135,9 @@ export function AssessmentResult({ assessment, onReset, notice, isAiGenerated, a
       </div>
 
       {notice && (
-        <Alert style={{background:"#EFF6FF", borderColor:"#BFDBFE"}}>
-          <Info style={{color:"#2563EB"}}/>
-          <AlertDescription style={{color:"#1D4ED8"}}>{notice}</AlertDescription>
+        <Alert className="bg-blue-50 border-blue-500">
+          <InfoIcon className="text-blue-600"/>
+          <AlertDescription className="text-blue-600">{notice}</AlertDescription>
         </Alert>
       )}
 
