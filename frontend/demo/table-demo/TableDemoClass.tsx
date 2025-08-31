@@ -292,11 +292,11 @@ export function TableDemoClass() {
                 <TableCell className="text-right">
                   {appointment.converted === 'No' ? (
                   <Button variant={'outline'} className="rounded-full">
-                    <FaCircle style={{ color: "red" }} /> Not Converted
+                    <FaCircle className="text-red-500" /> Not Converted
                    </Button>) 
                    : appointment.converted === 'Yes' ? (
                    <Button variant={'outline'} className="rounded-full">
-                    <FaCircle style={{ color: "green" }} /> Converted
+                    <FaCircle className="text-green-500" /> Converted
                    </Button>) 
                    : null}
                 </TableCell>
