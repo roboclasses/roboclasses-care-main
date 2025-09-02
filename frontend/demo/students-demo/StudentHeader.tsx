@@ -11,6 +11,18 @@ const StudentHeader = () => {
   const pathname = usePathname();
   const {slug} = useParams();
   const [user, setUser] = useState({name:"", role:""})
+  const [currentDate, setCurrentDate] = useState<Date | null>(null)
+
+  // For date formatting
+  useEffect(()=>{
+    setCurrentDate(new Date())
+  },[])
+
+  const formattedDate = currentDate ?  new Intl.DateTimeFormat("en-us",{
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(currentDate) : ''
 
   // Handle fetch student session
   useEffect(()=>{
@@ -44,6 +56,7 @@ const StudentHeader = () => {
   {id:11, path:'/students/helpAndSupport', name:'Help & Support'},
   ]
 
+
   return (
     <div className="flex items-center justify-between mb-8 lg:px-40">
       <div>
@@ -52,7 +65,7 @@ const StudentHeader = () => {
             {item.path === pathname ? item.name : ''}
           </h1>
         ))}
-        <p className="text-gray-600">December 15, 2024</p>
+        <p className="text-gray-600">{formattedDate}</p>
       </div>
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" className="relative">
