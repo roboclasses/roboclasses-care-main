@@ -115,6 +115,12 @@ useEffect(()=>{
         url: "/manageAttendance",
         icon: AlignEndVerticalIcon,
       },
+       {
+        title:  "Student Dashboard",
+        url:  "/students/studentDashboard",
+        icon: LayoutDashboard,
+        isActive: false,
+      },
       {
         title: "New Batch Entry",
         url: "/newBatchEntry",
