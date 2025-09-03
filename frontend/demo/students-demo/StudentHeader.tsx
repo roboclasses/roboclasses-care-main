@@ -74,7 +74,7 @@ const StudentHeader = () => {
             3
           </Badge>
         </Button>
-        <div className="flex items-center gap-3">
+        {user.role === 'student' ? (<div className="flex items-center gap-3">
           <Avatar>
             <AvatarImage src="/assets/images/student-profile.png" />
             <AvatarFallback>{user?.name?.charAt(2).toUpperCase()}</AvatarFallback>
@@ -83,7 +83,7 @@ const StudentHeader = () => {
             <p className="font-medium">{user.role === 'student' ? user.name : ''}</p>
             <p className="text-sm text-gray-500">3rd Year</p>
           </div>
-        </div>
+        </div>) : <></>}
       </div>
     </div>
   );
