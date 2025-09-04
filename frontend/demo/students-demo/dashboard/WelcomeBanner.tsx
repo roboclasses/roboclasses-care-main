@@ -10,7 +10,7 @@ import axios from "axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const WelcomeBanner = () => {
+const WelcomeBanner = ({value, onValueChange}:{value:string, onValueChange:(val:string)=>void}) => {
   const [user, setUser] = useState({ name: "", role: "" });
   const [students, setStudents] = useState([]);
 
@@ -47,12 +47,12 @@ const WelcomeBanner = () => {
         <div className="flex items-center justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-3xl font-bold mb-2">Welcome back </h1>
+              <h1 className="lg:text-3xl font-bold mb-2">Welcome back </h1>
               {/* Admin only dropdown for selecting students */}
               {user.role === "admin" ? (
                 <div>
-                  <Select>
-                    <SelectTrigger className="w-[180px] bg-white">
+                  <Select value={value} onValueChange={onValueChange}>
+                    <SelectTrigger className="w-[180px] bg-white text-black" >
                       <SelectValue placeholder="Select a student" />
                     </SelectTrigger>
                     <SelectContent>
@@ -66,10 +66,10 @@ const WelcomeBanner = () => {
                   </Select>
                 </div>
               ) : (
-                "!"
+                <p className="lg:text-3xl font-semibold mb-2">{user.name} !</p>
               )}
             </div>
-            <p className="text-purple-100">
+            <p className="text-purple-100 ">
               Always stay updated in your student portal
             </p>
           </div>
