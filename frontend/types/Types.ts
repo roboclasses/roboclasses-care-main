@@ -202,5 +202,13 @@ export type TCalendarType={
   getStatusColor: (status: string) => string,
 }
 
+export type User={
+  _id?:string,
+  name: string
+  role: string
+  email?: string
+  token?: string
+}
+
 
 

@@ -1,7 +1,6 @@
 "use client";
 import WelcomeBanner from "./WelcomeBanner";
 import QuickLinksDemo from "./QuickLinksDemo";
-// import UpcomingClassesDemo from "./UpcomingClassesDemo";
 import RecentAnnouncements from "./RecentAnnouncements";
 import NotificationPanel from "./NotificationPanel";
 import { useEffect, useMemo, useState } from "react";
@@ -11,16 +10,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BookOpen, Calendar } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { appointmentTypes, batchType } from "@/types/Types";
+import { appointmentTypes, batchType, User } from "@/types/Types";
 import axios from "axios";
 import { DemoClassUrl, NewBatchEntryUrl } from "@/constants";
 import Cookies from "js-cookie";
 import { format, isBefore, isToday, startOfDay } from "date-fns";
 
 export function StudentDashboard() {
-  const [user, setUser] = useState({ name: "", role: "" });
+  const [user, setUser] = useState<User | null>(null);
   const [batchNames, setbatchNames] = useState<batchType[]>([]);
-  const [classes, setClasses] = useState<appointmentTypes[]>([])
+  const [classes, setClasses] = useState<appointmentTypes[]>([]);
   const [selectedStudent, setSelectedStudent] = useState("");
 
   // Handle fetch user session
@@ -38,19 +37,24 @@ export function StudentDashboard() {
     };
 
     handleFetch();
-  }, [user.name, user.role]);
+  }, [user?.name, user?.role]);
 
   // Handle fetch enrolled courses
   useEffect(() => {
-    if(!user.role || !user.name) return;
-    if(user.role !== 'student' && !selectedStudent) return;
+    if (!user?.role || !user?.name) return;
+    if (user.role !== "student" && !selectedStudent) return;
     const handleFetch = async () => {
       try {
-        const studentName = user.role === "student" ? user.name : selectedStudent;
-        const res = await axios.get(`${NewBatchEntryUrl}?name=${studentName}`, {headers:{Authorization: Cookies.get('token')}});
+        const studentName =
+          user.role === "student" ? user.name : selectedStudent;
+        const res = await axios.get(`${NewBatchEntryUrl}?name=${studentName}`, {
+          headers: { Authorization: Cookies.get("token") },
+        });
         console.log(res.data);
         if (res.data) {
-          const filteredStudents = res.data.filter((item: batchType) => item.studentName === studentName)
+          const filteredStudents = res.data.filter(
+            (item: batchType) => item.studentName === studentName
+          );
           if (filteredStudents) {
             setbatchNames(filteredStudents);
           }
@@ -60,42 +64,43 @@ export function StudentDashboard() {
       }
     };
     handleFetch();
-  }, [selectedStudent, user.name, user.role]);
+  }, [selectedStudent, user?.name, user?.role]);
 
   // Handle fetch demo classes
-  useEffect(()=>{
-    const handleFetch = async()=>{
+  useEffect(() => {
+    const handleFetch = async () => {
       try {
-        const res  = await axios.get(`${DemoClassUrl}?name=${selectedStudent}`);
+        const res = await axios.get(`${DemoClassUrl}?name=${selectedStudent}`);
         console.log(res.data);
-        if(res.data){
-          const filteredClasses = res.data.filter((item:appointmentTypes)=>item.userName === selectedStudent)
-          if(filteredClasses){
-            setClasses(filteredClasses)
+        if (res.data) {
+          const filteredClasses = res.data.filter(
+            (item: appointmentTypes) => item.userName === selectedStudent
+          );
+          if (filteredClasses) {
+            setClasses(filteredClasses);
           }
         }
-        
       } catch (error) {
         console.error(error);
       }
-    }
+    };
     handleFetch();
-  },[selectedStudent])
+  }, [selectedStudent]);
 
   // Handle filter classes with different badges
-  const filteredClasses = useMemo(()=>{
-    if(!classes) return[];
+  const filteredClasses = useMemo(() => {
+    if (!classes) return [];
 
-    const today  = startOfDay(new Date());
+    const today = startOfDay(new Date());
 
-    return classes.map((item:appointmentTypes)=>{
+    return classes.map((item: appointmentTypes) => {
       const itemDate = startOfDay(new Date(item.date));
-       let status : "today" | "upcoming" | "old" = "upcoming"
-       if(isToday(itemDate)) status = "today";
-       else if(isBefore(itemDate, today)) status = "old";
-       return {...item, status}
-    })
-  },[classes])
+      let status: "today" | "upcoming" | "old" = "upcoming";
+      if (isToday(itemDate)) status = "today";
+      else if (isBefore(itemDate, today)) status = "old";
+      return { ...item, status };
+    });
+  }, [classes]);
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -122,7 +127,7 @@ export function StudentDashboard() {
             <CardContent>
               <ScrollArea>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {batchNames.map((item:batchType) => (
+                  {batchNames.map((item: batchType) => (
                     <Card
                       key={item._id}
                       className="border-purple-200 bg-purple-50"
@@ -155,32 +160,44 @@ export function StudentDashboard() {
           </Card>
 
           {/* Upcoming Classes & Deadlines Section */}
-          {/* <UpcomingClassesDemo /> */}
-           <Card>
-      <CardHeader>
-        <CardTitle>Upcoming Classes & Deadlines</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <ScrollArea>
-        <div className="space-y-4">
-         {filteredClasses.map((item, index)=>(
-          <div key={index} className="flex items-center gap-4 p-4 bg-orange-50 rounded-lg border border-orange-200">
-            <div className="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center">
-              <Calendar className="w-6 h-6 text-white" />
-            </div>
-            <div className="flex-1">
-              <h4 className="font-medium">{item.course}</h4>
-              <p className="text-sm text-gray-600">{item.date ? format(new Date(item.date), 'MMM dd, yyyy') : ''}</p>
-            </div>
-            {item.status =="today" &&  <Badge variant="destructive">Due Today</Badge>}
-            {item.status =="upcoming" &&  <Badge variant="default">Upcoming</Badge>}
-            {item.status =="old" &&  <Badge variant="outline">Completed</Badge>}
-          </div>
-         ))}
-        </div>
-        </ScrollArea>
-      </CardContent>
-    </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Upcoming Classes & Deadlines</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ScrollArea>
+                <div className="space-y-4">
+                  {filteredClasses.map((item, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-4 p-4 bg-orange-50 rounded-lg border border-orange-200"
+                    >
+                      <div className="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center">
+                        <Calendar className="w-6 h-6 text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-medium">{item.course}</h4>
+                        <p className="text-sm text-gray-600">
+                          {item.date
+                            ? format(new Date(item.date), "MMM dd, yyyy")
+                            : ""}
+                        </p>
+                      </div>
+                      {item.status == "today" && (
+                        <Badge variant="destructive">Due Today</Badge>
+                      )}
+                      {item.status == "upcoming" && (
+                        <Badge variant="default">Upcoming</Badge>
+                      )}
+                      {item.status == "old" && (
+                        <Badge variant="outline">Completed</Badge>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Right Column - Sidebar Content */}
