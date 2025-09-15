@@ -97,7 +97,7 @@ const filteredData = useMemo(()=>{
               <div>
                  <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                  <LucideChevronsUpDown size={16}/>
+                  <LucideChevronsUpDown />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-[200px]" align="end">
                 <DropdownMenuRadioGroup value={sortOrder} onValueChange={setSortOrder}>
@@ -127,12 +127,12 @@ const filteredData = useMemo(()=>{
             <TableRow key={feedback._id}>
               <TableCell className="font-medium">
                 {feedback.isCompleted === true ? (
-                  <Button variant={'outline'} className="p-2 rounded-full font-semibold">
-                    <FaCircle className="text-green-500" size={16} /> Completed
+                  <Button variant={'outline'} className="rounded-full font-semibold text-green-500 hover:text-green-500 bg-green-50 hover:bg-green-100">
+                    <FaCircle /> Completed
                   </Button>
                 ) : feedback.isCompleted === false ? (
-                  <Button variant={'outline'} className="p-2 rounded-full font-semibold">
-                    <FaCircle className="text-blue-500" size={16} /> Active
+                  <Button variant={'outline'} className="rounded-full font-semibold text-red-500 hover:text-red-500 bg-red-50 hover:bg-red-100">
+                    <FaCircle /> Active
                   </Button>
                 ) : (
                   false
