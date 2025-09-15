@@ -37,6 +37,7 @@ import { Button } from "@/components/ui/button";
 import { MdClass } from "react-icons/md";
 import { AddButton } from "../button-demo/AddButton";
 import { toast } from "sonner";
+import { FaCircle } from "react-icons/fa6";
 
 const fetcher = (url: string) =>
   axios
@@ -238,12 +239,18 @@ export function TableBatchEntries() {
                   {batch.numberOfClasses}
                 </TableCell>
 
-                <TableCell className="text-right">
+                <TableCell>
                   {batch.completed === "Yes"
-                    ? "Completed"
-                    : batch.completed === "No"
-                    ? "Active"
-                    : ""}
+                    ?
+                   (<Button variant={"outline"} className="rounded-full text-green-600 hover:text-green-600 bg-green-50 hover:bg-green-100">
+                      <FaCircle /> Completed
+                    </Button>) :
+                    batch.completed === "No"
+                    ?
+                    (<Button variant={"outline"} className="rounded-full text-red-600 hover:text-red-600 bg-red-50 hover:bg-red-100">
+                      <FaCircle /> Active
+                    </Button>)
+                    : null}
                 </TableCell>
 
                 <TableCell className="text-right">

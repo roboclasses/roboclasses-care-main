@@ -291,11 +291,11 @@ export function TableDemoClass() {
                 <TableCell className="text-right"> {appointment.timeZone} </TableCell>
                 <TableCell className="text-right">
                   {appointment.converted === 'No' ? (
-                  <Button variant={'outline'} className="rounded-full">
-                    <FaCircle className="text-red-500" /> Not Converted
+                  <Button variant={'outline'} className="rounded-full bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-600">
+                    <FaCircle /> Not Converted
                    </Button>) 
                    : appointment.converted === 'Yes' ? (
-                   <Button variant={'outline'} className="rounded-full">
+                   <Button variant={'outline'} className="rounded-full bg-green-50 hover:bg-green-100 text-green-600 hover:text-green-600">
                     <FaCircle className="text-green-500" /> Converted
                    </Button>) 
                    : null}
