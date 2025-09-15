@@ -117,7 +117,7 @@ export function AssessmentTable() {
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">Batch Name</TableHead>
-            <TableHead className="w-[100px] flex items-center gap-2">
+            <TableHead className="lg:w-[100px] w-[150px] flex items-center gap-2">
               Teacher Name
               {user.role === 'admin' && (<div>
                 <DropdownMenu>
