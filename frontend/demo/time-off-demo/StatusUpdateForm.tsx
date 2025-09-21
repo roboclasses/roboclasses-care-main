@@ -62,7 +62,7 @@ export function StatusUpdateForm({timeOffId}:timeOffIdType) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
 
         {/* Time off type */}
         <FormField
@@ -72,7 +72,7 @@ export function StatusUpdateForm({timeOffId}:timeOffIdType) {
             <FormItem>
               <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
-                  <SelectTrigger className="rounded-xl shadow-none">
+                  <SelectTrigger className="rounded-xl shadow-none w-full">
                     <SelectValue placeholder="Edit time off status" />
                   </SelectTrigger>
                 </FormControl>

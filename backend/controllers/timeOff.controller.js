@@ -2,9 +2,9 @@ import { Leaves } from "../models/timeOff.model.js";
 
 export const createTimeOffController = async(req, res)=>{
     try {
-        const { teacherName, timeOffType, dateRange, notes } = req.body;
+        const { employeeName, timeOffType, dateRange, notes } = req.body;
 
-        const data = await Leaves.create({ teacherName, timeOffType, dateRange, notes });
+        const data = await Leaves.create({ employeeName, timeOffType, dateRange, notes });
         console.log(data);
 
         return res.status(201).json({success: true, message: "Time off created successfully."})

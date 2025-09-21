@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const timeOffSchema = new mongoose.Schema({
-    teacherName:{
+    employeeName:{
         type:String,
         required:true,
     },

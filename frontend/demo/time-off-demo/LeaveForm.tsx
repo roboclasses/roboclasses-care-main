@@ -27,7 +27,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 
 import { TimeOffUrl } from "@/constants";
-import { teachers, timeOffTypes } from "@/data/dataStorage";
+import { employees, timeOffTypes } from "@/data/dataStorage";
 import { getUserSession } from "@/lib/session";
 import SubmitButton from "../button-demo/SubmitButton";
 import { CalendarIcon } from "lucide-react";
@@ -41,7 +41,7 @@ import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 
 const FormSchema = z.object({
-  teacherName: z.string().min(2, { message: "Tecaher Name must be at least 2 characters." }),
+  employeeName: z.string().min(2, { message: "Tecaher Name must be at least 2 characters." }),
   timeOffType: z.string().optional(),
   dateRange: z.object({
     from: z.date(),
@@ -54,7 +54,7 @@ export function LeaveForm({ defaultValue }: { defaultValue: string }) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      teacherName: "",
+      employeeName: "",
       timeOffType: defaultValue,
       dateRange: { from: new Date(), to: addDays(new Date(), 7) },
       notes: "",
@@ -69,7 +69,7 @@ export function LeaveForm({ defaultValue }: { defaultValue: string }) {
 
 /**
  * Fetches the user session and updates the form based on the user's role.
- * For teachers, pre-populates the form's teacherName field with their name.
+ * For teachers, pre-populates the form's employeeName field with their name.
  * For admins, a dropdown of teacher names is displayed (implemented elsewhere).
  * @throws {Error} If no valid user session or role is found.
  * @remarks
@@ -77,7 +77,7 @@ export function LeaveForm({ defaultValue }: { defaultValue: string }) {
  * - Assumes `form` is a valid Formik or React Hook Form instance.
  * - Runs on component mount and when `form`, `user.role`, or `user.name` change.
  * @example
- * // Teacher role: form.teacherName is set to "John Doe".
+ * // Teacher role: form.employeeName is set to "John Doe".
  * // Admin role: Dropdown is shown (logic not in this snippet).
  */
 useEffect(() => {
@@ -90,7 +90,7 @@ useEffect(() => {
       setUser({ role: session.role, name: session.name });
 
       if (session.role === "teacher") {
-        form.setValue("teacherName", session.name); // Update only teacherName
+        form.setValue("employeeName", session.name); // Update only employeeName
       }
       // Note: Admin dropdown logic is handled in a separate component.
     } catch (error) {
@@ -111,7 +111,7 @@ useEffect(() => {
         data.dateRange.to?.toISOString().split("T")[0] || formattedFromDate;
 
       const payload = {
-        teacherName: data.teacherName,
+        employeeName: data.employeeName,
         timeOffType: data.timeOffType,
         dateRange: { from: formattedFromDate, to: formattedToDate },
         notes: data.notes,
@@ -141,17 +141,17 @@ useEffect(() => {
         {/* Teacher Full Name */}
         <FormField
           control={form.control}
-          name="teacherName"
+          name="employeeName"
           render={({ field }) => (
             <FormItem>
               <FormControl>
                 {user.role === "admin" ? (
                   <Select onValueChange={field.onChange} value={field.value}>
                     <SelectTrigger className="shadow-none rounded-xl py-6 w-full">
-                      <SelectValue placeholder="Select a Teacher" />
+                      <SelectValue placeholder="Select an Employee" />
                     </SelectTrigger>
                     <SelectContent>
-                      {teachers.map((item) => (
+                      {employees.map((item) => (
                         <SelectItem value={item.name} key={item.id}>
                           {item.name}
                         </SelectItem>
