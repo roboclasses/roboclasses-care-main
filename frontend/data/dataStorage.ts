@@ -7,6 +7,17 @@ export const teachers = [
   { id: 5, name: "Pal Gudka" },
 ];
 
+// For mapping employees in drop-down
+export const employees = [
+  { id: 1, name: "All" },
+  { id: 2, name: "Admin" },
+  { id: 3, name: "Kritika Maheswari" },
+  { id: 4, name: "Monty" },
+  { id: 5, name: "Kiruthika PK" },
+  { id: 6, name: "Pal Gudka" },
+  { id: 7, name: "Pritam Nandy" },
+];
+
 // For detect system timezone
 // export const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 

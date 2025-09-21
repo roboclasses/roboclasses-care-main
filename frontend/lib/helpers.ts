@@ -25,7 +25,7 @@ export const calculateLeaveDays = (
   return leaves
     .filter(
       (leave) =>
-        leave.teacherName === userName &&
+        leave.employeeName === userName &&
         leave.timeOffType === type &&
         leave.status === "Approved"
     )

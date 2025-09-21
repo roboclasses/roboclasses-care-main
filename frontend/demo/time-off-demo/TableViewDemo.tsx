@@ -25,7 +25,7 @@ import { TimeOffUrl } from "@/constants";
 import { getUserSession } from "@/lib/session";
 import { leaveType } from "@/types/Types";
 import { adjustedNormalLeave, calculateLeaveDays } from "@/lib/helpers";
-import { LEAVE_POLICY, teachers } from "@/data/dataStorage";
+import { employees, LEAVE_POLICY } from "@/data/dataStorage";
 
 import React, { useEffect, useMemo, useState } from "react";
 import { differenceInCalendarDays, format } from "date-fns";
@@ -61,8 +61,8 @@ const TableViewDemo = () => {
     if (employee && user.role === "admin") {
 
       // Find the first matching teacher name from leaves
-      const matchedLeave = leaves.find((leave) => leave.teacherName === employee )      
-      return matchedLeave?.teacherName || "";
+      const matchedLeave = leaves.find((leave) => leave.employeeName === employee )      
+      return matchedLeave?.employeeName || "";
     }
     return user.name;
   }, [employee, user, leaves]);
@@ -105,7 +105,7 @@ const TableViewDemo = () => {
     if (!leaves) return [];
 
     return leaves.filter((item) => {
-      if (user.role === "teacher" && item.teacherName !== user.name) return false;
+      if (user.role === "teacher" && item.employeeName !== user.name) return false;
       if (filters.type && item.timeOffType !== filters.type) return false;
       if (filters.status && item.status !== filters.status) return false;
       if (
@@ -113,8 +113,8 @@ const TableViewDemo = () => {
         item.dateRange?.from &&
         new Date(item.dateRange?.from) < new Date(filters.fromDate)
       ) return false;
-      if(user.role === 'admin' && employee === 'All' && item.teacherName !== employee) return true;
-      if ( user.role === 'admin' && item.teacherName !== employee) return false;
+      if(user.role === 'admin' && employee === 'All' && item.employeeName !== employee) return true;
+      if ( user.role === 'admin' && item.employeeName !== employee) return false;
       return true;
     });
   }, [leaves, user, filters, employee]);
@@ -156,7 +156,7 @@ const TableViewDemo = () => {
             <SelectValue placeholder="Filter Employees" />
           </SelectTrigger>
           <SelectContent>
-            {teachers.map((item) => (
+            {employees.map((item) => (
               <SelectItem value={item.name} key={item.id}>
                 {item.name}
               </SelectItem>
@@ -175,7 +175,7 @@ const TableViewDemo = () => {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[100px]">Status</TableHead>
-                <TableHead>Teacher Name</TableHead>
+                <TableHead>Employee Name</TableHead>
                 <TableHead>Time off type</TableHead>
                 <TableHead>From</TableHead>
                 <TableHead>To</TableHead>
@@ -188,7 +188,7 @@ const TableViewDemo = () => {
               {filteredData.map((item: leaveType) => (
                 <TableRow key={item._id}>
                   <TableCell className="font-medium">{item.status}</TableCell>
-                  <TableCell>{item.teacherName}</TableCell>
+                  <TableCell>{item.employeeName}</TableCell>
                   <TableCell>{item.timeOffType}</TableCell>
                   <TableCell>
                     {item.dateRange?.from ? format(new Date(item.dateRange?.from), "MMM dd, yyyy") : ""}
@@ -217,11 +217,11 @@ const TableViewDemo = () => {
               {user.role === "teacher" || (user.role === "admin" && employee !== 'All') ? 
               (
                 <TableRow>
-                  <TableCell colSpan={3} className="text-right">
+                  <TableCell colSpan={8} className="text-right">
                     {`Normal leave remaining: ${usedAdjustedNormalLeaveDays}`}
                   </TableCell>
 
-                  <TableCell colSpan={3} className="text-right">
+                  <TableCell colSpan={8} className="text-right">
                     {`Sick leave remaining: ${LEAVE_POLICY.sick.total - usedSickLeaveDays}`}
                   </TableCell>
                 </TableRow>

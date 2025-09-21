@@ -166,7 +166,7 @@ export type TPtmType={
 export type leaveType = {
   length: unknown;
   _id: string;
-  teacherName: string;
+  employeeName: string;
   timeOffType: string;
   dateRange: {from: string, to:string};
   notes: string;
