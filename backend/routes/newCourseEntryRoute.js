@@ -1,5 +1,5 @@
 import express from "express";
-import { createCourseController, deleteCourseController, getCourseController, getCoursesController, updateCourseController } from "../controllers/course.controller.js";
+import { createCourseController, deleteCourseController, getCourseController, getCoursesController, updateCourseController, upload } from "../controllers/course.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import { roleMiddleware } from "../middlewares/role.middleware.js";
 
@@ -11,7 +11,7 @@ router.get("/courses", getCoursesController)
 
 router.get("/courses/:id", getCourseController)
 
-router.put("/courses/:id", updateCourseController)
+router.put("/courses/:id", upload.single("syllabus"), updateCourseController)
 
 router.delete("/courses/:id", authMiddleware, roleMiddleware('admin'), deleteCourseController)
 
