@@ -1,6 +1,9 @@
+import multer from "multer";
+import fs from "fs";
+import csv from "csv-parser";
 import { Course } from "../models/course.model.js";
 
-export const createCourseController = async(req, res)=>{
+ const createCourseController = async(req, res)=>{
     try {
         const {course} = req.body;
 
@@ -20,7 +23,7 @@ export const createCourseController = async(req, res)=>{
     }
 }
 
-export const getCoursesController = async(_req, res)=>{
+ const getCoursesController = async(_req, res)=>{
     try {
         const data = await Course.find();
         console.log(data);
@@ -33,7 +36,7 @@ export const getCoursesController = async(_req, res)=>{
     }
 }
 
-export const getCourseController = async(req, res)=>{
+ const getCourseController = async(req, res)=>{
     try {
         const {id} = req.params;
         const data = await Course.findById(id);
@@ -47,15 +50,41 @@ export const getCourseController = async(req, res)=>{
     }
 }
 
-export const updateCourseController = async(req, res)=>{
+// Configure multer for file-upload
+const upload = multer({dest: "/uploads"})
+
+ const updateCourseController = async(req, res)=>{
     try {
         const {id} = req.params;
-        const courseDetails = req.body;
+        const {course, numberOfClasses } = req.body;
 
-        const data = await Course.findByIdAndUpdate(id, courseDetails, {new: true})
-        console.log(data);
+        // Check if file is uploaded 
+        if(!req.file){
+            return res.status(400).json({success: false, message: "No file uploaded."})
+        }
 
-         res.status(200).json({success: true, message: "Course successfully updated."})
+        const topics = [];
+        const filePath = req.file.path;
+        console.log("File path is: "+filePath);
+
+        fs.createReadStream(filePath).pipe(csv()).on('data', (row)=>{
+            console.log("topics:"+row.topic);
+            const topic = { topic: row.topic };
+            topics.push(topic);
+        }).on('end', async()=>{
+            try {
+                const data = await Course.findByIdAndUpdate(id, {course, numberOfClasses, syllabus:topics}, {new: true});
+                console.log(data);
+                res.status(200).json({success: true, message: "Course updated successfully."})
+
+            } catch (error) {
+                console.error(error)
+
+            }
+        }).on('error', (error)=>{
+            console.error(error);
+            res.status(500).json({success: false, message: "Error parsing CSV file."})
+        })
           
     } catch (error) {
         console.error(error);
@@ -64,7 +93,7 @@ export const updateCourseController = async(req, res)=>{
     }
 }
 
-export const deleteCourseController = async(req, res)=>{
+ const deleteCourseController = async(req, res)=>{
     try {
         const {id} = req.params;
 
@@ -79,3 +108,5 @@ export const deleteCourseController = async(req, res)=>{
         
     }
 }
+
+ export {createCourseController, getCoursesController, getCourseController, upload, updateCourseController, deleteCourseController};
