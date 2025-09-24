@@ -41,11 +41,18 @@ export type batchType = {
   colorCode: string;
 };
 
+type Syllabus={
+  _id:string
+  topic:string
+}
+
 export type courseType={
   _id:string;
   course:string;
   numberOfClasses:string;
+  syllabus: Syllabus[];
 }
+
 
 export type usersType={
   _id:string;

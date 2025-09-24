@@ -75,8 +75,9 @@ export function TableCourseEntries() {
           <TableCaption>A list of courses</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead >Course Name</TableHead>
-              <TableHead >Number of Classes</TableHead>
+              <TableHead className="w-[100px]">Course Name</TableHead>
+              <TableHead className="w-[100px]">Courses Syllabus</TableHead>
+              <TableHead className="w-[100px]">Number of Classes</TableHead>
               <TableHead>Edit</TableHead>
               <TableHead>Delete</TableHead>
             </TableRow>
@@ -86,16 +87,23 @@ export function TableCourseEntries() {
               <TableRow key={courses._id}>
                 <TableCell className="font-medium">{courses.course}</TableCell>
                 <TableCell className="font-medium">
+                  <div className="w-[300px] text-wrap text-center">
+                  { courses.syllabus ? 
+                      courses.syllabus.map((item)=>item.topic).join(', ') : 
+                        [] }
+                  </div>
+                </TableCell>
+                <TableCell className="font-medium">
                   {courses.numberOfClasses}
                 </TableCell>
 
-                <TableCell className="text-right w-[50px]">
+                <TableCell className="text-right w-[100px]">
                   <Link href={`/courseEntry/edit/${courses._id}`}>
                     <EditButton name="Edit" type="button" />
                   </Link>
                 </TableCell>
 
-                <TableCell className="text-right w-[50px]">
+                <TableCell className="text-right w-[100px]">
                   <DeleteAlertDemo
                     onCancel={() => console.log("Delete action canceled")}
                     onDelete={() => handleDelete(courses._id)}
