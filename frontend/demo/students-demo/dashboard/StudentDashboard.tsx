@@ -15,6 +15,21 @@ import axios from "axios";
 import { DemoClassUrl, NewBatchEntryUrl } from "@/constants";
 import Cookies from "js-cookie";
 import { format, isBefore, isToday, startOfDay } from "date-fns";
+import Link from "next/link";
+
+// Function for extracting and formatting course name
+function funcFormatSlug(slug:string){
+  const parts = slug.split("-");
+  const courseName = parts[parts.length - 2].trim(); // extract the course name from batch
+
+  const formattedSlug = courseName
+  .toLowerCase()
+  .replace(/\s+/g, "-")   // replace spaces with dashes
+  .replace(/[^a-z0-9-]/g, ""); // remove special chars
+
+  return formattedSlug;
+
+}
 
 export function StudentDashboard() {
   const [user, setUser] = useState<User | null>(null);
@@ -148,9 +163,11 @@ export function StudentDashboard() {
                         {/* <p className="text-sm text-gray-600 mb-4">
                           Learn the fundamentals of OOP concepts
                         </p> */}
+                        <Link href={`/students/courses/${funcFormatSlug(item.batch)}`}>
                         <Button className="w-full bg-purple-600 hover:bg-purple-700">
                           View Course
                         </Button>
+                        </Link>
                       </CardContent>
                     </Card>
                   ))}
