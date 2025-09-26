@@ -1,5 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CoursesUrl } from "@/constants";
+// import { CoursesUrl } from "@/constants";
 import UpcomingDeadlinesDemo from "@/demo/students-demo/assessments-and-assignments/UpcomingDeadlinesDemo";
 import Assignments from "@/demo/students-demo/course-details/Assignments";
 import CourseResources from "@/demo/students-demo/course-details/CourseResources";
@@ -8,8 +8,16 @@ import Grades from "@/demo/students-demo/course-details/Grades";
 import Header from "@/demo/students-demo/course-details/Header";
 import InstructorDemo from "@/demo/students-demo/course-details/InstructorDemo";
 import Lecture from "@/demo/students-demo/course-details/Lecture";
-import Syllabus from "@/demo/students-demo/course-details/Syllabus";
-import { courseType } from "@/types/Types";
+// import Syllabus from "@/demo/students-demo/course-details/Syllabus";
+// import { courseType } from "@/types/Types";
+
+// Correct type for Next.js dynamic route page
+// type PageProps = {
+//   params: {
+//     slug: string;
+//   };
+// };
+
 
 const TabsData = [
   {
@@ -39,11 +47,11 @@ const TabsData = [
   },
 ];
 
-const page = async({params}:{params:{slug:string}}) => {
-  const {slug} = await params;
-  const response = await fetch(CoursesUrl);
-  const Course : courseType[] = await response.json();
-  const selectedCourse = Course.find((item:courseType)=>item.course.trim().toLowerCase() === slug.trim().toLowerCase());
+const page = () => {
+  // const {slug} = params;
+  // const response = await fetch(CoursesUrl);
+  // const Course : courseType[] = await response.json();
+  // const selectedCourse = Course.find((item:courseType)=>item.course.trim().toLowerCase() === slug.trim().toLowerCase());
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100">
@@ -62,7 +70,7 @@ const page = async({params}:{params:{slug:string}}) => {
               </TabsList>
 
               <TabsContent value="syllabus">
-                {selectedCourse?.syllabus && (<Syllabus items={selectedCourse?.syllabus}/>)}
+                {/* {selectedCourse?.syllabus && (<Syllabus items={selectedCourse?.syllabus}/>)} */}
               </TabsContent>
 
               <TabsContent value="lectures">
