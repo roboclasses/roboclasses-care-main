@@ -29,11 +29,15 @@ import { UploadIcon } from "lucide-react";
 const FormSchema = z.object({
   course: z.string(),
   numberOfClasses: z.string().trim(),
-  syllabus: z.instanceof(File).refine((file)=>[
-    "text/csv",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-  ].includes(file.type),
-{message: "Invalid file type."}),
+  syllabus: z.any().refine(
+    (file) => {
+      if (typeof window === "undefined") return true; // Skip check on server
+      return file instanceof File && file.name.endsWith(".csv");
+    },
+    {
+      message: "Please upload a valid CSV file",
+    }
+  ),
 });
 
 export function EditCourseEntryForm() {
@@ -194,7 +198,7 @@ export function EditCourseEntryForm() {
                               <input
                                 id="dropzone-file"
                                 type="file"
-                                accept=".csv, .xlsx"
+                                accept=".csv"
                                 onChange={(e) => {
                                   const file = e.target.files?.[0];
                                   if (file) {

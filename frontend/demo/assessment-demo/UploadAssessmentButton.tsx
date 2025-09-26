@@ -50,10 +50,15 @@ const FormSchema = z.object({
   batch: z.string().nonempty("Please select a batch"),
   teacher: z.string().min(3, {message: "Teacher name must be 3 character long"}),
   assessmentLevel: z.string().nonempty("Please select assesment level"),
-  questions: z.instanceof(File).refine((file)=>[
-    "text/csv",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-  ].includes(file.type), "Invalid file type.")
+  questions: z.any().refine(
+    (file) => {
+      if (typeof window === "undefined") return true; // Skip check on server
+      return file instanceof File && file.name.endsWith(".csv");
+    },
+    {
+      message: "Please upload a valid CSV file",
+    }
+  ),
 });
 
 const fetcher = (url: string) =>
@@ -267,7 +272,7 @@ export function UploadAssessmentButton() {
                               <input
                                 id="dropzone-file"
                                 type="file"
-                                accept=".csv, .xlsx"
+                                accept=".csv"
                                 onChange={(e) => {
                                   const file = e.target.files?.[0];
                                   if (file) {
