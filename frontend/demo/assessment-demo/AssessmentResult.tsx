@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Download, Printer, RotateCcw, Info, Sparkles, InfoIcon } from "lucide-react"
+import { Download, Printer, RotateCcw, Sparkles, InfoIcon } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
 import { UploadAssessmentButton } from "./UploadAssessmentButton"
