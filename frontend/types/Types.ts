@@ -41,7 +41,7 @@ export type batchType = {
   colorCode: string;
 };
 
-type Syllabus={
+export type Syllabus={
   _id:string
   topic:string
 }
