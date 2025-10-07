@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 
 const cookie ={
-    options:{ httponly: true, secure: false, samesite: "lax", path: '/' },
+    options:{ httponly: true, secure: process.env.NODE_ENV === "production", samesite: process.env.NODE_ENV === "production"? "None" : "Lax", path: '/' },
     duration:10 * 24 * 60 * 60 * 1000, //10 days
 
 }
