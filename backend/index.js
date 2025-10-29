@@ -34,8 +34,8 @@ handleCleanupExpiredTimeOff();
 
 
 // middlewares
-app.use(cors());
-// app.use(cors({credentials:true, origin:["https://portal.roboclasses.com"]}))
+// app.use(cors());
+app.use(cors({credentials:true, origin:["https://portal.roboclasses.com"]}))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
