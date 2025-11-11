@@ -3,9 +3,9 @@
 import { cookies } from "next/headers";
 
 const cookie ={
-    options:{ httponly: true, secure: false, samesite: "lax", path: '/' },
-    // options:{ httponly: true, secure: process.env.NODE_ENV === "production", samesite: process.env.NODE_ENV === "production"? "None" : "Lax", path: '/' },
-    duration:20 * 24 * 60 * 60 * 1000, //20 days
+    // options:{ httponly: true, secure: false, samesite: "lax", path: '/' },
+    options:{ httponly: true, secure: process.env.NODE_ENV === "production", samesite: "Lax", path: '/' },
+    duration: 90 * 24 * 60 * 60 * 1000, //90 days
 
 }
 // user session will expires in 10days
