@@ -253,7 +253,7 @@ export function AttendanceForm() {
       <Label className="font-semibold">Classes</Label>
       {Array.from({length: handleNumber(numberOfClasses)}).map((_, index)=>(
         <FormField
-          key={index}
+          key={`classes-${index}`}
           control={form.control}
           name={`classes.${index}`}
           render={({ field }) => (
