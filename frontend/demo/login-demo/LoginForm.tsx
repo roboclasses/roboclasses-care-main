@@ -16,7 +16,6 @@ import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
 import { passwordValidation } from "@/lib/helpers";
 import { toast } from "sonner";
-import { createUserSession } from "@/lib/session";
 
 const FormSchema = z.object({
   email: z.email("Please enter a valid email"),
@@ -46,12 +45,11 @@ export function LoginForm() {
   // handle user login
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     try {
-      const res = await axios.post(LoginUrl, data);
+      const res = await axios.post(LoginUrl, data, {withCredentials: true});
       console.log(res.data);
-      const { message, success, jwtToken, _id, name, email, role } = res.data;
+      const {success, message} = res.data;
       
       if (success) {
-        await createUserSession(jwtToken, role, _id, email, name);
         router.push("/");
         toast.success(message)
       }

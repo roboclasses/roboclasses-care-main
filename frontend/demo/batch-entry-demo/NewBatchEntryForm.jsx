@@ -206,11 +206,10 @@ export function NewBatchEntryForm() {
         ...transformedDateTimeEntries,
       };
       const res = await axios.post(NewBatchEntryUrl, payload, {
-        headers: { Authorization: Cookies.get("token") },
+        headers: { Authorization: `Bearer ${Cookies.get("token")}` },
       });
+      // const res = await axios.post(NewBatchEntryUrl, payload)
       console.log(res.data);
-
-      // form.reset();
 
       const { message, success } = res.data;
       setIsSuccess(success);
