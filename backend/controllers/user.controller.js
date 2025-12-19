@@ -56,9 +56,10 @@ export const loginController = async (req, res) => {
 
     const cookieOptions = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      // secure: process.env.NODE_ENV === "production",
+      secure: true,
       sameSite: "none",
-      maxAge: 90 * 24 * 60 * 60 * 1000,
+      maxAge: 10 * 24 * 60 * 60 * 1000,
       path: "/",
     };
 
