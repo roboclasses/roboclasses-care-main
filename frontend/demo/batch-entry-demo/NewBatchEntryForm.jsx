@@ -205,10 +205,10 @@ export function NewBatchEntryForm() {
         email: data.email,
         ...transformedDateTimeEntries,
       };
-      const res = await axios.post(NewBatchEntryUrl, payload, {
-        headers: { Authorization: `Bearer ${Cookies.get("token")}` },
-      });
-      // const res = await axios.post(NewBatchEntryUrl, payload)
+      // const res = await axios.post(NewBatchEntryUrl, payload, {
+      //   headers: { Authorization: `Bearer ${Cookies.get("token")}` },
+      // });
+      const res = await axios.post(NewBatchEntryUrl, payload, {headers:{Authorization: Cookies.get("token")}})
       console.log(res.data);
 
       const { message, success } = res.data;
