@@ -54,25 +54,31 @@ export const loginController = async (req, res) => {
       { expiresIn: "10d" }
     );
 
-    const cookieOptions = {
-      httpOnly: true,
-      // secure: process.env.NODE_ENV === "production",
-      secure: true,
-      sameSite: "none",
-      maxAge: 10 * 24 * 60 * 60 * 1000,
-      path: "/",
-    };
+    // const cookieOptions = {
+    //   httpOnly: true,
+    //   // secure: process.env.NODE_ENV === "production",
+    //   secure: true,
+    //   sameSite: "none",
+    //   maxAge: 10 * 24 * 60 * 60 * 1000,
+    //   path: "/",
+    // };
 
-    res.cookie("token", token, cookieOptions);
-    res.cookie("_id", user._id.toString(), cookieOptions);
-    res.cookie("name", user.name, cookieOptions);
-    res.cookie("email", user.email, cookieOptions);
-    res.cookie("role", user.role, cookieOptions);
+    // res.cookie("token", token, cookieOptions);
+    // res.cookie("_id", user._id.toString(), cookieOptions);
+    // res.cookie("name", user.name, cookieOptions);
+    // res.cookie("email", user.email, cookieOptions);
+    // res.cookie("role", user.role, cookieOptions);
 
-    return res.status(200).json({
-      success: true,
-      message: "Logged-in successfully.",
-    });
+return res.status(200).json(
+        {
+            success:true, 
+            message: "Logged-in successfully.", 
+            token, 
+            name:user.name, 
+            email:user.email.trim(), 
+            _id:user._id, 
+            role:user.role.trim()
+        })
   } catch (error) {
     console.error(error);
     return res
