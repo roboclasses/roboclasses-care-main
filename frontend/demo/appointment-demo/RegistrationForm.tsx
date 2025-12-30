@@ -33,13 +33,12 @@ const FormSchema = z.object({
   parentName: z.string().min(3, { message: "Parent Name must be atleast 3 characters long"}),
   destination: z
   .string()
-  .min(10, { message: "Mobile number is too short" })
+  .min(8, "Mobile number is too short")
   .refine((val) => {
-    const digits = val.replace(/\D/g, ""); // Remove non-digit characters
-    return digits.length === 12 && digits.startsWith("971");
-  }, {
-    message: "Please enter a valid UAE mobile number (e.g., +9715XXXXXXXX)"
-  }),
+    const digits = val.replace(/\D/g, "");
+    return /^\+?[1-9]\d{7,14}$/.test(val) && digits.length <= 15;
+  }, "Please enter a valid international mobile number (e.g., +14155552671)"),
+
   email: z.email({message:"Please enter a valid email"}),
   address: z.string().min(3, {message: "Address must be atleast 3 characters long"}),
   country: z.string().min(2, {message: "Country must be atleast 2 characters long"}),
@@ -55,7 +54,7 @@ export function RegistrationForm() {
     defaultValues: {
       studentName: "",
       parentName: "",
-      destination: "+971",
+      destination: "",
       email:"",
       courses: "",
       address:"",
