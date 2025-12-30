@@ -53,11 +53,13 @@ const FormSchema = z.object({
   numberOfClasses: z.string().trim().max(3, "Number of classes must have maximum 3 digits").trim(),
   studentName: z.string().min(3, "Student Name must be atlest 3 characters long"),
   email: z.string().trim().email("Please enter a valid email"),
-  destination: z.string().min(10, "Mobile number is too short")
-    .refine((val) => {
-      const digits = val.replace(/\D/g, ""); // Remove non-digit characters
-      return digits.length === 12 && digits.startsWith("971");
-    }, "Please enter a valid UAE mobile number (e.g., +971XXXXXXX)"),
+  destination: z
+  .string()
+  .min(8, "Mobile number is too short")
+  .refine((val) => {
+    const digits = val.replace(/\D/g, "");
+    return /^\+?[1-9]\d{7,14}$/.test(val) && digits.length <= 15;
+  }, "Please enter a valid international mobile number (e.g., +14155552671)"),
 });
 
 export function NewBatchEntryForm() {

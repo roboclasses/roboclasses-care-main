@@ -64,13 +64,15 @@ const FormSchema = z.object({
   studentName: z
     .string()
     .min(3, "Student Name must be atlest 3 characters long"),
+    
   destination: z
-    .string()
-    .min(10, "Mobile number is too short")
-    .refine((val) => {
-      const digits = val.replace(/\D/g, ""); // Remove non-digit characters
-      return digits.length === 12 && digits.startsWith("971");
-    }, "Please enter a valid UAE mobile number (e.g., +971XXXXXXX)"),
+  .string()
+  .min(8, "Mobile number is too short")
+  .refine((val) => {
+    const digits = val.replace(/\D/g, "");
+    return /^\+?[1-9]\d{7,14}$/.test(val) && digits.length <= 15;
+  }, "Please enter a valid international mobile number (e.g., +14155552671)"),
+
   email: z.email("Please enter a valid email"),
   completed: z.string().nonempty("Please select (YES/NO)").optional(),
   isColorCoding: z.boolean().optional(),
