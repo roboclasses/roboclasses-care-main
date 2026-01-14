@@ -37,42 +37,57 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { getUserSession } from "@/lib/session";
 
 import Link from "next/link";
 import Image from "next/image";
 import { LOGO_IMG } from "@/constants/images";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import { UserProfileUrl } from "@/constants";
+import Cookies from "js-cookie";
 
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 const pathname = usePathname();
-const [name, setName] = useState("")
-const [email, setEmail] = useState("")
-const [avatar, setAvatar] = useState("")
-const [role, setRole] = useState("")
+// const [name, setName] = useState("")
+// const [email, setEmail] = useState("")
+// const [avatar, setAvatar] = useState("")
+// const [role, setRole] = useState("")
+const [user, setUser] = useState({name:"", email:"", avatar:"", role: ""});
+
 
 // Fetch user credentials to set user profile
 useEffect(()=>{
   const fetchUserSession = async()=>{
-    const user = await getUserSession();
-    if(user){
-      setName(user.name || 'Guest')  
-      setEmail(user.email || 'guest@gmail.com')
-      setRole(user.role || '')
-      setAvatar(user.name?.slice(0,2) || 'G')
+    const res = await axios.get(UserProfileUrl, {withCredentials: true, headers: {Authorization: Cookies.get("token")}})
+    console.log(res.data);
+    
+    if(res.data){
+      // setName(user.name || 'Guest')  
+      // setEmail(user.email || 'guest@gmail.com')
+      // setRole(user.role || '')
+      // setAvatar(user.name?.slice(0,2) || 'G')
+      setUser({
+        name: res.data.name || 'Guest', 
+        email: res.data.email || 'guest@gmail.com', 
+        role: res.data.role || '', 
+        avatar: res.data.name?.slice(0,2) || 'G' 
+      })
     }
   }
-  fetchUserSession();
-},[pathname])
+  if(!pathname.startsWith("/login") && !pathname.startsWith("/signup")){
+    fetchUserSession();
+  }
+  
+},[pathname ])
 
  // Views data (side-bar)
   const data = {
     user: {
-      name: name,
-      email: email ,
-      avatar: avatar,
+      name: user.name,
+      email: user.email ,
+      avatar: user.avatar,
     },
 
     navMainAdmin: [
@@ -377,7 +392,7 @@ useEffect(()=>{
   };
   
   // Used use-memo hook to prevent unnecessary re renders
-  const navItems = React.useMemo(() => getNavItems(role), [getNavItems, role]);
+  const navItems = React.useMemo(() => getNavItems(user.role), [getNavItems, user.role]);
   
   return (
     <>

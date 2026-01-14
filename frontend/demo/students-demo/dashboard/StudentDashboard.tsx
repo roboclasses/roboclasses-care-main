@@ -62,7 +62,7 @@ export function StudentDashboard() {
       try {
         const studentName =
           user.role === "student" ? user.name : selectedStudent;
-        const res = await axios.get(`${NewBatchEntryUrl}?name=${studentName}`, {
+        const res = await axios.get(`${NewBatchEntryUrl}?name=${studentName}`, {withCredentials: true,
           headers: { Authorization: Cookies.get("token") },
         });
         console.log(res.data);

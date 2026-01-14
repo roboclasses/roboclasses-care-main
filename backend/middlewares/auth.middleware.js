@@ -1,25 +1,23 @@
 import jwt from "jsonwebtoken";
+import { User } from "../models/user.model.js";
 
-export const authMiddleware = (req, res, next) => {
-  const auth = req.headers["authorization"];
-  console.log(auth);
-
-  if (!auth) {
-    return res.status(403).json({ success: false, message: "JWT token is required" });
+export const authMiddleware = async(req, res, next) => {
+  const token = req.cookies.token;
+  if(!token){
+    return res.status(401).json({success: false, message: "Unauthorized - Token is required"})
   }
 
-  // const token =auth.startsWith("Bearer ") ?  auth.split(" ")[1] : auth;
-
   try {
-    const decoded = jwt.verify(auth, process.env.JWT_SECRET);
-    req.user = decoded;
-    console.log(decoded);
-    console.log(new Date().toISOString());
-    console.log(decoded.exp * 1000, Date.now());
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.userId);
+    if(!user){
+      return res.status(404).json({success: false, message: "Unauthorized - User not found"})
+    }
+    req.user = user;
 
     next();
   } catch (error) {
     console.error(error);
-    return res.status(403).json({ success: false, message: "JWT token is wrong or expired" });
+    return res.status(403).json({ success: false, message: "Forbidden - JWT token is wrong or expired" });
   }
 };

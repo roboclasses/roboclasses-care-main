@@ -80,7 +80,7 @@ export function AttendanceForm() {
     useEffect(()=>{
       const handleFetch = async()=>{
         try {
-          const res = await axios.get(NewBatchEntryUrl, {headers:{Authorization: Cookies.get("token")}})
+          const res = await axios.get(NewBatchEntryUrl, {withCredentials: true, headers:{Authorization: Cookies.get("token")}})
           console.log(res.data);
           if(role === "teacher"){
             const filteredBatch = res.data.filter((item)=>item.teacher === name)
@@ -104,7 +104,7 @@ export function AttendanceForm() {
     useEffect(()=>{
       const handleFetch = async()=>{
         try {
-          const res = await axios.get(`${NewBatchEntryUrl}?name=${batchName}`, {headers: {Authorization : Cookies.get("token")}})
+          const res = await axios.get(`${NewBatchEntryUrl}?name=${batchName}`, {withCredentials: true, headers: {Authorization : Cookies.get("token")}})
           console.log(res.data);
           if(res.data){
             const selectedBatch = res.data.find((items)=> items.batch === batchName)

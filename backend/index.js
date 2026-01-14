@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import helmet from "helmet";
+import cookieParser from "cookie-parser";
 
 import { dbConnect } from "./config/db.js";
 import demoClassAppointmentRoutes from "./routes/demoClassAppointmentRoute.js"
@@ -40,6 +41,7 @@ app.use(cors({
 }));
 // app.use(cors({credentials:true, origin:["https://portal.roboclasses.com"]}))
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 
