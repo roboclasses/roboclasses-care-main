@@ -14,8 +14,7 @@ import { toast } from "@/hooks/use-toast";
 import { EditButton } from "../button-demo/EditButton";
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 
-import { getUserSession } from "@/lib/session";
-import { NormalClassUrl } from "@/constants";
+import { NormalClassUrl, UserProfileUrl } from "@/constants";
 import { normalClassType } from "@/types/Types";
 
 import { useEffect, useMemo, useState } from "react";
@@ -26,31 +25,52 @@ import {format} from "date-fns"
 import Cookies from "js-cookie";
 import { Card } from "@/components/ui/card";
 import { AddButton } from "../button-demo/AddButton";
+import { usePathname } from "next/navigation";
 
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 export function TableNormalClass() {
   const [user, setUser] = useState({role:"", name:""})
+  const pathname = usePathname();
 
   // Handle fetch normal classes
   const { data, isLoading, isValidating, error, mutate } = useSWR<normalClassType[]>(NormalClassUrl, fetcher);
 
   // Fetch logged-in teacher session
+    // useEffect(() => {
+    //   const handleFetch = async () => {
+    //     try {
+    //       const session = await getUserSession();
+    //       if (!session.role || !session.name) {
+    //         throw new Error("No user session is found.");
+    //       }
+    //       setUser({ role: session.role, name: session.name });
+    //     } catch (error) {
+    //       console.error(error);
+    //     }
+    //   };
+    //   handleFetch();
+    // }, []);
+
   useEffect(()=>{
-    const handleFetch = async()=>{
+    const doFetch = async()=>{
       try {
-        const session = await getUserSession();
-        if(!session.role || !session.name){
-          throw new Error('No user session is found.')
-        }
-        setUser({role:session.role, name:session.name})
+        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        console.log(res.data);
+
+        setUser({role: res.data.role, name: res.data.name})
+        
       } catch (error) {
         console.error(error);
       }
     }
-    handleFetch();  
-  },[])
+
+    if(pathname.startsWith('/adminDashboard')){
+      doFetch();
+    }
+
+  },[pathname])
 
   // Handle role and name based rows filering 
   const filteredData = useMemo(()=>{
@@ -67,7 +87,7 @@ export function TableNormalClass() {
   // handle delete appointment for normal class
   const handleDelete = async (id: string) => {
     try {
-      const res = await axios.delete(`${NormalClassUrl}/${id}`, {headers: { Authorization: Cookies.get("token") }});
+      const res = await axios.delete(`${NormalClassUrl}/${id}`, {withCredentials: true, headers: { Authorization: Cookies.get("token") }});
       console.log(res.data);
 
       mutate((data) => data?.filter((item) => item._id !== id));

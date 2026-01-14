@@ -3,9 +3,12 @@ import React, { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Bell } from "lucide-react";
+import { Bell} from "lucide-react";
 import { useParams, usePathname } from "next/navigation";
-import { getUserSession } from "@/lib/session";
+// import { getUserSession } from "@/lib/session";
+import axios from "axios";
+import { UserProfileUrl } from "@/constants";
+import Cookies from "js-cookie";
 
 const StudentHeader = () => {
   const pathname = usePathname();
@@ -25,21 +28,37 @@ const StudentHeader = () => {
   }).format(currentDate) : ''
 
   // Handle fetch student session
-  useEffect(()=>{
-    const handleFetch = async()=>{
-      try {
-        const session = await getUserSession();
-        if(!session.name || !session.role){
-          throw new Error('No user session found.')
-        }
-        setUser({name: session.name, role: session.role})
+  // useEffect(()=>{
+  //   const handleFetch = async()=>{
+  //     try {
+  //       const session = await getUserSession();
+  //       if(!session.name || !session.role){
+  //         throw new Error('No user session found.')
+  //       }
+  //       setUser({name: session.name, role: session.role})
         
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   }
+  //   handleFetch();
+  // },[])
+
+  useEffect(()=>{
+    const doFetch = async()=>{
+      try {
+        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{Authorization: Cookies.get("token")}});
+        console.log(res.data);
+        setUser({name: res.data.name, role: res.data.role})
       } catch (error) {
         console.error(error);
       }
     }
-    handleFetch();
-  },[])
+
+    if(pathname === '/students/studentDashboard'){
+      doFetch();
+    }
+  },[pathname])
 
   // Screen name based on routes data
   const routesData = [

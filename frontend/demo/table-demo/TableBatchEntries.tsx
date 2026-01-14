@@ -21,9 +21,9 @@ import { Input } from "@/components/ui/input";
 import { EditButton } from "../button-demo/EditButton";
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 
-import { getUserSession } from "@/lib/session";
+// import { getUserSession } from "@/lib/session";
 import { batchType } from "@/types/Types";
-import { NewBatchEntryUrl } from "@/constants";
+import { NewBatchEntryUrl, UserProfileUrl } from "@/constants";
 
 import { useEffect, useMemo, useState } from "react";
 import axios, { AxiosError } from "axios";
@@ -38,13 +38,15 @@ import { MdClass } from "react-icons/md";
 import { AddButton } from "../button-demo/AddButton";
 import { toast } from "sonner";
 import { FaCircle } from "react-icons/fa6";
+import { usePathname } from "next/navigation";
 
 const fetcher = (url: string) =>
   axios
-    .get(url, { headers: { Authorization: Cookies.get("token") } })
+    .get(url, {withCredentials: true, headers: { Authorization: Cookies.get("token") } })
     .then((res) => res.data);
 
 export function TableBatchEntries() {
+  const pathname = usePathname();
   const [user, setUser] = useState({ role: "", name: "" });
 
   const [batchStatus, setBatchStatus] = useState("active");
@@ -56,20 +58,39 @@ export function TableBatchEntries() {
   );
 
   // Fetch logged-in teacher session
-  useEffect(() => {
-    const handleFetch = async () => {
+  // useEffect(() => {
+  //   const handleFetch = async () => {
+  //     try {
+  //       const session = await getUserSession();
+  //       if (!session.role || !session.name) {
+  //         throw new Error("No user session is found.");
+  //       }
+  //       setUser({ role: session.role, name: session.name });
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+  //   handleFetch();
+  // }, []);
+
+      useEffect(()=>{
+    const doFetch = async()=>{
       try {
-        const session = await getUserSession();
-        if (!session.role || !session.name) {
-          throw new Error("No user session is found.");
-        }
-        setUser({ role: session.role, name: session.name });
+        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        console.log(res.data);
+
+        setUser({role: res.data.role, name: res.data.name})
+        
       } catch (error) {
         console.error(error);
       }
-    };
-    handleFetch();
-  }, []);
+    }
+
+    if(pathname.startsWith('/adminDashboard')){
+      doFetch();
+    }
+
+  },[pathname])
 
   // Filter batches
   const filteredBatches = useMemo(() => {
@@ -92,7 +113,7 @@ export function TableBatchEntries() {
   // Handle delete a batch
   const handleDelete = async (id: string) => {
     try {
-      const res = await axios.delete(`${NewBatchEntryUrl}/${id}`, {
+      const res = await axios.delete(`${NewBatchEntryUrl}/${id}`, {withCredentials: true,
         headers: { Authorization: Cookies.get("token") },
       });
       console.log(res.data);

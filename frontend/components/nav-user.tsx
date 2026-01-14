@@ -22,6 +22,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 import { deleteUserSession } from "@/lib/session"
 
 export function NavUser({
@@ -39,8 +40,8 @@ export function NavUser({
   // Handle logout
   const handleLogout = async()=>{
     await deleteUserSession();
-    router.push('/login')
-    
+    router.push('/login');
+    toast.success("Logged-out successfully");
   }
 
   return (

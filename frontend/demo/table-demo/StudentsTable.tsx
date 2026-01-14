@@ -14,7 +14,7 @@ import { EditButton } from "../button-demo/EditButton";
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 
 import { studentType } from "@/types/Types";
-import { StudentRegUrl } from "@/constants";
+import { StudentRegUrl, UserProfileUrl } from "@/constants";
 import { getUserSession } from "@/lib/session";
 
 import useSWR from "swr";
@@ -26,24 +26,43 @@ import { Card } from "@/components/ui/card";
 import { AddButton } from "../button-demo/AddButton";
 import { ExportAlertDemo } from "../dialog-demo/ExportAlertDemo";
 import { toast } from "sonner";
+import { usePathname } from "next/navigation";
 
 const fetcher = (url: string) => axios.get(url, {headers:{Authorization: Cookies.get('token')}}).then((res) => res.data);
 
 export function StudentsTable() {
   const { data, error, isLoading, isValidating, mutate } = useSWR<studentType[]>(StudentRegUrl, fetcher);
   const [role, setRole] = useState("");
+  const pathname = usePathname();
 
   // Get user session
-  useEffect(() => {
-    const handleFetch = async () => {
-      const session = await getUserSession();
-      if (!session.role) {
-        throw new Error("User session not found.");
+  // useEffect(() => {
+  //   const handleFetch = async () => {
+  //     const session = await getUserSession();
+  //     if (!session.role) {
+  //       throw new Error("User session not found.");
+  //     }
+  //     setRole(session.role);
+  //   };
+  //   handleFetch();
+  // }, []);
+
+  useEffect(()=>{
+    const handleFetch = async()=>{
+      try {
+        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{Authorization: Cookies.get("token")}})
+        console.log(res.data);
+        setRole(res.data.role)
+        
+      } catch (error) {
+        console.error(error);
       }
-      setRole(session.role);
-    };
-    handleFetch();
-  }, []);
+    }
+    if(pathname === '/adminDashboard'){
+      handleFetch();
+    }
+    
+  },[pathname])
 
   // Handle delete Student
   const handleDelete = async (studentId: string) => {

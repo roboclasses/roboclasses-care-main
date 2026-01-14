@@ -35,7 +35,7 @@ export function TableCourseEntries() {
   // Handle delete a course
   const handleDelete = async (id: string) => {
     try {
-      const res = await axios.delete(`${CoursesUrl}/${id}`, {
+      const res = await axios.delete(`${CoursesUrl}/${id}`, {withCredentials: true,
         headers: { Authorization: Cookies.get("token") },
       });
       console.log(res.data);

@@ -44,7 +44,7 @@ import { toast } from "sonner";
 
 const fetcher = (url: string) =>
   axios
-    .get(url, { headers: { Authorization: Cookies.get("token") } })
+    .get(url, {withCredentials: true, headers: { Authorization: Cookies.get("token") } })
     .then((res) => res.data);
 
 const FormSchema = z.object({
@@ -118,7 +118,7 @@ export function PtmForm() {
   useEffect(() => {
     const handleFetch = async () => {
       try {
-        const res = await axios.get(`${NewBatchEntryUrl}?name=${batchName}`, {
+        const res = await axios.get(`${NewBatchEntryUrl}?name=${batchName}`, { withCredentials: true,
           headers: { Authorization: Cookies.get("token") },
         });
         console.log(res.data);

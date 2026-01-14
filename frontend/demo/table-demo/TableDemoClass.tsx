@@ -22,9 +22,9 @@ import { Button } from "@/components/ui/button";
 
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 import { EditButton } from "../button-demo/EditButton";
-import { getUserSession } from "@/lib/session";
+// import { getUserSession } from "@/lib/session";
 import { appointmentTypes } from "@/types/Types";
-import { DemoClassUrl } from "@/constants";
+import { DemoClassUrl, UserProfileUrl } from "@/constants";
 
 import useSWR from "swr";
 import { useEffect, useMemo, useState } from "react";
@@ -37,6 +37,7 @@ import { FaCircle } from "react-icons/fa6";
 import { AddButton } from "../button-demo/AddButton";
 import { ExportAlertDemo } from "../dialog-demo/ExportAlertDemo";
 import { toast } from "sonner";
+import { usePathname } from "next/navigation";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -49,6 +50,7 @@ const tableCaptions:Record<TCompensationClassesType, string> = {
 }
 
 export function TableDemoClass() {
+  const pathname = usePathname();
   const [user, setUser] = useState({ role: "", name: "" });
   const { data, error, isLoading, isValidating, mutate } = useSWR<appointmentTypes[]>(DemoClassUrl, fetcher);
   const [demoClasses, setDemoClasses] = useState("upcoming");
@@ -56,20 +58,39 @@ export function TableDemoClass() {
   const [sortOrder, setSortOrder] = useState("ALL");
 
   // Fetch logged-in teacher session
-  useEffect(() => {
-    const handleFetch = async () => {
+  // useEffect(() => {
+  //   const handleFetch = async () => {
+  //     try {
+  //       const session = await getUserSession();
+  //       if (!session.role || !session.name) {
+  //         throw new Error("No user session is found.");
+  //       }
+  //       setUser({ role: session.role, name: session.name });
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+  //   handleFetch();
+  // }, []);
+
+    useEffect(()=>{
+    const doFetch = async()=>{
       try {
-        const session = await getUserSession();
-        if (!session.role || !session.name) {
-          throw new Error("No user session is found.");
-        }
-        setUser({ role: session.role, name: session.name });
+        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        console.log(res.data);
+
+        setUser({role: res.data.role, name: res.data.name})
+        
       } catch (error) {
         console.error(error);
       }
-    };
-    handleFetch();
-  }, []);
+    }
+
+    if(pathname.startsWith('/adminDashboard')){
+      doFetch();
+    }
+
+  },[pathname])
 
   // Handle role and name based rows filering
   const filteredData = useMemo(() => {
@@ -100,7 +121,7 @@ export function TableDemoClass() {
   // Handle delete appointment
   const handleDelete = async (appointmentId: string) => {
     try {
-      const res = await axios.delete(`${DemoClassUrl}/${appointmentId}`, {
+      const res = await axios.delete(`${DemoClassUrl}/${appointmentId}`, { withCredentials: true,
         headers: { Authorization: Cookies.get("token") },
       });
       console.log(res.data);

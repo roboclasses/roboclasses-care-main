@@ -4,6 +4,7 @@ import { User } from "../models/user.model.js";
 import { signupService } from "../services/user.service.js";
 
 import bcrypt from "bcrypt";
+import { generateToken } from "../utils/utils.js";
 
 export const signupController = async (req, res) => {
   try {
@@ -48,36 +49,23 @@ export const loginController = async (req, res) => {
         .json({ success: false, message: "Invalid credentials." });
     }
 
-    const token = jwt.sign(
-      { email: user.email, _id: user._id, name: user.name, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "10d" }
-    );
+    generateToken(user._id, res);
 
-    // const cookieOptions = {
-    //   httpOnly: true,
-    //   // secure: process.env.NODE_ENV === "production",
-    //   secure: true,
-    //   sameSite: "none",
-    //   maxAge: 10 * 24 * 60 * 60 * 1000,
-    //   path: "/",
-    // };
+    // const token = jwt.sign(
+    //   { email: user.email, _id: user._id, name: user.name, role: user.role },
+    //   process.env.JWT_SECRET,
+    //   { expiresIn: "10d" }
+    // );
 
-    // res.cookie("token", token, cookieOptions);
-    // res.cookie("_id", user._id.toString(), cookieOptions);
-    // res.cookie("name", user.name, cookieOptions);
-    // res.cookie("email", user.email, cookieOptions);
-    // res.cookie("role", user.role, cookieOptions);
 
 return res.status(200).json(
         {
             success:true, 
             message: "Logged-in successfully.", 
-            token, 
             name:user.name, 
-            email:user.email.trim(), 
+            email:user.email,
             _id:user._id, 
-            role:user.role.trim()
+            role:user.role,
         })
   } catch (error) {
     console.error(error);
@@ -86,6 +74,29 @@ return res.status(200).json(
       .json({ success: false, message: "Internal server error." });
   }
 };
+
+export const logoutController = (_, res) =>{
+  try {
+    res.clearCookie("token", {maxAge: 0});
+    return res.status(200).json({success: true, message: "Logged-out successfully."})
+    
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: "Internal server error." });
+  }
+}
+
+export const getUserByIdController = async(req, res) =>{
+  try {
+    const data = await User.findById(req.user._id);
+    console.log(data);
+    return res.status(200).json(data);
+    
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: "Internal server error." });
+  }
+}
 
 export const getUsersController = async (req, res) => {
   try {

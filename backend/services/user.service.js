@@ -3,7 +3,8 @@ import bcrypt from "bcrypt";
 
 export const signupService = async(name, email, password, role)=>{
     try {
-        const hashedPassword = await bcrypt.hash(password, 10)
+        const salt = bcrypt.genSaltSync(10);
+        const hashedPassword = bcrypt.hashSync(password, salt);
 
         const usermodel =  new User({name, email, password:hashedPassword, role})
         await usermodel.save();
