@@ -22,9 +22,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import SubmitButton from "../button-demo/SubmitButton";
-import { AttendanceUrl, NewBatchEntryUrl } from "@/constants";
-import { getUserSession } from "@/lib/session";
+import { AttendanceUrl, NewBatchEntryUrl, UserProfileUrl } from "@/constants";
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -64,17 +62,28 @@ export function AttendanceForm() {
   });
 
   // Getting logged-in user's role and name
-  useEffect(()=>{
-    const handleFetch = async()=>{
-       const user = await getUserSession();
-       setRole(user.role);
-       setName(user.name);
-    if(user.role === "teacher"){
-      form.reset({teacher: name})
-    }
-    }
-    handleFetch();
-  },[form, name, pathname])
+    useEffect(()=>{
+      const doFetch = async()=>{
+        try {
+          const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+          console.log(res.data);
+  
+          setName(res.data.name);
+          setRole(res.data.role);
+
+        if(role === "teacher"){
+          form.reset({teacher: name})
+        }
+        } catch (error) {
+          console.error(error);
+        }
+      }
+  
+      if(pathname.startsWith('/manageAttendance')){
+        doFetch();
+      }
+  
+    },[pathname])
 
   // Fetching batches from newBatchEntry api based on role and teacher name
     useEffect(()=>{

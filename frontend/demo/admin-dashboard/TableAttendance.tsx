@@ -56,20 +56,6 @@ export function TableAttendance() {
   const [searchQuery, setSearchQuery] = useState("")
 
   // Fetch user session
-  // useEffect(() => {
-  //   const handleFetch = async () => {
-  //     try {
-  //       const session = await getUserSession();
-  //       if (!session.role || !session.name) {
-  //         throw new Error("No user session is found.");
-  //       }
-  //       setUser({ role: session.role, name: session.name });
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-  //   handleFetch();
-  // }, []);
 
     useEffect(()=>{
     const doFetch = async()=>{

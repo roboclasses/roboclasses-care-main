@@ -4,10 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Book, BookOpen, Users } from "lucide-react";
-import { getUserSession } from "@/lib/session";
 import { batchType } from "@/types/Types";
 import axios from "axios";
-import { CoursesUrl, NewBatchEntryUrl } from "@/constants";
+import { CoursesUrl, NewBatchEntryUrl, UserProfileUrl } from "@/constants";
 import Cookies from "js-cookie";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { courseType } from "@/types/Types";
@@ -16,29 +15,34 @@ import CoursesFilterDemo from "./CoursesFilterDemo";
 // import AvailableCoursesDemo from "./AvailableCoursesDemo";
 import CourseUpdatesDemo from "./CourseUpdatesDemo";
 import CourseNotificationDemo from "./CourseNotificationDemo";
+import { usePathname } from "next/navigation";
 
 export function CourseCatalog() {
   const [user, setUser] = useState({ name: "", role: "" });
   const [courses, setCourses] = useState<courseType[] | null>(null);
   const [batches, setBatches] = useState<batchType[] | null>(null);
   const [searchQuery, setsearchQuery] = useState("");
+  const pathname = usePathname();
 
-    // Get the logged-in user session
-  useEffect(() => {
-    const handleFetch = async () => {
+  // Get the logged-in user session
+  useEffect(()=>{
+    const doFetch = async()=>{
       try {
-        const session = await getUserSession();
-        if (!session.role || !session.name) {
-          throw new Error("No user session is found.");
-        }
-        setUser({ name: session.name, role: session.role });
+        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        console.log(res.data);
+
+        setUser({role: res.data.role, name: res.data.name})
+        
       } catch (error) {
         console.error(error);
       }
-    };
+    }
 
-    handleFetch();
-  }, []);
+    if(pathname.startsWith('/students')){
+      doFetch();
+    }
+
+  },[pathname])
 
   // Fetch all courses
   useEffect(() => {

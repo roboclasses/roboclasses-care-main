@@ -26,9 +26,8 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 
-import { TimeOffUrl } from "@/constants";
+import { TimeOffUrl, UserProfileUrl } from "@/constants";
 import { employees, timeOffTypes } from "@/data/dataStorage";
-import { getUserSession } from "@/lib/session";
 import SubmitButton from "../button-demo/SubmitButton";
 import { CalendarIcon } from "lucide-react";
 
@@ -39,6 +38,7 @@ import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
+import { usePathname } from "next/navigation";
 
 const FormSchema = z.object({
   employeeName: z.string().min(2, { message: "Tecaher Name must be at least 2 characters." }),
@@ -61,6 +61,7 @@ export function LeaveForm({ defaultValue }: { defaultValue: string }) {
     },
   });
 
+  const pathname = usePathname();
   const [user, setUser] = useState({ role: "", name: "" });
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: new Date(),
@@ -80,26 +81,29 @@ export function LeaveForm({ defaultValue }: { defaultValue: string }) {
  * // Teacher role: form.employeeName is set to "John Doe".
  * // Admin role: Dropdown is shown (logic not in this snippet).
  */
-useEffect(() => {
-  const fetchUserSession = async () => {
-    try {
-      const session = await getUserSession();
-      if (!session.role || !session.name) {
-        throw new Error("No user session is found.");
-      }
-      setUser({ role: session.role, name: session.name });
 
-      if (session.role === "teacher") {
-        form.setValue("employeeName", session.name); // Update only employeeName
+  useEffect(()=>{
+    const doFetch = async()=>{
+      try {
+        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        console.log(res.data);
+
+        setUser({role: res.data.role, name: res.data.name})
+
+        if (user.role === "teacher") {
+        form.setValue("employeeName", user.name); // Update only employeeName
       }
-      // Note: Admin dropdown logic is handled in a separate component.
-    } catch (error) {
-      console.error("Failed to fetch user session:", error);
-      // TODO: Handle error (e.g., redirect to login or show error message).
+        
+      } catch (error) {
+        console.error(error);
+      }
     }
-  };
-  fetchUserSession();
-}, [form, user.role, user.name]);
+
+    if(pathname.startsWith('/timeOff')){
+      doFetch();
+    }
+
+  },[pathname])
 
   // Handle form status
   const { isSubmitting } = form.formState;

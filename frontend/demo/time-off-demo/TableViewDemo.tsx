@@ -21,8 +21,7 @@ import {
 
 import { FilterTimeOffDemo } from "./FilterTimeOffDemo";
 import { TimeOffApprovalDemo } from "./TimeOffApprovalDemo";
-import { TimeOffUrl } from "@/constants";
-import { getUserSession } from "@/lib/session";
+import { TimeOffUrl, UserProfileUrl } from "@/constants";
 import { leaveType } from "@/types/Types";
 import { adjustedNormalLeave, calculateLeaveDays } from "@/lib/helpers";
 import { employees, LEAVE_POLICY } from "@/data/dataStorage";
@@ -33,6 +32,7 @@ import axios, { AxiosError } from "axios";
 import useSWR from "swr";
 import Cookies from "js-cookie";
 import { RefreshCcw } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 
 const fetcher = (url: string) => axios.get(url, {headers: { Authorization: Cookies.get("token") }}).then((res) => res.data);
@@ -43,18 +43,27 @@ const TableViewDemo = () => {
   const [filters, setFilters] = useState<{ type: string, status: string, fromDate: string }>({ type: "", status: "", fromDate: "" });
   const [employee, setEmployee] = useState("All");
   const [user, setUser] = useState({ role: "", name: "" });
+  const pathname = usePathname();
 
   // Get user session
-  useEffect(() => {
-    const handleFetch = async () => {
-      const user = await getUserSession();
-      if (!user.role || !user.name) {
-        throw new Error("No user session is found.");
+  useEffect(()=>{
+    const doFetch = async()=>{
+      try {
+        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        console.log(res.data);
+
+        setUser({role: res.data.role, name: res.data.name})
+        
+      } catch (error) {
+        console.error(error);
       }
-      setUser({ role: user.role, name: user.name });
-    };
-    handleFetch();
-  }, []);
+    }
+
+    if(pathname.startsWith('/timeOff')){
+      doFetch();
+    }
+
+  },[pathname])
 
   // Get the teacher name from select or current user
   const targetTeacher = useMemo(() => {

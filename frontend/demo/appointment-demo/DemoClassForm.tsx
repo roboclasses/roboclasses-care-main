@@ -23,8 +23,7 @@ import {
 } from "@/components/ui/select";
 
 import SubmitButton from "../button-demo/SubmitButton";
-import { DemoClassUrl } from "@/constants";
-import { getUserSession } from "@/lib/session";
+import { DemoClassUrl, UserProfileUrl } from "@/constants";
 import { meetingTypeData, reminderData, teachers, timezone } from "@/data/dataStorage";
 
 import { usePathname } from "next/navigation";
@@ -41,6 +40,7 @@ import { Button } from "@/components/ui/button";
 import { Plus, X } from "lucide-react";
 import SuccessMessageCard from "../card-demo/SuccessMessageCard";
 import { toast } from "sonner";
+import Cookies from "js-cookie";;
 
 // for mapping checkbox value and label
 const items = [
@@ -92,19 +92,28 @@ const FormSchema = z.object({
 
 export function DemoClassForm() {
   const pathname = usePathname();
-  const [name, setName] = useState("");
-  const [role, setRole] = useState("");
+  const [user, setUser] = useState({name:"", role:""});
   const [isSuccess, setIsSuccess] = useState(false);
 
   // Handle fetching logged-in users credentials from cookie storage
-  useEffect(() => {
-    const handleFetch = async () => {
-      const user = await getUserSession();
-      setRole(user.role || "");
-      setName(user.name || "");
-    };
-    handleFetch();
-  }, [pathname]);
+  useEffect(()=>{
+    const doFetch = async()=>{
+      try {
+        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        console.log(res.data);
+
+        setUser({role: res.data.role, name: res.data.name})
+        
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    if(pathname.startsWith('/adminDashboard')){
+      doFetch();
+    }
+
+  },[pathname])
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -314,9 +323,9 @@ export function DemoClassForm() {
                         displayed in demo-class table.
                       </FormDescription>
                       <SelectContent>
-                        {role === "teacher" ? (
-                          <SelectItem value={name}>{name}</SelectItem>
-                        ) : role === "admin" ? (
+                        {user.role === "teacher" ? (
+                          <SelectItem value={user.name}>{user.name}</SelectItem>
+                        ) : user.role === "admin" ? (
                           teachers.map((item) => (
                             <SelectItem value={item.name} key={item.id}>
                               {item.name}

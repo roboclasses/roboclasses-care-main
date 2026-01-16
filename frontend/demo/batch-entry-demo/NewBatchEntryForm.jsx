@@ -23,7 +23,7 @@ import { Input } from "@/components/ui/input";
 
 import SubmitButton from "../button-demo/SubmitButton";
 import { getUserSession } from "@/lib/session";
-import { CoursesUrl, NewBatchEntryUrl, StudentRegUrl } from "@/constants";
+import { CoursesUrl, NewBatchEntryUrl, StudentRegUrl, UserProfileUrl } from "@/constants";
 import { teachers, timezone } from "@/data/dataStorage";
 
 import { useEffect, useState } from "react";
@@ -79,14 +79,28 @@ export function NewBatchEntryForm() {
   };
 
   // For fetching logged-in users name and role
-  useEffect(() => {
-    const handleFetch = async () => {
-      const user = await getUserSession();
-      setRole(user.role || "");
-      setName(user.name || "");
-    };
-    handleFetch();
-  }, [pathname]);
+    useEffect(()=>{
+      const doFetch = async()=>{
+        try {
+          const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+          console.log(res.data);
+  
+          setName(res.data.name);
+          setRole(res.data.role);
+
+        if(role === "teacher"){
+          form.reset({teacher: name})
+        }
+        } catch (error) {
+          console.error(error);
+        }
+      }
+  
+      if(pathname.startsWith('/newBatchEntry')){
+        doFetch();
+      }
+  
+    },[pathname])
 
   // Get courses
   useEffect(() => {

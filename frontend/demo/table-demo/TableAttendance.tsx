@@ -21,8 +21,7 @@ import { Button } from "@/components/ui/button";
 
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 import { EditButton } from "../button-demo/EditButton";
-import { getUserSession } from "@/lib/session";
-import { AttendanceUrl, CoursesUrl } from "@/constants";
+import { AttendanceUrl, CoursesUrl, UserProfileUrl } from "@/constants";
 import { attendanceType, courseType } from "@/types/Types";
 
 import Link from "next/link";
@@ -37,10 +36,12 @@ import { MdOutlineClass } from "react-icons/md";
 import { Input } from "@/components/ui/input";
 import { AddButton } from "../button-demo/AddButton";
 import { toast } from "sonner";
+import { usePathname } from "next/navigation";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 export function TableAttendance() {
+  const pathname = usePathname();
   const [user, setUser] = useState({ role: "", name: "" });
   const { data, isLoading, isValidating, error, mutate } = useSWR<
     attendanceType[]
@@ -54,20 +55,24 @@ export function TableAttendance() {
   const [searchQuery, setSearchQuery] = useState("")
 
   // Fetch user session
-  useEffect(() => {
-    const handleFetch = async () => {
+    useEffect(()=>{
+    const doFetch = async()=>{
       try {
-        const session = await getUserSession();
-        if (!session.role || !session.name) {
-          throw new Error("No user session is found.");
-        }
-        setUser({ role: session.role, name: session.name });
+        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        console.log(res.data);
+
+        setUser({role: res.data.role, name: res.data.name})
+        
       } catch (error) {
         console.error(error);
       }
-    };
-    handleFetch();
-  }, []);
+    }
+
+    if(pathname.startsWith('/adminDashboard')){
+      doFetch();
+    }
+
+  },[pathname])
 
   // Filter data
   const filteredData = useMemo(() => {
@@ -145,7 +150,7 @@ export function TableAttendance() {
                 <ArrowUpDown className="w-4 h-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-[200px]" align="end">
+            <DropdownMenuContent className="w-50" align="end">
               <DropdownMenuRadioGroup
                 value={attendanceStatus}
                 onValueChange={setAttendanceStatus}
@@ -170,7 +175,7 @@ export function TableAttendance() {
                 <ArrowUpDown className="w-4 h-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-[200px]" align="end">
+            <DropdownMenuContent className="w-50" align="end">
               <DropdownMenuRadioGroup
                 value={sortOrder}
                 onValueChange={setSortOrder}
@@ -188,7 +193,7 @@ export function TableAttendance() {
       </div>
 
       {user.role === "admin" && (
-          <div className="flex gap-2 lg:w-full w-[360px] mb-4 item-center border border-gray-300 rounded-full px-2 py-1">
+          <div className="flex gap-2 lg:w-full w-90 mb-4 item-center border border-gray-300 rounded-full px-2 py-1">
             <Search className="h-4 w-4 mr-2.5" />
             <Input
               type="search"
@@ -230,7 +235,7 @@ export function TableAttendance() {
                     : ""}
                 </TableCell>
                 <TableCell>
-                  <div className="text-wrap text-center w-[300px]">
+                  <div className="text-wrap text-center w-75">
                   {item.classes
                     ? item.classes
                         .map((date) => formatDate(date, "MMM dd, yyyy"))
@@ -239,7 +244,7 @@ export function TableAttendance() {
                   </div>
                 </TableCell>
                 <TableCell>
-                  <div className="text-wrap text-center w-[300px]">
+                  <div className="text-wrap text-center w-75">
                   {item.curriculumTaught
                     ? item.curriculumTaught.map((item) => item).join(", ")
                     : ""}

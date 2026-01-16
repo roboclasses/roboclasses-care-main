@@ -13,7 +13,6 @@ import {
 import { EditButton } from "../button-demo/EditButton";
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 
-import { getUserSession } from "@/lib/session";
 import { TPtmType } from "@/types/Types";
 
 import { useEffect, useMemo, useState } from "react";
@@ -22,33 +21,40 @@ import useSWR from "swr";
 import Link from "next/link";
 import {format} from "date-fns"
 import { Card } from "@/components/ui/card";
-import { PtmUrl } from "@/constants";
+import { PtmUrl, UserProfileUrl } from "@/constants";
 import { AddButton } from "../button-demo/AddButton";
 import { toast } from "sonner";
+import Cookies from "js-cookie";
+import { usePathname } from "next/navigation";
 
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 export function PtmTable() {
   const [user, setUser] = useState({role:"", name:""})
+  const pathname = usePathname();
 
   const { data:PtmData, isLoading, isValidating, error, mutate } = useSWR<TPtmType[]>(PtmUrl, fetcher);
 
   // Fetch logged-in teacher session
   useEffect(()=>{
-    const handleFetch = async()=>{
+    const doFetch = async()=>{
       try {
-        const session = await getUserSession();
-        if(!session.role || !session.name){
-          throw new Error('No user session is found.')
-        }
-        setUser({role:session.role, name:session.name})
+        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        console.log(res.data);
+
+        setUser({role: res.data.role, name: res.data.name})
+        
       } catch (error) {
         console.error(error);
       }
     }
-    handleFetch();  
-  },[])
+
+    if(pathname.startsWith('/appointment/PTM')){
+      doFetch();
+    }
+
+  },[pathname])
 
   // Handle role and name based rows filering 
   const filteredData = useMemo(()=>{

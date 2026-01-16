@@ -1,31 +1,40 @@
 "use client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { StudentRegUrl } from "@/constants";
+import { StudentRegUrl, UserProfileUrl } from "@/constants";
 import { STUDENT_PROFILE } from "@/constants/images";
-import { getUserSession } from "@/lib/session";
 import { studentType } from "@/types/Types";
 import axios from "axios";
 
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
 const WelcomeBanner = ({value, onValueChange}:{value:string, onValueChange:(val:string)=>void}) => {
   const [user, setUser] = useState({ name: "", role: "" });
   const [students, setStudents] = useState([]);
+  const pathname = usePathname();
 
   // Handle logged-in user session
-  useEffect(() => {
-    const handleFetch = async () => {
-      const session = await getUserSession();
-      if (!session.name || !session.role) {
-        throw new Error("User session not found.");
-      }
-      setUser({ name: session.name, role: session.role });
-    };
+    useEffect(()=>{
+    const doFetch = async()=>{
+      try {
+        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        console.log(res.data);
 
-    handleFetch();
-  }, []);
+        setUser({role: res.data.role, name: res.data.name})
+        
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    if(pathname.startsWith('/students')){
+      doFetch();
+    }
+
+  },[pathname])
 
   // Handle fetch students
   useEffect(()=>{

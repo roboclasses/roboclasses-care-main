@@ -1,8 +1,7 @@
 
 import { leaveType } from "@/types/Types";
-import { TimeOffUrl } from "@/constants";
+import { TimeOffUrl, UserProfileUrl } from "@/constants";
 import { LEAVE_POLICY } from "@/data/dataStorage";
-import { getUserSession } from "@/lib/session";
 import { adjustedNormalLeave, calculateLeaveDays, currentYear } from "@/lib/helpers";
 
 import CardApplyLeaves from "./CardApplyLeaves";
@@ -17,6 +16,7 @@ import { MdHolidayVillage } from "react-icons/md";
 import { FaHandHoldingMedical } from "react-icons/fa6";
 import { FaCalendar } from "react-icons/fa";
 import dynamic from "next/dynamic";
+import { usePathname } from "next/navigation";
 
 const fetcher = (url: string) => axios.get(url, {headers: { Authorization: Cookies.get("token") }}).then((res) => res.data);
 
@@ -24,18 +24,27 @@ const fetcher = (url: string) => axios.get(url, {headers: { Authorization: Cooki
 const CardViewDemo = () => {
   const { data: leaves = [] } = useSWR<leaveType[]>(TimeOffUrl, fetcher);
   const [user, setUser] = useState({ role: "", name: "" });
+  const pathname = usePathname();
 
   // Get user session
-  useEffect(() => {
-    const handleFetch = async () => {
-      const user = await getUserSession();
-      if (!user.role || !user.name) {
-        throw new Error('No user session is found')
+  useEffect(()=>{
+    const doFetch = async()=>{
+      try {
+        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        console.log(res.data);
+
+        setUser({role: res.data.role, name: res.data.name})
+        
+      } catch (error) {
+        console.error(error);
       }
-      setUser({ role: user.role || "", name: user.name || "" });
-    };
-    handleFetch();
-  }, []);
+    }
+
+    if(pathname.startsWith('/timeOff')){
+      doFetch();
+    }
+
+  },[pathname])
 
   // Calculate used leave days for both types
   const usedNormalLeaveDays = useMemo(

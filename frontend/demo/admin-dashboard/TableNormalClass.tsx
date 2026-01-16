@@ -38,21 +38,6 @@ export function TableNormalClass() {
   const { data, isLoading, isValidating, error, mutate } = useSWR<normalClassType[]>(NormalClassUrl, fetcher);
 
   // Fetch logged-in teacher session
-    // useEffect(() => {
-    //   const handleFetch = async () => {
-    //     try {
-    //       const session = await getUserSession();
-    //       if (!session.role || !session.name) {
-    //         throw new Error("No user session is found.");
-    //       }
-    //       setUser({ role: session.role, name: session.name });
-    //     } catch (error) {
-    //       console.error(error);
-    //     }
-    //   };
-    //   handleFetch();
-    // }, []);
-
   useEffect(()=>{
     const doFetch = async()=>{
       try {
@@ -141,7 +126,7 @@ export function TableNormalClass() {
       </TableCaption>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[100px]">Teacher Name</TableHead>
+          <TableHead className="w-25">Teacher Name</TableHead>
           <TableHead>Batch Name</TableHead>
           <TableHead>Number of Classes</TableHead>
           <TableHead>Student Name</TableHead>

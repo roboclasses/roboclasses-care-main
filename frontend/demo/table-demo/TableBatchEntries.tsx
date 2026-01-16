@@ -58,22 +58,7 @@ export function TableBatchEntries() {
   );
 
   // Fetch logged-in teacher session
-  // useEffect(() => {
-  //   const handleFetch = async () => {
-  //     try {
-  //       const session = await getUserSession();
-  //       if (!session.role || !session.name) {
-  //         throw new Error("No user session is found.");
-  //       }
-  //       setUser({ role: session.role, name: session.name });
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-  //   handleFetch();
-  // }, []);
-
-      useEffect(()=>{
+  useEffect(()=>{
     const doFetch = async()=>{
       try {
         const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});

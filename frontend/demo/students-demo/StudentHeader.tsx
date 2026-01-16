@@ -28,22 +28,6 @@ const StudentHeader = () => {
   }).format(currentDate) : ''
 
   // Handle fetch student session
-  // useEffect(()=>{
-  //   const handleFetch = async()=>{
-  //     try {
-  //       const session = await getUserSession();
-  //       if(!session.name || !session.role){
-  //         throw new Error('No user session found.')
-  //       }
-  //       setUser({name: session.name, role: session.role})
-        
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   }
-  //   handleFetch();
-  // },[])
-
   useEffect(()=>{
     const doFetch = async()=>{
       try {
@@ -55,7 +39,7 @@ const StudentHeader = () => {
       }
     }
 
-    if(pathname === '/students/studentDashboard'){
+    if(pathname.startsWith('/students')){
       doFetch();
     }
   },[pathname])
