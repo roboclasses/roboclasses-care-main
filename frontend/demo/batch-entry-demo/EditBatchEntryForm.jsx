@@ -106,7 +106,7 @@ export function EditBatchEntryForm() {
   useEffect(() => {
     const fetchBatchDetails = async () => {
       try {
-        const res = await axios.get(`${NewBatchEntryUrl}/${id}`, {
+        const res = await axios.get(`${NewBatchEntryUrl}/${id}`, {withCredentials: true,
           headers: { Authorization: Cookies.get("token") },
         });
 

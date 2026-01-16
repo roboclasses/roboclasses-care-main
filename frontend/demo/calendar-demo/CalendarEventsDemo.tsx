@@ -3,8 +3,7 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import { appointmentTypes, batchType } from "@/types/Types";
-import { DemoClassUrl, NewBatchEntryUrl } from "@/constants";
-import { getUserSession } from "@/lib/session";
+import { DemoClassUrl, NewBatchEntryUrl, UserProfileUrl } from "@/constants";
 import { teachers } from "@/data/dataStorage";
 
 import FullCalendar from "@fullcalendar/react";
@@ -20,6 +19,7 @@ import Cookies from "js-cookie";
 
 // Augment FullCalendar's EventInput type
 import { EventInput } from '@fullcalendar/core';
+import { usePathname } from "next/navigation";
 
 // Define a custom event type that includes backgroundColor and borderColor
 interface CustomEvent extends EventInput {
@@ -37,7 +37,7 @@ interface CustomEvent extends EventInput {
 }
 
 
-const fetcher = (url: string) => axios.get(url, {headers:{Authorization: Cookies.get("token")}}).then((res) => res.data);
+const fetcher = (url: string) => axios.get(url, {withCredentials: true, headers:{Authorization: Cookies.get("token")}}).then((res) => res.data);
 
 const CalendarEventsDemo = () => {
   const { data: batchData, error: batchError } = useSWR<batchType[]>(NewBatchEntryUrl, fetcher);
@@ -45,24 +45,27 @@ const CalendarEventsDemo = () => {
 
   const [user, setUser] = useState({role:"", name:""})
   const [teacher, setTeacher] = useState("Monty")
+  const pathname = usePathname();
 
 // Handle fetch user session
-useEffect(()=>{
-  const handleFetch = async()=>{
-    try {
-      const session = await getUserSession();
-      if(!session.role || !session.name){
-        throw new Error('No user session is found.')
-      }
-      setUser({role: session.role, name: session.name})
-      
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  useEffect(()=>{
+    const doFetch = async()=>{
+      try {
+        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        console.log(res.data);
 
-  handleFetch();
-},[])  
+        setUser({role: res.data.role, name: res.data.name})
+        
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    if(pathname.startsWith('/teachersAvailability')){
+      doFetch();
+    }
+
+  },[pathname])
 
 // Process batchData into calendar events
 const batchEvents = useMemo(() => {

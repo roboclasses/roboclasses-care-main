@@ -15,7 +15,6 @@ import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 
 import { studentType } from "@/types/Types";
 import { StudentRegUrl, UserProfileUrl } from "@/constants";
-import { getUserSession } from "@/lib/session";
 
 import useSWR from "swr";
 import { useEffect, useState } from "react";
@@ -36,17 +35,6 @@ export function StudentsTable() {
   const pathname = usePathname();
 
   // Get user session
-  // useEffect(() => {
-  //   const handleFetch = async () => {
-  //     const session = await getUserSession();
-  //     if (!session.role) {
-  //       throw new Error("User session not found.");
-  //     }
-  //     setRole(session.role);
-  //   };
-  //   handleFetch();
-  // }, []);
-
   useEffect(()=>{
     const handleFetch = async()=>{
       try {
@@ -58,7 +46,7 @@ export function StudentsTable() {
         console.error(error);
       }
     }
-    if(pathname === '/adminDashboard'){
+    if(pathname.startsWith('/adminDashboard')){
       handleFetch();
     }
     
@@ -67,7 +55,7 @@ export function StudentsTable() {
   // Handle delete Student
   const handleDelete = async (studentId: string) => {
     try {
-      const res = await axios.delete(`${StudentRegUrl}/${studentId}`, {
+      const res = await axios.delete(`${StudentRegUrl}/${studentId}`, {withCredentials: true,
         headers: { Authorization: Cookies.get("token") },
       });
       console.log(res.data);

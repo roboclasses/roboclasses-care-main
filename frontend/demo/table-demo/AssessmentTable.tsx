@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 
-import { AssessmentUrl } from "@/constants";
+import { AssessmentUrl, UserProfileUrl } from "@/constants";
 import { AssessmentType } from "@/types/Types";
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 
@@ -22,7 +22,6 @@ import Link from "next/link";
 import { Copy, LucideChevronsUpDown } from "lucide-react";
 import Cookies from "js-cookie";
 import { useEffect, useMemo, useState } from "react";
-import { getUserSession } from "@/lib/session";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,24 +32,34 @@ import {
 import { teachers } from "@/data/dataStorage";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
+import { usePathname } from "next/navigation";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 export function AssessmentTable() {
   const [user, setUser] = useState({ name: "", role: "" });
-  const [sortOrder, setSortOrder] = useState("All")
+  const [sortOrder, setSortOrder] = useState("All");
+  const pathname = usePathname();
 
   // Handle fetch user session
-  useEffect(() => {
-    const handleFetch = async () => {
-      const session = await getUserSession();
-      if (!session.role || !session.name) {
-        throw new Error("No user session is found");
+    useEffect(()=>{
+    const doFetch = async()=>{
+      try {
+        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        console.log(res.data);
+
+        setUser({role: res.data.role, name: res.data.name})
+        
+      } catch (error) {
+        console.error(error);
       }
-      setUser({ name: session.name, role: session.role });
-    };
-    handleFetch();
-  }, []);
+    }
+
+    if(pathname.startsWith('/assessmentViewer')){
+      doFetch();
+    }
+
+  },[pathname])
 
   const {
     data: assessmentData = [],

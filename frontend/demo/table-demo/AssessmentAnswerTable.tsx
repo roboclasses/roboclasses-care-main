@@ -13,12 +13,11 @@ import {
 import { AnswerType, AssessmentType } from "@/types/Types";
 import useSWR from "swr";
 import axios, { AxiosError } from "axios";
-import { AnswerUrl, AssessmentUrl } from "@/constants";
+import { AnswerUrl, AssessmentUrl, UserProfileUrl } from "@/constants";
 import { format } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 import Cookies from 'js-cookie';
-import { getUserSession } from "@/lib/session";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,30 +29,39 @@ import { LucideChevronsUpDown } from "lucide-react";
 import { teachers } from "@/data/dataStorage";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
+import { usePathname } from "next/navigation";
 
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 export function AssessmentAnswerTable() {
-    const [user, setUser] = useState({name:"", role:""})
-    const [sortOrder, setSortOrder] = useState("All")
-    
-  
-    // Handle fetch user session
+    const pathname = usePathname(); 
+    const [user, setUser] = useState({name:"", role:""});
+    const [sortOrder, setSortOrder] = useState("All");
+    const { data: answerData= [], isLoading, isValidating, error, mutate } = useSWR<AnswerType[]>(AnswerUrl,fetcher);  
+    const [assessmentData, setAssessmentData] = useState<AssessmentType[]>([]);
+
+  // Do fetch logged-in user session
     useEffect(()=>{
-      const handleFetch = async()=>{
-        const session = await getUserSession();
-        if(!session.role || !session.name){
-          throw new Error('No user session is found')
-        }
-        setUser({name:session.name, role:session.role})
+    const doFetch = async()=>{
+      try {
+        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        console.log(res.data);
+
+        setUser({role: res.data.role, name: res.data.name})
+        
+      } catch (error) {
+        console.error(error);
       }
-      handleFetch();
+    }
+
+    if(pathname.startsWith('/assessmentViewer')){
+      doFetch();
+    }
+
+  },[pathname])
   
-    },[])
-  
-  const { data: answerData= [], isLoading, isValidating, error, mutate } = useSWR<AnswerType[]>(AnswerUrl,fetcher);  
-  const [assessmentData, setAssessmentData] = useState<AssessmentType[]>([])
+
 
   // Fetching answer set from assessment module
   useEffect(()=>{

@@ -4,7 +4,6 @@ import QuickLinksDemo from "./QuickLinksDemo";
 import RecentAnnouncements from "./RecentAnnouncements";
 import NotificationPanel from "./NotificationPanel";
 import { useEffect, useMemo, useState } from "react";
-import { getUserSession } from "@/lib/session";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -12,10 +11,11 @@ import { BookOpen, Calendar } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { appointmentTypes, batchType, User } from "@/types/Types";
 import axios from "axios";
-import { DemoClassUrl, NewBatchEntryUrl } from "@/constants";
+import { DemoClassUrl, NewBatchEntryUrl, UserProfileUrl } from "@/constants";
 import Cookies from "js-cookie";
 import { format, isBefore, isToday, startOfDay } from "date-fns";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 // Function for extracting and formatting course name
 function funcFormatSlug(slug:string){
@@ -36,23 +36,27 @@ export function StudentDashboard() {
   const [batchNames, setbatchNames] = useState<batchType[]>([]);
   const [classes, setClasses] = useState<appointmentTypes[]>([]);
   const [selectedStudent, setSelectedStudent] = useState("");
+  const pathname = usePathname();
 
   // Handle fetch user session
-  useEffect(() => {
-    const handleFetch = async () => {
+    useEffect(()=>{
+    const doFetch = async()=>{
       try {
-        const session = await getUserSession();
-        if (!session.name || !session.role) {
-          throw new Error("No user session is found.");
-        }
-        setUser({ name: session.name, role: session.role });
+        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        console.log(res.data);
+
+        setUser({role: res.data.role, name: res.data.name})
+        
       } catch (error) {
         console.error(error);
       }
-    };
+    }
 
-    handleFetch();
-  }, [user?.name, user?.role]);
+    if(pathname.startsWith('/students')){
+      doFetch();
+    }
+
+  },[pathname])
 
   // Handle fetch enrolled courses
   useEffect(() => {
