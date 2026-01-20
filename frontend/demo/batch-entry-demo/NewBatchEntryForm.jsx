@@ -171,7 +171,7 @@ export function NewBatchEntryForm() {
   useEffect(() => {
     const handleFetch = async () => {
       try {
-        const res = await axios.get(`${CoursesUrl}?name=${courseName}`, {
+        const res = await axios.get(`${CoursesUrl}?name=${courseName}`, {withCredentials: true,
           headers: { Authorization: Cookies.get("token") },
         });
         console.log(res.data);
@@ -224,7 +224,7 @@ export function NewBatchEntryForm() {
       // const res = await axios.post(NewBatchEntryUrl, payload, {
       //   headers: { Authorization: `Bearer ${Cookies.get("token")}` },
       // });
-      const res = await axios.post(NewBatchEntryUrl, payload, {headers:{Authorization: Cookies.get("token")}})
+      const res = await axios.post(NewBatchEntryUrl, payload, {withCredentials: true, headers:{Authorization: Cookies.get("token")}})
       console.log(res.data);
 
       const { message, success } = res.data;
