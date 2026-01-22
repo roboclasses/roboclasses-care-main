@@ -92,7 +92,7 @@ export function EditAttendanceForm() {
   useEffect(() => {
     const handleFetch = async () => {
       try {
-        const res = await axios.get(`${AttendanceUrl}/${id}`, {
+        const res = await axios.get(`${AttendanceUrl}/${id}`, {withCredentials: true, 
           headers: { Authorization: Cookies.get("token") },
         });
         const attendanceData = res.data;
@@ -160,7 +160,7 @@ export function EditAttendanceForm() {
         completed: data.completed,
       };
 
-      const res = await axios.put(`${AttendanceUrl}/${id}`, payload, {
+      const res = await axios.put(`${AttendanceUrl}/${id}`, payload, {withCredentials: true,
         headers: { Authorization: Cookies.get("token") },
       });
       console.log(res.data);
