@@ -205,7 +205,7 @@ export function EditBatchEntryForm() {
         ...transformedDateTimeEntries,
       };
 
-      const res = await axios.put(`${NewBatchEntryUrl}/${id}`, payload, {
+      const res = await axios.put(`${NewBatchEntryUrl}/${id}`, payload, {withCredentials: true,
         headers: { Authorization: Cookies.get("token") },
       });
       console.log(res.data);

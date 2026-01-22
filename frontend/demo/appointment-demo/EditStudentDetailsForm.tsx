@@ -66,7 +66,7 @@ export function EditStudentDetailsForm() {
   useEffect(() => {
     const handleFetch = async () => {
       try {
-        const res = await axios.get(`${StudentRegUrl}/${id}`, {
+        const res = await axios.get(`${StudentRegUrl}/${id}`, {withCredentials: true,
           headers: { Authorization: Cookies.get("token") },
         });
         console.log(res.data);

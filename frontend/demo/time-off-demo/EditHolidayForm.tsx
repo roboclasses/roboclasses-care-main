@@ -45,7 +45,7 @@ export function EditHoidayForm() {
       }
       console.log(JSON.stringify(payload));
       
-      const res = await axios.put(TimeOffUrl, payload, {headers:{Authorization: Cookies.get("token")}})
+      const res = await axios.put(TimeOffUrl, payload, {withCredentials: true, headers:{Authorization: Cookies.get("token")}})
       console.log(res.data);
 
       form.reset();
