@@ -50,7 +50,6 @@ export function AttendanceForm() {
   const [numberOfClasses, setNumberOfClasses] = useState(0);
   const [isSuccess, setIsSuccess] = useState(false);
 
-
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -65,14 +64,19 @@ export function AttendanceForm() {
     useEffect(()=>{
       const doFetch = async()=>{
         try {
-          const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+          const res= await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
           console.log(res.data);
-  
-          setName(res.data.name);
-          setRole(res.data.role);
+                    
+          const userName = res.data.name;
+          const userRole = res.data.role;
+          console.log("user role is: ", userRole);
+          console.log("user name is: ", userName);
 
-        if(role === "teacher"){
-          form.reset({teacher: name})
+          setRole(userRole);
+          setName(userName);
+
+        if(userRole === "teacher"){
+          form.setValue("teacher", userName)
         }
         } catch (error) {
           console.error(error);
@@ -89,7 +93,7 @@ export function AttendanceForm() {
     useEffect(()=>{
       const handleFetch = async()=>{
         try {
-          const res = await axios.get(NewBatchEntryUrl, {withCredentials: true, headers:{Authorization: Cookies.get("token")}})
+          const res= await axios.get(NewBatchEntryUrl, {withCredentials: true, headers:{Authorization: Cookies.get("token")}})
           console.log(res.data);
           if(role === "teacher"){
             const filteredBatch = res.data.filter((item)=>item.teacher === name)
@@ -113,7 +117,7 @@ export function AttendanceForm() {
     useEffect(()=>{
       const handleFetch = async()=>{
         try {
-          const res = await axios.get(`${NewBatchEntryUrl}?name=${batchName}`, {withCredentials: true, headers: {Authorization : Cookies.get("token")}})
+          const res= await axios.get(`${NewBatchEntryUrl}?name=${batchName}`, {withCredentials: true, headers: {Authorization : Cookies.get("token")}})
           console.log(res.data);
           if(res.data){
             const selectedBatch = res.data.find((items)=> items.batch === batchName)
@@ -165,7 +169,7 @@ export function AttendanceForm() {
       }
       console.log("payload is"+JSON.stringify(payload));
       
-      const res = await axios.post(AttendanceUrl ,payload)
+      const res= await axios.post(AttendanceUrl ,payload)
       console.log(res.data);
       
       const {message, success} = res.data;
@@ -237,7 +241,7 @@ export function AttendanceForm() {
           <FormItem>
             <FormLabel className="font-semibold">Teacher Name</FormLabel>
             <FormControl>
-              <Input {...field} disabled required/>
+              <Input {...field} readOnly required/>
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -252,7 +256,7 @@ export function AttendanceForm() {
           <FormItem>
             <FormLabel className="font-semibold">Start Date</FormLabel>
             <FormControl>
-              <Input {...field} type="date" disabled required/>
+              <Input {...field} type="date" readOnly required/>
             </FormControl>
             <FormMessage />
           </FormItem>
