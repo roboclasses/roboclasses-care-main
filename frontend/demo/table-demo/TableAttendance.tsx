@@ -99,7 +99,7 @@ export function TableAttendance() {
   // Handle delete attendance
   const handleDelete = async (id: string) => {
     try {
-      const res = await axios.delete(`${AttendanceUrl}/${id}`, {
+      const res = await axios.delete(`${AttendanceUrl}/${id}`, {withCredentials: true,
         headers: { Authorization: Cookies.get("token") },
       });
       console.log(res.data);
