@@ -55,6 +55,7 @@ const pathname = usePathname();
 // const [avatar, setAvatar] = useState("")
 // const [role, setRole] = useState("")
 const [user, setUser] = useState({name:"", email:"", avatar:"", role: ""});
+console.log(JSON.stringify(user))
 
 
 // Fetch user credentials to set user profile
