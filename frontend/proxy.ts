@@ -1,11 +1,19 @@
 "use server";
 
-import { type NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
-  //Routes which are not accessible
+  // ✅ Public routes (no auth required)
+  const publicRoutes = ["/login", "/signup"];
+
+  // ✅ Routes that should always be accessible
+  const openRoutePrefixes = [
+    "/assessmentViewer/create",
+    "/feedbackViewer/edit",
+  ];
+
+  // ✅ Protected routes (REMOVED "/" 🚨)
   const protectedRoutePrefixes = [
-    "/",
     "/adminDashboard",
     "/appointment",
     "/assessmentGenerator",
@@ -18,9 +26,11 @@ export function middleware(req: NextRequest) {
     "/timeOff",
     "/assessmentViewer",
     "/feedbackViewer",
-    "/students"
+    "/students",
   ];
-  const studentRoutePrefixes = [
+
+  // ❗ Routes restricted for students
+  const restrictedForStudents = [
     "/adminDashboard",
     "/appointment/normal-class",
     "/appointment/demo-class",
@@ -36,7 +46,8 @@ export function middleware(req: NextRequest) {
     "/feedbackViewer",
   ];
 
-  const contractorRoutePrefixes = [
+  // ❗ Routes restricted for contractors
+  const restrictedForContractors = [
     "/assessmentGenerator",
     "/feedbackAdmin",
     "/courseEntry",
@@ -46,58 +57,60 @@ export function middleware(req: NextRequest) {
     "/timeOff",
     "/assessmentViewer",
     "/feedbackViewer",
-  ]
+  ];
 
-  const publicRoutes = ["/login", "/signup"];
-  const openRoutePrefixes = ["/assessmentViewer/create", "/feedbackViewer/edit"]
-  
-  // Get the current pathname
   const currentPath = req.nextUrl.pathname;
 
-  const isPublicRoute = publicRoutes.includes(currentPath)
-  const isOpenRoute = openRoutePrefixes.some(prefix => currentPath.startsWith(prefix))
+  // ✅ Allow public & open routes
+  const isPublicRoute = publicRoutes.includes(currentPath);
+  const isOpenRoute = openRoutePrefixes.some((prefix) =>
+    currentPath.startsWith(prefix)
+  );
 
-  // Exclude public routes from middleware
   if (isPublicRoute || isOpenRoute) {
     return NextResponse.next();
   }
 
-  //Checking the routes prefixes
+  // ✅ Check if route is protected
   const isProtectedRoute = protectedRoutePrefixes.some((prefix) =>
     currentPath.startsWith(prefix)
   );
-  const isStudentRoute = studentRoutePrefixes.some((prefix) =>
+
+  if (!isProtectedRoute) {
+    return NextResponse.next(); // allow non-protected routes
+  }
+
+  // ✅ Get auth data from cookies
+  const token = req.cookies.get("token")?.value;
+  const role = req.cookies.get("role")?.value;
+
+  // 🚨 If no token → redirect to login
+  if (!token) {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
+
+  // ✅ Student restriction
+  const isStudentRestrictedRoute = restrictedForStudents.some((prefix) =>
     currentPath.startsWith(prefix)
   );
-  const isContractorRoute = contractorRoutePrefixes.some((prefix) =>
+
+  if (isStudentRestrictedRoute && role === "student") {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
+  // ✅ Contractor restriction
+  const isContractorRestrictedRoute = restrictedForContractors.some((prefix) =>
     currentPath.startsWith(prefix)
   );
 
-  if (isProtectedRoute) {
-    const isAuth = req.cookies.get("token")?.value;
-    const role = req.cookies.get("role")?.value;
-
-    // Protection from not authenticated users
-    if (!isAuth) {
-      return NextResponse.redirect(new URL("/login", req.nextUrl));
-    }
-
-    // Student views
-    if (isStudentRoute && !(role === "admin" || role === "teacher" || role === "contractor")) {
-      return NextResponse.redirect(new URL("/", req.nextUrl));
-    }
-
-    // Contractor views
-    if(isContractorRoute && !(role==="admin" || role === "teacher")){
-      return NextResponse.redirect(new URL("/", req.nextUrl));
-    }
+  if (isContractorRestrictedRoute && role === "contractor") {
+    return NextResponse.redirect(new URL("/", req.url));
   }
 
   return NextResponse.next();
 }
 
-
-// Exclude API routes, static files, and assets
+// ✅ Exclude API & static files
 export const config = {
   matcher: [
     "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|assets/).*)",
