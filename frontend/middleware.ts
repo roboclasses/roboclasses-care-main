@@ -14,6 +14,7 @@ export function middleware(req: NextRequest) {
 
   // ✅ Protected routes (REMOVED "/" 🚨)
   const protectedRoutePrefixes = [
+    "/",
     "/adminDashboard",
     "/appointment",
     "/assessmentGenerator",
@@ -71,22 +72,25 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
+  // ✅ Get auth data from cookies
+  const token = req.cookies.get("token")?.value;
+  const role = req.cookies.get("role")?.value;
+
+  console.log(`[Middleware] Path: ${currentPath}, Token: ${token ? "EXISTS" : "MISSING"}, Role: ${role}`);
+
+  // 🚨 If no token → redirect to login (applies to root and all protected routes)
+  if (!token) {
+    console.log(`[Middleware] No token! Redirecting ${currentPath} → /login`);
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
+
   // ✅ Check if route is protected
   const isProtectedRoute = protectedRoutePrefixes.some((prefix) =>
     currentPath.startsWith(prefix)
   );
 
   if (!isProtectedRoute) {
-    return NextResponse.next(); // allow non-protected routes
-  }
-
-  // ✅ Get auth data from cookies
-  const token = req.cookies.get("token")?.value;
-  const role = req.cookies.get("role")?.value;
-
-  // 🚨 If no token → redirect to login
-  if (!token) {
-    return NextResponse.redirect(new URL("/login", req.url));
+    return NextResponse.next(); // allow non-protected authenticated routes
   }
 
   // ✅ Student restriction
