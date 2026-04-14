@@ -61,20 +61,33 @@ console.log(JSON.stringify(user))
 // Fetch user credentials to set user profile
 useEffect(()=>{
   const fetchUserSession = async()=>{
-    const res = await axios.get(UserProfileUrl, {withCredentials: true, headers: {Authorization: Cookies.get("token")}})
-    console.log(res.data);
-    
-    if(res.data){
-      // setName(user.name || 'Guest')  
-      // setEmail(user.email || 'guest@gmail.com')
-      // setRole(user.role || '')
-      // setAvatar(user.name?.slice(0,2) || 'G')
+    try {
+      // const res = await axios.get(UserProfileUrl, {withCredentials: true, headers: {Authorization: Cookies.get("token")}})
+      const res = await axios.get(UserProfileUrl, {withCredentials: true })
+
+      console.log(res.data);
+      
+      if(res.data){
+        // setName(user.name || 'Guest')  
+        // setEmail(user.email || 'guest@gmail.com')
+        // setRole(user.role || '')
+        // setAvatar(user.name?.slice(0,2) || 'G')
+        setUser({
+          name: res.data.name || 'Guest', 
+          email: res.data.email || 'guest@gmail.com', 
+          role: res.data.role || '', 
+          avatar: res.data.name?.slice(0,2) || 'G' 
+        })
+      }
+    } catch (error) {
+      console.error('Failed to fetch user session:', error);
+      // User is not authenticated, set default values
       setUser({
-        name: res.data.name || 'Guest', 
-        email: res.data.email || 'guest@gmail.com', 
-        role: res.data.role || '', 
-        avatar: res.data.name?.slice(0,2) || 'G' 
-      })
+        name: 'Guest',
+        email: 'guest@gmail.com',
+        role: '',
+        avatar: 'G'
+      });
     }
   }
   if(!pathname.startsWith("/login") && !pathname.startsWith("/signup")){
