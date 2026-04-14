@@ -14,7 +14,6 @@ export function middleware(req: NextRequest) {
 
   // ✅ Protected routes (REMOVED "/" 🚨)
   const protectedRoutePrefixes = [
-    "/",
     "/adminDashboard",
     "/appointment",
     "/assessmentGenerator",
