@@ -49,16 +49,16 @@ export const loginController = async (req, res) => {
         .json({ success: false, message: "Invalid credentials." });
     }
 
-    generateToken(user._id, res);
+    try {
+      generateToken(user._id, res);
+    } catch (tokenError) {
+      console.error("Token generation failed:", tokenError.message);
+      return res
+        .status(500)
+        .json({ success: false, message: "Failed to generate authentication token. Please contact support." });
+    }
 
-    // const token = jwt.sign(
-    //   { email: user.email, _id: user._id, name: user.name, role: user.role },
-    //   process.env.JWT_SECRET,
-    //   { expiresIn: "10d" }
-    // );
-
-
-return res.status(200).json(
+    return res.status(200).json(
         {
             success:true, 
             message: "Logged-in successfully.", 
