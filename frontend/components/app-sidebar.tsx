@@ -43,7 +43,7 @@ import Image from "next/image";
 import { LOGO_IMG } from "@/constants/images";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "@/lib/axiosConfig";
 import { UserProfileUrl } from "@/constants";
 import Cookies from "js-cookie";
 
@@ -62,16 +62,11 @@ console.log(JSON.stringify(user))
 useEffect(()=>{
   const fetchUserSession = async()=>{
     try {
-      // const res = await axios.get(UserProfileUrl, {withCredentials: true, headers: {Authorization: Cookies.get("token")}})
-      const res = await axios.get(UserProfileUrl, {withCredentials: true })
+      const res = await axiosInstance.get(UserProfileUrl, {withCredentials: true })
 
       console.log(res.data);
       
       if(res.data){
-        // setName(user.name || 'Guest')  
-        // setEmail(user.email || 'guest@gmail.com')
-        // setRole(user.role || '')
-        // setAvatar(user.name?.slice(0,2) || 'G')
         setUser({
           name: res.data.name || 'Guest', 
           email: res.data.email || 'guest@gmail.com', 

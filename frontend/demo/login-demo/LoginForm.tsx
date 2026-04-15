@@ -47,7 +47,12 @@ export function LoginForm() {
     try {
       const res = await axios.post(LoginUrl, data, {withCredentials: true});
       console.log(res.data);
-      const { message } = res.data;
+      const { message, token } = res.data;
+
+      // Store token in localStorage
+      if (token) {
+        localStorage.setItem("token", token);
+      }
 
       router.push("/");
       toast.success(message)

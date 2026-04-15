@@ -49,8 +49,9 @@ export const loginController = async (req, res) => {
         .json({ success: false, message: "Invalid credentials." });
     }
 
+    let token;
     try {
-      generateToken(user._id, res);
+      token = generateToken(user._id, res);
     } catch (tokenError) {
       console.error("Token generation failed:", tokenError.message);
       return res
@@ -66,6 +67,7 @@ export const loginController = async (req, res) => {
             email:user.email,
             _id:user._id, 
             role:user.role,
+            token: token
         })
   } catch (error) {
     console.error(error);
@@ -77,11 +79,6 @@ export const loginController = async (req, res) => {
 
 export const logoutController = (_, res) =>{
   try {
-    res.clearCookie("token", {
-      maxAge: 0,
-      domain: ".up.railway.app",
-      path: "/"
-    });
     return res.status(200).json({success: true, message: "Logged-out successfully."})
     
   } catch (error) {

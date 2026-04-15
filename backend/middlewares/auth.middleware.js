@@ -2,7 +2,17 @@ import jwt from "jsonwebtoken";
 import { User } from "../models/user.model.js";
 
 export const authMiddleware = async(req, res, next) => {
-  const token = req.cookies.token;
+  // Check Authorization header first (header format: "Bearer <token>")
+  let token = null;
+  const authHeader = req.headers.authorization;
+  
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    token = authHeader.slice(7); // Remove "Bearer " prefix
+  } else {
+    // Fallback to cookie for backward compatibility
+    token = req.cookies.token;
+  }
+
   if(!token){
     return res.status(401).json({success: false, message: "Unauthorized - Token is required"})
   }

@@ -39,6 +39,8 @@ export function NavUser({
 
   // Handle logout
   const handleLogout = async()=>{
+    // Clear localStorage token
+    localStorage.removeItem('token');
     await deleteUserSession();
     router.push('/login');
     toast.success("Logged-out successfully");

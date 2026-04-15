@@ -15,14 +15,5 @@ export const generateToken = (userId, res)=>{
         throw new Error("JWT Token generation failed");
     }
     
-    res.cookie("token", token,  {
-        httpOnly: true,
-        path: "/",
-        maxAge: 10 * 24 * 60 * 60 * 1000,
-        secure: true,
-        sameSite: "none",
-        domain: ".up.railway.app",  // Allow cookie across subdomains
-    });
-   
     return token;
 }
