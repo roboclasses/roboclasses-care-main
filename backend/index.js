@@ -37,17 +37,18 @@ app.set("trust proxy", 1);
 
 // middlewares
 app.use(cors({
-  origin:"http://localhost:3000",
+  // origin:"http://localhost:3000",
+  origin: process.env.FE_URL,
   credentials: true,
 }));
 // app.use(cors({
 //   credentials:true, 
-//   origin:"https://portal.roboclasses.com",
+//   origin:process.env.FE_URL,
 //   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 //   allowedHeaders: ["Content-Type", "Authorization"]
 // }))
 // app.options('*', cors({
-//   origin:"https://portal.roboclasses.com",
+//   origin:process.env.FE_URL,
 //   credentials: true
 // }))
 app.use(express.json());
