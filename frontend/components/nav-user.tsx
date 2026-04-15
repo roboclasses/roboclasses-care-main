@@ -24,6 +24,7 @@ import {
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { deleteUserSession } from "@/lib/session"
+import { clearTokenFromStorage } from "@/lib/axiosConfig"
 
 export function NavUser({
   user,
@@ -39,8 +40,8 @@ export function NavUser({
 
   // Handle logout
   const handleLogout = async()=>{
-    // Clear localStorage token
-    localStorage.removeItem('token');
+    // Clear token from both localStorage and cookie
+    clearTokenFromStorage();
     await deleteUserSession();
     router.push('/login');
     toast.success("Logged-out successfully");

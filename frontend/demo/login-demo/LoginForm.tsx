@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
 import { passwordValidation } from "@/lib/helpers";
 import { toast } from "sonner";
+import { setTokenInStorage } from "@/lib/axiosConfig";
 
 const FormSchema = z.object({
   email: z.email("Please enter a valid email"),
@@ -49,9 +50,9 @@ export function LoginForm() {
       console.log(res.data);
       const { message, token } = res.data;
 
-      // Store token in localStorage
+      // Store token in both localStorage and cookie
       if (token) {
-        localStorage.setItem("token", token);
+        setTokenInStorage(token);
       }
 
       router.push("/");

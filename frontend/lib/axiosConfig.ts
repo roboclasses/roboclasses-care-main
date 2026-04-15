@@ -27,11 +27,32 @@ axiosInstance.interceptors.response.use(
       // Clear token on unauthorized
       if (typeof window !== 'undefined') {
         localStorage.removeItem('token');
+        // Clear cookie too
+        document.cookie = 'token=; max-age=0; path=/';
         window.location.href = '/login';
       }
     }
     return Promise.reject(error);
   }
 );
+
+// Helper to set token in both localStorage and cookie
+export const setTokenInStorage = (token: string) => {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('token', token);
+    // Set cookie for server-side middleware
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + 10);
+    document.cookie = `token=${token}; expires=${expiryDate.toUTCString()}; path=/; SameSite=Lax`;
+  }
+};
+
+// Helper to clear token from both localStorage and cookie
+export const clearTokenFromStorage = () => {
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('token');
+    document.cookie = 'token=; max-age=0; path=/';
+  }
+};
 
 export default axiosInstance;
