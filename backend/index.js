@@ -36,20 +36,20 @@ handleCleanupExpiredTimeOff();
 app.set("trust proxy", 1);
 
 // middlewares
-app.use(cors({
-  origin:"http://localhost:3000",
-  credentials: true,
-}));
 // app.use(cors({
-//   credentials:true, 
-//   origin:"https://portal.roboclasses.com",
-//   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-//   allowedHeaders: ["Content-Type", "Authorization"]
-// }))
-// app.options('*', cors({
-//   origin:"https://portal.roboclasses.com",
-//   credentials: true
-// }))
+//   origin:"http://localhost:3000",
+//   credentials: true,
+// }));
+app.use(cors({
+  credentials:true, 
+  origin:"https://portal.roboclasses.com",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}))
+app.options('*', cors({
+  origin:"https://portal.roboclasses.com",
+  credentials: true
+}))
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
