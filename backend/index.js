@@ -45,7 +45,8 @@ app.use(cors({
   credentials:true, 
   origin:process.env.FE_URL,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+  allowedHeaders: ["Content-Type", "Authorization"],
+  exposedHeaders: ["Set-Cookie"]
 }))
 app.options('*', cors({
   origin:process.env.FE_URL,

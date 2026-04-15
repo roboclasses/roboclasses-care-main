@@ -77,7 +77,11 @@ export const loginController = async (req, res) => {
 
 export const logoutController = (_, res) =>{
   try {
-    res.clearCookie("token", {maxAge: 0});
+    res.clearCookie("token", {
+      maxAge: 0,
+      domain: ".up.railway.app",
+      path: "/"
+    });
     return res.status(200).json({success: true, message: "Logged-out successfully."})
     
   } catch (error) {

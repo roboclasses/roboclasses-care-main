@@ -19,10 +19,9 @@ export const generateToken = (userId, res)=>{
         httpOnly: true,
         path: "/",
         maxAge: 10 * 24 * 60 * 60 * 1000,
-        // secure: process.env.NODE_ENV === 'production',
-        // sameSite: process.env.NODE_ENV === 'production' ? "none" : "lax",
         secure: true,
         sameSite: "none",
+        domain: ".up.railway.app",  // Allow cookie across subdomains
     });
    
     return token;
