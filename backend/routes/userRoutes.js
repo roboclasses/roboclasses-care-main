@@ -13,7 +13,9 @@ router.post('/auth/login', authLimiter, loginController)
 
 router.post('/auth/logout', authLimiter, logoutController)
 
-router.get('/userProfile', authMiddleware, getUserByIdController)
+// router.get('/userProfile', authMiddleware, getUserByIdController)
+
+router.get('/userProfile', getUserByIdController)
 
 router.get('/users', getUsersController)
 
