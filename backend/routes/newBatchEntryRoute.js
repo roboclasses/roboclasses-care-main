@@ -8,17 +8,31 @@ import { createBatchController, deleteBatchController, getBatchByIdController, g
 const router = express.Router();
 
 
-router.post("/newBatchEntries", authMiddleware, roleMiddleware("teacher", "admin"), createBatchController);
+// router.post("/newBatchEntries", authMiddleware, roleMiddleware("teacher", "admin"), createBatchController);
+
+// // router.post("/newBatchEntries", createBatchController);
+
+// router.get("/newBatchEntries", authMiddleware, roleMiddleware("teacher", "admin", "student", "contractor"), getBatchController);
+
+// router.get("/newBatchEntries/:id", authMiddleware, roleMiddleware("teacher", "admin", "student", "contractor"), getBatchByIdController);
+
+// router.put("/newBatchEntries/:id", authMiddleware, roleMiddleware("teacher", "admin"), updateBatchController);
+
+// router.delete("/newBatchEntries/:id", authMiddleware, roleMiddleware("admin"), deleteBatchController);
+
+
+
+router.post("/newBatchEntries", createBatchController);
 
 // router.post("/newBatchEntries", createBatchController);
 
-router.get("/newBatchEntries", authMiddleware, roleMiddleware("teacher", "admin", "student", "contractor"), getBatchController);
+router.get("/newBatchEntries", getBatchController);
 
-router.get("/newBatchEntries/:id", authMiddleware, roleMiddleware("teacher", "admin", "student", "contractor"), getBatchByIdController);
+router.get("/newBatchEntries/:id", getBatchByIdController);
 
-router.put("/newBatchEntries/:id", authMiddleware, roleMiddleware("teacher", "admin"), updateBatchController);
+router.put("/newBatchEntries/:id", updateBatchController);
 
-router.delete("/newBatchEntries/:id", authMiddleware, roleMiddleware("admin"), deleteBatchController);
+router.delete("/newBatchEntries/:id", deleteBatchController);
 
 
 export default router;
