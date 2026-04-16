@@ -36,22 +36,22 @@ handleCleanupExpiredTimeOff();
 app.set("trust proxy", 1);
 
 // middlewares
-app.use(cors({
-  // origin:"http://localhost:3000",
-  origin: process.env.FE_URL,
-  credentials: true,
-}));
 // app.use(cors({
-//   credentials:true, 
-//   origin:process.env.FE_URL,
-//   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-//   allowedHeaders: ["Content-Type", "Authorization"],
-//   exposedHeaders: ["Set-Cookie"]
-// }))
-// app.options('*', cors({
-//   origin:process.env.FE_URL,
-//   credentials: true
-// }))
+//   // origin:"http://localhost:3000",
+//   origin: process.env.FE_URL,
+//   credentials: true,
+// }));
+app.use(cors({
+  credentials:true, 
+  origin:process.env.FE_URL,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  exposedHeaders: ["Set-Cookie"]
+}))
+app.options('*', cors({
+  origin:process.env.FE_URL,
+  credentials: true
+}))
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
