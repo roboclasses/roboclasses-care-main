@@ -109,7 +109,7 @@ export function DemoClassForm() {
       }
     }
 
-    if(pathname.startsWith('/adminDashboard')){
+    if(pathname.startsWith('/adminDashboard') || pathname.startsWith('/appointment')){
       doFetch();
     }
 
@@ -137,6 +137,13 @@ export function DemoClassForm() {
       meetingReminder: "",
     },
   });
+
+  // Auto-populate teacher field when user data is loaded
+  useEffect(() => {
+    if (user.role === "teacher" && user.name) {
+      form.setValue("teacher", user.name);
+    }
+  }, [user.role, user.name, form]);
 
   // Handle form status
   const { isSubmitting, isSubmitSuccessful } = form.formState;
