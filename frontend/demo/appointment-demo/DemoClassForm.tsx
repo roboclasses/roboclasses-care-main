@@ -23,8 +23,8 @@ import {
 } from "@/components/ui/select";
 
 import SubmitButton from "../button-demo/SubmitButton";
-import { DemoClassUrl, UserProfileUrl } from "@/constants";
-import { meetingTypeData, reminderData, teachers, timezone } from "@/data/dataStorage";
+import { DemoClassUrl, UserProfileUrl, UsersUrl } from "@/constants";
+import { meetingTypeData, reminderData, timezone } from "@/data/dataStorage";
 
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -93,28 +93,10 @@ const FormSchema = z.object({
 export function DemoClassForm() {
   const pathname = usePathname();
   const [user, setUser] = useState({name:"", role:""});
+  const [teachers, setTeachers] = useState<any[]>([]);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  // Handle fetching logged-in users credentials from cookie storage
-  useEffect(()=>{
-    const doFetch = async()=>{
-      try {
-        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
-        console.log(res.data);
-
-        setUser({role: res.data.role, name: res.data.name})
-        
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    if(pathname.startsWith('/adminDashboard') || pathname.startsWith('/appointment')){
-      doFetch();
-    }
-
-  },[pathname])
-
+  // Initialize form first, before using it in effects
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -138,12 +120,48 @@ export function DemoClassForm() {
     },
   });
 
+  // Handle fetching logged-in users credentials from cookie storage
+  useEffect(()=>{
+    const doFetch = async()=>{
+      try {
+        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        console.log(res.data);
+
+        setUser({role: res.data.role, name: res.data.name})
+        
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    if(pathname.startsWith('/adminDashboard') || pathname.startsWith('/appointment')){
+      doFetch();
+    }
+
+  },[pathname])
+
+  // Fetch teachers from API (for admin role)
+  useEffect(() => {
+    const handleFetch = async () => {
+      try {
+        const res = await axios.get(UsersUrl);
+        console.log("All users:", res.data);
+        // Filter users with role "teacher"
+        const teacherList = res.data.filter((user: any) => user.role === "teacher");
+        setTeachers(teacherList);
+      } catch (error) {
+        console.error("Error fetching teachers:", error);
+      }
+    };
+    handleFetch();
+  }, []);
+
   // Auto-populate teacher field when user data is loaded
   useEffect(() => {
     if (user.role === "teacher" && user.name) {
       form.setValue("teacher", user.name);
     }
-  }, [user.role, user.name, form]);
+  }, [user.role, user.name]);
 
   // Handle form status
   const { isSubmitting, isSubmitSuccessful } = form.formState;
@@ -334,7 +352,7 @@ export function DemoClassForm() {
                           <SelectItem value={user.name}>{user.name}</SelectItem>
                         ) : user.role === "admin" ? (
                           teachers.map((item) => (
-                            <SelectItem value={item.name} key={item.id}>
+                            <SelectItem value={item.name} key={item._id}>
                               {item.name}
                             </SelectItem>
                           ))

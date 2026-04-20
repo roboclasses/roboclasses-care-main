@@ -23,8 +23,8 @@ import { Input } from "@/components/ui/input";
 
 import SubmitButton from "../button-demo/SubmitButton";
 import { getUserSession } from "@/lib/session";
-import { CoursesUrl, NewBatchEntryUrl, StudentRegUrl, UserProfileUrl } from "@/constants";
-import { teachers, timezone } from "@/data/dataStorage";
+import { CoursesUrl, NewBatchEntryUrl, StudentRegUrl, UserProfileUrl, UsersUrl } from "@/constants";
+import { timezone } from "@/data/dataStorage";
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -67,10 +67,31 @@ export function NewBatchEntryForm() {
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
   const [courses, setCourses] = useState([]);
+  const [teachers, setTeachers] = useState([]);
   const [isSuccess, setIsSuccess] = useState(false);
 
   const [dayTimeEntries, setDayTimeEntries] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null);
+
+  // Initialize form first, before using it in effects and handlers
+  const form = useForm({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      batch: "",
+      course: "",
+      teacher: "",
+      startDate: "",
+      dayTimeEntries: {
+        day: "",
+        time: "",
+      },
+      timeZone: "Asia/Dubai",
+      numberOfClasses: "",
+      studentName: "",
+      destination: "+971",
+      email: "",
+    },
+  });
 
   // Handle select student
   const handleStudentSelect = (student) => {
@@ -85,12 +106,16 @@ export function NewBatchEntryForm() {
           const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
           console.log(res.data);
   
-          setName(res.data.name);
-          setRole(res.data.role);
+          const userData = res.data.name;
+          const userRole = res.data.role;
+          
+          setName(userData);
+          setRole(userRole);
 
-        if(role === "teacher"){
-          form.reset({teacher: name})
-        }
+          // Use local variables instead of state to avoid race condition
+          if(userRole === "teacher"){
+            form.reset({teacher: userData})
+          }
         } catch (error) {
           console.error(error);
         }
@@ -116,24 +141,21 @@ export function NewBatchEntryForm() {
     handleFetch();
   }, []);
 
-  const form = useForm({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      batch: "",
-      course: "",
-      teacher: "",
-      startDate: "",
-      dayTimeEntries: {
-        day: "",
-        time: "",
-      },
-      timeZone: "Asia/Dubai",
-      numberOfClasses: "",
-      studentName: "",
-      destination: "+971",
-      email: "",
-    },
-  });
+  // Fetch teachers from API (for admin role)
+  useEffect(() => {
+    const handleFetch = async () => {
+      try {
+        const res = await axios.get(UsersUrl);
+        console.log("All users:", res.data);
+        // Filter users with role "teacher"
+        const teacherList = res.data.filter((user) => user.role === "teacher");
+        setTeachers(teacherList);
+      } catch (error) {
+        console.error("Error fetching teachers:", error);
+      }
+    };
+    handleFetch();
+  }, []);
 
   // Handle multiple date and time add, remove and update
   const handleDateTimeEntriesChange = (entries) => {
@@ -461,7 +483,7 @@ export function NewBatchEntryForm() {
                       <SelectItem value={name}>{name}</SelectItem>
                     ) : role === "admin" ? (
                       teachers.map((item) => (
-                        <SelectItem value={item.name} key={item.id}>
+                        <SelectItem value={item.name} key={item._id}>
                           {item.name}
                         </SelectItem>
                       ))

@@ -88,11 +88,13 @@ export function LeaveForm({ defaultValue }: { defaultValue: string }) {
         const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
         console.log(res.data);
 
-        setUser({role: res.data.role, name: res.data.name})
+        const userData = { role: res.data.role, name: res.data.name };
+        setUser(userData);
 
-        if (user.role === "teacher") {
-        form.setValue("employeeName", user.name); // Update only employeeName
-      }
+        // Use local variable instead of state to avoid race condition
+        if (userData.role === "teacher") {
+          form.setValue("employeeName", userData.name);
+        }
         
       } catch (error) {
         console.error(error);
@@ -103,7 +105,7 @@ export function LeaveForm({ defaultValue }: { defaultValue: string }) {
       doFetch();
     }
 
-  },[pathname])
+  },[pathname, form])
 
   // Handle form status
   const { isSubmitting } = form.formState;

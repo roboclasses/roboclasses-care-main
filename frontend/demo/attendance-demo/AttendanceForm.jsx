@@ -109,7 +109,7 @@ export function AttendanceForm() {
         }
       }
     handleFetch();
-    },[name, role])
+    },[name, role, form])
 
   // Pre-populate start date and classes from newBatchEntry api
     const batchName = form.watch("batchName")
