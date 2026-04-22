@@ -22,7 +22,7 @@ import SubmitButton from "../button-demo/SubmitButton";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import axiosInstance from '@/lib/axiosConfig';
 import { AssessmentUrl, NewBatchEntryUrl } from "@/constants";
 import Cookies from "js-cookie";

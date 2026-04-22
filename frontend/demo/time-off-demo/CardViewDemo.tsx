@@ -17,6 +17,7 @@ import { FaHandHoldingMedical } from "react-icons/fa6";
 import { FaCalendar } from "react-icons/fa";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
+import axiosInstance from "@/lib/axiosConfig";
 
 const fetcher = (url: string) => axiosInstance.get(url).then((res) => res.data);
 
