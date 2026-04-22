@@ -16,6 +16,7 @@ import CoursesFilterDemo from "./CoursesFilterDemo";
 import CourseUpdatesDemo from "./CourseUpdatesDemo";
 import CourseNotificationDemo from "./CourseNotificationDemo";
 import { usePathname } from "next/navigation";
+import axiosInstance from "@/lib/axiosConfig";
 
 export function CourseCatalog() {
   const [user, setUser] = useState({ name: "", role: "" });

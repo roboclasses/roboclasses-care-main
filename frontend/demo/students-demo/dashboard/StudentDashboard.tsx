@@ -16,6 +16,7 @@ import Cookies from "js-cookie";
 import { format, isBefore, isToday, startOfDay } from "date-fns";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import axiosInstance from "@/lib/axiosConfig";
 
 // Function for extracting and formatting course name
 function funcFormatSlug(slug:string){

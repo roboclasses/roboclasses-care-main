@@ -10,6 +10,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import axiosInstance from "@/lib/axiosConfig";
 
 const WelcomeBanner = ({value, onValueChange}:{value:string, onValueChange:(val:string)=>void}) => {
   const [user, setUser] = useState({ name: "", role: "" });
