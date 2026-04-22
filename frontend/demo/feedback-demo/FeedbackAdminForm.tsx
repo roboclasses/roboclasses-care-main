@@ -17,7 +17,8 @@ import { Input } from "@/components/ui/input";
 import { FeedbackUrl, NewBatchEntryUrl } from "@/constants";
 import SubmitButton from "../button-demo/SubmitButton";
 
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import axiosInstance from '@/lib/axiosConfig';
 import useSWR from "swr";
 import Cookies from "js-cookie";
 import { batchType } from "@/types/Types";
@@ -36,7 +37,7 @@ import SuccessMessageCard from "../card-demo/SuccessMessageCard";
 import { toast } from "sonner";
 
 
-const fetcher = (url: string) => axios.get(url, { headers: { Authorization: Cookies.get("token") } }).then((res) => res.data);
+const fetcher = (url: string) => axiosInstance.get(url).then((res) => res.data);
 
 const FormSchema = z.object({
   batch: z.string().min(2, { message: "Batch Name must be atleast 2 character" }),
@@ -69,7 +70,7 @@ export function FeedbackAdminForm() {
   useEffect(() => {
     const handleFetch = async () => {
       try {
-        const res = await axios.get(`${NewBatchEntryUrl}?name=${batchName}`, {headers: {Authorization: Cookies.get('token')}});
+        const res = await axiosInstance.get(`${NewBatchEntryUrl}?name=${batchName}`);
         console.log(res.data);
         if (res.data) {
             console.log(res.data);
@@ -104,7 +105,7 @@ export function FeedbackAdminForm() {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      const res = await axios.post(FeedbackUrl, data);
+      const res = await axiosInstance.post(FeedbackUrl, data);
       console.log(res.data);
       // form.reset();
 

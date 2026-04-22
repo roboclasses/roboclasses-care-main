@@ -26,7 +26,8 @@ import { AttendanceUrl, NewBatchEntryUrl, UserProfileUrl } from "@/constants";
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import axiosInstance from "@/lib/axiosConfig";
 import Cookies from "js-cookie";
 import { format } from "date-fns";
 import SuccessMessageCard from "../card-demo/SuccessMessageCard";
@@ -64,7 +65,7 @@ export function AttendanceForm() {
     useEffect(()=>{
       const doFetch = async()=>{
         try {
-          const res= await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+          const res= await axiosInstance.get(UserProfileUrl, {withCredentials: true});
           console.log(res.data);
                     
           const userName = res.data.name;
@@ -93,7 +94,7 @@ export function AttendanceForm() {
     useEffect(()=>{
       const handleFetch = async()=>{
         try {
-          const res= await axios.get(NewBatchEntryUrl, {withCredentials: true, headers:{Authorization: Cookies.get("token")}})
+          const res= await axiosInstance.get(NewBatchEntryUrl, {withCredentials: true})
           console.log(res.data);
           if(role === "teacher"){
             const filteredBatch = res.data.filter((item)=>item.teacher === name)
@@ -117,7 +118,7 @@ export function AttendanceForm() {
     useEffect(()=>{
       const handleFetch = async()=>{
         try {
-          const res= await axios.get(`${NewBatchEntryUrl}?name=${batchName}`, {withCredentials: true, headers: {Authorization : Cookies.get("token")}})
+          const res= await axiosInstance.get(`${NewBatchEntryUrl}?name=${batchName}`, {withCredentials: true})
           console.log(res.data);
           if(res.data){
             const selectedBatch = res.data.find((items)=> items.batch === batchName)
@@ -169,7 +170,7 @@ export function AttendanceForm() {
       }
       console.log("payload is"+JSON.stringify(payload));
       
-      const res= await axios.post(AttendanceUrl ,payload)
+      const res= await axiosInstance.post(AttendanceUrl ,payload)
       console.log(res.data);
       
       const {message, success} = res.data;

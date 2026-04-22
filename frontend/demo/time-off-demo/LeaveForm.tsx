@@ -34,7 +34,8 @@ import { CalendarIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { addDays, format } from "date-fns";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import axiosInstance from '@/lib/axiosConfig';
 import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
@@ -85,7 +86,7 @@ export function LeaveForm({ defaultValue }: { defaultValue: string }) {
   useEffect(()=>{
     const doFetch = async()=>{
       try {
-        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        const res = await axiosInstance.get(UserProfileUrl, { withCredentials: true });
         console.log(res.data);
 
         const userData = { role: res.data.role, name: res.data.name };
@@ -124,7 +125,7 @@ export function LeaveForm({ defaultValue }: { defaultValue: string }) {
       };
       console.log(JSON.stringify(payload));
 
-      const res = await axios.post(TimeOffUrl, payload, { headers: { Authorization: Cookies.get("token") }});
+      const res = await axiosInstance.post(TimeOffUrl, payload);
       console.log(res.data);
 
       form.reset();

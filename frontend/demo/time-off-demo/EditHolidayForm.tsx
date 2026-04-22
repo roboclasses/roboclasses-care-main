@@ -17,7 +17,8 @@ import { Input } from "@/components/ui/input"
 import { TimeOffUrl } from "@/constants"
 import SubmitButton from "../button-demo/SubmitButton"
 
-import axios, { AxiosError } from "axios"
+import { AxiosError } from "axios";
+import axiosInstance from '@/lib/axiosConfig'
 import Cookies from "js-cookie";
 import { toast } from "sonner"
 
@@ -45,7 +46,7 @@ export function EditHoidayForm() {
       }
       console.log(JSON.stringify(payload));
       
-      const res = await axios.put(TimeOffUrl, payload, {withCredentials: true, headers:{Authorization: Cookies.get("token")}})
+      const res = await axiosInstance.put(TimeOffUrl, payload, { withCredentials: true })
       console.log(res.data);
 
       form.reset();

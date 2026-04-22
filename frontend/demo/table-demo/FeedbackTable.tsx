@@ -24,7 +24,8 @@ import { FeedbackType } from "@/types/Types";
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 
 import useSWR from "swr";
-import axios, { AxiosError } from "axios";
+import axiosInstance from "@/lib/axiosConfig";
+import { AxiosError } from "axios";
 import Link from "next/link";
 import { Copy, LucideChevronsUpDown } from "lucide-react";
 import { FaCircle } from "react-icons/fa";
@@ -33,7 +34,7 @@ import { useMemo, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+const fetcher = (url: string) => axiosInstance.get(url).then((res) => res.data);
 
 export function FeedbackTable() {
   const {
@@ -60,7 +61,7 @@ const filteredData = useMemo(()=>{
   // Handle delete question
   const handleDelete = async (id: string) => {
     try {
-      const res = await axios.delete(`${FeedbackUrl}/${id}`);
+      const res = await axiosInstance.delete(`${FeedbackUrl}/${id}`);
       console.log(res.data);
 
       mutate();

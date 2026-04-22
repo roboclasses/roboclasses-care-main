@@ -28,7 +28,7 @@ export function CourseCatalog() {
   useEffect(()=>{
     const doFetch = async()=>{
       try {
-        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        const res = await axiosInstance.get(UserProfileUrl, { withCredentials: true });
         console.log(res.data);
 
         setUser({role: res.data.role, name: res.data.name})
@@ -48,7 +48,7 @@ export function CourseCatalog() {
   useEffect(() => {
     const handleFetch = async () => {
       try {
-        const res = await axios.get(CoursesUrl);
+        const res = await axiosInstance.get(CoursesUrl);
         console.log(res.data);
         setCourses(res.data);
       } catch (error) {
@@ -74,7 +74,7 @@ export function CourseCatalog() {
   useEffect(() => {
     const handleFetch = async () => {
       try {
-        const res = await axios.get(NewBatchEntryUrl, {
+        const res = await axiosInstance.get(NewBatchEntryUrl, {
           headers: { Authorization: Cookies.get("token") },
         });
         console.log(res.data);

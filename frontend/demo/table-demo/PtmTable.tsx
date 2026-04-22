@@ -16,7 +16,8 @@ import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 import { TPtmType } from "@/types/Types";
 
 import { useEffect, useMemo, useState } from "react";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import axiosInstance from '@/lib/axiosConfig';
 import useSWR from "swr";
 import Link from "next/link";
 import {format} from "date-fns"
@@ -28,7 +29,7 @@ import Cookies from "js-cookie";
 import { usePathname } from "next/navigation";
 
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+const fetcher = (url: string) => axiosInstance.get(url).then((res) => res.data);
 
 export function PtmTable() {
   const [user, setUser] = useState({role:"", name:""})
@@ -40,7 +41,7 @@ export function PtmTable() {
   useEffect(()=>{
     const doFetch = async()=>{
       try {
-        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        const res = await axiosInstance.get(UserProfileUrl, { withCredentials: true });
         console.log(res.data);
 
         setUser({role: res.data.role, name: res.data.name})
@@ -71,7 +72,7 @@ export function PtmTable() {
   // handle delete ptm for normal class
   const handleDelete = async (id: string) => {
     try {
-      const res = await axios.delete(`${PtmUrl}/${id}`);
+      const res = await axiosInstance.delete(`${PtmUrl}/${id}`);
       console.log(res.data);
       mutate();
       const {message} = res.data;

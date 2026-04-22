@@ -28,14 +28,15 @@ import { employees, LEAVE_POLICY } from "@/data/dataStorage";
 
 import React, { useEffect, useMemo, useState } from "react";
 import { differenceInCalendarDays, format } from "date-fns";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import axiosInstance from '@/lib/axiosConfig';
 import useSWR from "swr";
 import Cookies from "js-cookie";
 import { RefreshCcw } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 
-const fetcher = (url: string) => axios.get(url, {headers: { Authorization: Cookies.get("token") }}).then((res) => res.data);
+const fetcher = (url: string) => axiosInstance.get(url).then((res) => res.data);
 
 const TableViewDemo = () => {
   const { data: leaves = [], error, isLoading, isValidating } = useSWR<leaveType[]>(TimeOffUrl, fetcher);
@@ -49,7 +50,7 @@ const TableViewDemo = () => {
   useEffect(()=>{
     const doFetch = async()=>{
       try {
-        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        const res = await axiosInstance.get(UserProfileUrl, { withCredentials: true });
         console.log(res.data);
 
         setUser({role: res.data.role, name: res.data.name})

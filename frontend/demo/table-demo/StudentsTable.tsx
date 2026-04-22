@@ -18,7 +18,8 @@ import { StudentRegUrl, UserProfileUrl } from "@/constants";
 
 import useSWR from "swr";
 import { useEffect, useState } from "react";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import axiosInstance from '@/lib/axiosConfig';
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { Card } from "@/components/ui/card";
@@ -27,7 +28,7 @@ import { ExportAlertDemo } from "../dialog-demo/ExportAlertDemo";
 import { toast } from "sonner";
 import { usePathname } from "next/navigation";
 
-const fetcher = (url: string) => axios.get(url, {headers:{Authorization: Cookies.get('token')}}).then((res) => res.data);
+const fetcher = (url: string) => axiosInstance.get(url).then((res) => res.data);
 
 export function StudentsTable() {
   const { data, error, isLoading, isValidating, mutate } = useSWR<studentType[]>(StudentRegUrl, fetcher);
@@ -38,7 +39,7 @@ export function StudentsTable() {
   useEffect(()=>{
     const handleFetch = async()=>{
       try {
-        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{Authorization: Cookies.get("token")}})
+        const res = await axiosInstance.get(UserProfileUrl, { withCredentials: true })
         console.log(res.data);
         setRole(res.data.role)
         
@@ -55,7 +56,7 @@ export function StudentsTable() {
   // Handle delete Student
   const handleDelete = async (studentId: string) => {
     try {
-      const res = await axios.delete(`${StudentRegUrl}/${studentId}`, {withCredentials: true,
+      const res = await axiosInstance.delete(`${StudentRegUrl}/${studentId}`, {withCredentials: true,
         headers: { Authorization: Cookies.get("token") },
       });
       console.log(res.data);

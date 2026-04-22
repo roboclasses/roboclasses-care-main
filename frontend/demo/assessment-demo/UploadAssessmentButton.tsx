@@ -22,7 +22,8 @@ import SubmitButton from "../button-demo/SubmitButton";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import axiosInstance from '@/lib/axiosConfig';
 import { AssessmentUrl, NewBatchEntryUrl } from "@/constants";
 import Cookies from "js-cookie";
 import { batchType } from "@/types/Types";
@@ -63,7 +64,7 @@ const FormSchema = z.object({
 
 const fetcher = (url: string) =>
   axios
-    .get(url, { headers: { Authorization: Cookies.get("token") } })
+    .get(url)
     .then((res) => res.data);
 
 export function UploadAssessmentButton() {
@@ -85,7 +86,7 @@ export function UploadAssessmentButton() {
   useEffect(() => {
     const handleFetch = async () => {
       try {
-        const res = await axios.get(`${NewBatchEntryUrl}?name=${batchName}`, {
+        const res = await axiosInstance.get(`${NewBatchEntryUrl}?name=${batchName}`, {
           headers: { Authorization: Cookies.get("token") },
         });
         console.log(res.data);
@@ -117,7 +118,7 @@ export function UploadAssessmentButton() {
       formData.append("assessmentLevel", data.assessmentLevel);
       formData.append("questions", data.questions);
 
-      const res = await axios.post(AssessmentUrl, formData, {
+      const res = await axiosInstance.post(AssessmentUrl, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log(res.data);

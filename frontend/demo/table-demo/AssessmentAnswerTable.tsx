@@ -12,7 +12,8 @@ import {
 } from "@/components/ui/table";
 import { AnswerType, AssessmentType } from "@/types/Types";
 import useSWR from "swr";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import axiosInstance from "@/lib/axiosConfig";
 import { AnswerUrl, AssessmentUrl, UserProfileUrl } from "@/constants";
 import { format } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
@@ -32,7 +33,7 @@ import { toast } from "sonner";
 import { usePathname } from "next/navigation";
 
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+const fetcher = (url: string) => axiosInstance.get(url).then((res) => res.data);
 
 export function AssessmentAnswerTable() {
     const pathname = usePathname(); 
@@ -45,7 +46,7 @@ export function AssessmentAnswerTable() {
     useEffect(()=>{
     const doFetch = async()=>{
       try {
-        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        const res = await axiosInstance.get(UserProfileUrl, {withCredentials: true});
         console.log(res.data);
 
         setUser({role: res.data.role, name: res.data.name})
@@ -67,7 +68,7 @@ export function AssessmentAnswerTable() {
   useEffect(()=>{
     const handleFetch = async()=>{
       try {
-        const res = await axios.get(AssessmentUrl)
+        const res = await axiosInstance.get(AssessmentUrl)
         setAssessmentData(res.data)
         
       } catch (error) {
@@ -121,7 +122,7 @@ export function AssessmentAnswerTable() {
     // Handle delete question
     const handleDelete = async(id: string)=>{
       try {
-        const res = await axios.delete(`${AnswerUrl}/${id}`, {headers: {Authorization: Cookies.get('token')}})
+        const res = await axiosInstance.delete(`${AnswerUrl}/${id}`)
         console.log(res.data);
   
         mutate();
