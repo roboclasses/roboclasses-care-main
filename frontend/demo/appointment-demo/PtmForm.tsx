@@ -24,7 +24,8 @@ import { Input } from "@/components/ui/input";
 import { NewBatchEntryUrl, PtmUrl } from "@/constants";
 import SubmitButton from "../button-demo/SubmitButton";
 
-import { AxiosError } from "axios";
+
+import axios, { AxiosError } from "axios";
 import axiosInstance from '@/lib/axiosConfig';
 import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
