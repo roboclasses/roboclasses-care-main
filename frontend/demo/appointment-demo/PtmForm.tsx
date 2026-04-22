@@ -24,7 +24,8 @@ import { Input } from "@/components/ui/input";
 import { NewBatchEntryUrl, PtmUrl } from "@/constants";
 import SubmitButton from "../button-demo/SubmitButton";
 
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import axiosInstance from '@/lib/axiosConfig';
 import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import Cookies from "js-cookie";
@@ -44,7 +45,7 @@ import { toast } from "sonner";
 
 const fetcher = (url: string) =>
   axios
-    .get(url, {withCredentials: true, headers: { Authorization: Cookies.get("token") } })
+    .get(url, { withCredentials: true })
     .then((res) => res.data);
 
 const FormSchema = z.object({
@@ -118,7 +119,7 @@ export function PtmForm() {
   useEffect(() => {
     const handleFetch = async () => {
       try {
-        const res = await axios.get(`${NewBatchEntryUrl}?name=${batchName}`, { withCredentials: true,
+        const res = await axiosInstance.get(`${NewBatchEntryUrl}?name=${batchName}`, { withCredentials: true,
           headers: { Authorization: Cookies.get("token") },
         });
         console.log(res.data);
@@ -185,7 +186,7 @@ export function PtmForm() {
         isMeetingSetting: data.isMeetingSetting,
         meetingReminder: data.meetingReminder,
       }
-      const res = await axios.post(PtmUrl, payload);
+      const res = await axiosInstance.post(PtmUrl, payload);
       console.log(res.data);
       // form.reset();
 

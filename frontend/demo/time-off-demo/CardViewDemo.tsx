@@ -18,7 +18,7 @@ import { FaCalendar } from "react-icons/fa";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 
-const fetcher = (url: string) => axios.get(url, {headers: { Authorization: Cookies.get("token") }}).then((res) => res.data);
+const fetcher = (url: string) => axiosInstance.get(url).then((res) => res.data);
 
 
 const CardViewDemo = () => {
@@ -30,7 +30,7 @@ const CardViewDemo = () => {
   useEffect(()=>{
     const doFetch = async()=>{
       try {
-        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        const res = await axiosInstance.get(UserProfileUrl, { withCredentials: true });
         console.log(res.data);
 
         setUser({role: res.data.role, name: res.data.name})

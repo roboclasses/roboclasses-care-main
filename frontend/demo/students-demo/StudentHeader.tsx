@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Bell} from "lucide-react";
 import { useParams, usePathname } from "next/navigation";
 // import { getUserSession } from "@/lib/session";
-import axios from "axios";
+import axiosInstance from "@/lib/axiosConfig";
 import { UserProfileUrl } from "@/constants";
 import Cookies from "js-cookie";
 
@@ -31,7 +31,7 @@ const StudentHeader = () => {
   useEffect(()=>{
     const doFetch = async()=>{
       try {
-        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{Authorization: Cookies.get("token")}});
+        const res = await axiosInstance.get(UserProfileUrl);
         console.log(res.data);
         setUser({name: res.data.name, role: res.data.role})
       } catch (error) {

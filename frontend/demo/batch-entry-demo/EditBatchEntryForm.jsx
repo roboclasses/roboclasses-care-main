@@ -29,7 +29,8 @@ import { timezone } from "@/data/dataStorage";
 import Cookies from "js-cookie";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import axiosInstance from '@/lib/axiosConfig';
 import { useParams } from "next/navigation";
 
 import "react-phone-input-2/lib/style.css";
@@ -106,7 +107,7 @@ export function EditBatchEntryForm() {
   useEffect(() => {
     const fetchBatchDetails = async () => {
       try {
-        const res = await axios.get(`${NewBatchEntryUrl}/${id}`, {withCredentials: true,
+        const res = await axiosInstance.get(`${NewBatchEntryUrl}/${id}`, {withCredentials: true,
           headers: { Authorization: Cookies.get("token") },
         });
 
@@ -152,7 +153,7 @@ export function EditBatchEntryForm() {
   useEffect(() => {
     const handleFetch = async () => {
       try {
-        const res = await axios.get(`${StudentRegUrl}?name=${studentName}`);
+        const res = await axiosInstance.get(`${StudentRegUrl}?name=${studentName}`);
         if (res.data) {
           const selectedStudent = res.data.find(
             (item) => item.studentName === studentName
@@ -205,7 +206,7 @@ export function EditBatchEntryForm() {
         ...transformedDateTimeEntries,
       };
 
-      const res = await axios.put(`${NewBatchEntryUrl}/${id}`, payload, {withCredentials: true,
+      const res = await axiosInstance.put(`${NewBatchEntryUrl}/${id}`, payload, {withCredentials: true,
         headers: { Authorization: Cookies.get("token") },
       });
       console.log(res.data);

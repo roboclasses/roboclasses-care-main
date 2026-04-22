@@ -20,7 +20,7 @@ const WelcomeBanner = ({value, onValueChange}:{value:string, onValueChange:(val:
     useEffect(()=>{
     const doFetch = async()=>{
       try {
-        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        const res = await axiosInstance.get(UserProfileUrl, { withCredentials: true });
         console.log(res.data);
 
         setUser({role: res.data.role, name: res.data.name})
@@ -40,7 +40,7 @@ const WelcomeBanner = ({value, onValueChange}:{value:string, onValueChange:(val:
   useEffect(()=>{
     const handleFetch = async()=>{
       try {
-        const res = await axios.get(StudentRegUrl)
+        const res = await axiosInstance.get(StudentRegUrl)
         console.log(res.data);
         setStudents(res.data)
       } catch (error) {

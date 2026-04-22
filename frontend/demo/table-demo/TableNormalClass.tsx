@@ -17,7 +17,8 @@ import { NormalClassUrl, UserProfileUrl } from "@/constants";
 import { normalClassType } from "@/types/Types";
 
 import { useEffect, useMemo, useState } from "react";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import axiosInstance from '@/lib/axiosConfig';
 import useSWR from "swr";
 import Link from "next/link";
 import {format} from "date-fns"
@@ -28,7 +29,7 @@ import { toast } from "sonner";
 import { usePathname } from "next/navigation";
 
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+const fetcher = (url: string) => axiosInstance.get(url).then((res) => res.data);
 
 export function TableNormalClass() {
   const pathname = usePathname();
@@ -40,7 +41,7 @@ export function TableNormalClass() {
     useEffect(()=>{
     const doFetch = async()=>{
       try {
-        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        const res = await axiosInstance.get(UserProfileUrl, { withCredentials: true });
         console.log(res.data);
 
         setUser({role: res.data.role, name: res.data.name})
@@ -71,7 +72,7 @@ export function TableNormalClass() {
   // handle delete appointment for normal class
   const handleDelete = async (id: string) => {
     try {
-      const res = await axios.delete(`${NormalClassUrl}/${id}`, {headers: { Authorization: Cookies.get("token") }});
+      const res = await axiosInstance.delete(`${NormalClassUrl}/${id}`);
       console.log(res.data);
 
       mutate((data) => data?.filter((item) => item._id !== id));

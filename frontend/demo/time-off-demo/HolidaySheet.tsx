@@ -43,7 +43,8 @@ import { HolidayUrl } from "@/constants";
 
 import useSWR from "swr";
 import { useState } from "react";
-import axios, { AxiosError } from "axios";
+import axiosInstance from "@/lib/axiosConfig";
+import { AxiosError } from "axios";
 import { addDays, format } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { CalendarIcon } from "lucide-react";
@@ -51,7 +52,7 @@ import { IoSettingsSharp } from "react-icons/io5";
 import { toast } from "sonner";
 
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+const fetcher = (url: string) => axiosInstance.get(url).then((res) => res.data);
 
 interface holidayDataT {
   _id: string;
@@ -89,7 +90,7 @@ export function HolidaySheet() {
   async function onSubmit(data: z.infer<typeof formSchema>) {
     console.log(data);
     try {
-      const res = await axios.post(HolidayUrl, data);
+      const res = await axiosInstance.post(HolidayUrl, data);
       console.log(res.data);
 
       //Reset the form fields

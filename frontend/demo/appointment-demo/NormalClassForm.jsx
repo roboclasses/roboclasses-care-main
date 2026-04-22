@@ -21,7 +21,8 @@ import SubmitButton from "../button-demo/SubmitButton";
 import { weekDays } from "@/data/dataStorage";
 
 import { useEffect, useState } from "react";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import axiosInstance from '@/lib/axiosConfig';
 import Cookies from "js-cookie";
 import PhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css'
@@ -105,7 +106,7 @@ export function NormalClassForm() {
   useEffect(()=>{
     const handleFetch = async()=>{
       try {
-        const res = await axios.get(NewBatchEntryUrl,{headers:{ Authorization: Cookies.get("token") }})
+        const res = await axiosInstance.get(NewBatchEntryUrl)
         console.log(res.data);
         setData(res.data)
         
@@ -148,7 +149,7 @@ export function NormalClassForm() {
   useEffect(()=>{
     const handleFetch=async()=>{
       try {
-        const res = await axios.get(`${StudentRegUrl}?name=${studentName}`)
+        const res = await axiosInstance.get(`${StudentRegUrl}?name=${studentName}`)
         
         if(res.data){
           const selectedStudent = res.data.find((item)=>item.studentName === studentName)
@@ -173,7 +174,7 @@ export function NormalClassForm() {
   useEffect(()=>{
     const handleFetch = async()=>{
       try {
-        const res = await axios.get(`${NewBatchEntryUrl}?name=${batchName}`, {headers: {Authorization: Cookies.get("token")}})
+        const res = await axiosInstance.get(`${NewBatchEntryUrl}?name=${batchName}`)
 
         if(res.data){
           const selectedBatch = res.data.find((item)=>item.batch === batchName)
@@ -226,7 +227,7 @@ export function NormalClassForm() {
       }   
       const payload = {...data,...mappedDates};
       
-      const res = await axios.post(NormalClassUrl, payload);
+      const res = await axiosInstance.post(NormalClassUrl, payload);
   
       console.log(res.data);
       // form.reset();

@@ -28,7 +28,8 @@ import { timezone } from "@/data/dataStorage";
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import axiosInstance from '@/lib/axiosConfig';
 import Cookies from "js-cookie";
 import { format } from "date-fns";
 import "react-phone-input-2/lib/style.css";
@@ -96,7 +97,7 @@ export function EditDemoClassForm() {
   useEffect(() => {
     const handleFetch = async () => {
       try {
-        const res = await axios.get(`${DemoClassUrl}/${id}`, {withCredentials: true, 
+        const res = await axiosInstance.get(`${DemoClassUrl}/${id}`, {withCredentials: true, 
           headers: { Authorization: Cookies.get("token") },
         });
         console.log(res.data);
@@ -145,7 +146,7 @@ export function EditDemoClassForm() {
         isCompensationClass: data.isCompensationClass,
       };
 
-      const res = await axios.put(`${DemoClassUrl}/${id}`, payload);
+      const res = await axiosInstance.put(`${DemoClassUrl}/${id}`, payload);
       console.log(res.data);
 
       const { message, success } = res.data;

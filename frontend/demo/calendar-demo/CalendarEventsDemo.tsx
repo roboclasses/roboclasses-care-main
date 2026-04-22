@@ -11,7 +11,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 
 import React, { useEffect, useMemo, useState } from "react";
-import axios from "axios";
+import axiosInstance from "@/lib/axiosConfig";
 import useSWR from "swr";
 import Cookies from "js-cookie";
 
@@ -37,7 +37,7 @@ interface CustomEvent extends EventInput {
 }
 
 
-const fetcher = (url: string) => axios.get(url, {withCredentials: true, headers:{Authorization: Cookies.get("token")}}).then((res) => res.data);
+const fetcher = (url: string) => axiosInstance.get(url, {withCredentials: true}).then((res) => res.data);
 
 const CalendarEventsDemo = () => {
   const { data: batchData, error: batchError } = useSWR<batchType[]>(NewBatchEntryUrl, fetcher);
@@ -51,7 +51,7 @@ const CalendarEventsDemo = () => {
   useEffect(()=>{
     const doFetch = async()=>{
       try {
-        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        const res = await axiosInstance.get(UserProfileUrl, {withCredentials: true});
         console.log(res.data);
 
         setUser({role: res.data.role, name: res.data.name})

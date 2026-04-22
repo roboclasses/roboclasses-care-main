@@ -20,7 +20,8 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import "react-phone-input-2/lib/style.css";
 import PhoneInput from "react-phone-input-2";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import axiosInstance from '@/lib/axiosConfig';
 import Cookies from "js-cookie";
 import SubmitButton from "../button-demo/SubmitButton";
 import { Label } from "@/components/ui/label";
@@ -66,7 +67,7 @@ export function EditStudentDetailsForm() {
   useEffect(() => {
     const handleFetch = async () => {
       try {
-        const res = await axios.get(`${StudentRegUrl}/${id}`, {withCredentials: true,
+        const res = await axiosInstance.get(`${StudentRegUrl}/${id}`, {withCredentials: true,
           headers: { Authorization: Cookies.get("token") },
         });
         console.log(res.data);
@@ -100,7 +101,7 @@ export function EditStudentDetailsForm() {
         grade: data.grade,
         courses: data.courses,
       };
-      const res = await axios.put(`${StudentRegUrl}/${id}`, payload, {headers: { Authorization: Cookies.get("token") }});
+      const res = await axiosInstance.put(`${StudentRegUrl}/${id}`, payload);
       console.log(res.data);
 
       const { message, success } = res.data;

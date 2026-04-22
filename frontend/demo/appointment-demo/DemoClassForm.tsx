@@ -28,7 +28,8 @@ import { meetingTypeData, reminderData, timezone } from "@/data/dataStorage";
 
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import axiosInstance from '@/lib/axiosConfig';
 import "react-phone-input-2/lib/style.css";
 import PhoneInput from "react-phone-input-2";
 import { Switch } from "@/components/ui/switch";
@@ -124,7 +125,7 @@ export function DemoClassForm() {
   useEffect(()=>{
     const doFetch = async()=>{
       try {
-        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        const res = await axiosInstance.get(UserProfileUrl, { withCredentials: true });
         console.log(res.data);
 
         setUser({role: res.data.role, name: res.data.name})
@@ -144,7 +145,7 @@ export function DemoClassForm() {
   useEffect(() => {
     const handleFetch = async () => {
       try {
-        const res = await axios.get(UsersUrl);
+        const res = await axiosInstance.get(UsersUrl);
         console.log("All users:", res.data);
         // Filter users with role "teacher"
         const teacherList = res.data.filter((user: any) => user.role === "teacher");
@@ -212,7 +213,7 @@ export function DemoClassForm() {
       console.log(JSON.stringify(payload));
       // console.log("Meeting setting boolean: "+payload.isMeetingSetting)
 
-      const res = await axios.post(DemoClassUrl, payload);
+      const res = await axiosInstance.post(DemoClassUrl, payload);
       console.log(res.data);
 
       // form.reset();

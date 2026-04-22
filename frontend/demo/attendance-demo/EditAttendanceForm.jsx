@@ -22,7 +22,8 @@ import { AttendanceUrl } from "@/constants";
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import axiosInstance from '@/lib/axiosConfig';
 import Cookies from "js-cookie";
 import { formatDate } from "date-fns";
 import {
@@ -92,7 +93,7 @@ export function EditAttendanceForm() {
   useEffect(() => {
     const handleFetch = async () => {
       try {
-        const res = await axios.get(`${AttendanceUrl}/${id}`, {withCredentials: true, 
+        const res = await axiosInstance.get(`${AttendanceUrl}/${id}`, {withCredentials: true, 
           headers: { Authorization: Cookies.get("token") },
         });
         const attendanceData = res.data;
@@ -160,7 +161,7 @@ export function EditAttendanceForm() {
         completed: data.completed,
       };
 
-      const res = await axios.put(`${AttendanceUrl}/${id}`, payload, {withCredentials: true,
+      const res = await axiosInstance.put(`${AttendanceUrl}/${id}`, payload, {withCredentials: true,
         headers: { Authorization: Cookies.get("token") },
       });
       console.log(res.data);

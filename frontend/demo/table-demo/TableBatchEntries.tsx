@@ -26,7 +26,8 @@ import { batchType } from "@/types/Types";
 import { NewBatchEntryUrl, UserProfileUrl } from "@/constants";
 
 import { useEffect, useMemo, useState } from "react";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import axiosInstance from '@/lib/axiosConfig';
 import Cookies from "js-cookie";
 import useSWR from "swr";
 import Link from "next/link";
@@ -41,8 +42,8 @@ import { FaCircle } from "react-icons/fa6";
 import { usePathname } from "next/navigation";
 
 const fetcher = (url: string) =>
-  axios
-    .get(url, {withCredentials: true, headers: { Authorization: Cookies.get("token") } })
+  axiosInstance
+    .get(url, { withCredentials: true })
     .then((res) => res.data);
 
 export function TableBatchEntries() {
@@ -61,7 +62,7 @@ export function TableBatchEntries() {
   useEffect(()=>{
     const doFetch = async()=>{
       try {
-        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        const res = await axiosInstance.get(UserProfileUrl, { withCredentials: true });
         console.log(res.data);
 
         setUser({role: res.data.role, name: res.data.name})
@@ -98,9 +99,7 @@ export function TableBatchEntries() {
   // Handle delete a batch
   const handleDelete = async (id: string) => {
     try {
-      const res = await axios.delete(`${NewBatchEntryUrl}/${id}`, {withCredentials: true,
-        headers: { Authorization: Cookies.get("token") },
-      });
+      const res = await axiosInstance.delete(`${NewBatchEntryUrl}/${id}`, { withCredentials: true });
       console.log(res.data);
 
       mutate((data) => data?.filter((batch) => batch._id !== id));

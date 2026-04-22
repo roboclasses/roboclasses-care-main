@@ -14,7 +14,8 @@ import { EditButton } from "../button-demo/EditButton";
 import { usersType } from "@/types/Types";
 
 import useSWR from "swr";
-import axios, { AxiosError } from "axios";
+import axiosInstance from "@/lib/axiosConfig";
+import { AxiosError } from "axios";
 import Link from "next/link";
 import { DeleteAlertDemo } from "../dialog-demo/DeleteAlertDemo";
 import {
@@ -32,7 +33,7 @@ import { ArrowUpDown, Copy, User } from "lucide-react";
 import { toast } from "sonner";
 
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+const fetcher = (url: string) => axiosInstance.get(url).then((res) => res.data);
 
 export function EmployeeTable() {
   const [role, setRole] = useState('teacher')
@@ -54,7 +55,7 @@ export function EmployeeTable() {
   // Handle delete a course
   const handleDelete = async(id:string)=>{
     try {
-      const res = await axios.delete(`${UsersUrl}/${id}`)
+      const res = await axiosInstance.delete(`${UsersUrl}/${id}`)
       console.log(res.data);
 
       mutate((data)=>data?.filter((user)=>user._id !== id))

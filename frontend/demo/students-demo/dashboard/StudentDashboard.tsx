@@ -42,7 +42,7 @@ export function StudentDashboard() {
     useEffect(()=>{
     const doFetch = async()=>{
       try {
-        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        const res = await axiosInstance.get(UserProfileUrl, { withCredentials: true });
         console.log(res.data);
 
         setUser({role: res.data.role, name: res.data.name})
@@ -66,7 +66,7 @@ export function StudentDashboard() {
       try {
         const studentName =
           user.role === "student" ? user.name : selectedStudent;
-        const res = await axios.get(`${NewBatchEntryUrl}?name=${studentName}`, {withCredentials: true,
+        const res = await axiosInstance.get(`${NewBatchEntryUrl}?name=${studentName}`, {withCredentials: true,
           headers: { Authorization: Cookies.get("token") },
         });
         console.log(res.data);
@@ -89,7 +89,7 @@ export function StudentDashboard() {
   useEffect(() => {
     const handleFetch = async () => {
       try {
-        const res = await axios.get(`${DemoClassUrl}?name=${selectedStudent}`);
+        const res = await axiosInstance.get(`${DemoClassUrl}?name=${selectedStudent}`);
         console.log(res.data);
         if (res.data) {
           const filteredClasses = res.data.filter(

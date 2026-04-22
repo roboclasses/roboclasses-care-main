@@ -28,7 +28,8 @@ import { timezone } from "@/data/dataStorage";
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import axiosInstance from "@/lib/axiosConfig";
 import Cookies from "js-cookie";
 import "react-phone-input-2/lib/style.css";
 import PhoneInput from "react-phone-input-2";
@@ -103,7 +104,7 @@ export function NewBatchEntryForm() {
     useEffect(()=>{
       const doFetch = async()=>{
         try {
-          const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+          const res = await axiosInstance.get(UserProfileUrl, {withCredentials: true});
           console.log(res.data);
   
           const userData = res.data.name;
@@ -131,7 +132,7 @@ export function NewBatchEntryForm() {
   useEffect(() => {
     const handleFetch = async () => {
       try {
-        const res = await axios.get(CoursesUrl);
+        const res = await axiosInstance.get(CoursesUrl);
         console.log(res.data);
         setCourses(res.data);
       } catch (error) {
@@ -145,7 +146,7 @@ export function NewBatchEntryForm() {
   useEffect(() => {
     const handleFetch = async () => {
       try {
-        const res = await axios.get(UsersUrl);
+        const res = await axiosInstance.get(UsersUrl);
         console.log("All users:", res.data);
         // Filter users with role "teacher"
         const teacherList = res.data.filter((user) => user.role === "teacher");
@@ -170,7 +171,7 @@ export function NewBatchEntryForm() {
   useEffect(() => {
     const handleFetch = async () => {
       try {
-        const res = await axios.get(`${StudentRegUrl}?name=${studentName}`);
+        const res = await axiosInstance.get(`${StudentRegUrl}?name=${studentName}`);
         if (res.data) {
           const selectedStudent = res.data.find(
             (item) => item.studentName === studentName
@@ -193,9 +194,7 @@ export function NewBatchEntryForm() {
   useEffect(() => {
     const handleFetch = async () => {
       try {
-        const res = await axios.get(`${CoursesUrl}?name=${courseName}`, {withCredentials: true,
-          headers: { Authorization: Cookies.get("token") },
-        });
+        const res = await axiosInstance.get(`${CoursesUrl}?name=${courseName}`, {withCredentials: true});
         console.log(res.data);
 
         if (res.data) {
@@ -243,10 +242,7 @@ export function NewBatchEntryForm() {
         email: data.email,
         ...transformedDateTimeEntries,
       };
-      // const res = await axios.post(NewBatchEntryUrl, payload, {
-      //   headers: { Authorization: `Bearer ${Cookies.get("token")}` },
-      // });
-      const res = await axios.post(NewBatchEntryUrl, payload, {withCredentials: true, headers:{Authorization: Cookies.get("token")}})
+      const res = await axiosInstance.post(NewBatchEntryUrl, payload, {withCredentials: true});
       console.log(res.data);
 
       const { message, success } = res.data;

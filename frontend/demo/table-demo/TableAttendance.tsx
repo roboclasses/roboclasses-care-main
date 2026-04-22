@@ -26,7 +26,8 @@ import { attendanceType, courseType } from "@/types/Types";
 
 import Link from "next/link";
 import useSWR from "swr";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import axiosInstance from '@/lib/axiosConfig';
 import React, { useEffect, useMemo, useState } from "react";
 import { formatDate } from "date-fns";
 import Cookies from "js-cookie";
@@ -38,7 +39,7 @@ import { AddButton } from "../button-demo/AddButton";
 import { toast } from "sonner";
 import { usePathname } from "next/navigation";
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+const fetcher = (url: string) => axiosInstance.get(url).then((res) => res.data);
 
 export function TableAttendance() {
   const pathname = usePathname();
@@ -58,7 +59,7 @@ export function TableAttendance() {
     useEffect(()=>{
     const doFetch = async()=>{
       try {
-        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        const res = await axiosInstance.get(UserProfileUrl, { withCredentials: true });
         console.log(res.data);
 
         setUser({role: res.data.role, name: res.data.name})
@@ -99,7 +100,7 @@ export function TableAttendance() {
   // Handle delete attendance
   const handleDelete = async (id: string) => {
     try {
-      const res = await axios.delete(`${AttendanceUrl}/${id}`, {withCredentials: true,
+      const res = await axiosInstance.delete(`${AttendanceUrl}/${id}`, {withCredentials: true,
         headers: { Authorization: Cookies.get("token") },
       });
       console.log(res.data);

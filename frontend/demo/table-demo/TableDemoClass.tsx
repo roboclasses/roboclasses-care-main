@@ -28,7 +28,8 @@ import { DemoClassUrl, UserProfileUrl } from "@/constants";
 
 import useSWR from "swr";
 import { useEffect, useMemo, useState } from "react";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
+import axiosInstance from '@/lib/axiosConfig';
 import Link from "next/link";
 import { format } from "date-fns";
 import Cookies from "js-cookie";
@@ -39,7 +40,7 @@ import { ExportAlertDemo } from "../dialog-demo/ExportAlertDemo";
 import { toast } from "sonner";
 import { usePathname } from "next/navigation";
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+const fetcher = (url: string) => axiosInstance.get(url).then((res) => res.data);
 
 type TCompensationClassesType = 'demo' | 'compensation'
 
@@ -61,7 +62,7 @@ export function TableDemoClass() {
   useEffect(()=>{
     const doFetch = async()=>{
       try {
-        const res = await axios.get(UserProfileUrl, {withCredentials: true, headers:{ Authorization:Cookies.get("token") }});
+        const res = await axiosInstance.get(UserProfileUrl, { withCredentials: true });
         console.log(res.data);
 
         setUser({role: res.data.role, name: res.data.name})
@@ -106,7 +107,7 @@ export function TableDemoClass() {
   // Handle delete appointment
   const handleDelete = async (appointmentId: string) => {
     try {
-      const res = await axios.delete(`${DemoClassUrl}/${appointmentId}`, { withCredentials: true,
+      const res = await axiosInstance.delete(`${DemoClassUrl}/${appointmentId}`, { withCredentials: true,
         headers: { Authorization: Cookies.get("token") },
       });
       console.log(res.data);
