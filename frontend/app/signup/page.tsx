@@ -10,13 +10,14 @@ const page = () => {
     <div className="grid lg:grid-cols-2 grid-cols-1">
       <Image
         src={PUBLIC_WALLPAPER}
+        priority
         width={1200}
         height={1200}
         alt="user-image"
         className="lg:min-h-screen h-10 lg:object-cover lg:visible invisible"
       />
       <div className="flex flex-col items-center justify-center gap-5">
-        <Image src={LOGO_IMG} height={200} width={200} alt="robo-class-logo" />
+        <Image src={LOGO_IMG} priority height={"200"} width={200} alt="robo-class-logo" className="h-auto w-auto"/>
 
         <div className="w-full px-5 space-y-2 text-center">
           <h1 className="lg:text-2xl text-xl font-semibold">Create account</h1>

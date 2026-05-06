@@ -414,9 +414,11 @@ useEffect(()=>{
                   <Link href="/">
                     <Image
                       src={LOGO_IMG}
+                      priority
                       height={100}
                       width={150}
                       alt="robo-class-logo"
+                      className="h-auto w-auto"
                     />
                   </Link>
                 </SidebarMenuButton>
