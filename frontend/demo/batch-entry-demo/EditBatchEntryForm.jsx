@@ -342,7 +342,7 @@ export function EditBatchEntryForm() {
                   <Input
                     {...field}
                     required
-                    disabled
+                    // disabled
                     type="number"
                     className="h-12 rounded-xl shadow-none"
                   />
