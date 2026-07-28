@@ -21,6 +21,7 @@ import { StudentRegUrl } from "@/constants";
 
 import axios, { AxiosError } from "axios";
 import PhoneInput from "react-phone-input-2";
+// @ts-ignore: Ignore missing type declarations for CSS side-effect import
 import 'react-phone-input-2/lib/style.css'
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
