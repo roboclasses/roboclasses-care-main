@@ -18,6 +18,7 @@ import {
   School,
   Send,
   Settings2,
+  Sparkles,
   SquareTerminal,
   User2,
   Users,
@@ -153,7 +154,7 @@ useEffect(()=>{
       {
         title: "New Course Entry",
         url: "/courseEntry",
-        icon: BookIcon,
+        icon: BookOpenIcon,
       },
       {
         title: "Manage Employee Roles",
@@ -173,7 +174,7 @@ useEffect(()=>{
       {
         title: "Assessment Generator",
         url: "/assessmentGenerator",
-        icon: BookOpenIcon,
+        icon: Sparkles,
       },
       {
         title: "Assessment Viewer",
@@ -236,7 +237,7 @@ useEffect(()=>{
       {
         title: "New Course Entry",
         url: "/courseEntry",
-        icon: BookIcon,
+        icon: BookOpenIcon,
       },
       {
         title: "Time Off",
@@ -251,7 +252,7 @@ useEffect(()=>{
       {
         title: "Assessment Generator",
         url: "/assessmentGenerator",
-        icon: BookOpenIcon,
+        icon: Sparkles,
       },
       {
         title: "Assessment Viewer",
