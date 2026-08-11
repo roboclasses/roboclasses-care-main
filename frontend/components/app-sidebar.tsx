@@ -172,7 +172,7 @@ useEffect(()=>{
         icon: User2,
       },
       {
-        title: "Assessment Generator",
+        title: "AI Assessment Generator",
         url: "/assessmentGenerator",
         icon: Sparkles,
       },
@@ -250,7 +250,7 @@ useEffect(()=>{
         icon: AlignEndVerticalIcon,
       },
       {
-        title: "Assessment Generator",
+        title: "AI Assessment Generator",
         url: "/assessmentGenerator",
         icon: Sparkles,
       },
