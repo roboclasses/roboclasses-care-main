@@ -72,7 +72,7 @@ const FormSchema = z.object({
   .refine((val) => {
     const digits = val.replace(/\D/g, "");
     return /^\+?[1-9]\d{7,14}$/.test(val) && digits.length <= 15;
-  }, "Please enter a valid international mobile number (e.g., +14155552671)"),
+  }, "Please enter a valid international mobile number (e.g.,, +14155552671)"),
 
   email: z.email("Please enter a valid email"),
   completed: z.string().nonempty("Please select (YES/NO)").optional(),

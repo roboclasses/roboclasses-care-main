@@ -110,7 +110,7 @@ export function SignupForm() {
                       required
                       autoComplete="name"
                       type="text"
-                      placeholder="e.g., James Bond"
+                      placeholder="e.g.,, James Bond"
                       className="py-6 rounded-xl shadow-none"
                     />
                   </FormControl>
@@ -167,7 +167,7 @@ export function SignupForm() {
                       required
                       autoComplete="email"
                       type="email"
-                      placeholder="e.g. bond@gmail.com"
+                      placeholder="e.g., bond@gmail.com"
                       className="py-6 rounded-xl shadow-none"
                     />
                   </FormControl>

@@ -68,7 +68,7 @@ const FormSchema = z.object({
         const digits = val.replace(/\D/g, ""); // Remove non-digit characters
         return digits.length === 12 && digits.startsWith("971");
       },
-      { message: "Please enter a valid UAE mobile number (e.g., +971XXXXXXX)" }
+      { message: "Please enter a valid UAE mobile number (e.g.,, +971XXXXXXX)" }
     ),
   course: z
     .string()
@@ -315,7 +315,7 @@ export function DemoClassForm() {
                         required
                         type="text"
                         title="Course"
-                        placeholder="e.g. AI for kids"
+                        placeholder="e.g., AI for kids"
                         className="shadow-none rounded-xl py-6"
                       />
                     </FormControl>
@@ -521,7 +521,7 @@ export function DemoClassForm() {
                             required
                             type="text"
                             title="Topic"
-                            placeholder="e.g., Team Sync-up"
+                            placeholder="e.g.,, Team Sync-up"
                             className="shadow-none rounded-xl py-6"
                           />
                         </FormControl>
@@ -581,7 +581,7 @@ export function DemoClassForm() {
                             required
                             type="number"
                             title="Duration"
-                            placeholder="e.g., 60"
+                            placeholder="e.g.,, 60"
                             className="shadow-none rounded-xl py-6"
                           />
                         </FormControl>
@@ -605,7 +605,7 @@ export function DemoClassForm() {
                           <Textarea
                             {...field}
                             title="Agenda"
-                            placeholder="e.g., Weekly team progress discussion"
+                            placeholder="e.g.,, Weekly team progress discussion"
                             className="shadow-none rounded-xl h-32"
                           />
                         </FormControl>
@@ -642,7 +642,7 @@ export function DemoClassForm() {
                             {...field}
                             type="email"
                             title="Email"
-                            placeholder="e.g., dev@gmail.com"
+                            placeholder="e.g.,, dev@gmail.com"
                             // className="shadow-none rounded-xl py-6"
                           />
                         </FormControl>

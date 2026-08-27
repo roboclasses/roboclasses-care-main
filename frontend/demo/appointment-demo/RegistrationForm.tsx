@@ -38,7 +38,7 @@ const FormSchema = z.object({
   .refine((val) => {
     const digits = val.replace(/\D/g, "");
     return /^\+?[1-9]\d{7,14}$/.test(val) && digits.length <= 15;
-  }, "Please enter a valid international mobile number (e.g., +14155552671)"),
+  }, "Please enter a valid international mobile number (e.g.,, +14155552671)"),
 
   email: z.email({message:"Please enter a valid email"}),
   address: z.string().min(3, {message: "Address must be atleast 3 characters long"}),
