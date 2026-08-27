@@ -84,7 +84,7 @@ export function NewCourseEntryForm() {
               <FormLabel>Course Name</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="e.g., Scratch L1"
+                  placeholder="e.g.,, Scratch L1"
                   {...field}
                   required
                   className="shadow-none rounded-xl py-6"

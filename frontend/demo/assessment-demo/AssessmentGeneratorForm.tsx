@@ -119,7 +119,7 @@ export function AssessmentGeneratorForm() {
                     <FormControl>
                       <Input
                         required
-                        placeholder="e.g. Math, Science, Reading"
+                        placeholder="e.g., Math, Science, Reading"
                         {...field}
                         className="shadow-none rounded-xl py-6 bg-white"
                       />

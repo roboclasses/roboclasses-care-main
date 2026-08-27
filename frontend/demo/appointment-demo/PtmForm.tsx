@@ -61,7 +61,7 @@ const FormSchema = z.object({
     .refine((val) => {
       const digits = val.replace(/\D/g, ""); // Remove non-digit characters
       return digits.length === 12 && digits.startsWith("971");
-    }, "Please enter a valid UAE mobile number (e.g., +971XXXXXXX)"),
+    }, "Please enter a valid UAE mobile number (e.g.,, +971XXXXXXX)"),
   teacher: z
     .string()
     .nonempty("Please select a teacher")
@@ -454,7 +454,7 @@ export function PtmForm() {
                                                     required
                                                     type="text"
                                                     title="Topic"
-                                                    placeholder="e.g., Team Sync-up"
+                                                    placeholder="e.g.,, Team Sync-up"
                                                     className="shadow-none rounded-xl py-6"
                                                   />
                                                 </FormControl>
@@ -514,7 +514,7 @@ export function PtmForm() {
                                                     required
                                                     type="number"
                                                     title="Duration"
-                                                    placeholder="e.g., 60"
+                                                    placeholder="e.g.,, 60"
                                                     className="shadow-none rounded-xl py-6"
                                                   />
                                                 </FormControl>
@@ -537,7 +537,7 @@ export function PtmForm() {
                                                   <Textarea
                                                     {...field}
                                                     title="Agenda"
-                                                    placeholder="e.g., Weekly team progress discussion"
+                                                    placeholder="e.g.,, Weekly team progress discussion"
                                                     className="shadow-none rounded-xl h-16"
                                                   />
                                                 </FormControl>
@@ -574,7 +574,7 @@ export function PtmForm() {
                                                     {...field}
                                                     type="email"
                                                     title="Email"
-                                                    placeholder="e.g., dev@gmail.com"
+                                                    placeholder="e.g.,, dev@gmail.com"
                                                     // className="shadow-none rounded-xl py-6"
                                                   />
                                                 </FormControl>

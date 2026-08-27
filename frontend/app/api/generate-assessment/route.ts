@@ -160,7 +160,7 @@ export async function POST(req: Request) {
     - Make the content engaging and suitable for ${ageGroup}-year-olds
     
     # Answer Key:
-    Provide the correct answers in a numbered list format (e.g., 1. A, 2. C, ...).
+    Provide the correct answers in a numbered list format (e.g.,, 1. A, 2. C, ...).
     `;
     
 

@@ -38,7 +38,7 @@ const FormSchema = z.object({
     .refine((val) => {
       const digits = val.replace(/\D/g, ""); // Remove non-digit characters
       return digits.length === 12 && digits.startsWith("971");
-    }, { message: "Please enter a valid UAE mobile number (e.g., +971XXXXXXX)" }),
+    }, { message: "Please enter a valid UAE mobile number (e.g.,, +971XXXXXXX)" }),
   dateTimeEntries: z
     .array(
       z.object({
