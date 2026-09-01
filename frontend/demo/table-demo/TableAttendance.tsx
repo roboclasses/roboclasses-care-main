@@ -38,6 +38,7 @@ import { Input } from "@/components/ui/input";
 import { AddButton } from "../button-demo/AddButton";
 import { toast } from "sonner";
 import { usePathname } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
 
 const fetcher = (url: string) => axiosInstance.get(url).then((res) => res.data);
 
@@ -253,7 +254,10 @@ export function TableAttendance() {
                 </TableCell>
                 <TableCell>{item.classes.length}</TableCell>
                 <TableCell>
-                  {item.completed === "Yes" ? "Completed" : "Active"}
+                  {item.completed === "Yes" ? 
+                  
+                  (<Badge className="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">Completed</Badge>)
+                  : (<Badge className="bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300">Active</Badge>)}
                 </TableCell>
                  <TableCell>
                     {item.dateRange?.from ? formatDate(item.dateRange?.from, "MMM dd, yyyy") : ""}

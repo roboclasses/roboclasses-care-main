@@ -40,6 +40,7 @@ import { AddButton } from "../button-demo/AddButton";
 import { toast } from "sonner";
 import { FaCircle } from "react-icons/fa6";
 import { usePathname } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
 
 const fetcher = (url: string) =>
   axiosInstance
@@ -247,14 +248,10 @@ export function TableBatchEntries() {
                 <TableCell>
                   {batch.completed === "Yes"
                     ?
-                   (<Button variant={"outline"} className="rounded-full text-green-600 hover:text-green-600 bg-green-50 hover:bg-green-100">
-                      <FaCircle /> Completed
-                    </Button>) :
+                   (<Badge className="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">Completed</Badge>) :
                     batch.completed === "No"
                     ?
-                    (<Button variant={"outline"} className="rounded-full text-red-600 hover:text-red-600 bg-red-50 hover:bg-red-100">
-                      <FaCircle /> Active
-                    </Button>)
+                    (<Badge className="bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300">Active</Badge>)
                     : null}
                 </TableCell>
 
