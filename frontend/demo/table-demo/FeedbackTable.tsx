@@ -16,7 +16,7 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
 import { FeedbackUrl } from "@/constants";
@@ -33,6 +33,7 @@ import { format, isValid } from "date-fns";
 import { useMemo, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
 
 const fetcher = (url: string) => axiosInstance.get(url).then((res) => res.data);
 
@@ -44,19 +45,18 @@ export function FeedbackTable() {
     error,
     mutate,
   } = useSWR<FeedbackType[]>(FeedbackUrl, fetcher);
-  const [sortOrder, setSortOrder] = useState("active")
+  const [sortOrder, setSortOrder] = useState("active");
 
   // Handle Filter table
-const filteredData = useMemo(()=>{
-  if(!feedbackData) return [];
+  const filteredData = useMemo(() => {
+    if (!feedbackData) return [];
 
-   return feedbackData.filter((item:FeedbackType)=>{
-    if(sortOrder === 'active' && item.isCompleted === true) return false;
-    if(sortOrder === 'completed' && item.isCompleted === false) return false;
-    return true;
-   })
-
-},[feedbackData, sortOrder])
+    return feedbackData.filter((item: FeedbackType) => {
+      if (sortOrder === "active" && item.isCompleted === true) return false;
+      if (sortOrder === "completed" && item.isCompleted === false) return false;
+      return true;
+    });
+  }, [feedbackData, sortOrder]);
 
   // Handle delete question
   const handleDelete = async (id: string) => {
@@ -67,13 +67,13 @@ const filteredData = useMemo(()=>{
       mutate();
 
       const { message } = res.data;
-      toast.success(message)
+      toast.success(message);
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         console.error(error);
 
         const { message } = error.response?.data;
-        toast.error(message || 'An unknown error has occurred.')
+        toast.error(message || "An unknown error has occurred.");
       }
     }
   };
@@ -93,20 +93,27 @@ const filteredData = useMemo(()=>{
         <TableCaption>A list of Batch wise Feedbacks</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px] flex items-center gap-2"> 
+            <TableHead className="w-[100px] flex items-center gap-2">
               Status
               <div>
-                 <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                  <LucideChevronsUpDown />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-[200px]" align="end">
-                <DropdownMenuRadioGroup value={sortOrder} onValueChange={setSortOrder}>
-                  <DropdownMenuRadioItem value="active">Active</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="completed">Completed</DropdownMenuRadioItem>
-                </DropdownMenuRadioGroup>
-              </DropdownMenuContent>
-          </DropdownMenu>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <LucideChevronsUpDown />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-[200px]" align="end">
+                    <DropdownMenuRadioGroup
+                      value={sortOrder}
+                      onValueChange={setSortOrder}
+                    >
+                      <DropdownMenuRadioItem value="active">
+                        Active
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="completed">
+                        Completed
+                      </DropdownMenuRadioItem>
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </TableHead>
             <TableHead className="w-[100px]">Batch Name</TableHead>
@@ -117,7 +124,7 @@ const filteredData = useMemo(()=>{
             <TableHead>Feedback Answers(MCQ)</TableHead>
             <TableHead>Recommandation</TableHead>
             <TableHead>Additional Feedback</TableHead>
-             <TableHead>Feedback Time</TableHead>
+            <TableHead>Feedback Time</TableHead>
             <TableHead>Feedback</TableHead>
             <TableHead>Feedback Link</TableHead>
             <TableHead>Delete</TableHead>
@@ -128,19 +135,19 @@ const filteredData = useMemo(()=>{
             <TableRow key={feedback._id}>
               <TableCell className="font-medium">
                 {feedback.isCompleted === true ? (
-                  <Button variant={'outline'} className="rounded-full font-semibold text-green-500 hover:text-green-500 bg-green-50 hover:bg-green-100">
-                    <FaCircle /> Completed
-                  </Button>
+                  <Badge className="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
+                    Completed
+                  </Badge>
                 ) : feedback.isCompleted === false ? (
-                  <Button variant={'outline'} className="rounded-full font-semibold text-red-500 hover:text-red-500 bg-red-50 hover:bg-red-100">
-                    <FaCircle /> Active
-                  </Button>
+                  <Badge className="bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300">
+                    Active
+                  </Badge>
                 ) : (
                   false
                 )}
               </TableCell>
               <TableCell className="font-medium">{feedback.batch}</TableCell>
-              <TableCell className="font-medium">{feedback.student}</TableCell>
+              <TableCell className="font-medium">{feedback.student}</TableCell>+
               <TableCell className="font-medium">{feedback.teacher}</TableCell>
               <TableCell className="font-medium">
                 <Link
@@ -161,7 +168,9 @@ const filteredData = useMemo(()=>{
                 {feedback.additionalFeedback}
               </TableCell>
               <TableCell className="text-sm text-balance">
-                {(feedback.updatedAt && isValid(feedback.updatedAt)) ? format(new Date(feedback.updatedAt), 'PPpp') : null}
+                {feedback.updatedAt && isValid(feedback.updatedAt)
+                  ? format(new Date(feedback.updatedAt), "PPpp")
+                  : null}
               </TableCell>
               <TableCell className="text-right">
                 <Link href={`/feedbackViewer/edit/${feedback._id}`}>
@@ -177,10 +186,10 @@ const filteredData = useMemo(()=>{
                     navigator.clipboard
                       .writeText(link)
                       .then(() => {
-                        toast.success("Feedback link copied to clipboard")
+                        toast.success("Feedback link copied to clipboard");
                       })
                       .catch(() => {
-                        toast.error("Failed to copy link to clipboard")
+                        toast.error("Failed to copy link to clipboard");
                       });
                   }}
                   title="Copy feedback link"
