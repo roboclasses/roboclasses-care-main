@@ -49,7 +49,7 @@ export function FeedbackTable() {
 
   // Handle Filter table
   const filteredData = useMemo(() => {
-    if (!feedbackData) return [];
+    if (!feedbackData) return []; 
 
     return feedbackData.filter((item: FeedbackType) => {
       if (sortOrder === "active" && item.isCompleted === true) return false;
@@ -93,14 +93,14 @@ export function FeedbackTable() {
         <TableCaption>A list of Batch wise Feedbacks</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px] flex items-center gap-2">
+            <TableHead className="flex items-center gap-2">
               Status
-              <div>
+
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <LucideChevronsUpDown />
+                    <LucideChevronsUpDown className="h-8 w-4"/>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-[200px]" align="end">
+                  <DropdownMenuContent align="center">
                     <DropdownMenuRadioGroup
                       value={sortOrder}
                       onValueChange={setSortOrder}
@@ -114,10 +114,10 @@ export function FeedbackTable() {
                     </DropdownMenuRadioGroup>
                   </DropdownMenuContent>
                 </DropdownMenu>
-              </div>
+
             </TableHead>
-            <TableHead className="w-[100px]">Batch Name</TableHead>
-            <TableHead className="w-[100px]">Student Name</TableHead>
+            <TableHead>Batch Name</TableHead>
+            <TableHead>Student Name</TableHead>
             <TableHead>Teacher Name</TableHead>
             <TableHead>Student Email</TableHead>
             <TableHead>Student Contact</TableHead>
@@ -147,7 +147,7 @@ export function FeedbackTable() {
                 )}
               </TableCell>
               <TableCell className="font-medium">{feedback.batch}</TableCell>
-              <TableCell className="font-medium">{feedback.student}</TableCell>+
+              <TableCell className="font-medium">{feedback.student}</TableCell>
               <TableCell className="font-medium">{feedback.teacher}</TableCell>
               <TableCell className="font-medium">
                 <Link
@@ -172,12 +172,12 @@ export function FeedbackTable() {
                   ? format(new Date(feedback.updatedAt), "PPpp")
                   : null}
               </TableCell>
-              <TableCell className="text-right">
+              <TableCell className="text-balance">
                 <Link href={`/feedbackViewer/edit/${feedback._id}`}>
                   <Button type="button">View</Button>
                 </Link>
               </TableCell>
-              <TableCell className="text-right">
+              <TableCell className="text-balance">
                 <Button
                   type="button"
                   variant="link"
@@ -210,7 +210,7 @@ export function FeedbackTable() {
         </TableBody>
         <TableFooter>
           <TableRow>
-            <TableCell colSpan={12}>Total Rows</TableCell>
+            <TableCell colSpan={13}>Total Rows</TableCell>
             <TableCell className="text-right">{filteredData.length}</TableCell>
           </TableRow>
         </TableFooter>
